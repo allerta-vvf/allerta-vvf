@@ -1,0 +1,21 @@
+{
+    "name": "matteo/allerta",
+    "description": "Un software di allertamento per i vvf",
+    "type": "project",
+    "require": {
+        "cmfcmf/openweathermap-php-api": "dev-master",
+        "doctrine/lexer": "^1.3@dev",
+        "egulias/email-validator": "^2.1@dev",
+        "fzaninotto/faker": "^1.9@dev",
+        "twig/twig": "3.x-dev",
+        "tracy/tracy": "^2.7@dev"
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Matteo Gheza",
+            "email": "matteo@matteogheza.it"
+        }
+    ],
+    "minimum-stability": "dev"
+}
