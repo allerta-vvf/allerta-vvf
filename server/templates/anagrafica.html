@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div id='lista'>
+</div>
+<script>
+$("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+$(document).ready(function() {
+
+setInterval(function() {
+$("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+}, 10000);
+
+});
+check();
+$(document).ready(function() {
+
+setInterval(function() {
+check();
+}, 10000);
+
+});
+</script>
+
+     <script>
+   function AttivoAdmin(nomeutente, dispo){
+    dispo = +!dispo;
+    $.ajax({
+     url:"ajax_aggiornadispo.php",
+     method: "POST",
+     data: {nomeutente: nomeutente, dispo:dispo},
+     success: function (data) {
+      alert("Hai modificato la disponibilità di " + nomeutente + " in caso in allerta.");
+      $("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+     }
+    });
+   };
+   </script>
+{% endblock %}

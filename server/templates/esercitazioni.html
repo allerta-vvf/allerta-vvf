@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <img alt="VVF" src="./risorse/images/logo.jpg" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <br>
+    <p style="text-align: center;">
+    <a id='add' href="esercitazioni/modifica.php?aggiungi">Aggiungi esercitazione</a>
+    </p>
+    <br>
+    <div id="lista"></div>
+    <script>
+      $.get( "risorse/ajax/ajax_esercitazioni.php", function( data ) {
+         $( "#lista" ).html( data );
+         console.log( "Caricato lista." );
+      });
+      $(document).ready(function() {
+
+        setInterval(function() {
+          $.get( "risorse/ajax/ajax_esercitazioni.php", function( data ) {
+             $( "#lista" ).html( data );
+          });
+        }, 10000);
+
+      });
+/*
+      check();
+      $(document).ready(function() {
+
+        setInterval(function() {
+          check();
+        }, 10000);
+
+      });
+      */
+    </script>
+    <br>
+    <br>
+{% endblock %}

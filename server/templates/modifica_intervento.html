@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css" integrity="sha256-QeBQ7yamXxr4+oYQSRzluL3bLLul8ZpZO4Q/AmI+rvM=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js" integrity="sha256-nzvGziG948yQHPWFJCynD1AmNPBwYWY2nVZYaDCpq4E=" crossorigin="anonymous"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pikaday@1.7.0/plugins/pikaday.jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js" integrity="sha256-CutOzxCRucUsn6C6TcEYsauvvYilEniTXldPa6/wu0k=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/it.js" integrity="sha256-D8y560ZGsKY1LoAajKkQCG7y0Vkye361MH4yFv2K5kk=" crossorigin="anonymous"></script>
+<style>
+/* https://stackoverflow.com/a/44280071 */
+.checkbox label:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.checkbox .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #a9a9a9;
+  border-radius: .25em;
+  width: 1.3em;
+  height: 1.3em;
+  float: left;
+  margin-right: .5em;
+}
+
+.checkbox .cr .cr-icon {
+  position: absolute;
+  font-size: .8em;
+  line-height: 0;
+  top: 50%;
+  left: 15%;
+}
+
+.checkbox label input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox label input[type="checkbox"]+.cr>.cr-icon {
+  opacity: 0;
+}
+
+.checkbox label input[type="checkbox"]:checked+.cr>.cr-icon {
+  opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled+.cr {
+  opacity: .5;
+}
+</style>
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+<script>
+$(document).ready(function(){
+function zeroes(number, length) {
+    var my_string = '' + number;
+    while (my_string.length < length) {
+        my_string = '0' + my_string;
+    }
+
+    return my_string;
+}
+
+// activate datepickers for all elements with a class of `datepicker`
+$('.datepicker').pikaday({
+     i18n: {
+       months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+       weekdays: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
+       weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+       today: 'oggi',
+       clear: 'cancella',
+     },
+     firstDay: 1 ,
+     toString(date, format) {
+        // you should do formatting based on the passed format,
+        // but we will just return 'D/M/YYYY' for simplicity
+        var day = zeroes(date.getDate(), 2);
+        var month = zeroes(date.getMonth() + 1, 2);
+        var year = date.getFullYear();
+        var dat = year + '-' + month + '-' + day;
+        return dat;
+     }});
+
+// chain a few methods for the first datepicker, jQuery style!
+$('.datepicker').eq(0).pikaday('show');
+});
+</script>
+</head>
+<style>
+form {
+    border: 3px solid #f1f1f1;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.container {
+    padding: 16px;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    resize: none;
+}
+</style>
+<body>
+{% if intervento.modalità == "aggiungi" %}
+<form method="post">
+  <div class="container">
+    <label><b>Giorno dell' intervento</b></label>
+    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text">
+    <br>
+    <br>
+    <label><b>Progressivo</b></label>
+    <input id="progressivo" type="text" name="codice" placeholder="1234/5" required>
+    <br>
+    <br>
+    <label><b>Ora di uscita</b></label>
+    <input type="time" name="uscita" required>
+    <br>
+    <br>
+    <label><b>Ora di rientro</b></label>
+    <input type="time" name="rientro" required>
+    <br>
+    <br>
+    <label><b>Caposquadra</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endfor %}
+    <script>
+    $('input[name="capo"]').on('change', function() {
+       $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+    });
+    </script>
+    <br>
+    <label><b>Autisti</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    {% if vigile.autista == 1 %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <label><b>Altro personale</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endfor %}
+    <br>
+    <label><b>Luogo dell' intervento</b></label>
+    <input type="text" name="luogo" required>
+    <br>
+    <br>
+    <label><b>Altre note (es. via o info)</b></label><br>
+    <textarea name='note'></textarea>
+    <br>
+    <br>
+    <label><b>Tipo di intervento</b></label>
+    <br>
+    <select name='tipo'>
+    {% for tipo in intervento.tipologie %}
+    <option value='{{ tipo.nome }}'>{{ tipo.nome }}</option>
+    {% endfor %}
+  </select>
+    <br>
+    <input id="modalità" type="hidden" value="aggiungi" name="mod"></input>
+    <input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
+    <button type="submit">invia</button>
+  </div>
+</form>
+<script>
+$('form').submit(function () {
+    if(!$('#token').val().endsWith("dJN299u49")){
+      $('#token').val($('#token').val() + "");
+    }
+    var progressivo_valido = /^[0-9/]{3,6}$/
+    var progressivo = $('#progressivo').val();
+    if(!progressivo_valido.test(progressivo)){
+      var invia_progressivo = confirm("Il codice progressivo è stato rilevato come incorretto, vuoi aggiungere comunque l' intervento?");
+    } else {
+      var invia_progressivo = true;
+    }
+    return invia_progressivo;
+});
+</script>
+{% endif %}
+{% if intervento.modalità == "modifica" %}
+<form method="post">
+  <div class="container">
+    <label><b>Giorno dell' intervento</b></label>
+    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text">
+    <br>
+    <br>
+    <label><b>Progressivo</b></label>
+    <input id="progressivo" type="text" name="codice" placeholder="1234/5" required>
+    <br>
+    <br>
+    <label><b>Ora di uscita</b></label>
+    <input type="time" name="uscita" required>
+    <br>
+    <br>
+    <label><b>Ora di rientro</b></label>
+    <input type="time" name="rientro" required>
+    <br>
+    <br>
+    <label><b>Caposquadra</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endfor %}
+    <script>
+    $('input[name="capo"]').on('change', function() {
+       $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+    });
+    </script>
+    <br>
+    <label><b>Autisti</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    {% if vigile.autista == 1 %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <label><b>Altro personale</b></label>
+    <br>
+    {% for vigile in intervento.personale %}
+    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+      <label>
+      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+        {{ vigile.nome }}
+      </label>
+    </div>
+    {% endfor %}
+    <br>
+    <label><b>Luogo dell' intervento</b></label>
+    <input type="text" name="luogo" required>
+    <br>
+    <br>
+    <label><b>Altre note (es. via o info)</b></label><br>
+    <textarea name='note'></textarea>
+    <br>
+    <br>
+    <label><b>Tipo di intervento</b></label>
+    <br>
+    <select name='tipo'>
+    {% for tipo in intervento.tipologie %}
+    <option value='{{ tipo.nome }}'>{{ tipo.nome }}</option>
+    {% endfor %}
+  </select>
+    <br>
+    <input id="modalità" type="hidden" value="modifica" name="mod"></input>
+    <input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
+    <input id="id" type="hidden" value="{{ intervento.id }}" name="id"></input>
+    <button type="submit">invia</button>
+  </div>
+</form>
+<script>
+$('form').submit(function () {
+    if(!$('#token').val().endsWith("dJN299u49")){
+      $('#token').val($('#token').val() + "");
+    }
+    var progressivo_valido = /^[0-9/]{3,6}$/
+    var progressivo = $('#progressivo').val();
+    if(!progressivo_valido.test(progressivo)){
+      var invia_progressivo = confirm("Il codice progressivo è stato rilevato come incorretto, vuoi aggiungere comunque l' intervento?");
+    } else {
+      var invia_progressivo = true;
+    }
+    return invia_progressivo;
+});
+</script>
+{% endif %}
+{% if intervento.modalità == "elimina" %}
+<style>
+#add {
+ outline: none;
+ cursor: pointer;
+ text-align: center;
+ text-decoration: none;
+ font: bold 12px Arial, Helvetica, sans-serif;
+ color: #fff;
+ padding: 10px 20px;
+ border: solid 1px #0076a3;
+ background: #0095cd;
+}
+</style>
+<div style="margin: 0 auto; text-align: center">
+<p>Sei sicuro di voler eliminare l' intervento?</p>
+<form method="post">
+<input id="modalità" type="hidden" value="elimina" name="mod"></input>
+<input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
+<input id="id" type="hidden" value="{{ intervento.id }}" name="id"></input>
+<button id="add" type="submit">invia</button>
+</form>
+<script>
+$('form').submit(function () {
+    return confirm("L'azione non può essere annullata. Sei sicuro di voler continuare?");
+});
+</script>
+</div>
+{% endif %}
+</body>
+</html>
