@@ -6,7 +6,7 @@
 <div class='text-center' id="err">
 <script>
 var sound = new Howl({
-  src: ['risorse/musiche/non_hai_detto_la_parola_magica.mp3'],
+  src: ['risorse/musiche/error.mp3'],
   autoplay: true,
   volume: 0.9,
   onend: function() {
@@ -14,10 +14,6 @@ var sound = new Howl({
   }
 });
 sound.play();
-//var myVar = setInterval(function(){ sound.play(); }, 10000);
-</script>
-<script>
-//$("#err").delay(5000).fadeOut(300);
 </script>
 Possibile attività di hacking del software rilevata
 <img src='./risorse/images/nonono.gif'></img>

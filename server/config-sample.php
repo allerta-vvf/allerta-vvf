@@ -35,3 +35,6 @@ define( 'TECHNICAL_SUPPORT_KEY', '7e1d39b8d1a7e234c56a2da730e9ce5b95508dbc' );
 
 /* Insert your organization name */
 define( 'DISTACCAMENTO', 'Assoc VVF Vol Darfo' );
+
+/* Do you want to use a custom error message? (filename: custom-error.mp3) */
+define( 'USE_CUSTOM_ERROR_SOUND', false );

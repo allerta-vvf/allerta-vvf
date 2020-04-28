@@ -8,7 +8,7 @@
 <div class='text-center' id="err">
 <script>
 var sound = new Howl({
-  src: ['./risorse/musiche/non_hai_detto_la_parola_magica.mp3'],
+  src: ['{{ urlsoftware }}/risorse/musiche/{{ error_sound }}'],
   autoplay: true,
   volume: 0.9,
   onend: function() {
@@ -22,26 +22,17 @@ sound.play();
 $("#err").delay(5000).fadeOut(300);
 </script>
 {{ errore.spiegazione }}
-<img src='./risorse/images/nonono.gif'></img>
+<img src='{{ urlsoftware }}/risorse/images/nonono.gif'></img>
 </div>
 {% endif %}
 <div class="container text-center" id="modulogin">
   <form method="post">
-    <img alt="VVF" src="./risorse/images/logo.jpg" class="img-resposive"><br><br><br>
+    <img alt="VVF" src="{{ urlsoftware }}/risorse/images/logo.jpg" class="img-resposive"><br><br><br>
     <input type="text" name="nome" placeholder="Nome" required autocomplete="username"><br><br>
     <input type="password" name="password" placeholder="Password" required autocomplete="current-password"><br><br>
     <input type="checkbox" name="connesso" value='1' id="connesso" hidden checked><label hidden for='connesso'>Rimani Connesso</label><br>
     <input type="submit" name="login" class="btn btn-lg btn-success" value="Accedi">
   </form>
 </div>
-<br>
-<div id="panico" style='display: none' class="text-center"><i class="fa fa-exclamation-triangle"></i><br>
-  <p>Se hai premuto “Accedi” ma non è successo niente premi <a href=lista_admin.php>qui (admin)</a> o <a href=lista.php>qui (non-admin)</a></p>
-</div>
 <br><br>
-<a hidden class="text-center" href="https://www.abuseipdb.com/user/30576" title="AbuseIPDB is an IP address blacklist for webmasters and sysadmins to report IP addresses engaging in abusive behavior on their networks"
-  alt="AbuseIPDB Contributor Badge">
-  <img class="text-center" src="https://www.abuseipdb.com/contributor/30576.svg" style="width: 376px;">
-</a>
-<br>
 {% endblock %}

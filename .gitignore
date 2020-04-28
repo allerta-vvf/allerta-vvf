@@ -500,3 +500,5 @@ composer.phar
 config.php
 
 *password*
+
+custom-*.*

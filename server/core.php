@@ -22,6 +22,11 @@ function loadtemplate($templatename, $data, $richiedilogin=true){
   $data['enable_technical_support'] = ENABLE_TECHNICAL_SUPPORT;
   $data['technical_support_key'] = TECHNICAL_SUPPORT_KEY;
   $data['technical_support_open'] = isset($_COOKIE["chat"]);
+  if(USE_CUSTOM_ERROR_SOUND){
+    $data['error_sound'] = "custom-error.mp3";
+  } else {
+    $data['error_sound'] = "error.mp3";
+  }
   $template = $twig->load($templatename);
   echo $template->render($data);
 }
