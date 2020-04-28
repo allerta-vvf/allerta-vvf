@@ -1,7 +1,7 @@
 # This is an example with only required properties:
 version: 1
 update_configs:
-  - package_manager: "php"
+  - package_manager: "php:composer"
     directory: "/server"
     update_schedule: "live"
     default_labels:
