@@ -13,4 +13,4 @@ if(isset($_POST['nome']) & isset($_POST['password'])){
     $errore = $login;
   }
 }
-loadtemplate('index.html', ['errore' => $errore, 'titolo' => 'Login', 'distaccamento' => 'VVF Darfo', 'urlsoftware' => '', 'utente' => $utente->info(false)], false);
+loadtemplate('index.html', ['errore' => $errore, 'titolo' => 'Login'], false);
