@@ -38,3 +38,6 @@ define( 'DISTACCAMENTO', 'Distaccamento' );
 
 /* Do you want to use a custom error message? (filename: custom-error.mp3) */
 define( 'USE_CUSTOM_ERROR_SOUND', false );
+
+/* Do you want to use a custom error message? (filename: custom-error.gif) */
+define( 'USE_CUSTOM_ERROR_IMAGE', false );

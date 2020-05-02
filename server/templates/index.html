@@ -16,18 +16,17 @@ var sound = new Howl({
   }
 });
 sound.play();
-//var myVar = setInterval(function(){ sound.play(); }, 10000);
 </script>
 <script>
 $("#err").delay(5000).fadeOut(300);
 </script>
 {{ errore.spiegazione }}
-<img src='{{ urlsoftware }}/risorse/images/nonono.gif'></img>
+<img src='{{ urlsoftware }}/risorse/images/{{ error_image }}'></img>
 </div>
 {% endif %}
 <div class="container text-center" id="modulogin">
   <form method="post">
-    <img alt="VVF" src="{{ urlsoftware }}/risorse/images/logo.jpg" class="img-resposive"><br><br><br>
+    <img alt="VVF" src="{{ urlsoftware }}/risorse/images/{{ error_image }}" class="img-resposive"><br><br><br>
     <input type="text" name="nome" placeholder="Nome" required autocomplete="username" autofocus><br><br>
     <input type="password" name="password" placeholder="Password" required autocomplete="current-password"><br><br>
     <input type="checkbox" name="connesso" value='1' id="connesso" hidden checked><label hidden for='connesso'>Rimani Connesso</label><br>
