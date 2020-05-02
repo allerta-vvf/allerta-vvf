@@ -2,7 +2,7 @@
 error_reporting(1);
 $start = true;
 $minuti = date('i');
-include_once 'secure.php';
+include_once 'core.php';
 
 init_class();
 

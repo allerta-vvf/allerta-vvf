@@ -1,5 +1,5 @@
 <?php
-include_once 'secure.php';
+include_once 'core.php';
 init_class();
 if(isset($_SESSION)){
     $user = $_SESSION['nome'];

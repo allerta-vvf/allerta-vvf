@@ -1,5 +1,5 @@
 <?php
-include_once '../../secure.php';
+include_once '../../core.php';
 init_class();
 $utente->richiedilogin();
 if(isset($_POST["nomeutenteattivato"]) && isset($_POST["nomeutenteattivatore"]) && $_POST["dispo"] == 1)	{

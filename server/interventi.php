@@ -1,4 +1,4 @@
 <?php
-require_once 'core.php';
+require_once 'ui.php';
 loadtemplate('interventi.html', ['titolo' => 'Interventi']);
 ?>

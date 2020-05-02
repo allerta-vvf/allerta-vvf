@@ -28,13 +28,13 @@ define( 'INTRUSION_SAVE', true );
 define( 'INTRUSION_SAVE_INFO', true );
 
 /* Do you want to enbale chat with IT Manager support? */
-define( 'ENABLE_TECHNICAL_SUPPORT', true );
+define( 'ENABLE_TECHNICAL_SUPPORT', false );
 
 /* Leave blank if 'ENABLE_TECHNICAL_SUPPORT' is false, else go to https://www.smartsuppchat.com */
-define( 'TECHNICAL_SUPPORT_KEY', '7e1d39b8d1a7e234c56a2da730e9ce5b95508dbc' );
+define( 'TECHNICAL_SUPPORT_KEY', '' );
 
 /* Insert your organization name */
-define( 'DISTACCAMENTO', 'Assoc VVF Vol Darfo' );
+define( 'DISTACCAMENTO', 'Distaccamento' );
 
 /* Do you want to use a custom error message? (filename: custom-error.mp3) */
 define( 'USE_CUSTOM_ERROR_SOUND', false );

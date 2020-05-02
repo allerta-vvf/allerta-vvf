@@ -8,7 +8,7 @@ $minuti = 5;
 setlocale(LC_TIME, 'ita', 'it_IT');
 echo date('i') . " - " . date('H') . " - " . date("d") . "<br>";
 
-include_once 'secure.php';
+include_once 'core.php';
 
 init_class();
 

@@ -1,7 +1,7 @@
 <?php
 $start = true;
 $minuti = 5;
-include_once "../../secure.php";
+include_once "../../core.php";
 init_class();
 $utente->richiedilogin();
 

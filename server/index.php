@@ -1,5 +1,5 @@
 <?php
-require_once 'core.php';
+require_once 'ui.php';
 if($utente->autenticato()){
   $tools->redirect("lista.php");
 }

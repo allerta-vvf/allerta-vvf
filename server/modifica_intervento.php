@@ -1,5 +1,5 @@
 <?php
-require_once 'core.php';
+require_once 'ui.php';
 if($tools->validazione_form('$post-mod', true, "aggiungi")) {
   bdump("per poco...");
   if($tools->validazione_form(['$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
