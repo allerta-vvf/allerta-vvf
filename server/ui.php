@@ -27,6 +27,11 @@ function loadtemplate($templatename, $data, $richiedilogin=true){
   } else {
     $data['error_sound'] = "error.mp3";
   }
+  if(USE_CUSTOM_ERROR_IMAGE){
+    $data['error_image'] = "custom-error.gif";
+  } else {
+    $data['error_image'] = "error.gif";
+  }
   $template = $twig->load($templatename);
   echo $template->render($data);
 }
