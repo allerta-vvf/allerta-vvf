@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+   db:
+     image: mariadb:latest
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: allerta-db
+       MYSQL_USER: allerta
+       MYSQL_PASSWORD: password
+
+   allerta:
+     depends_on:
+       - db
+     image: allertavvf/allertavvf
+     build: ./
+     ports:
+       - "8081:8080"
+     restart: always
+     environment:
+       ALLERTA_DB_HOST: db:3306
+       ALLERTA_DB_USER: allerta
+       ALLERTA_DB_PASSWORD: password
+       ALLERTA_DB_NAME: allerta-db
+volumes:
+    db_data: {}
