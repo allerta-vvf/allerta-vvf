@@ -498,6 +498,7 @@ composer.phar
 !/server/error-log/index.html
 
 config.php
+config.old.php
 
 *password*
 
