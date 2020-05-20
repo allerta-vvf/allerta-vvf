@@ -10,31 +10,49 @@ jobs:
   build:
     env:
       working-directory: ./server
-
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
+    strategy:
+      matrix:        
+        php-versions: ['7.3', '7.4', '8.0']
+    name: PHP ${{ matrix.php-versions }}
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, short_open_tag=On
+        coverage: xdebug        
+        #tools: php-cs-fixer, phpunit
 
-      - name: Start MariaDB
-        uses: getong/mariadb-action@v1.1
-        with:
-          mysql root password: ''
-          mysql database: allerta
-          mysql user: user
-          mysql password: password
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-        working-directory: ${{env.working-directory}}
+    - name: Start MariaDB
+      uses: getong/mariadb-action@v1.1
+      with:
+        mysql root password: ''
+        mysql database: allerta
+        mysql user: user
+        mysql password: password
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-        working-directory: ${{env.working-directory}}
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+      working-directory: ${{env.working-directory}}
 
-      - name: Run test suite
-        run: composer run-script test
-        working-directory: ${{env.working-directory}}
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+      working-directory: ${{env.working-directory}}
+
+    - name: Run test suite
+      run: codecept run --steps
+      working-directory: ${{env.working-directory}}
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: tests output
+        path: ./server/tests/_output
