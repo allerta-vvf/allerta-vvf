@@ -11,12 +11,12 @@ $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
 $template = NULL;
-function loadtemplate($templatename, $data, $richiedilogin=true){
+function loadtemplate($templatename, $data, $requirelogin=true){
   global $utente, $twig, $template;
-  if($richiedilogin){
-    $utente->richiedilogin();
+  if($requirelogin){
+    $utente->requirelogin();
   }
-  $data['distaccamento'] = DISTACCAMENTO;
+  $data['owner'] = owner;
   $data['urlsoftware'] = WEB_URL;
   $data['utente'] = $utente->info();
   $data['enable_technical_support'] = ENABLE_TECHNICAL_SUPPORT;

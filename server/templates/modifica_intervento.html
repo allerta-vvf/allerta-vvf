@@ -225,12 +225,12 @@ textarea {
     <br>
     <label><b>Caposquadra</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <input type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endfor %}
@@ -242,13 +242,13 @@ textarea {
     <br>
     <label><b>Autisti</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    {% if vigile.autista == 1 %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    {% if user.autista == 1 %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endif %}
@@ -256,12 +256,12 @@ textarea {
     <br>
     <label><b>Altro personale</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endfor %}
@@ -324,12 +324,12 @@ $('form').submit(function () {
     <br>
     <label><b>Caposquadra</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <input type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endfor %}
@@ -341,13 +341,13 @@ $('form').submit(function () {
     <br>
     <label><b>Autisti</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    {% if vigile.autista == 1 %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    {% if user.autista == 1 %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endif %}
@@ -355,12 +355,12 @@ $('form').submit(function () {
     <br>
     <label><b>Altro personale</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.nome }}
       </label>
     </div>
     {% endfor %}

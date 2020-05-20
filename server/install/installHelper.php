@@ -16,7 +16,7 @@ function checkConnection($host, $user, $password, $database){
     } catch (PDOException $e){
         $connectionOk = false;
         ?>
-        <div class="wp-die-message"><h1>Errore nello stabilire una connessione al database</h1>
+        <div class="wp-die-message"><h1>Errore nello stabilire una connection al database</h1>
             <p>Questo potrebbe voler dire che nome utente e password nel file <code>config.php</code> sono sbagliate o che non possiamo contattare il database <code><?php echo $database; ?></code>. Potrebbe voler dire che il tuo database è irraggiungibile.</p>
             <ul>
                 <li>Sei sicuro di avere nome utente e password corretti?</li>
@@ -250,7 +250,7 @@ INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL,
     }
 }
 
-function initOptions($name, $visible, $password, $report_email, $distaccamento){
+function initOptions($name, $visible, $password, $report_email, $owner){
     try{
         require_once "../config.php";
         $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
@@ -258,12 +258,12 @@ function initOptions($name, $visible, $password, $report_email, $distaccamento){
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_users` (`id`, `role`, `hidden`, `disabled`, `nome`, `available`, `caposquadra`, `autista`, `telefono`, `password`, `password_hash`, `interventi`, `esercitazioni`, `online`, `online_time`, `minuti_dispo`, `immagine`) VALUES ('1', '5', :hidden, '0', :name, '0', '1', '0', NULL, MD5(:password), '', '0', '0', '0', '0', '0', '');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'distaccamento', :distaccamento, '1', current_timestamp(), current_timestamp(), '1');");
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'owner', :owner, '1', current_timestamp(), current_timestamp(), '1');");
         $prep->bindParam(':name', $name, PDO::PARAM_STR);
         $prep->bindParam(':hidden', $visible, PDO::PARAM_INT);
         $prep->bindParam(':password', $password, PDO::PARAM_STR);
         $prep->bindParam(':report_email', $report_email, PDO::PARAM_STR);
-        $prep->bindParam(':distaccamento', $distaccamento, PDO::PARAM_STR);
+        $prep->bindParam(':owner', $owner, PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
         ?>
