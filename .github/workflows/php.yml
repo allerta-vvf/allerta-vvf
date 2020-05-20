@@ -52,6 +52,7 @@ jobs:
       working-directory: ${{env.working-directory}}
     
     - name: Upload a Build Artifact
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: tests output
