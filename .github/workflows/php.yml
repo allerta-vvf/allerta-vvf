@@ -63,7 +63,7 @@ jobs:
         rm server/codeception.yml
         sudo rm server/tests -r
         sudo rm server/vendor -r
-        composer install --no-dev --no-progress --no-suggest -o -n -d=server
+        composer install --no-dev --no-progress --no-suggest -o -n -d server
 
     - name: Upload prod build
       if: ${{ always() }}
