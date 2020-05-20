@@ -55,7 +55,7 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: tests output
+        name: tests output (php ${{ matrix.php-versions }})
         path: ./server/tests/_output
     
     - name: Remove devs files and dirs
@@ -69,6 +69,6 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: prod build
+        name: prod build (php ${{ matrix.php-versions }})
         path: ./server/
         
