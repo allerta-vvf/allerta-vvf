@@ -34,7 +34,7 @@ jobs:
     - name: Start MariaDB
       uses: getong/mariadb-action@v1.1
       with:
-        mysql root password: ''
+        mysql root password: password
         mysql database: allerta
         mysql user: user
         mysql password: password

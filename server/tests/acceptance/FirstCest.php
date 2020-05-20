@@ -9,7 +9,7 @@ class FirstCest
         $I->seeCurrentURLEquals('/install/install.php');
         $I->fillField('dbhost', '127.0.0.1');
         $I->fillField('uname', 'root');
-        $I->fillField('pwd', '');
+        $I->fillField('pwd', 'password');
         $I->click('submit');
         
         $I->click('Popolare il database');
