@@ -1,0 +1,38 @@
+name: PHP Code Testing
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Secret Scan
+        uses: max/secret-scan@1.0.0
+
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop
+
+      - name: Start MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          mysql root password: ''
+          mysql database: allerta
+          mysql user: user
+          mysql password: password
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run test suite
+        run: composer run-script test
