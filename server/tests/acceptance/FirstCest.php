@@ -7,6 +7,7 @@ class FirstCest
         $I->amOnPage('/install/install.php');
         $I->click('Invia');
         $I->seeCurrentURLEquals('/install/install.php');
+        $I->fillField('dbhost', '127.0.0.1');
         $I->fillField('uname', 'root');
         $I->fillField('pwd', '');
         $I->click('submit');
