@@ -37,7 +37,7 @@ define( 'ENABLE_TECHNICAL_SUPPORT', false );
 define( 'TECHNICAL_SUPPORT_KEY', '' );
 
 /* Insert your organization name */
-define( 'DISTACCAMENTO', 'Distaccamento' );
+define( 'owner', 'owner' );
 
 /* Do you want to use a custom error message? (filename: custom-error.mp3) */
 define( 'USE_CUSTOM_ERROR_SOUND', false );

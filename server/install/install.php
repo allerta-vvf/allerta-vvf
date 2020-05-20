@@ -75,9 +75,9 @@ if(true){
         $prefixValue = "allerta01";
     }
 ?>
-    <h1 class="screen-reader-text">Configura la connessione al database</h1>
+    <h1 class="screen-reader-text">Configura la connection al database</h1>
     <form method="post">
-    <p>Di seguito puoi inserire i dettagli di connessione al database. Se non sei sicuro dei dati da inserire contatta il tuo fornitore di hosting.</p>
+    <p>Di seguito puoi inserire i dettagli di connection al database. Se non sei sicuro dei dati da inserire contatta il tuo fornitore di hosting.</p>
     <table class="form-table" role="presentation">
        <tbody>
           <tr>
@@ -210,8 +210,8 @@ if(true){
 			<p>Controlla attentamente il tuo indirizzo email prima di continuare.</p></td>
 		</tr>
 		<tr>
-			<th scope="row"><label for="distaccamento">Distaccamento</label></th>
-			<td><input name="distaccamento" type="text" id="distaccamento" size="100" value="">
+			<th scope="row"><label for="owner">owner</label></th>
+			<td><input name="owner" type="text" id="owner" size="100" value="">
 			<p>Verrà utilizzato nei report.</p></td>
 		</tr>
     </tbody></table>
@@ -221,7 +221,7 @@ if(true){
     </p>
 <?php
 } else if ($_POST["step"] == "5") {
-    initOptions($_POST["user_name"], $_POST["admin_visible"], $_POST["admin_password"], $_POST["admin_email"], $_POST["distaccamento"]);
+    initOptions($_POST["user_name"], $_POST["admin_visible"], $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
 ?>
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
     <p>Ottimo lavoro, amico! Hai completato l'installazione. Ora Allerta può funzionare correttamente. Adesso è il momento di…</p>

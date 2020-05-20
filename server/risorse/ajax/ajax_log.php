@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
+$utente->requirelogin();
 
 $risultato = $database->esegui("SELECT * FROM `%PREFIX%_log`", true);
 
