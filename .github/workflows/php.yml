@@ -59,9 +59,11 @@ jobs:
         path: ./server/tests/_output
     
     - name: Remove devs files and dirs
-      run: !
+      run: |
         rm server/codeception.yml
-        sudo rm server/tests/* -r
+        sudo rm server/tests -r
+        sudo rm server/vendor -r
+        composer install --no-dev --no-progress --no-suggest -o -n -d=server
 
     - name: Upload prod build
       if: ${{ always() }}
