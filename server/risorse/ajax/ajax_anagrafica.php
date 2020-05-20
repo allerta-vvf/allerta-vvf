@@ -317,13 +317,8 @@ function vero1($text, $img1 = "", $img2 = ""){
 foreach($risultato as $row){
 $nome = ($row['online']==1) ? '<u>' . $row['nome'] . "</u>" : $row['nome'];
 echo("<h1>Dati anagrafici <b>$nome</b></h1><br><br>");
-<<<<<<< HEAD
 echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
 $disp = vero1($row['avaible'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
-=======
-echo('<img alt="VVF" src="./risorse/images/owner.png" width="150" class="img-resposive"><br><br><br>');
-$disp = vero1($row['avaible'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
->>>>>>> e2b9cf2f49f0254dc8318c9c0021a23c464dd106
 $caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
 $autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
 echo("<p>Nome:  <b>$nome</b></p><br>");

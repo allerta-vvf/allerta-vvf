@@ -276,21 +276,12 @@ class user{
     }
   }
   
-<<<<<<< HEAD
-  public function avaible($nome){
-    $vigile = $this->database->esegui("SELECT avaible FROM `%PREFIX%_users` WHERE nome = :nome;", true, [":nome" => $nome]);
-    if(empty($vigile)){
-        return false;
-    } else {
-        return $vigile[0]["avaible"];
-=======
   public function avaible($nome){
     $user = $this->database->esegui("SELECT avaible FROM `%PREFIX%_users` WHERE nome = :nome;", true, [":nome" => $nome]);
     if(empty($user)){
         return false;
     } else {
         return $user[0]["avaible"];
->>>>>>> e2b9cf2f49f0254dc8318c9c0021a23c464dd106
     }
   }
   
