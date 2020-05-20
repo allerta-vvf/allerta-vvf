@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $utente->richiedilogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY available DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
 
 $whitelist = $utente->whitelist();
 ?>
@@ -39,7 +39,7 @@ th, td {
 <table style="width: 90%; text-align:center;">
   <tr>
     <th>Nome</th>
-    <th>Disponibile</th>
+    <th>available</th>
     <th>Autista</th>
     <th>Chiama</th>
     <th>Scrivi</th>
@@ -52,21 +52,21 @@ th, td {
        echo "<tr>
           <td>";
     $nome = $row["nome"];
-    $disponibile = $row["disponibile"];
-    if ($row['caposquadra'] == 1) {echo "<a onclick='AttivoAdmin(\"$nome\", \"$disponibile\");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='AttivoAdmin(\"$nome\", \"$disponibile\");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
+    $available = $row["available"];
+    if ($row['caposquadra'] == 1) {echo "<a onclick='AttivoAdmin(\"$nome\", \"$available\");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='AttivoAdmin(\"$nome\", \"$available\");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
     if($row['online'] == 1){
-        echo "<u>".$row["nome"]."</u></a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$disponibile\");'>";
+        echo "<u>".$row["nome"]."</u></a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$available\");'>";
     } else {
-        echo $row["nome"]."</a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$disponibile\");'>";
+        echo $row["nome"]."</a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$available\");'>";
     }
-     if ($row['disponibile'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
+     if ($row['available'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
        echo  "</a></td>
        <td>";
     if ($row['autista'] == 1) {echo "<img src='./risorse/images/volante.png' width='20px'>";} else{echo "";};
     echo "</td>
 		  <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
 
-    if ($row['disponibile'] == 1) {echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20Fulvio'><i class='fa fa-whatsapp' style='color:green'></i></td>";} else{echo "";};
+    if ($row['available'] == 1) {echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20Fulvio'><i class='fa fa-whatsapp' style='color:green'></i></td>";} else{echo "";};
 
      $interventi = $row['interventi'];
      $minuti = $row['minuti_dispo'];

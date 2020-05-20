@@ -318,7 +318,7 @@ foreach($risultato as $row){
 $nome = ($row['online']==1) ? '<u>' . $row['nome'] . "</u>" : $row['nome'];
 echo("<h1>Dati anagrafici <b>$nome</b></h1><br><br>");
 echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
-$disp = vero1($row['disponibile'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
+$disp = vero1($row['available'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
 $caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
 $autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
 echo("<p>Nome:  <b>$nome</b></p><br>");
