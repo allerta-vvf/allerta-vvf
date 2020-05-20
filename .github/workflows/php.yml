@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    env:
+      working-directory: ./server
 
     runs-on: ubuntu-latest
 
@@ -27,9 +29,12 @@ jobs:
 
       - name: Validate composer.json and composer.lock
         run: composer validate
+        working-directory: ${{env.working-directory}}
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
+        working-directory: ${{env.working-directory}}
 
       - name: Run test suite
         run: composer run-script test
+        working-directory: ${{env.working-directory}}
