@@ -43,6 +43,6 @@ maintenance:
 
 localisation:
   localisationReady: yes
-  availableLanguages:
+  avaibleLanguages:
     - en
     - it

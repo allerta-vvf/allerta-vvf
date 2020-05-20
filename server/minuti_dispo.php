@@ -68,7 +68,7 @@ function array_combine_($keys, $values){
 //print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
 
-$sql = "SELECT * FROM %PREFIX%_users ORDER BY available DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_users ORDER BY avaible DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
 $risultato = $database->esegui($sql, true);
 
 $users_tot = array();
@@ -76,7 +76,7 @@ $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
     $users_tot[] = $row['nome'];
-    if($row['available'] == "1"){
+    if($row['avaible'] == "1"){
         $incremento[] = $row['nome'];
         $minuti_dispo_old[] = $row['minuti_dispo'];
     }
@@ -93,11 +93,11 @@ foreach($incremento as $key=>$utente){
     $sql = "UPDATE %PREFIX%_users SET minuti_dispo = '" . $minuti_dispo . "' WHERE nome ='" . $utente . "'";
     $risultato = $database->esegui($sql, true);
 }
-$sql = "SELECT * FROM %PREFIX%_users ORDER BY available DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_users ORDER BY avaible DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
 $risultato = $database->esegui($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){
-    if($row['available'] == "1"){
+    if($row['avaible'] == "1"){
         $minuti_dispo[] = $row['minuti_dispo'];
     }
 }

@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $utente->requirelogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY available DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
 
 $whitelist = $utente->whitelist();
 ?>
@@ -41,7 +41,7 @@ th, td {
 <table style="width: 90%; text-align:center;">
     <tr>
      <th>Nome</th>
-     <th>available</th>
+     <th>avaible</th>
      <?php
    foreach($risultato as $row){
      if(!in_array($row['nome'], $whitelist)){
@@ -52,7 +52,7 @@ th, td {
       } else {
           echo "".$row["nome"]."</td><td>";
       }
-      if ($row['available'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
+      if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
       echo  "</td></tr>";
       }
      }
