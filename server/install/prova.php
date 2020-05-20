@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `tipo` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `nometipologia` (`nome`(99))
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `vigili` (
+CREATE TABLE IF NOT EXISTS `users` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `nome` text CHARACTER SET utf8 NOT NULL,
 `disponibile` tinyint(1) NOT NULL DEFAULT 0,

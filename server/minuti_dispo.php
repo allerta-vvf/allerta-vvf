@@ -13,9 +13,9 @@ include_once 'core.php';
 init_class();
 
 function resetminuti(){
-    global $vigili_tot;
+    global $users_tot;
     global $database;
-    $sql = "SELECT * FROM %PREFIX%_vigili"; // Pesco i dati della tabella e li ordino in base alla disponibilità
+    $sql = "SELECT * FROM %PREFIX%_users"; // Pesco i dati della tabella e li ordino in base alla disponibilità
     $risultato = $database->esegui($sql, true);
     $disp = array();
     foreach($risultato as $row){
@@ -42,7 +42,7 @@ function resetminuti(){
     $risultato = $database->esegui($sql);
 
     foreach($risultato as $row){
-        $sql = "UPDATE %PREFIX%_vigili SET minuti_dispo = '0' WHERE nome ='" . $utente . "'";
+        $sql = "UPDATE %PREFIX%_users SET minuti_dispo = '0' WHERE nome ='" . $utente . "'";
         $risultato = $database->esegui($sql);
         echo "reset effettuato: " . $utente . "<br>";
     }
@@ -68,14 +68,14 @@ function array_combine_($keys, $values){
 //print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
 
-$sql = "SELECT * FROM %PREFIX%_vigili ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_users ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
 $risultato = $database->esegui($sql, true);
 
-$vigili_tot = array();
+$users_tot = array();
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
-    $vigili_tot[] = $row['nome'];
+    $users_tot[] = $row['nome'];
     if($row['disponibile'] == "1"){
         $incremento[] = $row['nome'];
         $minuti_dispo_old[] = $row['minuti_dispo'];
@@ -90,10 +90,10 @@ resetminuti();
 
 foreach($incremento as $key=>$utente){
     $minuti_dispo = $minuti_dispo_old[$key] + $minuti;
-    $sql = "UPDATE %PREFIX%_vigili SET minuti_dispo = '" . $minuti_dispo . "' WHERE nome ='" . $utente . "'";
+    $sql = "UPDATE %PREFIX%_users SET minuti_dispo = '" . $minuti_dispo . "' WHERE nome ='" . $utente . "'";
     $risultato = $database->esegui($sql, true);
 }
-$sql = "SELECT * FROM %PREFIX%_vigili ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_users ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
 $risultato = $database->esegui($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){

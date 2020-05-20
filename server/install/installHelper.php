@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_tipo` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `nometipologia` (`nome`(99))
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_vigili` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_users` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `role` INT(50) NOT NULL DEFAULT '0',
 `hidden` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -256,7 +256,7 @@ function initOptions($name, $visible, $password, $report_email, $distaccamento){
         $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $prefix = DB_PREFIX;
         $prep = $connection->prepare("
-INSERT INTO `".$prefix."_vigili` (`id`, `role`, `hidden`, `disabled`, `nome`, `disponibile`, `caposquadra`, `autista`, `telefono`, `password`, `password_hash`, `interventi`, `esercitazioni`, `online`, `online_time`, `minuti_dispo`, `immagine`) VALUES ('1', '5', :hidden, '0', :name, '0', '1', '0', NULL, MD5(:password), '', '0', '0', '0', '0', '0', '');
+INSERT INTO `".$prefix."_users` (`id`, `role`, `hidden`, `disabled`, `nome`, `disponibile`, `caposquadra`, `autista`, `telefono`, `password`, `password_hash`, `interventi`, `esercitazioni`, `online`, `online_time`, `minuti_dispo`, `immagine`) VALUES ('1', '5', :hidden, '0', :name, '0', '1', '0', NULL, MD5(:password), '', '0', '0', '0', '0', '0', '');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'distaccamento', :distaccamento, '1', current_timestamp(), current_timestamp(), '1');");
         $prep->bindParam(':name', $name, PDO::PARAM_STR);

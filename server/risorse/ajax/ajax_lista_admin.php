@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $utente->richiedilogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_vigili` ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
 
 $whitelist = $utente->whitelist();
 ?>

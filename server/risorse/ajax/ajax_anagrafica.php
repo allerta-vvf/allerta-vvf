@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $utente->richiedilogin();
 
-$risultato = $database->esegui('SELECT * FROM `%PREFIX%_vigili` WHERE id = :id', true, array(":id" => $_GET['utente'])); // Pesco i dati della tabella
+$risultato = $database->esegui('SELECT * FROM `%PREFIX%_users` WHERE id = :id', true, array(":id" => $_GET['utente'])); // Pesco i dati della tabella
 
 $whitelist = $utente->whitelist();
 ?>

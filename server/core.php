@@ -206,7 +206,7 @@ class database{
     $incrementa = implode(",", $incrementa);
     bdump($incrementa);
     $sql = "INSERT INTO `%PREFIX%_interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
-    UPDATE `%PREFIX%_vigili` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
+    UPDATE `%PREFIX%_users` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
     $this->esegui($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso eseguire 2 query pdo con salvate le query nella classe dalla classe. Devo eseguirne 1 sola
   }
 }
@@ -268,7 +268,7 @@ class user{
   }
   
   public function nome_by_id($id){
-    $vigile = $this->database->esegui("SELECT nome FROM `%PREFIX%_vigili` WHERE id = :id;", true, [":id" => $id]);
+    $vigile = $this->database->esegui("SELECT nome FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
     if(empty($vigile)){
         return false;
     } else {
@@ -277,7 +277,7 @@ class user{
   }
   
   public function disponibile($nome){
-    $vigile = $this->database->esegui("SELECT disponibile FROM `%PREFIX%_vigili` WHERE nome = :nome;", true, [":nome" => $nome]);
+    $vigile = $this->database->esegui("SELECT disponibile FROM `%PREFIX%_users` WHERE nome = :nome;", true, [":nome" => $nome]);
     if(empty($vigile)){
         return false;
     } else {
@@ -322,13 +322,13 @@ class user{
   public function login($nome, $password, $twofa=null){
     if(!empty($nome)){
       if(!empty($password)){
-        $vigili = $this->database->esegui("SELECT * FROM `%PREFIX%_vigili` WHERE nome = :nome AND password = :password;", true, [":nome" => $nome, ":password" => $password]);
-        if(!empty($vigili)){
+        $users = $this->database->esegui("SELECT * FROM `%PREFIX%_users` WHERE nome = :nome AND password = :password;", true, [":nome" => $nome, ":password" => $password]);
+        if(!empty($users)){
           $_SESSION["accesso"] = "autenticato";
-          $_SESSION["nome"] = $vigili[0]["nome"];
-          $_SESSION["admin"] = $vigili[0]["caposquadra"];
+          $_SESSION["nome"] = $users[0]["nome"];
+          $_SESSION["admin"] = $users[0]["caposquadra"];
           return true;
-          //return $vigili;
+          //return $users;
         } else {
           return ["status" => "errore", "codice" => 003, "spiegazione" => "Dati di login non corretti"];
         }
@@ -346,7 +346,7 @@ class user{
   }
 
   public function lista($tutti=false){
-    $vigili = $this->database->esegui("SELECT * FROM `%PREFIX%_vigili`;", true);
+    $users = $this->database->esegui("SELECT * FROM `%PREFIX%_users`;", true);
   }
 
   public function logout(){

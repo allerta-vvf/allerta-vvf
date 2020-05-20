@@ -7,7 +7,7 @@ include_once 'core.php';
 init_class();
 
 $minuti = date('i');
-$sql = "UPDATE `%PREFIX%_vigili` SET online='0', online_time='0' WHERE online_time < '$minuti';";
+$sql = "UPDATE `%PREFIX%_users` SET online='0', online_time='0' WHERE online_time < '$minuti';";
 $risultato = $database->esegui($sql);
 echo $sql;
 ?>
