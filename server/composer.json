@@ -23,5 +23,11 @@
         "phpunit/phpunit": "6.*",
         "captbaritone/mailcatcher-codeception-module": "*",
         "nathanmac/datetime-codeception-module": "~1.0"
+    },
+    "scripts": {
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "codecept run --steps"
+        ]
     }
 }
