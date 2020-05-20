@@ -57,3 +57,16 @@ jobs:
       with:
         name: tests output
         path: ./server/tests/_output
+    
+    - name: Remove devs files and dirs
+      run: !
+        rm server/codeception.yml
+        sudo rm server/tests/* -r
+
+    - name: Upload prod build
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: prod build
+        path: ./server/
+        
