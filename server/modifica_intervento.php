@@ -34,8 +34,8 @@ if($tools->validazione_form('$post-mod', true, "aggiungi")) {
   $_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length) . "-bfwp64GGbdm";
   // 1 hour = 60 seconds * 60 minutes = 3600
   $_SESSION['token-expire'] = time() + 3600;
-  $personale = $database->esegui("SELECT * FROM vigili ORDER BY nome ASC", true); // Pesco i dati della tabella e li ordino in base al nome
-  $tipologie = $database->esegui("SELECT nome FROM tipo ORDER BY nome ASC", true); // Pesco le tipologie della tabella
+  $personale = $database->esegui("SELECT * FROM `%PREFIX%_vigili` ORDER BY nome ASC", true); // Pesco i dati della tabella e li ordino in base al nome
+  $tipologie = $database->esegui("SELECT nome FROM `%PREFIX%_tipo` ORDER BY nome ASC", true); // Pesco le tipologie della tabella
   $modalità = (isset($_GET["aggiungi"])) ? "aggiungi" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "aggiungi"));
   bdump($modalità, "modalità");
   bdump($tipologie, "tipologie");

@@ -7,7 +7,7 @@ $utente->richiedilogin();
 
 function arraynum(){
 global $database;
-$risultato = $database->esegui("SELECT * FROM vigili ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC", true); // Pesco i dati della tabella e li ordino in base alla disponibilità
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_vigili` ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC", true); // Pesco i dati della tabella e li ordino in base alla disponibilità
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){

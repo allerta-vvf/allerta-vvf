@@ -174,7 +174,7 @@ class database{
   public function esegui($sql, $fetch=false, $param=null){
     try{
       $this->connessione->beginTransaction();
-      $this->stmt = $this->connessione->prepare($sql);
+      $this->stmt = $this->connessione->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
       if(!is_null($param)){
         $this->query = $this->stmt->execute($param);
       } else {
@@ -194,7 +194,7 @@ class database{
   }
   
   public function esiste($tabella, $id){
-      $risultato = $this->esegui("SELECT :tabella FROM interventi WHERE id = :id;", true, [":tabella" => $tabella, ":id" => $id]);
+      $risultato = $this->esegui("SELECT :tabella FROM `%PREFIX%_interventi` WHERE id = :id;", true, [":tabella" => $tabella, ":id" => $id]);
       return !empty($risultato);
   }
   
@@ -205,8 +205,8 @@ class database{
     bdump($personale);
     $incrementa = implode(",", $incrementa);
     bdump($incrementa);
-    $sql = "INSERT INTO `interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
-    UPDATE `vigili` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
+    $sql = "INSERT INTO `%PREFIX%_interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
+    UPDATE `%PREFIX%_vigili` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
     $this->esegui($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso eseguire 2 query pdo con salvate le query nella classe dalla classe. Devo eseguirne 1 sola
   }
 }
@@ -237,7 +237,7 @@ class user{
         } else {
           $parametri = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
         }
-        $sql = "INSERT INTO `intrusioni` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
+        $sql = "INSERT INTO `%PREFIX%_intrusioni` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
         $this->database->esegui($sql, false, $parametri);
       }
       $this->tools->redirect(WEB_URL);
@@ -268,7 +268,7 @@ class user{
   }
   
   public function nome_by_id($id){
-    $vigile = $this->database->esegui("SELECT nome FROM vigili WHERE id = :id;", true, [":id" => $id]);
+    $vigile = $this->database->esegui("SELECT nome FROM `%PREFIX%_vigili` WHERE id = :id;", true, [":id" => $id]);
     if(empty($vigile)){
         return false;
     } else {
@@ -277,7 +277,7 @@ class user{
   }
   
   public function disponibile($nome){
-    $vigile = $this->database->esegui("SELECT disponibile FROM vigili WHERE nome = :nome;", true, [":nome" => $nome]);
+    $vigile = $this->database->esegui("SELECT disponibile FROM `%PREFIX%_vigili` WHERE nome = :nome;", true, [":nome" => $nome]);
     if(empty($vigile)){
         return false;
     } else {
@@ -322,7 +322,7 @@ class user{
   public function login($nome, $password, $twofa=null){
     if(!empty($nome)){
       if(!empty($password)){
-        $vigili = $this->database->esegui("SELECT * FROM vigili WHERE nome = :nome AND password = :password;", true, [":nome" => $nome, ":password" => $password]);
+        $vigili = $this->database->esegui("SELECT * FROM `%PREFIX%_vigili` WHERE nome = :nome AND password = :password;", true, [":nome" => $nome, ":password" => $password]);
         if(!empty($vigili)){
           $_SESSION["accesso"] = "autenticato";
           $_SESSION["nome"] = $vigili[0]["nome"];
@@ -341,12 +341,12 @@ class user{
   }
   public function log($azione, $subisce, $agisce, $data, $ora){
     $parametri = [":azione" => $azione, ":subisce" => $subisce, ":agisce" => $agisce, ":data" => $data, ":ora" => $ora];
-    $sql = "INSERT INTO `log` (`id`, `azione`, `subisce`, `agisce`, `data`, `ora`) VALUES (NULL, :azione, :subisce, :agisce, :data, :ora)";
+    $sql = "INSERT INTO `%PREFIX%_log` (`id`, `azione`, `subisce`, `agisce`, `data`, `ora`) VALUES (NULL, :azione, :subisce, :agisce, :data, :ora)";
     $this->database->esegui($sql, false, $parametri);
   }
 
   public function lista($tutti=false){
-    $vigili = $this->database->esegui("SELECT * FROM vigili;", true);
+    $vigili = $this->database->esegui("SELECT * FROM `%PREFIX%_vigili`;", true);
   }
 
   public function logout(){

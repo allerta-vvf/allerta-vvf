@@ -2,50 +2,8 @@
 include_once("../../core.php");
 init_class();
 $utente->richiedilogin();
-/*
-function trovanomi() {
-include_once '../../connection.php';
-$sql = "SELECT nome FROM vigili"; // Pesco i dati della tabella
-$result = mysqli_query($connessione, $sql);
-    while($row = $result->fetch_array())
-{
-$rows[] = $row;
-}
-$nome = array();
-foreach($rows as $row)
-{
- $nome[] = $row['nome'];
 
-}
-mysqli_close($connessione);
-return $nome;
-}
-
-function checkbox_vigili() {
-$whitelist = $utente->whitelist();
-$id = 0;
-$checkbox = <<<HTML
-<div class="dropdown show">
-  <a class="btn btn-secondary dropdown-toggle " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown link
-  </a>
-
-  <select class="form-control" aria-labelledby="dropdownMenuLink">
-HTML;
-foreach(trovanomi() as $nome) {
-    $test = "";
-    if(in_array($nome, $whitelist)){
-        $test = "hidden='hidden'";
-    }
-    $id = $id + 1;
-    $checkbox = $checkbox . "<option class='dropdown-item' id='checkbox' style='' $test value='$nome'>" . "<label $test>$nome</label><br>";
-}
-$checkbox = $checkbox . "</select>";
-return $checkbox;
-}
-*/
-
-$risultato = $database->esegui("SELECT * FROM `log`", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_log`", true);
 
 $whitelist = $utente->whitelist();
 ?>
