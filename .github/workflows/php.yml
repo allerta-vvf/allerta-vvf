@@ -7,10 +7,10 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  tests:
     env:
       working-directory: ./server
-    runs-on: self-hosted
+    runs-on: ubuntu_latest
     strategy:
       matrix:        
         php-versions: ['7.3', '7.4', '8.0']
