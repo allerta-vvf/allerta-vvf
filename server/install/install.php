@@ -14,7 +14,7 @@ if (file_exists("../config.php")) {
     $runInstallation = true;
 }
 
-if($runInstallation){
+if(true){
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <meta name="viewport" content="width=device-width">
@@ -47,7 +47,7 @@ if($runInstallation){
     <p class="step">
     <form method="POST">
     <input type="hidden" name="step" value="2">
-    <input type="submit" class="button button-large">
+    <input type="submit" value="Invia" class="button button-large">
     </form>
     </p>
 <?php
