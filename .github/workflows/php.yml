@@ -48,7 +48,7 @@ jobs:
       working-directory: ${{env.working-directory}}
 
     - name: Run test suite
-      run: codecept run --steps
+      run: vendor/bin/codecept run --steps
       working-directory: ${{env.working-directory}}
     
     - name: Upload a Build Artifact
