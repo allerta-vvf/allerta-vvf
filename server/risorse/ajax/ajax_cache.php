@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
+$utente->requirelogin();
 
 $users_sql = "SELECT `id`, `nome`, `disponibile`, `caposquadra`, `autista`, `telefono`, `interventi`, `esercitazioni`, `online`, `minuti_dispo`, `immagine` FROM `%PREFIX%_users` LIMIT 0 , 30";
 $users = $database->esegui($users_sql, true);

@@ -144,15 +144,15 @@ class database{
   protected $db_dbname = DB_NAME;
   protected $db_username = DB_USER;
   protected $db_password = DB_PASSWORD;
-  public $connessione = null;
+  public $connection = null;
   public $query = null;
   public $stmt = null;
 
   public function connetti(){
     try {
-      $this->connessione = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
-      $this->connessione->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-      $this->connessione->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->connection = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
+      $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch(PDOException $e)
     {
@@ -168,27 +168,27 @@ class database{
   }
 
   public function close(){
-    $this->connessione = null;
+    $this->connection = null;
   }
 
   public function esegui($sql, $fetch=false, $param=null){
     try{
-      $this->connessione->beginTransaction();
-      $this->stmt = $this->connessione->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
+      $this->connection->beginTransaction();
+      $this->stmt = $this->connection->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
       if(!is_null($param)){
         $this->query = $this->stmt->execute($param);
       } else {
         $this->query = $this->stmt->execute();
       }
       bdump($this->query);
-      $this->connessione->commit();
+      $this->connection->commit();
       if($fetch == true){
         return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       $this->stmt->closeCursor();
     } catch (PDOException $e) {
       print "Errore!: " . $e->getMessage() . "<br/>";
-      $this->connessione->rollBack();
+      $this->connection->rollBack();
       die();
     }
   }
@@ -229,7 +229,7 @@ class user{
     }
   }
 
-  public function richiedilogin(){
+  public function requirelogin(){
    if(!$this->autenticato()){
       if(INTRUSION_SAVE){
         if(INTRUSION_SAVE_INFO){
@@ -268,20 +268,20 @@ class user{
   }
   
   public function nome_by_id($id){
-    $vigile = $this->database->esegui("SELECT nome FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
-    if(empty($vigile)){
+    $user = $this->database->esegui("SELECT nome FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
+    if(empty($user)){
         return false;
     } else {
-        return $vigile[0]["nome"];
+        return $user[0]["nome"];
     }
   }
   
   public function disponibile($nome){
-    $vigile = $this->database->esegui("SELECT disponibile FROM `%PREFIX%_users` WHERE nome = :nome;", true, [":nome" => $nome]);
-    if(empty($vigile)){
+    $user = $this->database->esegui("SELECT disponibile FROM `%PREFIX%_users` WHERE nome = :nome;", true, [":nome" => $nome]);
+    if(empty($user)){
         return false;
     } else {
-        return $vigile[0]["disponibile"];
+        return $user[0]["disponibile"];
     }
   }
   
