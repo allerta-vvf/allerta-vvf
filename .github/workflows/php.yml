@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "! contains(toJSON(github.event.commits.*.msg), '[skip-ci]')"
     env:
       working-directory: ./server
     runs-on: ubuntu-latest
