@@ -8,13 +8,10 @@ if (file_exists("installHelper.php")) {
 } else {
     die("Please re-download Allerta. Installation corrupted");
 }
-if (file_exists("../config.php")) {
-    $runInstallation = false;
-} else {
-    $runInstallation = true;
-}
 
-if(true){
+if (!file_exists("runInstall.php")) {
+    die("Already installed");
+}
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <meta name="viewport" content="width=device-width">
@@ -229,11 +226,9 @@ if(true){
     <a href="../index.php">Eseguire il login</a>
     </p>
 <?php
+    unlink("runInstall.php");
 }
 ?>
     </div>
     </body>
     </html>
-<?php
-}
-?>
