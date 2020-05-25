@@ -52,12 +52,13 @@ th, td {
        echo "<tr>
           <td>";
     $name = $user->nameById($row["id"]);
+$callFunction = ($row['avaible'] == 1) ? "NonAttivo" : "Attivo";
     $avaible = $row["avaible"];
-    if ($row['caposquadra'] == 1) {echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
+    if ($row['caposquadra'] == 1) {echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
     if($row['online'] == 1){
-        echo "<u>".$user->nameById($row["id"])."</u></a></td><td><a onclick='Attivo(".$row["id"].");'>";
+        echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
     } else {
-        echo $user->nameById($row["id"])."</a></td><td><a onclick='Attivo(".$row["id"].");'>";
+        echo $name."</a></td><td><a onclick='$callFunction(".$row["id"].");'>";
     }
      if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
        echo  "</a></td>

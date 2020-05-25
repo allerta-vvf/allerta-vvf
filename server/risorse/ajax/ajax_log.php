@@ -81,7 +81,7 @@ select::-ms-expand {
      <?php
      foreach($risultato as $row){
      if(!in_array($row['subisce'], $hidden) OR in_array($user->name(), $hidden)){
-      echo "<tr><td>" . $row["azione"] . "</td><td>" . $row["subisce"] . "</td><td>" . $row["agisce"] ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
+      echo "<tr><td>" . $row["azione"] . "</td><td>" . $user->nameById($row["subisce"]) . "</td><td>" . $user->nameById($row["agisce"]) ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
 
       }
      }
