@@ -12,13 +12,13 @@ $twig = new \Twig\Environment($loader, [
 ]);
 $template = NULL;
 function loadtemplate($templatename, $data, $requirelogin=true){
-  global $utente, $twig, $template;
+  global $user, $twig, $template;
   if($requirelogin){
-    $utente->requirelogin();
+    $user->requirelogin();
   }
   $data['owner'] = owner;
   $data['urlsoftware'] = WEB_URL;
-  $data['utente'] = $utente->info();
+  $data['user'] = $user->info();
   $data['enable_technical_support'] = ENABLE_TECHNICAL_SUPPORT;
   $data['technical_support_key'] = TECHNICAL_SUPPORT_KEY;
   $data['technical_support_open'] = isset($_COOKIE["chat"]);

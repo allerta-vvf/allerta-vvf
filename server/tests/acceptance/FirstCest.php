@@ -22,7 +22,7 @@ class FirstCest
         $I->click('Submit');
         $I->see('Eseguire il login');
         $I->click('Eseguire il login');
-        $I->fillField('nome', 'admin_user');
+        $I->fillField('name', 'admin_user');
         $I->fillField('password', 'password');
         $I->click('login');
         $I->seeCurrentURLEquals('/lista.php');

@@ -30,8 +30,8 @@ if (!file_exists("runInstall.php")) {
     <h1 class="screen-reader-text">Prima di iniziare</h1>
     <p>Benvenuto in Allerta. Prima di iniziare abbiamo bisogno di alcune informazioni sul database. Devi conoscere i seguenti dati prima di procedere.</p>
     <ol>
-        <li>Nome del database</li>
-        <li>Nome utente del database</li>
+        <li>name del database</li>
+        <li>name user del database</li>
         <li>Password del database</li>
         <li>Host del database</li>
         <li>Prefisso tabelle (se desideri eseguire più Allerta con un solo database)</li>
@@ -59,14 +59,14 @@ if (!file_exists("runInstall.php")) {
             $prefixValue = DB_PREFIX;
         } catch (Exception $e) {
             $dbnameValue = "allerta";
-            $unameValue = "utente";
+            $unameValue = "user";
             $pwdValue = "password";
             $dbhostValue = "localhost";
             $prefixValue = "allerta01";
         }
     } else {
         $dbnameValue = "allerta";
-        $unameValue = "utente";
+        $unameValue = "user";
         $pwdValue = "password";
         $dbhostValue = "localhost";
         $prefixValue = "allerta01";
@@ -78,14 +78,14 @@ if (!file_exists("runInstall.php")) {
     <table class="form-table" role="presentation">
        <tbody>
           <tr>
-             <th scope="row"><label for="dbname">Nome database</label></th>
+             <th scope="row"><label for="dbname">name database</label></th>
              <td><input name="dbname" id="dbname" type="text" aria-describedby="dbname-desc" size="25" value="<?php echo $dbnameValue; ?>" autofocus=""></td>
-             <td id="dbname-desc">Il nome del database che vuoi utilizzare con Allerta.</td>
+             <td id="dbname-desc">Il name del database che vuoi utilizzare con Allerta.</td>
           </tr>
           <tr>
-             <th scope="row"><label for="uname">Nome utente</label></th>
+             <th scope="row"><label for="uname">name user</label></th>
              <td><input name="uname" id="uname" type="text" aria-describedby="uname-desc" size="25" value="<?php echo $unameValue; ?>"></td>
-             <td id="uname-desc">Il tuo nome utente del database.</td>
+             <td id="uname-desc">Il tuo name user del database.</td>
           </tr>
           <tr>
              <th scope="row"><label for="pwd">Password</label></th>
@@ -169,10 +169,10 @@ if (!file_exists("runInstall.php")) {
 	<table class="form-table" role="presentation">
 	<tbody>
 		<tr>
-			<th scope="row"><label for="user_login">Nome utente admin</label></th>
+			<th scope="row"><label for="user_login">name user admin</label></th>
 			<td>
 				<input name="user_name" type="text" id="user_login" size="75" value="">
-				<p>I nomi utente possono essere composti soltanto da caratteri alfanumerici, spazi, trattini bassi, trattini, punti e il simbolo @.</p>
+				<p>I nomi user possono essere composti soltanto da caratteri alfanumerici, spazi, trattini bassi, trattini, punti e il simbolo @.</p>
 			</td>
 		</tr>
         <tr class="form-field form-required user-pass1-wrap">
@@ -191,13 +191,13 @@ if (!file_exists("runInstall.php")) {
 			</td>
 		</tr>
         <tr>
-			<th scope="row">Rendi utente admin visibile</th>
+			<th scope="row">Rendi user admin visibile</th>
 			<td>
 				<fieldset>
-					<legend class="screen-reader-text"><span>Rendi utente admin visibile </span></legend>
+					<legend class="screen-reader-text"><span>Rendi user admin visibile </span></legend>
 						<label for="admin_visible"><input name="admin_visible" type="checkbox" id="admin_visible" value="0">
-						Rendi l'utente admin visibile agli altri utente</label>
-						<p class="description">Attivando questa opzione, l'utente che verrà creato sarà visibile negli elenchi e nelle procedure.</p>
+						Rendi l'user admin visibile agli altri user</label>
+						<p class="description">Attivando questa opzione, l'user che verrà creato sarà visibile negli elenchi e nelle procedure.</p>
 						</fieldset>
 			</td>
 	    </tr>

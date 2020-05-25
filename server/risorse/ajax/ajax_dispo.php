@@ -3,16 +3,16 @@ $start = true;
 $minuti = 5;
 include_once "../../core.php";
 init_class();
-$utente->requirelogin();
+$user->requirelogin();
 
 function arraynum(){
 global $database;
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, nome ASC", true); // Pesco i dati della tabella e li ordino in base alla disponibilità
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_profiles` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC", true); // Pesco i dati della tabella e li ordino in base alla disponibilità
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
     if($row['avaible'] == "1"){
-        $incremento[] = $row['nome'];
+        $incremento[] = $row['name'];
         $minuti_dispo_old[] = $row['minuti_dispo'];
     }
 }
@@ -20,13 +20,13 @@ foreach($risultato as $row){
 return $incremento;
 }
 
-if(!isset($_GET['nome'])){
+if(!isset($_GET['name'])){
 print_r(arraynum());
 } else {
-    if(isset($_GET['nome'])){
+    if(isset($_GET['name'])){
         $arr = arraynum();
-        $nome = str_replace("_", " ", $_GET['nome']);
-        if(in_array($nome, $arr)){
+        $name = str_replace("_", " ", $_GET['name']);
+        if(in_array($name, $arr)){
             echo "si";
         } else {
             echo "no";
