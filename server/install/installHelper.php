@@ -303,6 +303,8 @@ INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL,
     }
 }
 
+const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
+
 function initOptions($name, $visible, $password, $report_email, $owner){
     try{
         require_once "../config.php";
