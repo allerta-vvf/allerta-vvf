@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <br>
+    <div id="lista" hidden></div>
+    <b>TODO</b>
+    <script>
+      $.get( "risorse/ajax/ajax_log.php", function( data ) {
+         $( "#lista" ).html( data );
+         console.log( "Caricato lista." );
+      });
+      $(document).ready(function() {
+
+        setInterval(function() {
+          $.get( "risorse/ajax/ajax_log.php", function( data ) {
+             $( "#lista" ).html( data );
+          });
+        }, 10000);
+
+      });
+/*
+      check();
+      $(document).ready(function() {
+
+        setInterval(function() {
+          check();
+        }, 10000);
+
+      });
+      */
+    </script>
+    <br>
+    <br>
+{% endblock %}
