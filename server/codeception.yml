@@ -8,7 +8,4 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-coverage:
-    enabled: true
-    show_only_summary: false
-    remote: false
+
