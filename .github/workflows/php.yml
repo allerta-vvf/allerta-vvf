@@ -17,7 +17,8 @@ jobs:
         php-versions: ['7.3', '7.4']
     name: PHP ${{ matrix.php-versions }}
     steps:
-      - name: Dump GitHub context
+
+    - name: Dump GitHub context
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
