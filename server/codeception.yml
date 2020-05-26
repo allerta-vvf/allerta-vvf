@@ -11,3 +11,4 @@ extensions:
 coverage:
     enabled: true
     show_only_summary: false
+    remote: false
