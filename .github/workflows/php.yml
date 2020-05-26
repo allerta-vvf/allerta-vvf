@@ -17,6 +17,11 @@ jobs:
         php-versions: ['7.3', '7.4']
     name: PHP ${{ matrix.php-versions }}
     steps:
+      - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -52,7 +57,7 @@ jobs:
       run: vendor/bin/codecept run --steps
       working-directory: ${{env.working-directory}}
     
-    - name: Upload a Build Artifact
+    - name: Upload Tests Artifact
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
@@ -60,6 +65,7 @@ jobs:
         path: ./server/tests/_output
     
     - name: Remove devs files and dirs
+      if: "${{ success() }}"
       run: |
         rm server/codeception.yml
         sudo rm server/tests -r
@@ -67,7 +73,7 @@ jobs:
         composer install --no-dev --no-progress --no-suggest -o -n -d server
 
     - name: Upload prod build
-      if: ${{ always() }}
+      if: "${{ success() }}"
       uses: actions/upload-artifact@v2
       with:
         name: prod build (php ${{ matrix.php-versions }})
