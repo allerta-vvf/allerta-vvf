@@ -303,8 +303,6 @@ INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL,
     }
 }
 
-const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
-
 function initOptions($name, $visible, $password, $report_email, $owner){
     try{
         require_once "../config.php";
@@ -312,7 +310,7 @@ function initOptions($name, $visible, $password, $report_email, $owner){
         $prefix = DB_PREFIX;
         $auth = new \Delight\Auth\Auth($connection, $_SERVER['REMOTE_ADDR'], $prefix."_");
         $userId = $auth->register($report_email, $password, $name);
-        $auth->admin()->addRoleForUserById($userId, Role::SUPER_ADMIN);
+        $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::SUPER_ADMIN);
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`) VALUES (NULL);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
