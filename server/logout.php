@@ -1,6 +1,6 @@
 <?php
 include("core.php");
 init_class();
-$utente->logout();
+$user->logout();
 $tools->redirect("index.php");
 ?>

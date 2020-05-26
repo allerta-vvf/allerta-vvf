@@ -1,11 +1,11 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->requirelogin();
+$user->requirelogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_profiles` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC", true);
 
-$whitelist = $utente->whitelist();
+$hidden = $user->hidden();
 ?>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <style>
@@ -40,17 +40,17 @@ th, td {
 <div style="overflow-x:auto;">
 <table style="width: 90%; text-align:center;">
     <tr>
-     <th>Nome</th>
+     <th>name</th>
      <th>avaible</th>
      <?php
    foreach($risultato as $row){
-     if(!in_array($row['nome'], $whitelist)){
+     if(!in_array($row['name'], $hidden)){
       echo "<tr><td>";
       if ($row['caposquadra'] == 1) {echo "<img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<img src='./risorse/images/cascoNero.png' width='20px'>   ";}
       if($row['online'] == 1){
-          echo "<u>".$row["nome"]."</u></td><td>";
+          echo "<u>".$user->nameById($row["id"])."</u></td><td>";
       } else {
-          echo "".$row["nome"]."</td><td>";
+          echo "".$user->nameById($row["id"])."</td><td>";
       }
       if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
       echo  "</td></tr>";

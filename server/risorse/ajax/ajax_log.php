@@ -1,11 +1,11 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->requirelogin();
+$user->requirelogin();
 
 $risultato = $database->esegui("SELECT * FROM `%PREFIX%_log`", true);
 
-$whitelist = $utente->whitelist();
+$hidden = $user->hidden();
 ?>
 <style>
 th, td {
@@ -80,8 +80,8 @@ select::-ms-expand {
     <tbody>
      <?php
      foreach($risultato as $row){
-     if(!in_array($row['subisce'], $whitelist) OR in_array($utente->nome(), $whitelist)){
-      echo "<tr><td>" . $row["azione"] . "</td><td>" . $row["subisce"] . "</td><td>" . $row["agisce"] ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
+     if(!in_array($row['subisce'], $hidden) OR in_array($user->name(), $hidden)){
+      echo "<tr><td>" . $row["azione"] . "</td><td>" . $user->nameById($row["subisce"]) . "</td><td>" . $user->nameById($row["agisce"]) ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
 
       }
      }

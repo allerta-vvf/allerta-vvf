@@ -1,4 +1,4 @@
 <?php
 require_once 'ui.php';
-loadtemplate('anagrafica.html', ['titolo' => 'Anagrafica utente', 'dacontrollare' => ucwords(str_replace('_', ' ', urldecode($_GET['utente'])))]);
+loadtemplate('anagrafica.html', ['titolo' => 'Anagrafica user', 'dacontrollare' => ucwords(str_replace('_', ' ', urldecode($_GET['user'])))]);
 ?>

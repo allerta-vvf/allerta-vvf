@@ -5,7 +5,7 @@ if($tools->validazione_form('$post-mod', true, "aggiungi")) {
   if($tools->validazione_form(['$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("aggiungo intervento");
-      $database->aggiungi_intervento($_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $utente->nome());
+      $database->aggiungi_intervento($_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
@@ -34,8 +34,8 @@ if($tools->validazione_form('$post-mod', true, "aggiungi")) {
   $_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length) . "-bfwp64GGbdm";
   // 1 hour = 60 seconds * 60 minutes = 3600
   $_SESSION['token-expire'] = time() + 3600;
-  $personale = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY nome ASC", true); // Pesco i dati della tabella e li ordino in base al nome
-  $tipologie = $database->esegui("SELECT nome FROM `%PREFIX%_tipo` ORDER BY nome ASC", true); // Pesco le tipologie della tabella
+  $personale = $database->esegui("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC", true); // Pesco i dati della tabella e li ordino in base al name
+  $tipologie = $database->esegui("SELECT name FROM `%PREFIX%_tipo` ORDER BY name ASC", true); // Pesco le tipologie della tabella
   $modalità = (isset($_GET["aggiungi"])) ? "aggiungi" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "aggiungi"));
   bdump($modalità, "modalità");
   bdump($tipologie, "tipologie");
@@ -52,7 +52,7 @@ if($tools->validazione_form('$post-mod', true, "aggiungi")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_intervento.html', ['intervento' => array('id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie), 'titolo' => ucfirst($modalità) . ' intervento', 'owner' => 'VVF Darfo', 'urlsoftware' => '', 'utente' => $utente->info()]);
+  loadtemplate('modifica_intervento.html', ['intervento' => array('id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie), 'titolo' => ucfirst($modalità) . ' intervento', 'owner' => 'VVF Darfo', 'urlsoftware' => '', 'user' => $user->info()]);
   bdump($_SESSION['token'], "token");
 }
 ?>

@@ -5,11 +5,11 @@
 <div id='lista'>
 </div>
 <script>
-$("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+$("#lista").load("risorse/ajax/ajax_anagrafica.php?user={{ dacontrollare }}");
 $(document).ready(function() {
 
 setInterval(function() {
-$("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+$("#lista").load("risorse/ajax/ajax_anagrafica.php?user={{ dacontrollare }}");
 }, 10000);
 
 });
@@ -24,15 +24,15 @@ check();
 </script>
 
      <script>
-   function AttivoAdmin(nomeutente, dispo){
+   function AttivoAdmin(nameuser, dispo){
     dispo = +!dispo;
     $.ajax({
      url:"ajax_aggiornadispo.php",
      method: "POST",
-     data: {nomeutente: nomeutente, dispo:dispo},
+     data: {nameuser: nameuser, dispo:dispo},
      success: function (data) {
-      alert("Hai modificato la disponibilità di " + nomeutente + " in caso in allerta.");
-      $("#lista").load("risorse/ajax/ajax_anagrafica.php?utente={{ dacontrollare }}");
+      alert("Hai modificato la disponibilità di " + nameuser + " in caso in allerta.");
+      $("#lista").load("risorse/ajax/ajax_anagrafica.php?user={{ dacontrollare }}");
      }
     });
    };

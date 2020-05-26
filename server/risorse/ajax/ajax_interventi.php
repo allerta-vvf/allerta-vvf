@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->requirelogin();
+$user->requirelogin();
 
 function ancora($content, $id) {
 $content = substr($content,0,$limit);

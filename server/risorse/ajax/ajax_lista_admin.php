@@ -1,11 +1,11 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->requirelogin();
+$user->requirelogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_users` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, nome ASC", true);
+$risultato = $database->esegui("SELECT * FROM `%PREFIX%_profiles` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC", true);
 
-$whitelist = $utente->whitelist();
+$hidden = $user->hidden();
 ?>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <style>
@@ -38,7 +38,7 @@ th, td {
 <div style="overflow-x:auto;">
 <table style="width: 90%; text-align:center;">
   <tr>
-    <th>Nome</th>
+    <th>name</th>
     <th>avaible</th>
     <th>Autista</th>
     <th>Chiama</th>
@@ -48,16 +48,17 @@ th, td {
     <th>Altro</th>
    <?php
    foreach($risultato as $row){
-     if(!in_array($row['nome'], $whitelist) OR in_array($utente->nome(), $whitelist)){
+     if(!in_array($row['name'], $hidden) OR in_array($user->name(), $hidden)){
        echo "<tr>
           <td>";
-    $nome = $row["nome"];
+    $name = $user->nameById($row["id"]);
+$callFunction = ($row['avaible'] == 1) ? "NonAttivo" : "Attivo";
     $avaible = $row["avaible"];
-    if ($row['caposquadra'] == 1) {echo "<a onclick='AttivoAdmin(\"$nome\", \"$avaible\");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='AttivoAdmin(\"$nome\", \"$avaible\");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
+    if ($row['caposquadra'] == 1) {echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
     if($row['online'] == 1){
-        echo "<u>".$row["nome"]."</u></a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$avaible\");'>";
+        echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
     } else {
-        echo $row["nome"]."</a></td><td><a onclick='AttivoAdmin(\"$nome\", \"$avaible\");'>";
+        echo $name."</a></td><td><a onclick='$callFunction(".$row["id"].");'>";
     }
      if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
        echo  "</a></td>
@@ -70,7 +71,7 @@ th, td {
 
      $interventi = $row['interventi'];
      $minuti = $row['minuti_dispo'];
-     $u = 'anagrafica.php?utente=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
+     $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
      echo "<td>$interventi</td><td>$minuti</td><td><a href='$u'><p>Altri dettagli</p></a></td></tr>";
    }
 }
