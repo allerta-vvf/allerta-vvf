@@ -3,6 +3,7 @@
 
 A open source management software for "Associazione VVF Volontari Darfo"
 
+<center>
 |                 | it works :heavy_check_mark: | it's in beta :clock8: | it doesn't work :x: |
 |-----------------|-----------------------------|-----------------------|---------------------|
 | Availability    |      :heavy_check_mark:     |                       |                     |
@@ -14,6 +15,7 @@ A open source management software for "Associazione VVF Volontari Darfo"
 | Logs            |                             |        :clock8:       |                     |
 | Graphs          |                             |                       |         :x:         |
 | Images          |                             |        :clock8:       |                     |
+</center>
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf?ref=badge_large)
