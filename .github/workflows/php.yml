@@ -55,18 +55,8 @@ jobs:
       working-directory: ${{env.working-directory}}
 
     - name: Run test suite
-      run: vendor/bin/codecept run --steps --coverage --coverage-xml --coverage-html
+      run: vendor/bin/codecept run --steps
       working-directory: ${{env.working-directory}}
-
-    - name: Upload coverage to Codecov
-      if: "${{ success() }}"
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./server/tests/_output/coverage.xml
-        flags: unittests
-        name: codecov
-        fail_ci_if_error: true
     
     - name: Upload Tests Artifact
       if: ${{ always() }}
