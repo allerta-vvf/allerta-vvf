@@ -27,7 +27,6 @@
     },
     "scripts": {
         "test": [
-            "Composer\\Config::disableProcessTimeout",
             "codecept run --steps"
         ]
     }
