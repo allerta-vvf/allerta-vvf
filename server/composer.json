@@ -3,7 +3,6 @@
     "description": "Un software di allertamento per i vvf",
     "type": "project",
     "require": {
-        "egulias/email-validator": "^2.1@dev",
         "twig/twig": "3.x-dev",
         "tracy/tracy": "^2.7@dev",
         "delight-im/auth": "dev-master",
