@@ -1,19 +1,52 @@
 <?php
+use GetOpt\GetOpt as Getopt;
+use GetOpt\Option;
+
+function is_cli() //https://www.binarytides.com/php-check-running-cli/
+{
+	if( defined('STDIN') )
+	{
+		return true;
+	}
+	
+	if( empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) 
+	{
+		return true;
+	} 
+	
+	return false;
+}
+
 if (file_exists('../vendor/autoload.php')) {
     try {
         require '../vendor/autoload.php';
     } catch (Exception $e) {
+        if(is_cli()){
+            echo($e);
+            exit(1);
+        }
         die("Please install composer and run composer install (".$e);
     }
 } else {
+    if(is_cli()){
+        echo($e);
+        exit(1);
+    }
     die("Please install composer and run composer install");
 }
+
+define('NAME', 'AllertaVVF');
+define('VERSION', '0.1-alpha');
 
 function checkConnection($host, $user, $password, $database){
     try{
         $connection = new PDO("mysql:host=$host", $user, $password,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $connectionOk = true;
     } catch (PDOException $e){
+        if(is_cli()){
+            echo($e);
+            exit(8);
+        }
         $connectionOk = false;
         ?>
         <div class="wp-die-message"><h1>Errore nello stabilire una connection al database</h1>
@@ -42,6 +75,10 @@ function checkConnection($host, $user, $password, $database){
             }
             $connection->exec("use " . preg_replace('/[^a-zA-Z0-9]/', '', trim($database)));
         } catch (PDOException $e){
+            if(is_cli()){
+                echo($e);
+                exit(7);
+            }
             ?>
             <div class="wp-die-message"><h1>Impossibile selezionare il database</h1>
                 <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a selezionare il database <code><?php echo $database; ?></code>.</p>
@@ -79,6 +116,10 @@ function generateConfig($host,$user,$password,$db,$prefix){
         copy("../config-sample.php", "../config.php");
         replaceInFile([["@@db@@", $db],["@@user@@",$user],["@@password@@",$password],["@@host@@",$host],["@@prefix@@",$prefix]],"../config.php");
     } catch (Exception $e) {
+        if(is_cli()){
+            echo($e);
+            exit(6);
+        }
         ?>
         <div class="wp-die-message"><h1>Impossibile modificare il file di configurazioni</h1>
             <p>Non siamo riusciti a scrivere il file di configurazione <code>config.php</code>, richiesto per il funzionamento del programma.<br>E' tuttavia possibile modificarlo manualmente, seguentdo le seguenti istruzioni:</p>
@@ -288,6 +329,10 @@ KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL, '1', current_timestamp());");
     } catch (Exception $e) {
+        if(is_cli()){
+            echo($e);
+            exit(10);
+        }
         ?>
         <div class="wp-die-message"><h1>Impossibile creare le tabelle</h1>
             <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a creare le tabelle.</p>
@@ -319,6 +364,10 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
         $prep->bindParam(':owner', $owner, PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
+        if(is_cli()){
+            echo($e);
+            exit(11);
+        }
         ?>
         <div class="wp-die-message"><h1>Impossibile riempire le tabelle</h1>
             <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a riempire le tabelle.</p>
@@ -332,4 +381,157 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
         <?php
         exit();
     }
+}
+
+function validate_arg($options, $name, $default){
+    return array_key_exists($name, $options) ? $options[$name] : (isset($_ENV[$name]) ? $_ENV[$name] : (isset($_ENV[strtoupper($name)]) ? $_ENV[strtoupper($name)] : $default));
+}
+
+function change_dir($directory){
+    try{
+        chdir($directory);
+    } catch(Exception $e){
+        if(is_cli()){
+            exit(4);
+        }
+    }
+}
+function run_cli(){
+    $_SERVER['REMOTE_ADDR'] = "127.0.0.1";
+    $getopt = new \GetOpt\GetOpt();
+    $getopt->addCommands([
+        \GetOpt\Command::create('install', 'Install', [
+        ])->setDescription(
+            'Run Allerta installer.' . PHP_EOL .
+            PHP_EOL .
+            'You can use interactive mode.'
+        )->setShortDescription('Run Allerta installer'),
+    
+        \GetOpt\Command::create('config', 'conf', [
+            \GetOpt\Option::create('n', 'db_name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('DB name')
+                ->setArgumentName('DB name'),
+            \GetOpt\Option::create('u', 'db_username', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('DB username')
+                ->setArgumentName('DB username'),
+            \GetOpt\Option::create('a', 'db_password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('DB password')
+                ->setArgumentName('DB password'),
+            \GetOpt\Option::create('o', 'db_host', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('DB host')
+                ->setArgumentName('DB host'),
+            \GetOpt\Option::create('r', 'db_prefix', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('DB prefix')
+                ->setArgumentName('DB prefix')
+        ])->setDescription(
+            'Creates the config file "config.php".' . PHP_EOL .
+            PHP_EOL .
+            'This file is required for running "install".'
+        )->setShortDescription('Create a new user'),
+
+        \GetOpt\Command::create('populate', 'Populate', [
+            \GetOpt\Option::create('m', 'name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('Admin name')
+                ->setArgumentName('Admin name'),
+            \GetOpt\Option::create('b', 'visible', \GetOpt\GetOpt::NO_ARGUMENT)
+                ->setDescription('Is admin visible?')
+                ->setArgumentName('Is admin visible?'),
+            \GetOpt\Option::create('s', 'password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('Admin password')
+                ->setArgumentName('Admin password'),
+            \GetOpt\Option::create('w', 'owner', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('Owner')
+                ->setArgumentName('Owner'),
+            \GetOpt\Option::create('e', 'report_email', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('Report email')
+                ->setArgumentName('Report email')
+        ])->setDescription(
+            'Populate Allerta database.' . PHP_EOL .
+            PHP_EOL .
+            'This require a working config.php file.'
+        )->setShortDescription('Run Allerta installer')
+    ]);
+
+    $getopt->addOptions([
+        Option::create('v', 'version', \GetOpt\GetOpt::NO_ARGUMENT)
+            ->setDescription('Show version information and quit'),
+        
+        Option::create('h', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
+            ->setDescription('Show this help and quit'),
+
+        Option::create('i', 'interactive', \GetOpt\GetOpt::NO_ARGUMENT)
+            ->setDescription('Interactive mode'),
+
+        Option::create("p", 'path', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+            ->setDescription('Destination path')
+            ->setArgumentName('path')
+            ->setValidation('is_writable', function($operand, $value) {
+                if(file_exists($value)){
+                    echo($value . ' is not writable. Directory permissions: ' . @fileperms($value));
+                    exit(4);
+                } else {
+                    echo($value . ' not exists.');
+                    exit(3);
+                }
+            })
+    ]);
+
+    // process arguments and catch user errors
+    try {
+        try {
+            $getopt->process();
+        } catch (Missing $exception) {
+            // catch missing exceptions if help is requested
+        if (!$getopt->getOption('help')) {
+            throw $exception;
+        }
+    }
+    } catch (ArgumentException $exception) {
+        file_put_contents('php://stderr', $exception->getMessage() . PHP_EOL);
+        echo PHP_EOL . $getopt->getHelpText();
+        exit;
+    }
+
+    // show version and quit
+    if ($getopt->getOption('version')) {
+        echo sprintf('%s: %s' . PHP_EOL, NAME, VERSION);
+        exit;
+    }
+
+    // show help and quit
+    $command = $getopt->getCommand();
+    if (!$command || $getopt->getOption('help')) {
+        echo $getopt->getHelpText();
+        exit;
+    }
+    if ($getopt->getOption('interactive')) {
+        echo "Interactive mode ON" . PHP_EOL;
+        define("INTERACTIVE", true);
+    }
+
+    $options = $getopt->getOptions();
+    switch ($command->name()) {
+        case "install":
+            var_dump($options);
+            break;
+        case "config":
+            $db_name = validate_arg($options, "db_name", "allerta");
+            $db_username = validate_arg($options, "db_username", "allerta");
+            $db_password = validate_arg($options, "db_password", "allerta");
+            $db_host = validate_arg($options, "db_host", "allerta");
+            $db_prefix = validate_arg($options, "db_prefix", "allerta");
+            checkConnection($db_host, $db_username, $db_password, $db_name);
+            generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix);
+            var_dump($options);
+            break;
+        case "populate":
+            $name = validate_arg($options, "name", "admin");
+            $visible = array_key_exists("visible", $options);
+            $password = validate_arg($options, "password", "password");
+            $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
+            $owner = validate_arg($options, "owner", "Owner");
+            initDB();
+            initOptions($name, $visible, $password, $report_email, $owner);
+            var_dump($options);
+      }
 }

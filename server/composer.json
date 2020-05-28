@@ -6,7 +6,8 @@
         "egulias/email-validator": "^2.1@dev",
         "twig/twig": "3.x-dev",
         "tracy/tracy": "^2.7@dev",
-        "delight-im/auth": "dev-master"
+        "delight-im/auth": "dev-master",
+        "ulrichsg/getopt-php": "dev-master"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

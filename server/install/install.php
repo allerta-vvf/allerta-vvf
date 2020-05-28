@@ -12,6 +12,7 @@ if (file_exists("installHelper.php")) {
 if (!file_exists("runInstall.php")) {
     die("Already installed");
 }
+if(!is_cli()){
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <meta name="viewport" content="width=device-width">
@@ -232,3 +233,8 @@ if (!file_exists("runInstall.php")) {
     </div>
     </body>
     </html>
+<?php
+} else {
+    run_cli();
+}
+?>
