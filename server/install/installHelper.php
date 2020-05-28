@@ -348,6 +348,14 @@ INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL,
     }
 }
 
+final class Role {
+    //https://github.com/delight-im/PHP-Auth/blob/master/src/Role.php
+    const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
+  
+    public function __construct() {}
+  
+}
+
 function initOptions($name, $visible, $password, $report_email, $owner){
     try{
         require_once "../config.php";
@@ -355,7 +363,7 @@ function initOptions($name, $visible, $password, $report_email, $owner){
         $prefix = DB_PREFIX;
         $auth = new \Delight\Auth\Auth($connection, $_SERVER['REMOTE_ADDR'], $prefix."_");
         $userId = $auth->register($report_email, $password, $name);
-        $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::SUPER_ADMIN);
+        $auth->admin()->addRoleForUserById($userId, Role::SUPER_ADMIN);
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`) VALUES (NULL);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
@@ -400,7 +408,7 @@ function run_cli(){
     $_SERVER['REMOTE_ADDR'] = "127.0.0.1";
     $getopt = new \GetOpt\GetOpt();
     $getopt->addCommands([
-        \GetOpt\Command::create('install', 'Install', [
+        \GetOpt\Command::create('auto', 'Auto', [
         ])->setDescription(
             'Run Allerta installer.' . PHP_EOL .
             PHP_EOL .
@@ -506,23 +514,24 @@ function run_cli(){
     }
     if ($getopt->getOption('interactive')) {
         echo "Interactive mode ON" . PHP_EOL;
+        echo "TODO" . PHP_EOL;
         define("INTERACTIVE", true);
     }
 
     $options = $getopt->getOptions();
     switch ($command->name()) {
-        case "install":
+        case "auto":
             var_dump($options);
             break;
         case "config":
             $db_name = validate_arg($options, "db_name", "allerta");
-            $db_username = validate_arg($options, "db_username", "allerta");
-            $db_password = validate_arg($options, "db_password", "allerta");
-            $db_host = validate_arg($options, "db_host", "allerta");
+            $db_username = validate_arg($options, "db_username", "root");
+            $db_password = validate_arg($options, "db_password", "");
+            $db_host = validate_arg($options, "db_host", "127.0.0.1");
             $db_prefix = validate_arg($options, "db_prefix", "allerta");
             checkConnection($db_host, $db_username, $db_password, $db_name);
             generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix);
-            var_dump($options);
+            echo("Config created successful");
             break;
         case "populate":
             $name = validate_arg($options, "name", "admin");
@@ -532,6 +541,8 @@ function run_cli(){
             $owner = validate_arg($options, "owner", "Owner");
             initDB();
             initOptions($name, $visible, $password, $report_email, $owner);
-            var_dump($options);
+            echo("DB Populated successful");
+            unlink("runInstall.php");
+            break;
       }
 }

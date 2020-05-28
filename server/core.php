@@ -259,8 +259,8 @@ class user{
    }
   }
 
-  public function requireRole($role){
-    return $this->auth->hasRole($role);
+  public function requireRole($role, $adminGranted=true){
+    return $this->auth->hasRole($role) || $this->auth->hasRole(Role::SUPER_ADMIN) || ($this->auth->hasRole(Role::ADMIN) && $adminGranted);
   }
 
   public function name($replace=false){

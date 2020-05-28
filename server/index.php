@@ -10,6 +10,7 @@ if(isset($_POST['name']) & isset($_POST['password'])){
     $tools->redirect("lista.php");
   } else {
     $errore = $login;
+    bdump($errore);
   }
 }
 loadtemplate('index.html', ['errore' => $errore, 'titolo' => 'Login'], false);
