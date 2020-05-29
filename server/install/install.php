@@ -219,7 +219,7 @@ if(!is_cli()){
     </p>
 <?php
 } else if ($_POST["step"] == "5") {
-    initOptions($_POST["user_name"], $_POST["admin_visible"], $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
+    initOptions($_POST["user_name"], isset($_POST["admin_visible"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
 ?>
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
     <p>Ottimo lavoro, amico! Hai completato l'installazione. Ora Allerta può funzionare correttamente. Adesso è il momento di…</p>

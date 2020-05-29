@@ -365,11 +365,12 @@ function initOptions($name, $visible, $password, $report_email, $owner){
         $userId = $auth->register($report_email, $password, $name);
         $auth->admin()->addRoleForUserById($userId, Role::SUPER_ADMIN);
         $prep = $connection->prepare("
-INSERT INTO `".$prefix."_profiles` (`id`) VALUES (NULL);
+INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'owner', :owner, '1', current_timestamp(), current_timestamp(), '1');");
-        $prep->bindParam(':report_email', $report_email, PDO::PARAM_STR);
-        $prep->bindParam(':owner', $owner, PDO::PARAM_STR);
+        $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        
+        $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
+        $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
         if(is_cli()){
