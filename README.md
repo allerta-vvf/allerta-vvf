@@ -12,7 +12,6 @@ This is only a **development version**.
 |"Esercitazioni"|||:x:|
 |Installation|:heavy_check_mark:|||
 |CLI Installation|:heavy_check_mark:|||
-|CLI interactive Installation|||:x:|
 |Translation|||:x:|
 |User managament|||:x:|
 |Logs||:clock8:||

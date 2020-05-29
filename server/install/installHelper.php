@@ -108,13 +108,13 @@ function replaceInFile($edits,$file){
     file_put_contents($file,$content);
 }
 
-function generateConfig($host,$user,$password,$db,$prefix){
+function generateConfig($host,$user,$password,$db,$prefix,$path=".."){
     try{
-        if (file_exists('../config.php')) {
-            rename("../config.php", "../config.old.php");
+        if (file_exists($path.DIRECTORY_SEPARATOR.'config.php')) {
+            rename($path.DIRECTORY_SEPARATOR."config.php", $path.DIRECTORY_SEPARATOR."config.old.php");
         }
-        copy("../config-sample.php", "../config.php");
-        replaceInFile([["@@db@@", $db],["@@user@@",$user],["@@password@@",$password],["@@host@@",$host],["@@prefix@@",$prefix]],"../config.php");
+        copy($path.DIRECTORY_SEPARATOR."config-sample.php", $path.DIRECTORY_SEPARATOR."config.php");
+        replaceInFile([["@@db@@", $db],["@@user@@",$user],["@@password@@",$password],["@@host@@",$host],["@@prefix@@",$prefix]],$path.DIRECTORY_SEPARATOR."config.php");
     } catch (Exception $e) {
         if(is_cli()){
             echo($e);
@@ -405,17 +405,36 @@ function change_dir($directory){
         }
     }
 }
+function cli_helper($action, $options){
+    switch ($action) {
+        case "config":
+            $db_name = validate_arg($options, "db_name", "allerta");
+            $db_username = validate_arg($options, "db_username", "root");
+            $db_password = validate_arg($options, "db_password", "");
+            $db_host = validate_arg($options, "db_host", "127.0.0.1");
+            $db_prefix = validate_arg($options, "db_prefix", "allerta");
+            $path = isset($options->getOptions["path"]) ? "." : "..";
+            checkConnection($db_host, $db_username, $db_password, $db_name);
+            generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix,$path);
+            echo("Config created successful");
+            exit(0);
+        case "populate":
+            $name = validate_arg($options, "name", "admin");
+            $visible = array_key_exists("visible", $options);
+            $password = validate_arg($options, "password", "password");
+            $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
+            $owner = validate_arg($options, "owner", "Owner");
+            initDB();
+            initOptions($name, $visible, $password, $report_email, $owner);
+            echo("DB Populated successful");
+            unlink("runInstall.php");
+            exit(0);
+    }
+}
 function run_cli(){
     $_SERVER['REMOTE_ADDR'] = "127.0.0.1";
     $getopt = new \GetOpt\GetOpt();
-    $getopt->addCommands([
-        \GetOpt\Command::create('auto', 'Auto', [
-        ])->setDescription(
-            'Run Allerta installer.' . PHP_EOL .
-            PHP_EOL .
-            'You can use interactive mode.'
-        )->setShortDescription('Run Allerta installer'),
-    
+    $getopt->addCommands([ 
         \GetOpt\Command::create('config', 'conf', [
             \GetOpt\Option::create('n', 'db_name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription('DB name')
@@ -435,8 +454,8 @@ function run_cli(){
         ])->setDescription(
             'Creates the config file "config.php".' . PHP_EOL .
             PHP_EOL .
-            'This file is required for running "install".'
-        )->setShortDescription('Create a new user'),
+            'This file is required for running "populate".'
+        )->setShortDescription('Create a new config file'),
 
         \GetOpt\Command::create('populate', 'Populate', [
             \GetOpt\Option::create('m', 'name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
@@ -458,7 +477,7 @@ function run_cli(){
             'Populate Allerta database.' . PHP_EOL .
             PHP_EOL .
             'This require a working config.php file.'
-        )->setShortDescription('Run Allerta installer')
+        )->setShortDescription('Populate DB')
     ]);
 
     $getopt->addOptions([
@@ -467,9 +486,6 @@ function run_cli(){
         
         Option::create('h', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
             ->setDescription('Show this help and quit'),
-
-        Option::create('i', 'interactive', \GetOpt\GetOpt::NO_ARGUMENT)
-            ->setDescription('Interactive mode'),
 
         Option::create("p", 'path', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
             ->setDescription('Destination path')
@@ -513,37 +529,16 @@ function run_cli(){
         echo $getopt->getHelpText();
         exit;
     }
-    if ($getopt->getOption('interactive')) {
-        echo "Interactive mode ON" . PHP_EOL;
-        echo "TODO" . PHP_EOL;
-        define("INTERACTIVE", true);
+
+    if (isset($getopt->getOptions()["path"])) {
+        chdir($getopt->getOption('path'));
     }
 
     $options = $getopt->getOptions();
     switch ($command->name()) {
-        case "auto":
-            var_dump($options);
-            break;
         case "config":
-            $db_name = validate_arg($options, "db_name", "allerta");
-            $db_username = validate_arg($options, "db_username", "root");
-            $db_password = validate_arg($options, "db_password", "");
-            $db_host = validate_arg($options, "db_host", "127.0.0.1");
-            $db_prefix = validate_arg($options, "db_prefix", "allerta");
-            checkConnection($db_host, $db_username, $db_password, $db_name);
-            generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix);
-            echo("Config created successful");
-            break;
+            cli_helper("config", $options);
         case "populate":
-            $name = validate_arg($options, "name", "admin");
-            $visible = array_key_exists("visible", $options);
-            $password = validate_arg($options, "password", "password");
-            $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
-            $owner = validate_arg($options, "owner", "Owner");
-            initDB();
-            initOptions($name, $visible, $password, $report_email, $owner);
-            echo("DB Populated successful");
-            unlink("runInstall.php");
-            break;
-      }
+            cli_helper("populate", $options);
+    }
 }
