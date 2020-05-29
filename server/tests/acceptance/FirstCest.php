@@ -20,8 +20,8 @@ class FirstCest
         $I->fillField('admin_email', 'admin_mail@allertavvf.local');
         $I->fillField('owner', 'owner');
         $I->click('Submit');
-        $I->see('Eseguire il login');
-        $I->click('Eseguire il login');
+        $I->see('execre il login');
+        $I->click('execre il login');
         $I->fillField('name', 'admin_user');
         $I->fillField('password', 'password');
         $I->click('login');

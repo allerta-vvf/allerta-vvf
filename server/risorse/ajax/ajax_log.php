@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->esegui("SELECT * FROM `%PREFIX%_log`", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_log`", true);
 
 $hidden = $user->hidden();
 ?>

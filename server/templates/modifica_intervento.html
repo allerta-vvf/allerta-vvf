@@ -204,7 +204,7 @@ textarea {
 }
 </style>
 <body>
-{% if intervento.modalità == "aggiungi" %}
+{% if intervento.modalità == "add" %}
 <form method="post">
   <div class="container">
     <label><b>Giorno dell' intervento</b></label>
@@ -282,7 +282,7 @@ textarea {
     {% endfor %}
   </select>
     <br>
-    <input id="modalità" type="hidden" value="aggiungi" name="mod"></input>
+    <input id="modalità" type="hidden" value="add" name="mod"></input>
     <input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
     <button type="submit">invia</button>
   </div>

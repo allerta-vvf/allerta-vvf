@@ -35,7 +35,7 @@ if(!is_cli()){
         <li>name user del database</li>
         <li>Password del database</li>
         <li>Host del database</li>
-        <li>Prefisso tabelle (se desideri eseguire più Allerta con un solo database)</li>
+        <li>Prefisso tabelle (se desideri execre più Allerta con un solo database)</li>
     </ol>
     <p>
             Utilizzeremo queste informazioni per creare un file <code>config.php</code>.	<strong>
@@ -101,9 +101,9 @@ if(!is_cli()){
              </td>
           </tr>
           <tr>
-             <th scope="row"><label for="prefix">Prefisso tabella</label></th>
+             <th scope="row"><label for="prefix">Prefisso table</label></th>
              <td><input name="prefix" id="prefix" type="text" aria-describedby="prefix-desc" value="<?php echo $prefixValue; ?>" size="25"></td>
-             <td id="prefix-desc">Modifica questa voce se desideri eseguire più installazioni di Allerta su un singolo database.</td>
+             <td id="prefix-desc">Modifica questa voce se desideri execre più installazioni di Allerta su un singolo database.</td>
           </tr>
        </tbody>
     </table>
@@ -224,7 +224,7 @@ if(!is_cli()){
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
     <p>Ottimo lavoro, amico! Hai completato l'installazione. Ora Allerta può funzionare correttamente. Adesso è il momento di…</p>
     <p class="step">
-    <a href="../index.php">Eseguire il login</a>
+    <a href="../index.php">execre il login</a>
     </p>
 <?php
     unlink("runInstall.php");

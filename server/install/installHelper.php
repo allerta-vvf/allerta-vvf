@@ -50,7 +50,7 @@ function checkConnection($host, $user, $password, $database){
         $connectionOk = false;
         ?>
         <div class="wp-die-message"><h1>Errore nello stabilire una connection al database</h1>
-            <p>Questo potrebbe voler dire che name user e password nel file <code>config.php</code> sono sbagliate o che non possiamo contattare il database <code><?php echo $database; ?></code>. Potrebbe voler dire che il tuo database è irraggiungibile.</p>
+            <p>Questo potrebbe voler dire che name user e password nel file <code>config.php</code> sono sbagliate o che non possiamo contattare il database <code><?php echo $database; ?></code>. Potrebbe voler dire che il tuo database è irraddbile.</p>
             <ul>
                 <li>Sei sicuro di avere name user e password corretti?</li>
                 <li>Sei sicuro di aver scritto l'hostname corretto?</li>
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_interventi` (
 `inseritoda` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_intrusioni` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_intrusions` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `pagina` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
 `data` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,

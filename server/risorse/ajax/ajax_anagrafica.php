@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->esegui('SELECT * FROM `%PREFIX%_profiles` WHERE id = :id', true, array(":id" => $_GET['user'])); // Pesco i dati della tabella
+$risultato = $database->exec('SELECT * FROM `%PREFIX%_profiles` WHERE id = :id', true, array(":id" => $_GET['user'])); // Pesco i dati della table
 
 $hidden = $user->hidden();
 ?>

@@ -8,6 +8,6 @@ init_class();
 
 $minuti = date('i');
 $sql = "UPDATE `%PREFIX%_users` SET online='0', online_time='0' WHERE online_time < '$minuti';";
-$risultato = $database->esegui($sql);
+$risultato = $database->exec($sql);
 echo $sql;
 ?>

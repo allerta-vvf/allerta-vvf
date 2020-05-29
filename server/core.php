@@ -12,7 +12,7 @@ class tools{
     define("TOOLS", "OK");
   }
 
-  public function validazione_form($data, $noempty=true, $valore=null){
+  public function validate_form_data($data, $noempty=true, $value=null){
     if(!is_array($data) && isset($data) && !empty($data)){
       if(substr($data, 0, 6) == '$post-'){
         $data = substr($data, 6);
@@ -23,45 +23,42 @@ class tools{
     }
     if(is_array($data)){
       if(empty($data)){
-        $continuo = false;
+        $continue = false;
         return false;
       } else {
-        $continuo = true;
+        $continue = true;
       }
-      if($continuo){
-        foreach($data as $chiave=>$valore){
-          if(!is_array($valore) && isset($valore) && !empty($valore)){
-            if(substr($valore, 0, 6) == '$post-'){
-              $valore = substr($valore, 6);
-              if(isset($_POST[$valore])){
-                $valore = $_POST[$valore];
+      if($continue){
+        foreach($data as $key=>$value){
+          if(!is_array($value) && isset($value) && !empty($value)){
+            if(substr($value, 0, 6) == '$post-'){
+              $value = substr($value, 6);
+              if(isset($_POST[$value])){
+                $value = $_POST[$value];
               }
             }
           }
-          if($continuo){
-          if(!is_array($valore)){
-            bdump($valore);
+          if($continue){
+          if(!is_array($value)){
+            bdump($value);
             bdump("_");
-          $validazione = $this->validazione_form($valore, $noempty, $valore);
+          $validazione = $this->validate_form_data($value, $noempty, $value);
           if(!$validazione){
-            $continuo = false;
+            $continue = false;
             return false;
           }
         }
         }
         }
-        if($continuo){
-          bdump("passato con");
-          bdump($data);
+        if($continue){
           return true;
         }
       }
     } else if(isset($data)) {
       if(!empty($data)){
-        if(!is_null($valore)){
-          return $valore == $data;
+        if(!is_null($value)){
+          return $value == $data;
         } else {
-          bdump("non dovrebbe succedere");
           bdump($data);
           return true;
         }
@@ -148,7 +145,7 @@ class database{
   public $query = null;
   public $stmt = null;
 
-  public function connetti(){
+  public function connect(){
     try {
       $this->connection = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
       $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -164,14 +161,14 @@ class database{
     if(!defined("DATABASE")){
       define("DATABASE", "OK");
     }
-    $this->connetti();
+    $this->connect();
   }
 
   public function close(){
     $this->connection = null;
   }
 
-  public function esegui($sql, $fetch=false, $param=null){
+  public function exec($sql, $fetch=false, $param=null){
     try{
       $this->connection->beginTransaction();
       $this->stmt = $this->connection->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
@@ -187,18 +184,18 @@ class database{
       }
       $this->stmt->closeCursor();
     } catch (PDOException $e) {
-      print "Errore!: " . $e->getMessage() . "<br/>";
+      print "Error!: " . $e->getMessage() . "<br/>";
       $this->connection->rollBack();
       die();
     }
   }
   
-  public function esiste($tabella, $id){
-      $risultato = $this->esegui("SELECT :tabella FROM `%PREFIX%_interventi` WHERE id = :id;", true, [":tabella" => $tabella, ":id" => $id]);
+  public function exists($table, $id){
+      $risultato = $this->exec("SELECT :table FROM `%PREFIX%_interventi` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
       return !empty($risultato);
   }
   
-  public function aggiungi_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+  public function add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
     $autisti = implode(",", $autisti);
     bdump($autisti);
     $personale = implode(",", $personale);
@@ -207,7 +204,7 @@ class database{
     bdump($incrementa);
     $sql = "INSERT INTO `%PREFIX%_interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
     UPDATE `%PREFIX%_profiles` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
-    $this->esegui($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso eseguire 2 query pdo con salvate le query nella classe dalla classe. Devo eseguirne 1 sola
+    $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso execre 2 query pdo con salvate le query nella classe dalla classe. Devo execrne 1 sola
   }
 }
 
@@ -240,20 +237,20 @@ class user{
     define("LOGIN", "OK");
   }
 
-  public function autenticato(){
+  public function authenticated(){
     return $this->auth->isLoggedIn();
   }
 
   public function requirelogin(){
-   if(!$this->autenticato()){
+   if(!$this->authenticated()){
       if(INTRUSION_SAVE){
         if(INTRUSION_SAVE_INFO){
-          $parametri = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
+          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
         } else {
-          $parametri = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
+          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
         }
-        $sql = "INSERT INTO `%PREFIX%_intrusioni` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
-        $this->database->esegui($sql, false, $parametri);
+        $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
+        $this->database->exec($sql, false, $params);
       }
       $this->tools->redirect(WEB_URL);
    }
@@ -271,17 +268,17 @@ class user{
         return $_SESSION['_user_name'];
       }
     } else {
-        return "non autenticato";
+        return "not authenticated";
     }
   }
   
   public function nameById($id){
-    $profiles = $this->database->esegui("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
+    $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
     if(!empty($profiles)){
       if(!is_null($profiles[0]["name"])){
         return($profiles[0]["name"]);
       } else {
-        $user = $this->database->esegui("SELECT `username` FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
+        $user = $this->database->exec("SELECT `username` FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
         if(!empty($user)){
           if(!is_null($user[0]["username"])){
             return($user[0]["username"]);
@@ -298,12 +295,12 @@ class user{
   }
   
   public function hidden(){
-    $profiles = $this->database->esegui("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
+    $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
     return $profiles;
   }
   
   public function avaible($name){
-    $user = $this->database->esegui("SELECT avaible FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
+    $user = $this->database->exec("SELECT avaible FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
     if(empty($user)){
         return false;
     } else {
@@ -338,7 +335,7 @@ class user{
           die('Too many requests');
         }
         if($this->auth->isLoggedIn()){
-          $user = $this->database->esegui("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
+          $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
           if(!empty($user)){
             if(is_null($user[0]["name"])){
               $_SESSION['_user_name'] = $this->auth->getUsername();
@@ -358,10 +355,10 @@ class user{
       return ["status" => "error", "code" => 001];
     }
   }
-  public function log($azione, $subisce, $agisce, $data, $ora){
-    $parametri = [":azione" => $azione, ":subisce" => $subisce, ":agisce" => $agisce, ":data" => $data, ":ora" => $ora];
+  public function log($action, $subisce, $agisce, $data, $ora){
+    $params = [":azione" => $action, ":subisce" => $subisce, ":agisce" => $agisce, ":data" => $data, ":ora" => $ora];
     $sql = "INSERT INTO `%PREFIX%_log` (`id`, `azione`, `subisce`, `agisce`, `data`, `ora`) VALUES (NULL, :azione, :subisce, :agisce, :data, :ora)";
-    $this->database->esegui($sql, false, $parametri);
+    $this->database->exec($sql, false, $params);
   }
 
   public function logout(){

@@ -15,8 +15,8 @@ init_class();
 function resetminuti(){
     global $profiles_tot;
     global $database;
-    $sql = "SELECT * FROM %PREFIX%_profiles"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-    $risultato = $database->esegui($sql, true);
+    $sql = "SELECT * FROM %PREFIX%_profiles"; // Pesco i dati della table e li ordino in base alla disponibilità
+    $risultato = $database->exec($sql, true);
     $disp = array();
     foreach($risultato as $row){
         $disp[$row['name']] = $row['minuti_dispo'];
@@ -38,12 +38,12 @@ function resetminuti(){
     echo $mese . " - " . $anno . "<br>";
 
 
-    $sql = "INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-    $risultato = $database->esegui($sql);
+    $sql = "INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')"; // Pesco i dati della table e li ordino in base alla disponibilità
+    $risultato = $database->exec($sql);
 
     foreach($risultato as $row){
         $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '0' WHERE name ='" . $user . "'";
-        $risultato = $database->esegui($sql);
+        $risultato = $database->exec($sql);
         echo "reset effettuato: " . $user . "<br>";
     }
 
@@ -56,7 +56,7 @@ EOT;
     }
 }
 
-//Per quando dovrò (forse) reinserire i valori in tabella o generare un array
+//Per quando dovrò (forse) reinserire i valori in table o generare un array
 function array_combine_($keys, $values){
     $result = array();
     foreach ($keys as $i => $k) {
@@ -68,8 +68,8 @@ function array_combine_($keys, $values){
 //print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
 
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-$risultato = $database->esegui($sql, true);
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$risultato = $database->exec($sql, true);
 
 $profiles_tot = array();
 $incremento = array();
@@ -91,10 +91,10 @@ resetminuti();
 foreach($incremento as $key=>$user){
     $minuti_dispo = $minuti_dispo_old[$key] + $minuti;
     $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '" . $minuti_dispo . "' WHERE name ='" . $user . "'";
-    $risultato = $database->esegui($sql, true);
+    $risultato = $database->exec($sql, true);
 }
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-$risultato = $database->esegui($sql, true);
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$risultato = $database->exec($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){
     if($row['avaible'] == "1"){
