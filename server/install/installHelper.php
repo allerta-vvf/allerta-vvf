@@ -214,11 +214,11 @@ PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`azione` varchar(100) NOT NULL,
-`subisce` varchar(100) NOT NULL,
-`agisce` varchar(100) NOT NULL,
-`data` varchar(100) NOT NULL,
-`ora` varchar(100) NOT NULL,
+`action` varchar(100) NOT NULL,
+`changed` varchar(100) NOT NULL,
+`editor` varchar(100) NOT NULL,
+`date` varchar(100) NOT NULL,
+`time` varchar(100) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_minuti` (

@@ -355,9 +355,9 @@ class user{
       return ["status" => "error", "code" => 001];
     }
   }
-  public function log($action, $subisce, $agisce, $data, $ora){
-    $params = [":azione" => $action, ":subisce" => $subisce, ":agisce" => $agisce, ":data" => $data, ":ora" => $ora];
-    $sql = "INSERT INTO `%PREFIX%_log` (`id`, `azione`, `subisce`, `agisce`, `data`, `ora`) VALUES (NULL, :azione, :subisce, :agisce, :data, :ora)";
+  public function log($action, $changed, $editor, $date, $time){
+    $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":date" => $date, ":time" => $time];
+    $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `date`, `time`) VALUES (NULL, :action, :changed, :editor, :date, :time)";
     $this->database->exec($sql, false, $params);
   }
 
