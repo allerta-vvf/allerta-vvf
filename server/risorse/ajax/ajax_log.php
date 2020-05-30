@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_log`", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_log`  ORDER BY `date` DESC, `time` DESC", true);
 
 $hidden = $user->hidden();
 ?>
@@ -80,8 +80,8 @@ select::-ms-expand {
     <tbody>
      <?php
      foreach($risultato as $row){
-     if(!in_array($row['subisce'], $hidden) OR in_array($user->name(), $hidden)){
-      echo "<tr><td>" . $row["azione"] . "</td><td>" . $user->nameById($row["subisce"]) . "</td><td>" . $user->nameById($row["agisce"]) ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
+     if(!in_array($row['changed'], $hidden) OR in_array($user->name(), $hidden)){
+      echo "<tr><td>" . $row["action"] . "</td><td>" . $user->nameById($row["changed"]) . "</td><td>" . $user->nameById($row["editor"]) ."</td><td>" . $row['date'] . " - ore " . $row['time'] . "</tr>";
 
       }
      }

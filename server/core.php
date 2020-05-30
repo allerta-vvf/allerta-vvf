@@ -335,6 +335,7 @@ class user{
           die('Too many requests');
         }
         if($this->auth->isLoggedIn()){
+          $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
           $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
           if(!empty($user)){
             if(is_null($user[0]["name"])){
@@ -363,6 +364,7 @@ class user{
 
   public function logout(){
     try {
+      $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
       $this->auth->destroySession();
     }
     catch (\Delight\Auth\NotLoggedInException $e) {

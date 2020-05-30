@@ -14,7 +14,7 @@ This is only a **development version**.
 |CLI Installation|:heavy_check_mark:|||
 |Translation|||:x:|
 |User managament|||:x:|
-|Logs||:clock8:||
+|Logs|:heavy_check_mark:|||
 |Graphs|||:x:|
 |Images||:clock8:||
 
