@@ -1,0 +1,82 @@
+name: PHP Code Testing
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tests:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    env:
+      working-directory: ./server
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:        
+        php-versions: ['7.3', '7.4']
+    name: PHP ${{ matrix.php-versions }}
+    steps:
+
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, short_open_tag=On
+        coverage: xdebug, pcov    
+        #tools: php-cs-fixer, phpunit
+
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop
+
+    - name: Start MariaDB
+      uses: getong/mariadb-action@v1.1
+      with:
+        mysql root password: password
+        mysql database: allerta
+        mysql user: user
+        mysql password: password
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+      working-directory: ${{env.working-directory}}
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+      working-directory: ${{env.working-directory}}
+
+    - name: Run test suite
+      run: vendor/bin/codecept run --steps
+      working-directory: ${{env.working-directory}}
+    
+    - name: Upload Tests Artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: tests output (php ${{ matrix.php-versions }})
+        path: ./server/tests/_output
+    
+    - name: Remove devs files and dirs
+      if: "${{ success() }}"
+      run: |
+        rm server/codeception.yml
+        sudo rm server/tests -r
+        sudo rm server/vendor -r
+        composer install --no-dev --no-progress --no-suggest -o -n -d server
+
+    - name: Upload prod build
+      if: "${{ success() }}"
+      uses: actions/upload-artifact@v2
+      with:
+        name: prod build (php ${{ matrix.php-versions }})
+        path: ./server/
+        

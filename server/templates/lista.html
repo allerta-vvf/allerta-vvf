@@ -3,88 +3,49 @@
 {% block content %}
     <br>
     <div class="text-center">
-      <p>Sei disponibile in caso di allerta?</p>
-      <button class="btn btn-lg btn-success " onclick="Attivo('{{ utente.nome }}')">Attivo</button>
+      <p>Sei avaible in caso di allerta?</p>
+      <button class="btn btn-lg btn-success " onclick="Attivo('{{ user.id }}')">Attivo</button>
 
-      <button class="btn btn-lg btn-danger" style="background-color: red" onclick="nonAttivo('{{ utente.nome }}')">Non Attivo</button>
+      <button class="btn btn-lg btn-danger" style="background-color: red" onclick="NonAttivo('{{ user.id }}')">Non Attivo</button>
     </div>
     <script defer>
-      function AttivoAdmin(nomeutenteattivato, dispold){
-        var nomeutenteattivatore = '{{ utente.nome }}';
-        var dispo = 1-dispold;
-        var code = '{{ utente.codice }}';
+      function Attivo(id){
         $.ajax({
           url: "risorse/ajax/ajax_aggiornadispo.php",
           method: "POST",
           data: {
-            nomeutenteattivato: nomeutenteattivato,
-            nomeutenteattivatore: nomeutenteattivatore,
-            dispo: dispo
+            change_id: id,
+            dispo: 1
           },
           success: function(data) {
-            if(nomeutenteattivatore === nomeutenteattivato){
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la tua disponibilità in caso in allerta.");
-            } else {
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la disponibilità di " + nomeutenteattivato + " in caso in allerta.");
-            }
+            alert("Grazie, {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
             location.reload();
           }
         });
-      };
+      }
 
-      function Attivo(nomeutenteattivato){
-        var nomeutenteattivatore = '{{ utente.nome }}';
-        var dispo = 1;
-        var code = '{{ utente.codice }}';
+      function NonAttivo(id){
         $.ajax({
           url: "risorse/ajax/ajax_aggiornadispo.php",
           method: "POST",
           data: {
-            nomeutenteattivato: nomeutenteattivato,
-            nomeutenteattivatore: nomeutenteattivatore,
-            dispo: dispo
+            change_id: id,
+            dispo: 0
           },
           success: function(data) {
-            if(nomeutenteattivatore === nomeutenteattivato){
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la tua disponibilità in caso in allerta.");
-            } else {
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la disponibilità di " + nomeutenteattivato + " in caso in allerta.");
-            }
+            alert("Grazie {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
             location.reload();
           }
         });
-      };
-
-      function nonAttivo(nomeutenteattivato){
-        var nomeutenteattivatore = '{{ utente.nome }}';
-        var dispo = 0;
-        var code = '{{ utente.codice }}';
-        $.ajax({
-          url: "risorse/ajax/ajax_aggiornadispo.php",
-          method: "POST",
-          data: {
-            nomeutenteattivato: nomeutenteattivato,
-            nomeutenteattivatore: nomeutenteattivatore,
-            dispo: dispo
-          },
-          success: function(data) {
-            if(nomeutenteattivatore === nomeutenteattivato){
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la tua disponibilità in caso in allerta.");
-            } else {
-              alert("Grazie, " + nomeutenteattivatore + ", hai dato la disponibilità di " + nomeutenteattivato + " in caso in allerta.");
-            }
-            location.reload();
-          }
-        });
-      };
+      }
     </script>
     <br>
     <br>
-    <img alt="VVF" src="./risorse/images/logo.jpg" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <br>
     <div id="lista"></div>
-{% if utente.admin == false %}
+{% if user.full_viewer == false %}
 <script>
 $( "#lista" ).load("risorse/ajax/ajax_lista.php");
 $(document).ready(function() {
@@ -93,7 +54,7 @@ $(document).ready(function() {
   }, 10000);
 });
 </script>
-{% elseif utente.admin == true %}
+{% elseif user.full_viewer == true %}
 <script>
 $( "#lista" ).load("risorse/ajax/ajax_lista_admin.php");
 $(document).ready(function() {

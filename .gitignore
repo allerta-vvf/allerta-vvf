@@ -497,7 +497,14 @@ composer.phar
 /server/error-log/*
 !/server/error-log/index.html
 
+/server/tests/_output/*
+!/server/tests/_output/.gitkeep
+
+/server/tests/_data/*
+!/server/tests/_data/.gitkeep
+
 config.php
+config.old.php
 
 *password*
 

@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
+$user->requirelogin();
 
 function ancora($content, $id) {
 $content = substr($content,0,$limit);
@@ -13,7 +13,7 @@ return $content;
 $impostazioni['modifica'] = false;
 $impostazioni['elimina'] = false;
 
-$risultato = $database->esegui("SELECT * FROM interventi ORDER BY data DESC, uscita desc", true); // Pesco i dati della tabella e li ordino in base alla data
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_interventi` ORDER BY data DESC, uscita desc", true); // Pesco i dati della table e li ordino in base alla data
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>

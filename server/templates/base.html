@@ -2,7 +2,7 @@
 <html lang="it">
     <head>
         {% block head %}
-          <title>{{ titolo }} - ALLERTA sistema gestionale {{ distaccamento }}</title>
+          <title>{{ titolo }} - ALLERTA sistema gestionale {{ owner }}</title>
           <link href="{{ urlsoftware }}/risorse/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
           <meta name="viewport" content="user-scalable=no, initial-scale=1">
           <style>
@@ -34,12 +34,12 @@
           <script>
             // basic info
             smartsupp('email', '');
-            smartsupp('name', '{{ utente.nome }}');
+            smartsupp('name', '{{ user.name }}');
             smartsupp('recording:disable', false);
             // extra info
             smartsupp('variables', {
-              Nome: { label: 'Nome utente ', value: '{{ utente.nome }}' },
-              Admin: { label: 'Admin', value: '{{ utente.admin }}' }
+              name: { label: 'name user ', value: '{{ user.name }}' },
+              Admin: { label: 'Admin', value: '{{ user.full_viewer }}' }
             });
           </script>
           {% endif %}
@@ -307,7 +307,7 @@
           console.log(ciao);
       	console.log("onLine");
       	var xhr = new XMLHttpRequest();
-      	xhr.open('GET', '{{ urlsoftware }}online_check.php?utente={{ utente.nome }}');
+      	xhr.open('GET', '{{ urlsoftware }}online_check.php?user={{ user.name }}');
       	xhr.onload = function () {
       		if (xhr.status === 200) {
       			console.log('Text ' + xhr.responseText);
@@ -343,7 +343,7 @@
         <a href="{{ urlsoftware }}log.php">Log</a>
         <a {# href="{{ urlsoftware }}grafici.php" #}>Grafici</a>
         <a href="javascript:void(0);" onclick="chat()">Supporto tecnico</a>
-        <a style="float: right;" id="logout">Ciao {{ utente.nome }}. <b onclick="location.href='{{ urlsoftware }}logout.php';">Esegui il logout</b></a>
+        <a style="float: right;" id="logout">Ciao {{ user.name }}. <b onclick="location.href='{{ urlsoftware }}logout.php';">exec il logout</b></a>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">☰</a>
         </div>
         <!-- /Menu -->
@@ -359,7 +359,7 @@
         <footer hidden id="bottom" class="row text-left p-4">
         <div class="col-12 col-md-4">
         <h5>Copyright &copy; Matteo</h5>
-        <h4>Applicativo realizzato per {{ distaccamento }}</h4>
+        <h4>Applicativo realizzato per {{ owner }}</h4>
         </div>
         </footer>
         <!-- /Footer -->

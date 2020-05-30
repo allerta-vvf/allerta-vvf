@@ -1,11 +1,11 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
+$user->requirelogin();
 
-$risultato = $database->esegui('SELECT * FROM vigili WHERE id = :id', true, array(":id" => $_GET['utente'])); // Pesco i dati della tabella
+$risultato = $database->exec('SELECT * FROM `%PREFIX%_profiles` WHERE id = :id', true, array(":id" => $_GET['user'])); // Pesco i dati della table
 
-$whitelist = $utente->whitelist();
+$hidden = $user->hidden();
 ?>
 <style>/*
  * Bootstrap v2.2.1
@@ -315,13 +315,13 @@ function vero1($text, $img1 = "", $img2 = ""){
 }
 //var_dump($risultato);
 foreach($risultato as $row){
-$nome = ($row['online']==1) ? '<u>' . $row['nome'] . "</u>" : $row['nome'];
-echo("<h1>Dati anagrafici <b>$nome</b></h1><br><br>");
-echo('<img alt="VVF" src="./risorse/images/logo.jpg" width="150" class="img-resposive"><br><br><br>');
-$disp = vero1($row['disponibile'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
+$name = ($row['online']==1) ? '<u>' . $row['name'] . "</u>" : $row['name'];
+echo("<h1>Dati anagrafici <b>$name</b></h1><br><br>");
+echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
+$disp = vero1($row['avaible'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
 $caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
 $autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
-echo("<p>Nome:  <b>$nome</b></p><br>");
+echo("<p>name:  <b>$name</b></p><br>");
 echo("<p>Disponibilità:  <b>{$disp}</b></p><br>");
 echo("<p>Caposquadra:  <b>{$caposquadra}</b></p><br>");
 echo("<p>Autista:  <b>{$autista}</b></p><br>");

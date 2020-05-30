@@ -1,53 +1,11 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
-/*
-function trovanomi() {
-include_once '../../connection.php';
-$sql = "SELECT nome FROM vigili"; // Pesco i dati della tabella
-$result = mysqli_query($connessione, $sql);
-    while($row = $result->fetch_array())
-{
-$rows[] = $row;
-}
-$nome = array();
-foreach($rows as $row)
-{
- $nome[] = $row['nome'];
+$user->requirelogin();
 
-}
-mysqli_close($connessione);
-return $nome;
-}
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_log`  ORDER BY `date` DESC, `time` DESC", true);
 
-function checkbox_vigili() {
-$whitelist = $utente->whitelist();
-$id = 0;
-$checkbox = <<<HTML
-<div class="dropdown show">
-  <a class="btn btn-secondary dropdown-toggle " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown link
-  </a>
-
-  <select class="form-control" aria-labelledby="dropdownMenuLink">
-HTML;
-foreach(trovanomi() as $nome) {
-    $test = "";
-    if(in_array($nome, $whitelist)){
-        $test = "hidden='hidden'";
-    }
-    $id = $id + 1;
-    $checkbox = $checkbox . "<option class='dropdown-item' id='checkbox' style='' $test value='$nome'>" . "<label $test>$nome</label><br>";
-}
-$checkbox = $checkbox . "</select>";
-return $checkbox;
-}
-*/
-
-$risultato = $database->esegui("SELECT * FROM `log`", true);
-
-$whitelist = $utente->whitelist();
+$hidden = $user->hidden();
 ?>
 <style>
 th, td {
@@ -122,8 +80,8 @@ select::-ms-expand {
     <tbody>
      <?php
      foreach($risultato as $row){
-     if(!in_array($row['subisce'], $whitelist) OR in_array($utente->nome(), $whitelist)){
-      echo "<tr><td>" . $row["azione"] . "</td><td>" . $row["subisce"] . "</td><td>" . $row["agisce"] ."</td><td>" . $row['data'] . " - ore " . $row['ora'] . "</tr>";
+     if(!in_array($row['changed'], $hidden) OR in_array($user->name(), $hidden)){
+      echo "<tr><td>" . $row["action"] . "</td><td>" . $user->nameById($row["changed"]) . "</td><td>" . $user->nameById($row["editor"]) ."</td><td>" . $row['date'] . " - ore " . $row['time'] . "</tr>";
 
       }
      }

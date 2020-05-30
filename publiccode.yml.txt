@@ -1,0 +1,48 @@
+publiccodeYmlVersion: "0.2"
+
+name: Allerta VVF
+url: "https://github.com/allerta-vvf/allerta-vvf.git"
+softwareVersion: "dev"    # Optional
+releaseDate: "2020-04-15"
+platforms:
+  - web
+
+categories:
+  - fleet-management
+
+developmentStatus: development
+
+softwareType: "standalone/desktop"
+
+description:
+  en:
+    localisedName: Allerta VVF   # Optional
+    genericName: Allerta
+    shortDescription: >
+        Open source firefighter management software
+
+    longDescription: >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec congue augue. Nam blandit mollis mi sed eleifend. Etiam massa dolor, pulvinar sollicitudin ante vel, tristique pellentesque lectus. Donec sit amet varius leo. Nulla sagittis consequat justo in ornare. Donec eget congue dui, eu venenatis dolor. Proin tempus arcu risus, et pellentesque lorem pretium sed. Proin laoreet lacinia dolor, id cursus purus iaculis at. Morbi finibus sollicitudin dui a venenatis. Suspendisse potenti. Etiam semper convallis viverra. Donec condimentum libero non eros ornare convallis. Morbi at magna metus. Nullam vestibulum dapibus sapien, eget tincidunt mauris euismod vel. In vel nunc id nisi luctus tincidunt non nec justo.
+        Curabitur pretium, lacus accumsan tincidunt commodo, turpis est pharetra justo, vel faucibus lorem elit nec sapien. Fusce semper aliquam nisl ultricies molestie. Cras sagittis semper magna in interdum. Cras mattis euismod laoreet. Pellentesque sed gravida nisi. Pellentesque pharetra risus vel elementum viverra. Suspendisse id consectetur enim. Praesent a blandit est.
+        Nullam suscipit arcu arcu, accumsan pellentesque ipsum dapibus id. In vitae magna scelerisque, tincidunt elit ut, posuere neque. Sed ut tempus justo. Aenean id diam et leo sagittis mattis. Morbi mattis sit amet nulla a hendrerit. Donec gravida tortor augue, non rhoncus metus imperdiet ac. Nam sed arcu a tortor efficitur consectetur. Sed lobortis ut augue id tempor.
+        Mauris sed mollis ligula, a auctor ante. Quisque eget gravida magna. In porttitor fermentum urna quis consectetur. Donec non nulla feugiat, molestie eros et, feugiat justo. Aliquam venenatis, massa ac tristique malesuada, metus erat eleifend augue, vel ultrices urna leo sit amet diam. Nulla facilisi. Nullam erat enim, efficitur laoreet diam ac, blandit convallis elit. Sed feugiat libero at massa faucibus cursus.
+        Vestibulum imperdiet est at erat dapibus aliquet. Vestibulum elementum in libero quis elementum. Sed tincidunt lobortis mattis. Aliquam nisl quam, vulputate vel lacus eu, ornare tempor est. Donec ultricies nunc vitae varius pharetra. Morbi eu ipsum scelerisque, tempor orci commodo, mollis orci. Mauris vulputate sem vel congue pellentesque.
+
+    features:
+       - Just one feature
+       - Just feature two
+
+legal:
+  license: AGPL-3.0-or-later
+
+maintenance:
+  type: "community"
+
+  contacts:
+    - name: Matteo Gheza
+
+localisation:
+  localisationReady: yes
+  avaibleLanguages:
+    - en
+    - it

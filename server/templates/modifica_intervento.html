@@ -204,7 +204,7 @@ textarea {
 }
 </style>
 <body>
-{% if intervento.modalità == "aggiungi" %}
+{% if intervento.modalità == "add" %}
 <form method="post">
   <div class="container">
     <label><b>Giorno dell' intervento</b></label>
@@ -225,12 +225,12 @@ textarea {
     <br>
     <label><b>Caposquadra</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <input type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endfor %}
@@ -242,13 +242,13 @@ textarea {
     <br>
     <label><b>Autisti</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    {% if vigile.autista == 1 %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    {% if user.autista == 1 %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endif %}
@@ -256,12 +256,12 @@ textarea {
     <br>
     <label><b>Altro personale</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endfor %}
@@ -278,11 +278,11 @@ textarea {
     <br>
     <select name='tipo'>
     {% for tipo in intervento.tipologie %}
-    <option value='{{ tipo.nome }}'>{{ tipo.nome }}</option>
+    <option value='{{ tipo.name }}'>{{ tipo.name }}</option>
     {% endfor %}
   </select>
     <br>
-    <input id="modalità" type="hidden" value="aggiungi" name="mod"></input>
+    <input id="modalità" type="hidden" value="add" name="mod"></input>
     <input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
     <button type="submit">invia</button>
   </div>
@@ -324,12 +324,12 @@ $('form').submit(function () {
     <br>
     <label><b>Caposquadra</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='capo' value='{{ vigile.id }}'>
+      <input type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endfor %}
@@ -341,13 +341,13 @@ $('form').submit(function () {
     <br>
     <label><b>Autisti</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    {% if vigile.autista == 1 %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    {% if user.autista == 1 %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='autisti[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endif %}
@@ -355,12 +355,12 @@ $('form').submit(function () {
     <br>
     <label><b>Altro personale</b></label>
     <br>
-    {% for vigile in intervento.personale %}
-    <div {{ vigile.nome == "test" ? "style='display: none'" : "" }} class="checkbox">
+    {% for user in intervento.personale %}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='personale[]' value='{{ vigile.id }}'>
+      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ vigile.nome }}
+        {{ user.name }}
       </label>
     </div>
     {% endfor %}
@@ -377,7 +377,7 @@ $('form').submit(function () {
     <br>
     <select name='tipo'>
     {% for tipo in intervento.tipologie %}
-    <option value='{{ tipo.nome }}'>{{ tipo.nome }}</option>
+    <option value='{{ tipo.name }}'>{{ tipo.name }}</option>
     {% endfor %}
   </select>
     <br>

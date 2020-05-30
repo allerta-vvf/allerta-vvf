@@ -93,7 +93,7 @@ on the Program.
 permission, would make you directly or secondarily liable for
 infringement under applicable copyright law, except executing it on a
 computer or modifying a private copy.  Propagation includes copying,
-distribution (with or without modification), making available to the
+distribution (with or without modification), making avaible to the
 public, and in some countries other activities as well.
 
   To "convey" a work means any kind of propagation that enables other
@@ -125,7 +125,7 @@ than the work as a whole, that (a) is included in the normal form of
 packaging a Major Component, but which is not part of that Major
 Component, and (b) serves only to enable use of the work with that
 Major Component, or to implement a Standard Interface for which an
-implementation is available to the public in source code form.  A
+implementation is avaible to the public in source code form.  A
 "Major Component", in this context, means a major essential component
 (kernel, window system, and so on) of the specific operating system
 (if any) on which the executable work runs, or a compiler used to
@@ -135,7 +135,7 @@ produce the work, or an object code interpreter used to run it.
 the source code needed to generate, install, and (for an executable
 work) run the object code and to modify the work, including scripts to
 control those activities.  However, it does not include the work's
-System Libraries, or general-purpose tools or generally available free
+System Libraries, or general-purpose tools or generally avaible free
 programs which are used unmodified in performing those activities but
 which are not part of the work.  For example, Corresponding Source
 includes interface definition files associated with source files for
@@ -283,7 +283,7 @@ in one of these ways:
     clear directions next to the object code saying where to find the
     Corresponding Source.  Regardless of what server hosts the
     Corresponding Source, you remain obligated to ensure that it is
-    available for as long as needed to satisfy these requirements.
+    avaible for as long as needed to satisfy these requirements.
 
     e) Convey the object code using peer-to-peer transmission, provided
     you inform other peers where the object code and Corresponding
@@ -336,7 +336,7 @@ protocols for communication across the network.
 
   Corresponding Source conveyed, and Installation Information provided,
 in accord with this section must be in a format that is publicly
-documented (and with an implementation available to the public in
+documented (and with an implementation avaible to the public in
 source code form), and must require no special password or key for
 unpacking, reading or copying.
 
@@ -497,11 +497,11 @@ party means to make such an agreement or commitment not to enforce a
 patent against the party.
 
   If you convey a covered work, knowingly relying on a patent license,
-and the Corresponding Source of the work is not available for anyone
+and the Corresponding Source of the work is not avaible for anyone
 to copy, free of charge and under the terms of this License, through a
-publicly available network server or other readily accessible means,
+publicly avaible network server or other readily accessible means,
 then you must either (1) cause the Corresponding Source to be so
-available, or (2) arrange to deprive yourself of the benefit of the
+avaible, or (2) arrange to deprive yourself of the benefit of the
 patent license for this particular work, or (3) arrange, in a manner
 consistent with the requirements of this License, to extend the patent
 license to downstream recipients.  "Knowingly relying" means you have
@@ -535,7 +535,7 @@ or that patent license was granted, prior to 28 March 2007.
 
   Nothing in this License shall be construed as excluding or limiting
 any implied license or other defenses to infringement that may
-otherwise be available to you under applicable patent law.
+otherwise be avaible to you under applicable patent law.
 
   12. No Surrender of Others' Freedom.
 

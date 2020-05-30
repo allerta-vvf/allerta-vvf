@@ -11,14 +11,14 @@ $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
 $template = NULL;
-function loadtemplate($templatename, $data, $richiedilogin=true){
-  global $utente, $twig, $template;
-  if($richiedilogin){
-    $utente->richiedilogin();
+function loadtemplate($templatename, $data, $requirelogin=true){
+  global $user, $twig, $template;
+  if($requirelogin){
+    $user->requirelogin();
   }
-  $data['distaccamento'] = DISTACCAMENTO;
+  $data['owner'] = owner;
   $data['urlsoftware'] = WEB_URL;
-  $data['utente'] = $utente->info();
+  $data['user'] = $user->info();
   $data['enable_technical_support'] = ENABLE_TECHNICAL_SUPPORT;
   $data['technical_support_key'] = TECHNICAL_SUPPORT_KEY;
   $data['technical_support_open'] = isset($_COOKIE["chat"]);

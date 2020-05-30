@@ -12,7 +12,7 @@ class tools{
     define("TOOLS", "OK");
   }
 
-  public function validazione_form($data, $noempty=true, $valore=null){
+  public function validate_form_data($data, $noempty=true, $value=null){
     if(!is_array($data) && isset($data) && !empty($data)){
       if(substr($data, 0, 6) == '$post-'){
         $data = substr($data, 6);
@@ -23,45 +23,42 @@ class tools{
     }
     if(is_array($data)){
       if(empty($data)){
-        $continuo = false;
+        $continue = false;
         return false;
       } else {
-        $continuo = true;
+        $continue = true;
       }
-      if($continuo){
-        foreach($data as $chiave=>$valore){
-          if(!is_array($valore) && isset($valore) && !empty($valore)){
-            if(substr($valore, 0, 6) == '$post-'){
-              $valore = substr($valore, 6);
-              if(isset($_POST[$valore])){
-                $valore = $_POST[$valore];
+      if($continue){
+        foreach($data as $key=>$value){
+          if(!is_array($value) && isset($value) && !empty($value)){
+            if(substr($value, 0, 6) == '$post-'){
+              $value = substr($value, 6);
+              if(isset($_POST[$value])){
+                $value = $_POST[$value];
               }
             }
           }
-          if($continuo){
-          if(!is_array($valore)){
-            bdump($valore);
+          if($continue){
+          if(!is_array($value)){
+            bdump($value);
             bdump("_");
-          $validazione = $this->validazione_form($valore, $noempty, $valore);
+          $validazione = $this->validate_form_data($value, $noempty, $value);
           if(!$validazione){
-            $continuo = false;
+            $continue = false;
             return false;
           }
         }
         }
         }
-        if($continuo){
-          bdump("passato con");
-          bdump($data);
+        if($continue){
           return true;
         }
       }
     } else if(isset($data)) {
       if(!empty($data)){
-        if(!is_null($valore)){
-          return $valore == $data;
+        if(!is_null($value)){
+          return $value == $data;
         } else {
-          bdump("non dovrebbe succedere");
           bdump($data);
           return true;
         }
@@ -144,15 +141,15 @@ class database{
   protected $db_dbname = DB_NAME;
   protected $db_username = DB_USER;
   protected $db_password = DB_PASSWORD;
-  public $connessione = null;
+  public $connection = null;
   public $query = null;
   public $stmt = null;
 
-  public function connetti(){
+  public function connect(){
     try {
-      $this->connessione = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
-      $this->connessione->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-      $this->connessione->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->connection = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
+      $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch(PDOException $e)
     {
@@ -164,208 +161,228 @@ class database{
     if(!defined("DATABASE")){
       define("DATABASE", "OK");
     }
-    $this->connetti();
+    $this->connect();
   }
 
   public function close(){
-    $this->connessione = null;
+    $this->connection = null;
   }
 
-  public function esegui($sql, $fetch=false, $param=null){
+  public function exec($sql, $fetch=false, $param=null){
     try{
-      $this->connessione->beginTransaction();
-      $this->stmt = $this->connessione->prepare($sql);
+      $this->connection->beginTransaction();
+      $this->stmt = $this->connection->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
       if(!is_null($param)){
         $this->query = $this->stmt->execute($param);
       } else {
         $this->query = $this->stmt->execute();
       }
       bdump($this->query);
-      $this->connessione->commit();
+      $this->connection->commit();
       if($fetch == true){
         return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       $this->stmt->closeCursor();
     } catch (PDOException $e) {
-      print "Errore!: " . $e->getMessage() . "<br/>";
-      $this->connessione->rollBack();
+      print "Error!: " . $e->getMessage() . "<br/>";
+      $this->connection->rollBack();
       die();
     }
   }
   
-  public function esiste($tabella, $id){
-      $risultato = $this->esegui("SELECT :tabella FROM interventi WHERE id = :id;", true, [":tabella" => $tabella, ":id" => $id]);
+  public function exists($table, $id){
+      $risultato = $this->exec("SELECT :table FROM `%PREFIX%_interventi` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
       return !empty($risultato);
   }
   
-  public function aggiungi_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+  public function add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
     $autisti = implode(",", $autisti);
     bdump($autisti);
     $personale = implode(",", $personale);
     bdump($personale);
     $incrementa = implode(",", $incrementa);
     bdump($incrementa);
-    $sql = "INSERT INTO `interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
-    UPDATE `vigili` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
-    $this->esegui($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso eseguire 2 query pdo con salvate le query nella classe dalla classe. Devo eseguirne 1 sola
+    $sql = "INSERT INTO `%PREFIX%_interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);
+    UPDATE `%PREFIX%_profiles` SET `interventi`= interventi + 1 WHERE id IN (:incrementa);";
+    $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]); // Non posso execre 2 query pdo con salvate le query nella classe dalla classe. Devo execrne 1 sola
   }
+}
+
+final class Role {
+  //https://github.com/delight-im/PHP-Auth/blob/master/src/Role.php
+  const GUEST = \Delight\Auth\Role::AUTHOR;
+  const BASIC_VIEWER = \Delight\Auth\Role::COLLABORATOR;
+  const FULL_VIEWER = \Delight\Auth\Role::CONSULTANT;
+  const EDITOR = \Delight\Auth\Role::CONSUMER;
+  const SUPER_EDITOR = \Delight\Auth\Role::CONTRIBUTOR;
+  const DEVELOPER = \Delight\Auth\Role::DEVELOPER;
+  const TESTER = \Delight\Auth\Role::CREATOR;
+  const EXTERNAL_VIEWER = \Delight\Auth\Role::REVIEWER;
+  const ADMIN = \Delight\Auth\Role::ADMIN;
+  const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
+
+  public function __construct() {}
+
 }
 
 class user{
   private $database = null;
   private $tools = null;
+  public $auth = null;
 
   public function __construct($database, $tools){
     $this->database = $database;
     $this->tools = $tools;
+    $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_");
     define("LOGIN", "OK");
   }
 
-  public function autenticato(){
-    if(isset($_SESSION['accesso'])){
-        return true;
-    } else {
-        return false;
-    }
+  public function authenticated(){
+    return $this->auth->isLoggedIn();
   }
 
-  public function richiedilogin(){
-   if(!$this->autenticato()){
+  public function requirelogin(){
+   if(!$this->authenticated()){
       if(INTRUSION_SAVE){
         if(INTRUSION_SAVE_INFO){
-          $parametri = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
+          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
         } else {
-          $parametri = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
+          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
         }
-        $sql = "INSERT INTO `intrusioni` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
-        $this->database->esegui($sql, false, $parametri);
+        $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
+        $this->database->exec($sql, false, $params);
       }
       $this->tools->redirect(WEB_URL);
    }
   }
 
-  public function admin(){
-    if(isset($_SESSION['admin'])){
-    if($_SESSION['admin'] == 1){
-        return true;
-    } else {
-        return false;
-    }
-  } else {
-    return false;
+  public function requireRole($role, $adminGranted=true){
+    return $this->auth->hasRole($role) || $this->auth->hasRole(Role::SUPER_ADMIN) || ($this->auth->hasRole(Role::ADMIN) && $adminGranted);
   }
-  }
-  public function nome($replace=false){
-    if(isset($_SESSION['nome'])){
+
+  public function name($replace=false){
+    if(isset($_SESSION['_user_name'])){
       if($replace){
-        return str_replace(" ", "_", $_SESSION['nome']);
+        return str_replace(" ", "_", $_SESSION['_user_name']);
       } else {
-        return $_SESSION['nome'];
+        return $_SESSION['_user_name'];
       }
     } else {
-        return "non autenticato";
+        return "not authenticated";
     }
   }
   
-  public function nome_by_id($id){
-    $vigile = $this->database->esegui("SELECT nome FROM vigili WHERE id = :id;", true, [":id" => $id]);
-    if(empty($vigile)){
-        return false;
-    } else {
-        return $vigile[0]["nome"];
-    }
-  }
-  
-  public function disponibile($nome){
-    $vigile = $this->database->esegui("SELECT disponibile FROM vigili WHERE nome = :nome;", true, [":nome" => $nome]);
-    if(empty($vigile)){
-        return false;
-    } else {
-        return $vigile[0]["disponibile"];
-    }
-  }
-  
-  public function whitelist($array = true, $str = ", "){
-    $array_data = array("test", "test2", "test3");
-    if($array){
-      return $array_data;
-    } else if(!$array){
-      return implode((string) $str, $array_data);
-    }
-  }
-  public function info(){
-    return array("nome" => $this->nome(), "admin" => $this->admin(), "codice" => "TODO", "tester" => $this->tester());
-  }
-
-  public function tester($nome="questo"){
-    if($nome=="questo"){
-      $nome = $this->nome();
-    }
-    if(in_array($nome, $this->whitelist())){
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public function dev($nome="questo"){
-    if($nome=="questo"){
-      $nome = $this->nome();
-    }
-    if(in_array($nome, $this->whitelist())){
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public function login($nome, $password, $twofa=null){
-    if(!empty($nome)){
-      if(!empty($password)){
-        $vigili = $this->database->esegui("SELECT * FROM vigili WHERE nome = :nome AND password = :password;", true, [":nome" => $nome, ":password" => $password]);
-        if(!empty($vigili)){
-          $_SESSION["accesso"] = "autenticato";
-          $_SESSION["nome"] = $vigili[0]["nome"];
-          $_SESSION["admin"] = $vigili[0]["caposquadra"];
-          return true;
-          //return $vigili;
+  public function nameById($id){
+    $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
+    if(!empty($profiles)){
+      if(!is_null($profiles[0]["name"])){
+        return($profiles[0]["name"]);
+      } else {
+        $user = $this->database->exec("SELECT `username` FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
+        if(!empty($user)){
+          if(!is_null($user[0]["username"])){
+            return($user[0]["username"]);
+          } else {
+            return false;
+          }
         } else {
-          return ["status" => "errore", "codice" => 003, "spiegazione" => "Dati di login non corretti"];
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+  
+  public function hidden(){
+    $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
+    return $profiles;
+  }
+  
+  public function avaible($name){
+    $user = $this->database->exec("SELECT avaible FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
+    if(empty($user)){
+        return false;
+    } else {
+        return $user[0]["avaible"];
+    }
+  }
+  
+  public function info(){
+    return array("id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
+  }
+
+  public function login($name, $password, $twofa=null){
+    if(!empty($name)){
+      if(!empty($password)){
+        try {
+          $this->auth->loginWithUsername($name, $password);
+        }
+        catch (\Delight\Auth\InvalidEmailException $e) {
+          return ["status" => "error", "code" => 010, "text" => "Wrong email address"];
+          die('Wrong email address');
+        }
+        catch (\Delight\Auth\InvalidPasswordException $e) {
+          return ["status" => "error", "code" => 011, "text" => "Wrong password"];
+          die('Wrong password');
+        }
+        catch (\Delight\Auth\EmailNotVerifiedException $e) {
+          return ["status" => "error", "code" => 012, "text" => "Email not verified"];
+          die('Email not verified');
+        }
+        catch (\Delight\Auth\TooManyRequestsException $e) {
+          return ["status" => "error", "code" => 020, "text" => "Too many requests"];
+          die('Too many requests');
+        }
+        if($this->auth->isLoggedIn()){
+          $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+          $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
+          if(!empty($user)){
+            if(is_null($user[0]["name"])){
+              $_SESSION['_user_name'] = $this->auth->getUsername();
+            } else {
+              $_SESSION['_user_name'] = $user[0]["name"];
+            }
+            $_SESSION['_user_hidden'] = $user[0]["hidden"];
+            $_SESSION['_user_disabled'] = $user[0]["disabled"];
+            $_SESSION['_user_caposquadra'] = $user[0]["caposquadra"];
+            return true;
+          }
         }
       } else {
-        return ["status" => "errore", "codice" => 002];
+        return ["status" => "error", "code" => 002];
       }
     } else {
-      return ["status" => "errore", "codice" => 001];
+      return ["status" => "error", "code" => 001];
     }
   }
-  public function log($azione, $subisce, $agisce, $data, $ora){
-    $parametri = [":azione" => $azione, ":subisce" => $subisce, ":agisce" => $agisce, ":data" => $data, ":ora" => $ora];
-    $sql = "INSERT INTO `log` (`id`, `azione`, `subisce`, `agisce`, `data`, `ora`) VALUES (NULL, :azione, :subisce, :agisce, :data, :ora)";
-    $this->database->esegui($sql, false, $parametri);
-  }
-
-  public function lista($tutti=false){
-    $vigili = $this->database->esegui("SELECT * FROM vigili;", true);
+  public function log($action, $changed, $editor, $date, $time){
+    $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":date" => $date, ":time" => $time];
+    $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `date`, `time`) VALUES (NULL, :action, :changed, :editor, :date, :time)";
+    $this->database->exec($sql, false, $params);
   }
 
   public function logout(){
-    unset($_SESSION["accesso"]);
-    unset($_SESSION["nome"]);
-    unset($_SESSION["admin"]);
+    try {
+      $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+      $this->auth->destroySession();
+    }
+    catch (\Delight\Auth\NotLoggedInException $e) {
+      die('Not logged in');
+    }
   }
 }
 
 function init_class(){
-  global $utente, $tools, $database;
-  if(!isset($utente) && !isset($tools) && !isset($database)){
+  global $user, $tools, $database;
+  if(!isset($user) && !isset($tools) && !isset($database)){
     $tools = new tools();
     $database = new database();
-    $utente = new user($database, $tools);
+    $user = new user($database, $tools);
   }
-  if($utente->dev()){
+  //if($user->requireRole(Role::DEVELOPER)){
     Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-  } else {
-    Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-  }
+  //} else {
+    //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+  //}
 }

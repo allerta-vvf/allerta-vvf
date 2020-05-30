@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$utente->richiedilogin();
+$user->requirelogin();
 
 function ancora($content, $id) {
 $content = substr($content,0,$limit);
@@ -13,7 +13,7 @@ return $content;
 $impostazioni['modifica'] = false;
 $impostazioni['elimina'] = false;
 
-$risultato = $database->esegui("SELECT * FROM esercitazioni ORDER BY data DESC, inizio desc", true); // Pesco i dati della tabella e li ordino in base alla data
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY data DESC, inizio desc", true); // Pesco i dati della table e li ordino in base alla data
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
@@ -77,7 +77,7 @@ $risultato = $database->esegui("SELECT * FROM esercitazioni ORDER BY data DESC, 
     <thead>
     <tr>
      <th>Data</th>
-     <th>Nome</th>
+     <th>name</th>
      <th>Ora inizio</th>
      <th>Ora fine</th>
      <th>Capo</th>
@@ -92,9 +92,9 @@ $risultato = $database->esegui("SELECT * FROM esercitazioni ORDER BY data DESC, 
 <?php
 foreach($risultato as $row){
       $persone = base64_encode( $row['dec'] );
-      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['nome'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
+      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['name'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
       if($impostazioni['modifica']) {
-          echo "<td><a href='modifica.php?modifica&id={$row['id']}&data={$row['data']}&nome={$row['nome']}&inizio={$row['inizio']}&fine={$row['fine']}&luogo={$row['luogo']}&note={$row['note']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
+          echo "<td><a href='modifica.php?modifica&id={$row['id']}&data={$row['data']}&name={$row['name']}&inizio={$row['inizio']}&fine={$row['fine']}&luogo={$row['luogo']}&note={$row['note']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
       if($impostazioni['elimina']) {
           echo "<td><a href='modifica.php?elimina&id={$row['id']}&persone={$persone}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";

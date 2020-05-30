@@ -13,13 +13,13 @@ include_once 'core.php';
 init_class();
 
 function resetminuti(){
-    global $vigili_tot;
+    global $profiles_tot;
     global $database;
-    $sql = "SELECT * FROM vigili"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-    $risultato = $database->esegui($sql, true);
+    $sql = "SELECT * FROM %PREFIX%_profiles"; // Pesco i dati della table e li ordino in base alla disponibilità
+    $risultato = $database->exec($sql, true);
     $disp = array();
     foreach($risultato as $row){
-        $disp[$row['nome']] = $row['minuti_dispo'];
+        $disp[$row['name']] = $row['minuti_dispo'];
     }
     print("<br><pre>" . print_r($disp, true) . "</pre><br>");
 
@@ -38,13 +38,13 @@ function resetminuti(){
     echo $mese . " - " . $anno . "<br>";
 
 
-    $sql = "INSERT INTO `minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-    $risultato = $database->esegui($sql);
+    $sql = "INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')"; // Pesco i dati della table e li ordino in base alla disponibilità
+    $risultato = $database->exec($sql);
 
     foreach($risultato as $row){
-        $sql = "UPDATE vigili SET minuti_dispo = '0' WHERE nome ='" . $utente . "'";
-        $risultato = $database->esegui($sql);
-        echo "reset effettuato: " . $utente . "<br>";
+        $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '0' WHERE name ='" . $user . "'";
+        $risultato = $database->exec($sql);
+        echo "reset effettuato: " . $user . "<br>";
     }
 
     if($risultato){
@@ -56,7 +56,7 @@ EOT;
     }
 }
 
-//Per quando dovrò (forse) reinserire i valori in tabella o generare un array
+//Per quando dovrò (forse) reinserire i valori in table o generare un array
 function array_combine_($keys, $values){
     $result = array();
     foreach ($keys as $i => $k) {
@@ -68,16 +68,16 @@ function array_combine_($keys, $values){
 //print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
 
-$sql = "SELECT * FROM vigili ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-$risultato = $database->esegui($sql, true);
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$risultato = $database->exec($sql, true);
 
-$vigili_tot = array();
+$profiles_tot = array();
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
-    $vigili_tot[] = $row['nome'];
-    if($row['disponibile'] == "1"){
-        $incremento[] = $row['nome'];
+    $profiles_tot[] = $row['name'];
+    if($row['avaible'] == "1"){
+        $incremento[] = $row['name'];
         $minuti_dispo_old[] = $row['minuti_dispo'];
     }
 }
@@ -88,16 +88,16 @@ if($start && isset($_POST['reset']) && $_POST['reset'] == "cron-job"){
 resetminuti();
 }
 
-foreach($incremento as $key=>$utente){
+foreach($incremento as $key=>$user){
     $minuti_dispo = $minuti_dispo_old[$key] + $minuti;
-    $sql = "UPDATE vigili SET minuti_dispo = '" . $minuti_dispo . "' WHERE nome ='" . $utente . "'";
-    $risultato = $database->esegui($sql, true);
+    $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '" . $minuti_dispo . "' WHERE name ='" . $user . "'";
+    $risultato = $database->exec($sql, true);
 }
-$sql = "SELECT * FROM vigili ORDER BY disponibile DESC, caposquadra DESC, interventi ASC, nome ASC"; // Pesco i dati della tabella e li ordino in base alla disponibilità
-$risultato = $database->esegui($sql, true);
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY avaible DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$risultato = $database->exec($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){
-    if($row['disponibile'] == "1"){
+    if($row['avaible'] == "1"){
         $minuti_dispo[] = $row['minuti_dispo'];
     }
 }

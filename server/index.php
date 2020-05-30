@@ -1,16 +1,16 @@
 <?php
 require_once 'ui.php';
-if($utente->autenticato()){
+if($user->authenticated()){
   $tools->redirect("lista.php");
 }
 $errore = false;
-if(isset($_POST['nome']) & isset($_POST['password'])){
-  $login = $utente->login($_POST['nome'], md5($_POST['password']));
-  //var_dump($login); exit;
+if(isset($_POST['name']) & isset($_POST['password'])){
+  $login = $user->login($_POST['name'], $_POST['password']);
   if($login===true){
     $tools->redirect("lista.php");
   } else {
     $errore = $login;
+    bdump($errore);
   }
 }
 loadtemplate('index.html', ['errore' => $errore, 'titolo' => 'Login'], false);
