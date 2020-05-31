@@ -393,7 +393,7 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
 }
 
 function validate_arg($options, $name, $default){
-    return array_key_exists($name, $options) ? $options[$name] : (isset($_ENV[$name]) ? $_ENV[$name] : (isset($_ENV[strtoupper($name)]) ? $_ENV[strtoupper($name)] : $default));
+    return array_key_exists($name, $options) ? $options[$name] : (getenv($name)!==false ? getenv($name) : (getenv(strtoupper($name))!==false ? getenv(strtoupper($name)) : $default));
 }
 
 function change_dir($directory){
