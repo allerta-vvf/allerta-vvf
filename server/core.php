@@ -2,7 +2,11 @@
 require_once 'vendor/autoload.php';
 use Tracy\Debugger;
 
-require_once 'config.php';
+try{
+  require_once 'config.php';
+} catch(Exception $e){
+  header('Location: install/install.php');
+}
 
 session_start();
 date_default_timezone_set('Europe/Rome');

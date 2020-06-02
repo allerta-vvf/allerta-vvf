@@ -327,7 +327,9 @@ CREATE TABLE `".$prefix."_dbversion` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL, '1', current_timestamp());");
+INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL, '1', current_timestamp()) WHERE NOT EXISTS (
+    SELECT version FROM `".$prefix."_dbversion` WHERE version = '1'
+) LIMIT 1;");
     } catch (Exception $e) {
         if(is_cli()){
             echo($e);
