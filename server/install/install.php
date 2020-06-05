@@ -235,7 +235,7 @@ if(!is_cli()){
 	</form>
     </p>
 <?php
-} else if ($_POST["step"] == "5" || $userPopulated) {
+} else if (in_array("5",$_POST) || $userPopulated) {
     initOptions($_POST["user_name"], isset($_POST["admin_visible"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
 ?>
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
