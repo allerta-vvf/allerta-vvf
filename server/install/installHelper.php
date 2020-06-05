@@ -38,16 +38,19 @@ if (file_exists('../vendor/autoload.php')) {
 define('NAME', 'AllertaVVF');
 define('VERSION', '0.1-alpha');
 
-function checkConnection($host, $user, $password, $database){
+function checkConnection($host, $user, $password, $database, $return=false){
     try{
         $connection = new PDO("mysql:host=$host", $user, $password,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $connectionOk = true;
     } catch (PDOException $e){
-        if(is_cli()){
-            echo($e);
-            exit(8);
-        }
-        $connectionOk = false;
+        if($return){
+            return false;
+        } else {
+            if(is_cli()){
+                echo($e);
+                exit(8);
+            }
+            $connectionOk = false;
         ?>
         <div class="wp-die-message"><h1>Errore nello stabilire una connection al database</h1>
             <p>Questo potrebbe voler dire che name user e password nel file <code>config.php</code> sono sbagliate o che non possiamo contattare il database <code><?php echo $database; ?></code>. Potrebbe voler dire che il tuo database è irraddbile.</p>
@@ -61,10 +64,11 @@ function checkConnection($host, $user, $password, $database){
                 <summary>Informazioni avanzate</summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
         </div>
         <?php
-        exit();
+            exit();
+        }
     }
     if($connectionOk){
         try{
@@ -75,10 +79,13 @@ function checkConnection($host, $user, $password, $database){
             }
             $connection->exec("use " . preg_replace('/[^a-zA-Z0-9]/', '', trim($database)));
         } catch (PDOException $e){
-            if(is_cli()){
-                echo($e);
-                exit(7);
-            }
+            if($return){
+                return false;
+            } else {
+                if(is_cli()){
+                    echo($e);
+                    exit(7);
+                }
             ?>
             <div class="wp-die-message"><h1>Impossibile selezionare il database</h1>
                 <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a selezionare il database <code><?php echo $database; ?></code>.</p>
@@ -92,11 +99,13 @@ function checkConnection($host, $user, $password, $database){
                     <summary>Informazioni avanzate</summary>
                     <pre><?php echo($e); ?></pre>
                 </details>
-                <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+                <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
             </div>
             <?php
-            exit();
+                exit();
+            }
         }
+        return true;
     }
 }
 
@@ -160,7 +169,6 @@ define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
 
 function initDB(){
     try{
-        require "../config.php";
         $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $prefix = DB_PREFIX;
         $connection->exec("
@@ -327,7 +335,7 @@ CREATE TABLE `".$prefix."_dbversion` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL, '1', current_timestamp());");
+INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());");
     } catch (Exception $e) {
         if(is_cli()){
             echo($e);
@@ -393,7 +401,7 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
 }
 
 function validate_arg($options, $name, $default){
-    return array_key_exists($name, $options) ? $options[$name] : (isset($_ENV[$name]) ? $_ENV[$name] : (isset($_ENV[strtoupper($name)]) ? $_ENV[strtoupper($name)] : $default));
+    return array_key_exists($name, $options) ? $options[$name] : (getenv($name)!==false ? getenv($name) : (getenv(strtoupper($name))!==false ? getenv(strtoupper($name)) : $default));
 }
 
 function change_dir($directory){

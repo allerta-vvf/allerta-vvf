@@ -2,7 +2,11 @@
 require_once 'vendor/autoload.php';
 use Tracy\Debugger;
 
-require_once 'config.php';
+try{
+  require_once 'config.php';
+} catch(Exception $e){
+  header('Location: install/install.php');
+}
 
 session_start();
 date_default_timezone_set('Europe/Rome');
@@ -157,11 +161,18 @@ class database{
     }
   }
 
+  public function isOptionsEmpty(){
+    return empty($this->exec("SELECT * FROM `%PREFIX%_options`;", true));
+  }
+
   public function __construct(){
     if(!defined("DATABASE")){
       define("DATABASE", "OK");
     }
     $this->connect();
+    if($this->isOptionsEmpty()){
+      header('Location: install/install.php');
+    }
   }
 
   public function close(){
