@@ -235,8 +235,10 @@ if(!is_cli()){
 	</form>
     </p>
 <?php
-} else if (in_array("5",$_POST) || $userPopulated) {
+} else if (in_array("5",$_POST)) {
     initOptions($_POST["user_name"], isset($_POST["admin_visible"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
+    header("Location: install.php");
+} else if ($userPopulated) {
 ?>
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
     <p>Ottimo lavoro, amico! Hai completato l'installazione. Ora Allerta può funzionare correttamente. Adesso è il momento di…</p>
