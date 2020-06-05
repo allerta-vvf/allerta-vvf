@@ -24,7 +24,7 @@ if (file_exists("../config.php")) {
         $dbhostValue = DB_HOST;
         $prefixValue = DB_PREFIX;
         if(checkConnection($dbhostValue,$unameValue,$pwdValue,$dbnameValue,true)){
-            $configExist = true;
+            $configOk = true;
             try{
                 $connection = new PDO("mysql:host=$dbhostValue;dbname=$dbnameValue", $unameValue, $pwdValue,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
                 $stmt = $connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_dbversion`;"));
@@ -44,7 +44,7 @@ if (file_exists("../config.php")) {
         $pwdValue = "password";
         $dbhostValue = "localhost";
         $prefixValue = "allerta01";
-        $configExist = false;
+        $configOk = false;
     }
 } else {
     $dbnameValue = "allerta";
@@ -52,7 +52,7 @@ if (file_exists("../config.php")) {
     $pwdValue = "password";
     $dbhostValue = "localhost";
     $prefixValue = "allerta01";
-    $configExist = false;
+    $configOk = false;
 }
 
 if(!is_cli()){
@@ -70,7 +70,7 @@ if(!is_cli()){
     </head>
     <body class="wp-core-ui">
     <p id="logo"><a href="javascript:alert('TODO: add docs');">Allerta</a></p>
-<?php if(!isset($_POST["step"]) && !$configExist){ ?>
+<?php if(!isset($_POST["step"]) && !$configOk){ ?>
     <h1 class="screen-reader-text">Prima di iniziare</h1>
     <p>Benvenuto in Allerta. Prima di iniziare abbiamo bisogno di alcune informazioni sul database. Devi conoscere i seguenti dati prima di procedere.</p>
     <ol>
@@ -145,7 +145,7 @@ if(!is_cli()){
     </form>
     </p>
 <?php
-} else if ($configExist && !$populated) {
+} else if ($configOk && !$populated) {
     initDB();
     header("Location: install.php");
 } else if ($populated && !$userPopulated && !in_array("5",$_POST)) {
