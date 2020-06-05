@@ -161,11 +161,18 @@ class database{
     }
   }
 
+  public function isOptionsEmpty(){
+    return empty($this->database->exec("SELECT * FROM `%PREFIX%_options`;", true));
+  }
+
   public function __construct(){
     if(!defined("DATABASE")){
       define("DATABASE", "OK");
     }
     $this->connect();
+    if($this->isOptionsEmpty){
+      header('Location: install/install.php');
+    }
   }
 
   public function close(){

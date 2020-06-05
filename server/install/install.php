@@ -12,6 +12,43 @@ if (file_exists("installHelper.php")) {
 if (!file_exists("runInstall.php")) {
     die("Already installed");
 }
+
+$populated = false;
+if (file_exists("../config.php")) {
+    try {
+        require('../config.php');
+        $dbnameValue = DB_NAME;
+        $unameValue = DB_USER;
+        $pwdValue = DB_PASSWORD;
+        $dbhostValue = DB_HOST;
+        $prefixValue = DB_PREFIX;
+        if(checkConnection($dbhostValue,$unameValue,$pwdValue,$dbnameValue,true)){
+            $configExist = true;
+            try{
+                $connection = new PDO("mysql:host=$dbhostValue;dbname=$dbnameValue", $unameValue, $pwdValue,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+                $populated = !empty($connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_dbversion`;"))->execute());
+                $userPopulated = !empty($connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_users`;"))->execute());
+            } catch (PDOException $e){
+                $populated = false;
+            }
+        }
+    } catch (Exception $e) {
+        $dbnameValue = "allerta";
+        $unameValue = "user";
+        $pwdValue = "password";
+        $dbhostValue = "localhost";
+        $prefixValue = "allerta01";
+        $configExist = false;
+    }
+} else {
+    $dbnameValue = "allerta";
+    $unameValue = "user";
+    $pwdValue = "password";
+    $dbhostValue = "localhost";
+    $prefixValue = "allerta01";
+    $configExist = false;
+}
+
 if(!is_cli()){
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml"><head>
@@ -27,7 +64,7 @@ if(!is_cli()){
     </head>
     <body class="wp-core-ui">
     <p id="logo"><a href="javascript:alert('TODO: add docs');">Allerta</a></p>
-<?php if(!isset($_POST["step"])){ ?>
+<?php if(!isset($_POST["step"]) && !$configExist){ ?>
     <h1 class="screen-reader-text">Prima di iniziare</h1>
     <p>Benvenuto in Allerta. Prima di iniziare abbiamo bisogno di alcune informazioni sul database. Devi conoscere i seguenti dati prima di procedere.</p>
     <ol>
@@ -49,29 +86,7 @@ if(!is_cli()){
     </form>
     </p>
 <?php
-} else if ($_POST["step"] == "2") {
-    if (file_exists("../config.php")) {
-        try {
-            require('../config.php');
-            $dbnameValue = DB_NAME;
-            $unameValue = DB_USER;
-            $pwdValue = DB_PASSWORD;
-            $dbhostValue = DB_HOST;
-            $prefixValue = DB_PREFIX;
-        } catch (Exception $e) {
-            $dbnameValue = "allerta";
-            $unameValue = "user";
-            $pwdValue = "password";
-            $dbhostValue = "localhost";
-            $prefixValue = "allerta01";
-        }
-    } else {
-        $dbnameValue = "allerta";
-        $unameValue = "user";
-        $pwdValue = "password";
-        $dbhostValue = "localhost";
-        $prefixValue = "allerta01";
-    }
+} else if (in_array("2",$_POST)) {
 ?>
     <h1 class="screen-reader-text">Configura la connection al database</h1>
     <form method="post">
@@ -111,7 +126,7 @@ if(!is_cli()){
     <p class="step"><input name="submit" type="submit" value="Invia" class="button button-large"></p>
     </form>
 <?php
-} else if ($_POST["step"] == "3") {
+} else if (in_array("3",$_POST)) {
     checkConnection($_POST["dbhost"],$_POST["uname"],$_POST["pwd"],$_POST["dbname"]);
     generateConfig($_POST["dbhost"],$_POST["uname"],$_POST["pwd"],$_POST["dbname"],$_POST["prefix"]);
 ?>
@@ -124,8 +139,10 @@ if(!is_cli()){
     </form>
     </p>
 <?php
-} else if ($_POST["step"] == "4") {
+} else if ($configExist && !$populated) {
     initDB();
+    header("Location: install.php");
+} else if ($populated && !$userPopulated) {
 ?>
     <h1 class="screen-reader-text">Evviva!</h1>
     <p>Hai <b>quasi terminato</b> l'installazione di Allerta, devi solo inserire alcune informazioni.</p>
@@ -218,7 +235,7 @@ if(!is_cli()){
 	</form>
     </p>
 <?php
-} else if ($_POST["step"] == "5") {
+} else if ($_POST["step"] == "5" || $userPopulated) {
     initOptions($_POST["user_name"], isset($_POST["admin_visible"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
 ?>
     <h1 class="screen-reader-text">Installazione terminata con successo.</h1>
