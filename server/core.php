@@ -162,7 +162,7 @@ class database{
   }
 
   public function isOptionsEmpty(){
-    return empty($this->database->exec("SELECT * FROM `%PREFIX%_options`;", true));
+    return empty($this->exec("SELECT * FROM `%PREFIX%_options`;", true));
   }
 
   public function __construct(){
@@ -170,7 +170,7 @@ class database{
       define("DATABASE", "OK");
     }
     $this->connect();
-    if($this->isOptionsEmpty){
+    if($this->isOptionsEmpty()){
       header('Location: install/install.php');
     }
   }
