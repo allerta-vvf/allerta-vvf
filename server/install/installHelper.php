@@ -64,7 +64,7 @@ function checkConnection($host, $user, $password, $database, $return=false){
                 <summary>Informazioni avanzate</summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
         </div>
         <?php
             exit();
@@ -99,7 +99,7 @@ function checkConnection($host, $user, $password, $database, $return=false){
                     <summary>Informazioni avanzate</summary>
                     <pre><?php echo($e); ?></pre>
                 </details>
-                <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+                <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
             </div>
             <?php
                 exit();
@@ -335,9 +335,7 @@ CREATE TABLE `".$prefix."_dbversion` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO `".$prefix."_dbversion` (`id`, `version`, `timestamp`) VALUES (NULL, '1', current_timestamp()) WHERE NOT EXISTS (
-    SELECT version FROM `".$prefix."_dbversion` WHERE version = '1'
-) LIMIT 1;");
+INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());");
     } catch (Exception $e) {
         if(is_cli()){
             echo($e);

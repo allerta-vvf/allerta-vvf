@@ -14,6 +14,7 @@ if (!file_exists("runInstall.php")) {
 }
 
 $populated = false;
+$userPopulated = false;
 if (file_exists("../config.php")) {
     try {
         require('../config.php');
@@ -26,10 +27,15 @@ if (file_exists("../config.php")) {
             $configExist = true;
             try{
                 $connection = new PDO("mysql:host=$dbhostValue;dbname=$dbnameValue", $unameValue, $pwdValue,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-                $populated = !empty($connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_dbversion`;"))->execute());
-                $userPopulated = !empty($connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_users`;"))->execute());
+                $stmt = $connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_dbversion`;"));
+                $query = $stmt->execute();
+                $populated = !empty($stmt->fetchAll(PDO::FETCH_ASSOC));
+                $stmt2 = $connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_users`;"));
+                $query2 = $stmt2->execute();
+                $userPopulated = !empty($stmt2->fetchAll(PDO::FETCH_ASSOC));
             } catch (PDOException $e){
                 $populated = false;
+                $userPopulated = false;
             }
         }
     } catch (Exception $e) {
@@ -142,7 +148,7 @@ if(!is_cli()){
 } else if ($configExist && !$populated) {
     initDB();
     header("Location: install.php");
-} else if ($populated && !$userPopulated) {
+} else if ($populated && !$userPopulated && !in_array("5",$_POST)) {
 ?>
     <h1 class="screen-reader-text">Evviva!</h1>
     <p>Hai <b>quasi terminato</b> l'installazione di Allerta, devi solo inserire alcune informazioni.</p>
