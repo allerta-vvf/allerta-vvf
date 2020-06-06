@@ -364,6 +364,22 @@ final class Role {
   
 }
 
+function full_path()
+{
+    $s = &$_SERVER;
+    $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on') ? true:false;
+    $sp = strtolower($s['SERVER_PROTOCOL']);
+    $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
+    $port = $s['SERVER_PORT'];
+    $port = ((!$ssl && $port=='80') || ($ssl && $port=='443')) ? '' : ':'.$port;
+    $host = isset($s['HTTP_X_FORWARDED_HOST']) ? $s['HTTP_X_FORWARDED_HOST'] : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
+    $host = isset($host) ? $host : $s['SERVER_NAME'] . $port;
+    $uri = $protocol . '://' . $host . $s['REQUEST_URI'];
+    $segments = explode('?', $uri, 2);
+    $url = $segments[0];
+    return $url;
+}
+
 function initOptions($name, $visible, $password, $report_email, $owner){
     try{
         require_once "../config.php";
@@ -375,10 +391,18 @@ function initOptions($name, $visible, $password, $report_email, $owner){
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'owner', :owner, '1', current_timestamp(), current_timestamp(), '1');");
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'owner', :owner, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('3', 'web_url', :web_url, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('4', 'use_custom_error_sound', 0, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('5', 'use_custom_error_image', 0, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('6', 'intrusion_save', 1, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('7', 'intrusion_save_info', 1, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('8', 'enable_technical_support', 0, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('9', 'technical_support_key', '', '1', current_timestamp(), current_timestamp(), '1');");
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        
         $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
         $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
+        $prep->bindValue(':web_url', str_replace("install/install.php", "", full_path()), PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
         if(is_cli()){

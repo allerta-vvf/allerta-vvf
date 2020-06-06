@@ -206,6 +206,15 @@ class database{
       return !empty($risultato);
   }
   
+  public function getOption($name){
+    if(defined($name)){
+      return constant($name);
+    } else {
+      $option = $this->exec("SELECT `value` FROM `%PREFIX%_options` WHERE `name` = :name AND `enabled` = 1;", true, [":name" => $name]);
+      return empty($option) ? "" : $option[0]["value"];
+    }
+  }
+
   public function add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
     $autisti = implode(",", $autisti);
     bdump($autisti);
@@ -254,8 +263,8 @@ class user{
 
   public function requirelogin(){
    if(!$this->authenticated()){
-      if(INTRUSION_SAVE){
-        if(INTRUSION_SAVE_INFO){
+      if($this->database->getOption("intrusion_save")){
+        if($this->database->getOption("intrusion_save_info")){
           $params = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
         } else {
           $params = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
@@ -263,7 +272,7 @@ class user{
         $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
         $this->database->exec($sql, false, $params);
       }
-      $this->tools->redirect(WEB_URL);
+      $this->tools->redirect($this->database->getOption("web_url"));
    }
   }
 
