@@ -342,7 +342,7 @@
         <a href="{{ urlsoftware }}esercitazioni.php">Esercitazioni</a>
         <a href="{{ urlsoftware }}log.php">Log</a>
         <a {# href="{{ urlsoftware }}grafici.php" #}>Grafici</a>
-        <a href="javascript:void(0);" onclick="chat()">Supporto tecnico</a>
+        {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">Supporto tecnico</a>{% endif %}
         <a style="float: right;" id="logout">Ciao {{ user.name }}. <b onclick="location.href='{{ urlsoftware }}logout.php';">exec il logout</b></a>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">☰</a>
         </div>
