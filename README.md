@@ -12,6 +12,7 @@ This is only a **development version**.
 |"Esercitazioni"|||:x:|
 |Installation|:heavy_check_mark:|||
 |CLI Installation|:heavy_check_mark:|||
+|Docker Installation|:heavy_check_mark:|||
 |Translation|||:x:|
 |User managament|||:x:|
 |Options managament|||:x:|
