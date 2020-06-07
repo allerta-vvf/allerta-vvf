@@ -232,6 +232,10 @@ class database{
     $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]);
     $this->incrementa($incrementa);
   }
+
+  public function remove_intervento($id){
+    return $this->exec("DELETE FROM `%PREFIX%_interventi` WHERE `id` = :id", false, [":id" => $id]);
+  }
 }
 
 final class Role {

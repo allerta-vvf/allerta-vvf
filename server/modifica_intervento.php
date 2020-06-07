@@ -23,6 +23,8 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   if($tools->validate_form_data(['$post-id', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("rimuovo intervento");
+      $database->remove_intervento($_POST["id"]);
+      $tools->redirect("interventi.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
