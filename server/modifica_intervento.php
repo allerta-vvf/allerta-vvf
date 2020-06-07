@@ -53,7 +53,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_intervento.html', ['intervento' => array('id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie), 'titolo' => ucfirst($modalità) . ' intervento', 'owner' => 'VVF Darfo', 'urlsoftware' => '', 'user' => $user->info()]);
+  loadtemplate('modifica_intervento.html', ['intervento' => array('id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie), 'titolo' => ucfirst($modalità) . ' intervento']);
   bdump($_SESSION['token'], "token");
 }
 ?>
