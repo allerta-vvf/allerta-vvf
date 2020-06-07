@@ -1,17 +1,16 @@
 <?php
 require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
-  bdump("per poco...");
   if($tools->validate_form_data(['$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("aggiungo intervento");
       $database->add_intervento($_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
+      $tools->redirect("interventi.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "modifica")) {
-  bdump("per poco...");
   if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("modifico intervento");
@@ -35,7 +34,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   // 1 hour = 60 seconds * 60 minutes = 3600
   $_SESSION['token-expire'] = time() + 3600;
   $personale = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC", true); // Pesco i dati della table e li ordino in base al name
-  $tipologie = $database->exec("SELECT name FROM `%PREFIX%_tipo` ORDER BY name ASC", true); // Pesco le tipologie della table
+  $tipologie = $database->exec("SELECT `name` FROM `%PREFIX%_tipo` ORDER BY name ASC", true); // Pesco le tipologie della table
   $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "add"));
   bdump($modalità, "modalità");
   bdump($tipologie, "tipologie");
