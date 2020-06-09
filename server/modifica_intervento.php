@@ -13,17 +13,20 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
 } elseif($tools->validate_form_data('$post-mod', true, "modifica")) {
   if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
+      bdump($_POST);
       bdump("modifico intervento");
+      $database->change_intervento($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
+      $tools->redirect("interventi.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
   bdump("rimuovo intervento");
-  if($tools->validate_form_data(['$post-id', '$post-token'])) {
+  if($tools->validate_form_data(['$post-id', '$post-incrementa', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("rimuovo intervento");
-      $database->remove_intervento($_POST["id"]);
+      $database->remove_intervento($_POST["id"], $_POST["incrementa"]);
       $tools->redirect("interventi.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
@@ -47,8 +50,13 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       bdump($database->exists("interventi", $id));
       $values = $database->exec("SELECT * FROM `%PREFIX%_interventi` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
       bdump($values);
-    } else {
-    $value = [];
+  } else {
+      $values = [];
+  }
+  if(isset($_GET["incrementa"])){
+      $incrementa = $_GET["incrementa"];
+  } else {
+      $incrementa = "";
   }
   if($modalità=="modifica" || $modalità=="elimina"){
       if(empty($id)){
@@ -57,7 +65,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_intervento.html', ['intervento' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'titolo' => ucfirst($modalità) . ' intervento']);
+  loadtemplate('modifica_intervento.html', ['intervento' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' intervento']);
   bdump($_SESSION['token'], "token");
 }
 ?>

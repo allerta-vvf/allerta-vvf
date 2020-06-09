@@ -221,6 +221,19 @@ class database{
     $this->exec($sql, false);
   }
 
+  public function getIncrementa($id){
+    bdump($id);
+    $sql = "SELECT `incrementa` FROM `%PREFIX%_interventi` WHERE `id` = :id";
+    $incrementa = $this->exec($sql, true, [":id" => $id])[0]['incrementa'];
+    bdump($incrementa);
+    return $incrementa;
+  }
+
+  public function diminuisci($id){
+    $sql = "UPDATE `%PREFIX%_profiles` SET `interventi`= interventi - 1 WHERE id IN ({$this->getIncrementa($id)});";
+    $this->exec($sql, false);
+  }
+
   public function add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
     $autisti = implode(",", $autisti);
     bdump($autisti);
@@ -234,7 +247,14 @@ class database{
   }
 
   public function remove_intervento($id){
-    return $this->exec("DELETE FROM `%PREFIX%_interventi` WHERE `id` = :id", false, [":id" => $id]);
+    $this->diminuisci($id);
+    $this->exec("DELETE FROM `%PREFIX%_interventi` WHERE `id` = :id", true, [":id" => $id]);
+  }
+
+
+  public function change_intervento($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+    $this->remove_intervento($id); // TODO: update, instead of removing and re-adding (with another id)
+    $this->add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda);
   }
 }
 
