@@ -31,7 +31,6 @@ class FirstCest
 
     public function logsWorks(AcceptanceTester $I)
     {
-        $I->amOnPage('/');
         $I->amOnPage('/lista.php');
         $I->click('Attivo');
         $I->click('Log');
