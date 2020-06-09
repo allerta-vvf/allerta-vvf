@@ -335,7 +335,8 @@ CREATE TABLE `".$prefix."_dbversion` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());");
+INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());
+INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');");
     } catch (Exception $e) {
         if(is_cli()){
             echo($e);
