@@ -45,6 +45,10 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   if(isset($_GET["id"])){
       $id = $_GET["id"];
       bdump($database->exists("interventi", $id));
+      $values = $database->exec("SELECT * FROM `%PREFIX%_interventi` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
+      bdump($values);
+    } else {
+    $value = [];
   }
   if($modalità=="modifica" || $modalità=="elimina"){
       if(empty($id)){
@@ -53,7 +57,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_intervento.html', ['intervento' => array('id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie), 'titolo' => ucfirst($modalità) . ' intervento']);
+  loadtemplate('modifica_intervento.html', ['intervento' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'titolo' => ucfirst($modalità) . ' intervento']);
   bdump($_SESSION['token'], "token");
 }
 ?>

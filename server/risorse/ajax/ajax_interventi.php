@@ -10,7 +10,7 @@ $content = $content." <a href='dettagli.php?iid=$id#note'>...Leggi ancora</a>";
 return $content;
 }
 
-$impostazioni['modifica'] = false;
+$impostazioni['modifica'] = true;
 $impostazioni['elimina'] = true;
 
 $risultato = $database->exec("SELECT * FROM `%PREFIX%_interventi` ORDER BY data DESC, uscita desc", true); // Pesco i dati della table e li ordino in base alla data
@@ -96,7 +96,7 @@ foreach($risultato as $row){
       $persone = base64_encode( $row['incrementa'] );
       echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['autisti'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td><td>" . $row['tipo'] . "</td>";
       if($impostazioni['modifica']) {
-          echo "<td><a href='modifica.php?modifica&id={$row['id']}&data={$row['data']}&codice={$row['codice']}&uscita={$row['uscita']}&rientro={$row['rientro']}&luogo={$row['luogo']}&note={$row['note']}&tipo={$row['tipo']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
+          echo "<td><a href='modifica.php?modifica&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
       if($impostazioni['elimina']) {
           echo "<td><a href='modifica_intervento.php?elimina&id={$row['id']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";

@@ -307,19 +307,19 @@ $('form').submit(function () {
 <form method="post">
   <div class="container">
     <label><b>Giorno dell' intervento</b></label>
-    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text">
+    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text" value="{{ values.data }}">
     <br>
     <br>
     <label><b>Progressivo</b></label>
-    <input id="progressivo" type="text" name="codice" placeholder="1234/5" required>
+    <input id="progressivo" type="text" name="codice" placeholder="1234/5" required value="{{ values.codice }}">
     <br>
     <br>
     <label><b>Ora di uscita</b></label>
-    <input type="time" name="uscita" required>
+    <input type="time" name="uscita" required value="{{ values.uscita }}">
     <br>
     <br>
     <label><b>Ora di rientro</b></label>
-    <input type="time" name="rientro" required>
+    <input type="time" name="rientro" required value="{{ values.rientro }}">
     <br>
     <br>
     <label><b>Caposquadra</b></label>
@@ -327,7 +327,7 @@ $('form').submit(function () {
     {% for user in intervento.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='capo' value='{{ user.id }}'>
+      <input class="capo capo-{{ user.id }}" type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
         {{ user.name }}
       </label>
@@ -345,7 +345,7 @@ $('form').submit(function () {
     {% if user.autista == 1 %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='autisti[]' value='{{ user.id }}'>
+      <input class="autisti autisti-{{ user.id }}" type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
         {{ user.name }}
       </label>
@@ -358,7 +358,7 @@ $('form').submit(function () {
     {% for user in intervento.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
+      <input class="personale personale-{{ user.id }}" type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
         {{ user.name }}
       </label>
@@ -366,16 +366,16 @@ $('form').submit(function () {
     {% endfor %}
     <br>
     <label><b>Luogo dell' intervento</b></label>
-    <input type="text" name="luogo" required>
+    <input type="text" name="luogo" required value="{{ values.luogo }}">
     <br>
     <br>
     <label><b>Altre note (es. via o info)</b></label><br>
-    <textarea name='note'></textarea>
+    <textarea name='note' id='note'></textarea>
     <br>
     <br>
     <label><b>Tipo di intervento</b></label>
     <br>
-    <select name='tipo'>
+    <select name='tipo' class="tipi">
     {% for tipo in intervento.tipologie %}
     <option value='{{ tipo.name }}'>{{ tipo.name }}</option>
     {% endfor %}
@@ -388,6 +388,17 @@ $('form').submit(function () {
   </div>
 </form>
 <script>
+$.each('{{ values.capo }}'.split(','), function( index, value ) {
+  $('.capo-'+value).prop('checked', true);
+});
+$.each('{{ values.autisti }}'.split(','), function( index, value ) {
+  $('.autisti-'+value).prop('checked', true);
+});
+$.each('{{ values.personale }}'.split(','), function( index, value ) {
+  $('.personale-'+value).prop('checked', true);
+});
+$( ".tipi" ).val('{{ values.tipo }}');
+$('#note').val('{{ values.note }}');
 $('form').submit(function () {
     if(!$('#token').val().endsWith("dJN299u49")){
       $('#token').val($('#token').val() + "");
