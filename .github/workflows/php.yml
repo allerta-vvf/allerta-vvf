@@ -52,11 +52,11 @@ jobs:
       run: composer install --prefer-dist --no-progress
       working-directory: ${{env.working-directory}}
 
-    - name: A little hack for running test suite
-      run: |
-        mv index.php index.old.php
-        touch index.php
-      working-directory: ${{env.working-directory}}
+    #- name: A little hack for running test suite
+    #  run: |
+    #    mv index.php index.old.php
+    #    touch index.php
+    #  working-directory: ${{env.working-directory}}
 
     - name: Run test suite
       run: vendor/bin/codecept run --steps
