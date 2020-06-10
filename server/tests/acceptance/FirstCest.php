@@ -17,7 +17,7 @@ class FirstCest
         $I->fillField('user_name', 'admin_user');
         $I->fillField('admin_password', 'password');
         $I->checkOption('admin_visible');
-        $I->fillField('admin_email', 'admin_mail@allertavvf.local');
+        $I->fillField('admin_email', 'allerta@example.com');
         $I->fillField('owner', 'owner');
         $I->click('Submit');
         $I->see('execre il login');
