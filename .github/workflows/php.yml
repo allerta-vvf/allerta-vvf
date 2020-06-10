@@ -55,7 +55,7 @@ jobs:
     - name: A little hack for running test suite
       run: |
         mv index.php index.old.php
-        echo "<?php header('Location: lista.php'); ?>" > index.php
+        touch index.php
       working-directory: ${{env.working-directory}}
 
     - name: Run test suite
