@@ -425,10 +425,10 @@ class user{
     }
   }
 
-  public function add_utente($mail, $nome, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
-    $this->auth->registerWithUniqueUsername($mail, $password, $username);
-    $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :nome, :caposquadra, :autista)";
-    $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":nome" => $nome, ":caposquadra" => $capo, ":autista" => $autista]);
+  public function add_utente($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
+    $this->auth->registerWithUniqueUsername($email, $password, $username);
+    $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
+    $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
   }
 }
 

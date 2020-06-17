@@ -1,7 +1,7 @@
 <?php
 require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
-  if($tools->validate_form_data(['$post-mail', '$post-nome', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
+  if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("aggiungo utente");
       bdump($_POST);
@@ -9,7 +9,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $autista = isset($_POST["autista"]) ? 1 : 0;
       $hidden = isset($_POST["visible"]) ? 0 : 1;
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
-      $user->add_utente($_POST["mail"], $_POST["nome"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
+      $user->add_utente($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
       $tools->redirect("interventi.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
