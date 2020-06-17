@@ -14,7 +14,3 @@ define( 'DB_HOST', '@@host@@' );
 
 /* Database hostname */
 define( 'DB_PREFIX', '@@prefix@@' );
-
-/* Is the server under Cloudflare® */
-/* Cloudflare is a registered trademark of Cloudflare, Inc. */
-define( 'SERVER_UNDER_CF', false );

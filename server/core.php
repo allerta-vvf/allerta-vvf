@@ -12,8 +12,11 @@ session_start();
 date_default_timezone_set('Europe/Rome');
 
 class tools{
-  public function __construct(){
+  public $check_cf_ip;
+
+  public function __construct($check_cf_ip){
     define("TOOLS", "OK");
+    $this->check_cf_ip = $check_cf_ip;
   }
 
   public function validate_form_data($data, $noempty=true, $value=null){
@@ -82,7 +85,7 @@ class tools{
     }else{
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    if(SERVER_UNDER_CF){
+    if($this->check_cf_ip){
       if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
         $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
       }
@@ -426,8 +429,8 @@ class user{
 function init_class(){
   global $user, $tools, $database;
   if(!isset($user) && !isset($tools) && !isset($database)){
-    $tools = new tools();
     $database = new database();
+    $tools = new tools($database->getOption("check_cf_ip"));
     $user = new user($database, $tools);
   }
   //if($user->requireRole(Role::DEVELOPER)){
