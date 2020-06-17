@@ -286,7 +286,7 @@ class user{
   public function __construct($database, $tools){
     $this->database = $database;
     $this->tools = $tools;
-    $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_");
+    $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
     define("LOGIN", "OK");
   }
 
@@ -423,6 +423,12 @@ class user{
     catch (\Delight\Auth\NotLoggedInException $e) {
       die('Not logged in');
     }
+  }
+
+  public function add_utente($mail, $nome, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
+    $this->auth->registerWithUniqueUsername($mail, $password, $username);
+    $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :nome, :caposquadra, :autista)";
+    $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":nome" => $nome, ":caposquadra" => $capo, ":autista" => $autista]);
   }
 }
 

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <style>
+#add {
+ outline: none;
+ cursor: pointer;
+ text-align: center;
+ text-decoration: none;
+ font: bold 12px Arial, Helvetica, sans-serif;
+ color: #fff;
+ padding: 10px 20px;
+ border: solid 1px #0076a3;
+ background: #0095cd;
+}
+
+#href {
+ outline: none;
+ cursor: pointer;
+ text-align: center;
+ text-decoration: none;
+ font: bold 12px Arial, Helvetica, sans-serif;
+ color: #fff;
+ padding: 10px 20px;
+ border: solid 1px #0076a3;
+ background: #0095cd;
+}
+</style>
+    <p style="text-align: center;">
+      <a id='add' href="modifica_utente.php?add">add utente</a>
+    </p>
+    <script defer>
+      function Attivo(id){
+        $.ajax({
+          url: "risorse/ajax/ajax_aggiornadispo.php",
+          method: "POST",
+          data: {
+            change_id: id,
+            dispo: 1
+          },
+          success: function(data) {
+            alert("Grazie, {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
+            location.reload();
+          }
+        });
+      }
+
+      function NonAttivo(id){
+        $.ajax({
+          url: "risorse/ajax/ajax_aggiornadispo.php",
+          method: "POST",
+          data: {
+            change_id: id,
+            dispo: 0
+          },
+          success: function(data) {
+            alert("Grazie {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
+            location.reload();
+          }
+        });
+      }
+    </script>
+    <br>
+    <br>
+    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <br>
+    <br>
+    <div id="lista"></div>
+{% if user.full_viewer == false %}
+<script>
+$( "#lista" ).load("risorse/ajax/ajax_lista.php");
+$(document).ready(function() {
+  setInterval(function() {
+    $( "#lista" ).load("risorse/ajax/ajax_lista.php");
+  }, 10000);
+});
+</script>
+{% elseif user.full_viewer == true %}
+<script>
+$( "#lista" ).load("risorse/ajax/ajax_lista_admin.php");
+$(document).ready(function() {
+  setInterval(function() {
+    $( "#lista" ).load("risorse/ajax/ajax_lista_admin.php");
+  }, 10000);
+});
+</script>
+{% endif %}
+<script defer type="text/javascript" src="risorse/js/cache.js"></script>
+    <br>
+    <br>
+{% endblock %}
