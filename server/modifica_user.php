@@ -3,13 +3,13 @@ require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
   if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("aggiungo utente");
+      bdump("aggiungo user");
       bdump($_POST);
       $capo = isset($_POST["capo"]) ? 1 : 0;
       $autista = isset($_POST["autista"]) ? 1 : 0;
       $hidden = isset($_POST["visible"]) ? 0 : 1;
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
-      $user->add_utente($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
+      $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
       $tools->redirect("user_management.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
@@ -26,18 +26,18 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
-} elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
+*/} elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
   bdump("rimuovo intervento");
-  if($tools->validate_form_data(['$post-id', '$post-incrementa', '$post-token'])) {
+  if($tools->validate_form_data(['$post-id', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("rimuovo intervento");
-      $database->remove_intervento($_POST["id"], $_POST["incrementa"]);
-      $tools->redirect("interventi.php");
+      bdump("rimuovo user");
+      $user->remove_user($_POST["id"]);
+      $tools->redirect("user_management.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
-*/} else {
+} else {
   if(!isset($_GET["_tracy_bar"])){
     $length = 32;
   unset($_SESSION['token']);
@@ -64,7 +64,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_utente.html', ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' utente']);
+  loadtemplate('modifica_user.html', ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
   bdump($_SESSION['token'], "token");
 }
 ?>

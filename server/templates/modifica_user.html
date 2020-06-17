@@ -210,7 +210,7 @@ textarea {
 <form method="post">
   <div class="container">
     <label><b>E-mail</b></label>
-    <input id="mail" type="text" name="mail" placeholder="utente@providermail.estensione" required>
+    <input id="mail" type="text" name="mail" placeholder="user@providermail.estensione" required>
     <br>
     <br>
     <label><b>name</b></label>
@@ -262,6 +262,33 @@ $('form').submit(function () {
 {% if modalità == "modifica" %}
 {% endif %}
 {% if modalità == "elimina" %}
+<style>
+  #add {
+   outline: none;
+   cursor: pointer;
+   text-align: center;
+   text-decoration: none;
+   font: bold 12px Arial, Helvetica, sans-serif;
+   color: #fff;
+   padding: 10px 20px;
+   border: solid 1px #0076a3;
+   background: #0095cd;
+  }
+  </style>
+  <div style="margin: 0 auto; text-align: center">
+  <p>Sei sicuro di voler eliminare l' utente?</p>
+  <form method="post">
+  <input id="modalità" type="hidden" value="elimina" name="mod"></input>
+  <input id="token" type="hidden" value="{{ token }}" name="token"></input>
+  <input id="id" type="hidden" value="{{ id }}" name="id"></input>
+  <button id="add" type="submit">invia</button>
+  </form>
+  <script>
+  $('form').submit(function () {
+      return confirm("L'azione non può essere annullata. Sei sicuro di voler continuare?");
+  });
+  </script>
+  </div>
 {% endif %}
 </body>
 </html>

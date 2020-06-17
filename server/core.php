@@ -425,13 +425,17 @@ class user{
     }
   }
 
-  public function add_utente($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
+  public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
     $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
     $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
     if($capo == 1){
       $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
     }
+  }
+
+  public function remove_user($id){
+    $this->exec("DELETE FROM `%PREFIX%_users` WHERE `id` = :id; DELETE FROM `%PREFIX%_profiles` WHERE `id` = :id;", true, [":id" => $id]);
   }
 }
 
