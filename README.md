@@ -18,7 +18,7 @@ This is only a **development version**.
 |Translation|||:x:|
 |User managament|||:x:|
 |Options managament|||:x:|
-|Options||:clock8:||
+|Options|:heavy_check_mark:|||
 |Logs|:heavy_check_mark:|||
 |Graphs|||:x:|
 |Images||:clock8:||
