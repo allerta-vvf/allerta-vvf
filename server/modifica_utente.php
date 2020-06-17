@@ -10,7 +10,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $hidden = isset($_POST["visible"]) ? 0 : 1;
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
       $user->add_utente($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
-      $tools->redirect("interventi.php");
+      $tools->redirect("user_management.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }

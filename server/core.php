@@ -426,9 +426,12 @@ class user{
   }
 
   public function add_utente($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
-    $this->auth->registerWithUniqueUsername($email, $password, $username);
+    $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
     $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
+    if($capo == 1){
+      $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
+    }
   }
 }
 
