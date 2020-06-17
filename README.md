@@ -16,7 +16,7 @@ This is only a **development version**.
 |CLI Installation|:heavy_check_mark:|||
 |Docker Installation|:heavy_check_mark:|||
 |Translation|||:x:|
-|User managament|||:x:|
+|User managament||:clock8:||
 |Options managament|||:x:|
 |Options|:heavy_check_mark:|||
 |Logs|:heavy_check_mark:|||
