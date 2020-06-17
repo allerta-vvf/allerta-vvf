@@ -10,7 +10,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $hidden = isset($_POST["visible"]) ? 0 : 1;
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
       $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
-      $tools->redirect("user_management.php");
+      $tools->redirect("lista.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
@@ -32,7 +32,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("rimuovo user");
       $user->remove_user($_POST["id"]);
-      $tools->redirect("user_management.php");
+      $tools->redirect("lista.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
