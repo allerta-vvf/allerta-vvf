@@ -1,36 +1,36 @@
 <?php
 require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
-  if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note'/*, '$post-token'*/])) {
-    //if($_POST["token"] == $_SESSION['token']){
+  if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
+    if($_POST["token"] == $_SESSION['token']){
       bdump("aggiungo esercitazione");
       $database->add_esercitazione($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("esercitazioni.php");
-    //} else {
-      //$tools->redirect("nonfareilfurbo.php");
-    //}
+    } else {
+      $tools->redirect("nonfareilfurbo.php");
+    }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "modifica")) {
-  if($tools->validate_form_data(['$post-id', '$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note'/*, '$post-token'*/])) {
-    //if($_POST["token"] == $_SESSION['token']){
+  if($tools->validate_form_data(['$post-id', '$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
+    if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
       bdump("modifico esercitazione");
       $database->change_esercitazione($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("esercitazioni.php");
-    //} else {
-      //$tools->redirect("nonfareilfurbo.php");
-    //}
+    } else {
+      $tools->redirect("nonfareilfurbo.php");
+    }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
   bdump("rimuovo esercitazione");
-  if($tools->validate_form_data(['$post-id', '$post-incrementa'/*, '$post-token'*/])) {
-    //if($_POST["token"] == $_SESSION['token']){
+  if($tools->validate_form_data(['$post-id', '$post-incrementa', '$post-token'])) {
+    if($_POST["token"] == $_SESSION['token']){
       bdump("rimuovo esercitazione");
       $database->remove_esercitazione($_POST["id"], $_POST["incrementa"]);
       $tools->redirect("esercitazioni.php");
-    //} else {
-      //$tools->redirect("nonfareilfurbo.php");
-    //}
+    } else {
+      $tools->redirect("nonfareilfurbo.php");
+    }
   }
 } else {
   $length = 32;
@@ -63,7 +63,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           //$tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_esercitazione.html', ['esercitazione' => ['id' => $id,/*'token' => $_SESSION['token'],*/ 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' esercitazione']);
-  //bdump($_SESSION['token'], "token");
+  loadtemplate('modifica_esercitazione.html', ['esercitazione' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' esercitazione']);
+  bdump($_SESSION['token'], "token");
 }
 ?>

@@ -12,7 +12,7 @@ This is only a **development version**.
 |Availability|:heavy_check_mark:|||
 |"Interventi"|:heavy_check_mark:|||
 |"Esercitazioni"|:heavy_check_mark:|||
-|Token check||:clock8:||
+|Token check|:heavy_check_mark:|||
 |Installation|:heavy_check_mark:|||
 |CLI Installation|:heavy_check_mark:|||
 |Docker Installation|:heavy_check_mark:|||
