@@ -3,13 +3,6 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-function ancora($content, $id) {
-$content = substr($content,0,$limit);
-$content = substr($content,0,strrpos($content,' '));
-$content = $content." <a href='dettagli.php?iid=$id#note'>...Leggi ancora</a>";
-return $content;
-}
-
 $impostazioni['modifica'] = true;
 $impostazioni['elimina'] = true;
 
