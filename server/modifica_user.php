@@ -1,8 +1,8 @@
 <?php
 require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
-  if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
-    if($_POST["token"] == $_SESSION['token']){
+  if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday'/*, '$post-token'*/])) {
+    //if($_POST["token"] == $_SESSION['token']){
       bdump("aggiungo user");
       bdump($_POST);
       $capo = isset($_POST["capo"]) ? 1 : 0;
@@ -11,9 +11,9 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
       $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
       $tools->redirect("lista.php");
-    } else {
-      $tools->redirect("nonfareilfurbo.php");
-    }
+    //} else {
+      //$tools->redirect("nonfareilfurbo.php");
+    //}
   }
 /*} elseif($tools->validate_form_data('$post-mod', true, "modifica")) {
   if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
@@ -28,24 +28,24 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   }
 */} elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
   bdump("rimuovo intervento");
-  if($tools->validate_form_data(['$post-id', '$post-token'])) {
-    if($_POST["token"] == $_SESSION['token']){
+  if($tools->validate_form_data(['$post-id'/*, '$post-token'*/])) {
+    //if($_POST["token"] == $_SESSION['token']){
       bdump("rimuovo user");
       $user->remove_user($_POST["id"]);
       $tools->redirect("lista.php");
-    } else {
-      $tools->redirect("nonfareilfurbo.php");
-    }
+    //} else {
+      //$tools->redirect("nonfareilfurbo.php");
+    //}
   }
 } else {
-  if(!isset($_GET["_tracy_bar"])){
-    $length = 32;
-  unset($_SESSION['token']);
-  bdump("codice");
-  $_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length) . "-bfwp64GGbdm";
+  //if(!isset($_GET["_tracy_bar"])){
+    //$length = 32;
+  //unset($_SESSION['token']);
+  //bdump("codice");
+  //$_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length) . "-bfwp64GGbdm";
   // 1 hour = 60 seconds * 60 minutes = 3600
-  $_SESSION['token-expire'] = time() + 3600;
-  }
+  //$_SESSION['token-expire'] = time() + 3600;
+  //}
   $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "add"));
   bdump($modalità, "modalità");
   $id = "";
@@ -64,7 +64,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_user.html', ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
-  bdump($_SESSION['token'], "token");
+  loadtemplate('modifica_user.html', ['id' => $id,/*'token' => $_SESSION['token'],*/ 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
+  //bdump($_SESSION['token'], "token");
 }
 ?>

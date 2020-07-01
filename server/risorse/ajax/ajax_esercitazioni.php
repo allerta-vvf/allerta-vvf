@@ -3,8 +3,8 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$impostazioni['modifica'] = false;
-$impostazioni['elimina'] = false;
+$impostazioni['modifica'] = true;
+$impostazioni['elimina'] = true;
 
 $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY data DESC, inizio desc", true); // Pesco i dati della table e li ordino in base alla data
 ?>
@@ -70,7 +70,7 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY da
     <thead>
     <tr>
      <th>Data</th>
-     <th>name</th>
+     <th>Name</th>
      <th>Ora inizio</th>
      <th>Ora fine</th>
      <th>Capo</th>
@@ -84,13 +84,13 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY da
     <tbody>
 <?php
 foreach($risultato as $row){
-      $persone = base64_encode( $row['dec'] );
+      $persone = base64_encode( $row['incrementa'] );
       echo "<tr><td>" . $row['data'] . "</td><td>" . $row['name'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
       if($impostazioni['modifica']) {
-          echo "<td><a href='modifica.php?modifica&id={$row['id']}&data={$row['data']}&name={$row['name']}&inizio={$row['inizio']}&fine={$row['fine']}&luogo={$row['luogo']}&note={$row['note']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
+          echo "<td><a href='modifica_esercitazione.php?modifica&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
       if($impostazioni['elimina']) {
-          echo "<td><a href='modifica.php?elimina&id={$row['id']}&persone={$persone}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
+          echo "<td><a href='modifica_esercitazione.php?elimina&id={$row['id']}&incrementa={$row['incrementa']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
       }
 }
 ?>

@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_esercitazioni` (
 `capo` text NOT NULL,
 `luogo` text NOT NULL,
 `note` text NOT NULL,
-`dec` varchar(999) NOT NULL DEFAULT 'test',
+`incrementa` varchar(999) NOT NULL DEFAULT 'test',
 `inseritoda` varchar(200) NOT NULL DEFAULT 'test',
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
