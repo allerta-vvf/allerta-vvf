@@ -1,0 +1,14 @@
+{
+  "projectName": "allerta-vvf",
+  "projectOwner": "allerta-vvf",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "atom",
+  "contributors": [],
+  "contributorsPerLine": 7
+}
