@@ -7,9 +7,14 @@ try {
 } catch (Exception $e) {
     $loader = new \Twig\Loader\FilesystemLoader('../templates');
 }
+$filter = new \Twig\TwigFilter('t', function ($string) {
+  global $translations;
+  return $translations->translate($string);
+});
 $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
+$twig->addFilter($filter);
 $template = NULL;
 function loadtemplate($templatename, $data, $requirelogin=true){
   global $database, $user, $twig, $template;

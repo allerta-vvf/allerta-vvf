@@ -481,12 +481,68 @@ class user{
   }
 }
 
+class translations{
+  public $loaded_languages = ["en"];
+  public $default_language = "en";
+  public $language = "en";
+  public $client_languages = ["en"];
+  public $loaded_translations = [];
+  public $filename = "";
+
+  public function client_languages() {
+    $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    if(strpos($client_languages, ';') == false){
+        if(strpos($client_languages, '-') !== false){
+            return [substr($client_languages, 0, 5)];
+        } else {
+            return [substr($client_languages, 0, 2)];
+        }
+    } else {
+        $client_languages = explode(",", $client_languages);
+        $tmp_languages = [];
+        foreach($client_languages as $key=>$language){
+            if(strpos($language, ';') == false){
+                $tmp_languages[$language] = 1;
+            } else {
+                $tmp_languages[explode(";q=",$language)[0]] = (float) explode(";q=",$language)[1];
+            }
+        }
+        arsort($tmp_languages);
+        return array_keys($tmp_languages);
+    }
+  }
+
+  public function __construct(){
+    $this->client_languages = $this->client_languages();
+    foreach($this->client_languages as $language){
+      if(in_array($language, $this->loaded_languages)){
+        $this->language = $language;
+      }
+    }
+  }
+
+  public function translate($string){
+    try {
+      $this->filename = "translations/".$this->language."/".pathinfo(array_reverse(debug_backtrace())[0]['file'])['basename'];
+      if (!file_exists($this->filename))
+        throw new Exception ('file does not exist');
+      $this->loaded_translations = require($this->filename);
+      if (!in_array($string, $this->loaded_translations))
+        throw new Exception ('string does not exist');
+      return $this->loaded_translations[$string];
+    } catch (\Exception $e) {
+      return $string;
+    }
+  }
+}
+
 function init_class(){
-  global $user, $tools, $database;
-  if(!isset($user) && !isset($tools) && !isset($database)){
+  global $tools, $database, $user, $translations;
+  if(!isset($tools) && !isset($database) && !isset($translations)){
     $database = new database();
     $tools = new tools($database->getOption("check_cf_ip"));
     $user = new user($database, $tools);
+    $translations = new translations();
   }
   //if($user->requireRole(Role::DEVELOPER)){
     Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');

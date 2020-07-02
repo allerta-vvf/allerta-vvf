@@ -3,10 +3,10 @@
 {% block content %}
     <br>
     <div class="text-center">
-      <p>Sei avaible in caso di allerta?</p>
-      <button class="btn btn-lg btn-success " onclick="Attivo('{{ user.id }}')">Attivo</button>
+      <p>{{ 'Are you avaible in case of alert?'|t }}</p>
+      <button class="btn btn-lg btn-success " onclick="Attivo('{{ user.id }}')">{{ 'Active'|t }}</button>
 
-      <button class="btn btn-lg btn-danger" style="background-color: red" onclick="NonAttivo('{{ user.id }}')">Non Attivo</button>
+      <button class="btn btn-lg btn-danger" style="background-color: red" onclick="NonAttivo('{{ user.id }}')">{{ 'Not Active'|t }}</button>
     </div>
     <script defer>
       function Attivo(id){
