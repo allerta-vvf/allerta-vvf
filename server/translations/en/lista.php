@@ -4,5 +4,7 @@
 return [
     "Are you avaible in case of alert?" => "Are you avaible in case of alert?",
     "Active" => "Active",
-    "Not Active" => "Not Active"
+    "Not Active" => "Not Active",
+    "Thanks, %s, you have given your availability in case of alert." => "Thanks, %s, you have given your availability in case of alert.",
+    "Thanks, %s, you have removed your availability in case of alert." => "Thanks, %s, you have removed your availability in case of alert."
 ];

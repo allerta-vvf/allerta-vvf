@@ -337,13 +337,13 @@
       {% block menu %}
         <!-- Menu -->
         <div class="topnav" id="myTopnav">
-        <a href="{{ urlsoftware }}lista.php" class="active">Lista Disponibilità</a>
-        <a href="{{ urlsoftware }}interventi.php">Interventi</a>
-        <a href="{{ urlsoftware }}esercitazioni.php">Esercitazioni</a>
-        <a href="{{ urlsoftware }}log.php">Log</a>
-        <a {# href="{{ urlsoftware }}grafici.php" #}>Grafici</a>
-        {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">Supporto tecnico</a>{% endif %}
-        <a style="float: right;" id="logout">Ciao {{ user.name }}. <b onclick="location.href='{{ urlsoftware }}logout.php';">exec il logout</b></a>
+        <a href="{{ urlsoftware }}lista.php" class="active">{{ 'Availability List'|t }}</a>
+        <a href="{{ urlsoftware }}interventi.php">{{ 'Services'|t }}</a>
+        <a href="{{ urlsoftware }}esercitazioni.php">{{ 'Trainings'|t }}</a>
+        <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>
+        <a {# href="{{ urlsoftware }}grafici.php" #}>{{ 'Graphics'|t }}</a>
+        {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
+        <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">☰</a>
         </div>
         <!-- /Menu -->

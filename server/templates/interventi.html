@@ -5,14 +5,14 @@
     <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <p style="text-align: center;">
-    <a id='add' href="modifica_intervento.php?add">add intervento</a>
+    <a id='add' href="modifica_intervento.php?add">{{ 'Add service'|t }}</a>
     </p>
     <br>
     <div id="lista"></div>
     <script>
       $.get( "risorse/ajax/ajax_interventi.php", function( data ) {
          $( "#lista" ).html( data );
-         console.log( "Caricato lista." );
+         console.log( "List loaded." );
       });
       $(document).ready(function() {
 

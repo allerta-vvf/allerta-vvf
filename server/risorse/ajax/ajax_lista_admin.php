@@ -38,14 +38,14 @@ th, td {
 <div style="overflow-x:auto;">
 <table style="width: 90%; text-align:center;">
   <tr>
-    <th>name</th>
-    <th>avaible</th>
-    <th>Autista</th>
-    <th>Chiama</th>
-    <th>Scrivi</th>
-    <th>Interventi</th>
-    <th>Minuti Disponibilità</th>
-    <th>Altro</th>
+    <th><?php t("Name"); ?></th>
+    <th><?php t("Avaible"); ?></th>
+    <th><?php t("Driver"); ?></th>
+    <th><?php t("Call"); ?></th>
+    <th><?php t("Write"); ?></th>
+    <th><?php t("Services"); ?></th>
+    <th><?php t("Minuti Disponibilità"); ?></th>
+    <th><?php t("Other"); ?></th>
     <?php
     foreach($risultato as $row){
       if(!in_array($row['name'], $hidden) OR in_array($user->name(), $hidden)){

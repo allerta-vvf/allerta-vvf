@@ -15,6 +15,7 @@ $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
 $twig->addFilter($filter);
+
 $template = NULL;
 function loadtemplate($templatename, $data, $requirelogin=true){
   global $database, $user, $twig, $template;

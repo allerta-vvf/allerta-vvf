@@ -18,7 +18,7 @@
             dispo: 1
           },
           success: function(data) {
-            alert("Grazie, {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
+            alert("{{ 'Thanks, %s, you have given your availability in case of alert.'|t|format(user.name) }}");
             location.reload();
           }
         });
@@ -33,7 +33,7 @@
             dispo: 0
           },
           success: function(data) {
-            alert("Grazie {{ user.name }}, hai dato la tua disponibilità in caso in allerta.");
+            alert("{{ 'Thanks, %s, you have removed your availability in case of alert.'|t|format(user.name) }}");
             location.reload();
           }
         });
