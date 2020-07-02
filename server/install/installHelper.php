@@ -73,11 +73,11 @@ function checkConnection($host, $user, $password, $database, $return=false){
     if($connectionOk){
         try{
             try{
-                $connection->exec("CREATE DATABASE IF NOT EXISTS " . preg_replace('/[^a-zA-Z0-9]/', '', trim($database)));
+            $connection->exec("CREATE DATABASE IF NOT EXISTS " . /*preg_replace('/[^a-zA-Z0-9]/', '', */trim($database)/*)*/);
             } catch(Exception $e) {
                 //nothing
             }
-            $connection->exec("use " . preg_replace('/[^a-zA-Z0-9]/', '', trim($database)));
+        $connection->exec("use " . /*preg_replace('/[^a-zA-Z0-9]/', '', */trim($database)/*)*/);
         } catch (PDOException $e){
             if($return){
                 return false;

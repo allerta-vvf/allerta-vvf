@@ -46,35 +46,56 @@ th, td {
     <th>Interventi</th>
     <th>Minuti Disponibilità</th>
     <th>Altro</th>
-   <?php
-   foreach($risultato as $row){
-     if(!in_array($row['name'], $hidden) OR in_array($user->name(), $hidden)){
-       echo "<tr>
-          <td>";
-    $name = $user->nameById($row["id"]);
-$callFunction = ($row['avaible'] == 1) ? "NonAttivo" : "Attivo";
-    $avaible = $row["avaible"];
-    if ($row['caposquadra'] == 1) {echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";}
-    if($row['online'] == 1){
+    <?php
+    foreach($risultato as $row){
+      if(!in_array($row['name'], $hidden) OR in_array($user->name(), $hidden)){
+        echo "<tr>
+           <td>";
+      $name = $user->nameById($row["id"]);
+      $callFunction = ($row['avaible'] == 1) ? "NonAttivo" : "Attivo";
+      $avaible = $row["avaible"];
+      if ($row['caposquadra'] == 1) {
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";
+      } else {
+        echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";
+      }
+      if($row['online'] == 1){
         echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
-    } else {
+      } else {
         echo $name."</a></td><td><a onclick='$callFunction(".$row["id"].");'>";
+      }
+      if ($row['avaible'] == 1) {
+        echo "<i class='fa fa-check' style='color:green'></i>";
+      } else {
+        echo "<i class='fa fa-times'  style='color:red'></i>";
+      };
+        echo  "</a></td>
+        <td>";
+      if ($row['autista'] == 1) {
+        echo "<img src='./risorse/images/volante.png' width='20px'>";
+      } else {
+        echo "";
+      };
+      echo "</td>
+          <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
+ 
+      //if ($row['avaible'] == 1) {
+        $nome_url = urlencode($row['name']);
+        echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fa fa-whatsapp' style='color:green'></i></td>";
+      /*} else{
+        echo "";
+      };*/
+ 
+      $interventi = $row['interventi'];
+      $minuti = $row['minuti_dispo'];
+      $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
+      echo "<td>$interventi</td><td>$minuti</td><td><a href='$u'><p>Altri dettagli</p></a></td></tr>";
+      }
     }
-     if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
-       echo  "</a></td>
-       <td>";
-    if ($row['autista'] == 1) {echo "<img src='./risorse/images/volante.png' width='20px'>";} else{echo "";};
-    echo "</td>
-		  <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
-
-    if ($row['avaible'] == 1) {echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20Fulvio'><i class='fa fa-whatsapp' style='color:green'></i></td>";} else{echo "";};
-
-     $interventi = $row['interventi'];
-     $minuti = $row['minuti_dispo'];
-     $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
-     echo "<td>$interventi</td><td>$minuti</td><td><a href='$u'><p>Altri dettagli</p></a></td></tr>";
-   }
-}
     ?>
     </table>
+    <br>
+    <p style="text-align: center;">
+      <a id='add' href="modifica_user.php?add">add user</a>
+    </p>
 </div>
