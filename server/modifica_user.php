@@ -38,7 +38,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     }
   }
 } else {
-  if(isset($_GET["mod"])){
+  if(isset($_GET["add"])||isset($_GET["modifica"])||isset($_GET["elimina"])||isset($_GET["mod"])){
     $_SESSION["token"] = bin2hex(random_bytes(64));
   }
   $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "add"));

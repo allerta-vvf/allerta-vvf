@@ -33,11 +33,9 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     }
   }
 } else {
-  $length = 32;
-  //unset($_SESSION['token']);
-  //$_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length) . "-bfwp64GGbdm";
-  // 1 hour = 60 seconds * 60 minutes = 3600
-  //$_SESSION['token-expire'] = time() + 3600;
+  if(isset($_GET["add"])||isset($_GET["modifica"])||isset($_GET["elimina"])||isset($_GET["mod"])){
+    $_SESSION["token"] = bin2hex(random_bytes(64));
+  }
   $personale = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
   $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "add"));
   bdump($modalità, "modalità");
