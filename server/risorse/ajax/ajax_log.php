@@ -71,10 +71,10 @@ select::-ms-expand {
 <table style="width: 90%; text-align:center;">
     <thead>
     <tr>
-     <th>Azione</th>
-     <th>Interessato</th>
-     <th>Fatto da</th>
-     <th>Ora</th>
+     <th><?php t("Action"); ?></th>
+     <th><?php t("Interested"); ?></th>
+     <th><?php t("Made by"); ?></th>
+     <th><?php t("Datetime"); ?></th>
     </tr>
     </thead>
     <tbody>

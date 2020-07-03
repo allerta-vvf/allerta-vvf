@@ -2,13 +2,13 @@
 // Translated by: Name Surname (github, email or another social profile url/username)
 
 return [
+    "Personal data" => "Personal data",
     "Name" => "Name",
     "Avaible" => "Avaible",
+    "Foreman" => "Foreman",
     "Driver" => "Driver",
-    "Call" => "Call",
-    "Write" => "Write",
-    "Services" => "Services",
+    "Phone number" => "Phone number",
     "Availability Minutes" => "Availability Minutes",
-    "Other" => "Other",
-    "Others infos" => "Others infos"
+    "This week" => "This week",
+    "Services" => "Services"
 ];

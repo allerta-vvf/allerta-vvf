@@ -44,7 +44,7 @@ th, td {
     <th><?php t("Call"); ?></th>
     <th><?php t("Write"); ?></th>
     <th><?php t("Services"); ?></th>
-    <th><?php t("Minuti Disponibilità"); ?></th>
+    <th><?php t("Availability Minutes"); ?></th>
     <th><?php t("Other"); ?></th>
     <?php
     foreach($risultato as $row){
@@ -89,7 +89,7 @@ th, td {
       $interventi = $row['interventi'];
       $minuti = $row['minuti_dispo'];
       $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
-      echo "<td>$interventi</td><td>$minuti</td><td><a href='$u'><p>Altri dettagli</p></a></td></tr>";
+      echo "<td>$interventi</td><td>$minuti</td><td><a href='$u'><p>".t("Others infos",false)."</p></a></td></tr>";
       }
     }
     ?>

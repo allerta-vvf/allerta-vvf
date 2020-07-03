@@ -69,16 +69,16 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY da
     <table id="esercitazioni" cellspacing='0' class="display table table-striped table-bordered dt-responsive nowrap" style="width: 90%; text-align:center;">
     <thead>
     <tr>
-     <th>Data</th>
-     <th>Name</th>
-     <th>Ora inizio</th>
-     <th>Ora fine</th>
-     <th>Capo</th>
-     <th>Personale</th>
-     <th>Luogo</th>
-     <th>Note</th>
-     <?php if($impostazioni['modifica']) { echo "<th>Modifica</th>"; } ?>
-     <?php if($impostazioni['elimina']) { echo "<th>Elimina</th>"; } ?>
+     <th><?php t("Date"); ?></th>
+     <th><?php t("Name"); ?></th>
+     <th><?php t("Start time"); ?></th>
+     <th><?php t("End time"); ?></th>
+     <th><?php t("Foreman"); ?></th>
+     <th><?php t("People"); ?></th>
+     <th><?php t("Place"); ?></th>
+     <th><?php t("Notes"); ?></th>
+     <?php if($impostazioni['modifica']) { echo "<th>".t("Edit", false)."</th>"; } ?>
+     <?php if($impostazioni['elimina']) { echo "<th>".t("Remove", false)."</th>"; } ?>
     </tr>
     </thead>
     <tbody>

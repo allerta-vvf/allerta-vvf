@@ -204,96 +204,26 @@ textarea {
 }
 </style>
 <body>
-{% if esercitazione.modalità == "add" %}
+{% if esercitazione.modalità == "modifica" or esercitazione.modalità == "add" %}
 <form method="post">
   <div class="container">
-    <label><b>Giorno dell' esercitazione</b></label>
-    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text">
-    <br>
-    <br>
-    <label><b>Name</b></label>
-    <input id="name" type="text" name="name" placeholder="1234/5" required>
-    <br>
-    <br>
-    <label><b>Ora inizio</b></label>
-    <input type="time" name="start_time" required>
-    <br>
-    <br>
-    <label><b>Ora fine</b></label>
-    <input type="time" name="end_time" required>
-    <br>
-    <br>
-    <label><b>Caposquadra</b></label>
-    <br>
-    {% for user in esercitazione.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
-      <label>
-      <input type="checkbox" name='capo' value='{{ user.id }}'>
-      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ user.name }}
-      </label>
-    </div>
-    {% endfor %}
-    <script>
-    $('input[name="capo"]').on('change', function() {
-       $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-    });
-    </script>
-    <br>
-    <label><b>Altro personale</b></label>
-    <br>
-    {% for user in esercitazione.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
-      <label>
-      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
-      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ user.name }}
-      </label>
-    </div>
-    {% endfor %}
-    <br>
-    <label><b>Luogo dell' esercitazione</b></label>
-    <input type="text" name="luogo" required>
-    <br>
-    <br>
-    <label><b>Altre note (es. via o info)</b></label><br>
-    <textarea name='note'></textarea>
-    <br>
-    <br>
-    <input id="modalità" type="hidden" value="add" name="mod"></input>
-    <input id="token" type="hidden" value="{{ esercitazione.token }}" name="token"></input>
-    <button type="submit">invia</button>
-  </div>
-</form>
-<script>
-$('form').submit(function () {
-    if(!$('#token').val().endsWith("dJN299u49")){
-      $('#token').val($('#token').val() + "");
-    }
-    return true;
-});
-</script>
-{% endif %}
-{% if esercitazione.modalità == "modifica" %}
-<form method="post">
-  <div class="container">
-    <label><b>Giorno dell' esercitazione</b></label>
+    <label><b>{{ 'Training day'|t }}</b></label>
     <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text" value="{{ values.data }}">
     <br>
     <br>
-    <label><b>Name</b></label>
+    <label><b>{{ 'Name'|t }}</b></label>
     <input id="name" type="text" name="name" placeholder="1° esercitazione" required value="{{ values.name }}">
     <br>
     <br>
-    <label><b>Ora inizio</b></label>
+    <label><b>{{ 'Start time'|t }}</b></label>
     <input type="time" name="start_time" required value="{{ values.inizio }}">
     <br>
     <br>
-    <label><b>Ora fine</b></label>
+    <label><b>{{ 'End time'|t }}</b></label>
     <input type="time" name="end_time" required value="{{ values.fine }}">
     <br>
     <br>
-    <label><b>Caposquadra</b></label>
+    <label><b>{{ 'Foreman'|t }}</b></label>
     <br>
     {% for user in esercitazione.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
@@ -310,7 +240,7 @@ $('form').submit(function () {
     });
     </script>
     <br>
-    <label><b>Altro personale</b></label>
+    <label><b>{{ 'Others people'|t }}</b></label>
     <br>
     {% for user in esercitazione.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
@@ -322,21 +252,22 @@ $('form').submit(function () {
     </div>
     {% endfor %}
     <br>
-    <label><b>Luogo dell' esercitazione</b></label>
+    <label><b>{{ 'Training place'|t }}</b></label>
     <input type="text" name="luogo" required value="{{ values.luogo }}">
     <br>
     <br>
-    <label><b>Altre note (es. via o info)</b></label><br>
+    <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
     <textarea name='note'></textarea>
     <br>
     <br>
-    <input id="modalità" type="hidden" value="modifica" name="mod"></input>
+    <input id="modalità" type="hidden" value="{{ intervento.modalità }}" name="mod"></input>
     <input id="id" type="hidden" value="{{ esercitazione.id }}" name="id"></input>
     <input id="token" type="hidden" value="{{ esercitazione.token }}" name="token"></input>
-    <button type="submit">invia</button>
+    <button type="submit">{{ 'Submit'|t }}</button>
   </div>
 </form>
 <script>
+//No js Visual Studio Code errors {% if intervento.modalità == "modifica" %}
 $.each('{{ values.capo|striptags|e("js") }}'.split(','), function( index, value ) {
   $('.capo-'+value).prop('checked', true);
 });
@@ -344,6 +275,7 @@ $.each('{{ values.personale|striptags|e("js") }}'.split(','), function( index, v
   $('.personale-'+value).prop('checked', true);
 });
 $('#note').val('{{ values.note|e("js") }}');
+//{% endif %}
 $('form').submit(function () {
     if(!$('#token').val().endsWith("dJN299u49")){
       $('#token').val($('#token').val() + "");
@@ -367,17 +299,17 @@ $('form').submit(function () {
 }
 </style>
 <div style="margin: 0 auto; text-align: center">
-<p>Sei sicuro di voler eliminare l' esercitazione?</p>
+<p>{{ 'Are you sure you want to delete the training?'|t }}</p>
 <form method="post">
 <input id="modalità" type="hidden" value="elimina" name="mod"></input>
 <input id="token" type="hidden" value="{{ esercitazione.token }}" name="token"></input>
 <input id="id" type="hidden" value="{{ esercitazione.id }}" name="id"></input>
 <input id="incrementa" type="hidden" value="{{ incrementa }}" name="incrementa"></input>
-<button id="add" type="submit">invia</button>
+<button id="add" type="submit">{{ 'Submit'|t }}</button>
 </form>
 <script>
 $('form').submit(function () {
-    return confirm("L'azione non può essere annullata. Sei sicuro di voler continuare?");
+    return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
 });
 </script>
 </div>

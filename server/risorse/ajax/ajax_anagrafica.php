@@ -316,17 +316,17 @@ function vero1($text, $img1 = "", $img2 = ""){
 //var_dump($risultato);
 foreach($risultato as $row){
 $name = ($row['online']==1) ? '<u>' . $row['name'] . "</u>" : $row['name'];
-echo("<h1>Dati anagrafici <b>$name</b></h1><br><br>");
+echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");
 echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
 $disp = vero1($row['avaible'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
 $caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
 $autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
-echo("<p>name:  <b>$name</b></p><br>");
-echo("<p>Disponibilità:  <b>{$disp}</b></p><br>");
-echo("<p>Caposquadra:  <b>{$caposquadra}</b></p><br>");
-echo("<p>Autista:  <b>{$autista}</b></p><br>");
-echo("<p>Numero di telefono <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");
-echo("<p>Minuti di disponibilità <br>(Questo mese) <i class='demo-icon icon-hourglass'></i>:  <b>{$row['minuti_dispo']} minuti</b></p><br>");
-echo("<p>Interventi svolti:  <b>{$row['interventi']}</b></p><br>");
+echo("<p>".t("Name",false).":  <b>$name</b></p><br>");
+echo("<p>".t("Avaible",false).":  <b>{$disp}</b></p><br>");
+echo("<p>".t("Foreman",false).":  <b>{$caposquadra}</b></p><br>");
+echo("<p>".t("Driver",false).":  <b>{$autista}</b></p><br>");
+echo("<p>".t("Phone number",false)." <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");
+echo("<p>".t("Availability Minutes",false)." <br>(".t("This week",false).") <i class='demo-icon icon-hourglass'></i>:  <b>{$row['minuti_dispo']} minuti</b></p><br>");
+echo("<p>".t("Services",false).":  <b>{$row['interventi']}</b></p><br>");
 }
 ?>
