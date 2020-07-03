@@ -16,26 +16,21 @@ This is only a **development version**.
 |Installation|:heavy_check_mark:|||
 |CLI Installation|:heavy_check_mark:|||
 |Docker Installation|:heavy_check_mark:|||
-|Translation|||:x:|
+|Translation|:heavy_check_mark:|||
 |User managament||:clock8:||
 |Options|:heavy_check_mark:|||
 |Logs|:heavy_check_mark:|||
 |Graphs|||:x:|
 |Images||:clock8:||
 
-## Special thanks to:
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-- [@InveSte](https://github.com/investe), for the first version of Allerta (fireFighter), currently on Github at https://github.com/investe/firefighter
-
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf?ref=badge_large)
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+- [@InveSte](https://github.com/investe), for the first version of Allerta (fireFighter), currently on Github at https://github.com/investe/firefighter
+
+Thanks goes to ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->

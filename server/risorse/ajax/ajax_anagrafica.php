@@ -326,7 +326,7 @@ echo("<p>".t("Available",false).":  <b>{$disp}</b></p><br>");
 echo("<p>".t("Foreman",false).":  <b>{$caposquadra}</b></p><br>");
 echo("<p>".t("Driver",false).":  <b>{$autista}</b></p><br>");
 echo("<p>".t("Phone number",false)." <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");
-echo("<p>".t("Availability Minutes",false)." <br>(".t("This week",false).") <i class='demo-icon icon-hourglass'></i>:  <b>{$row['minuti_dispo']} minuti</b></p><br>");
+echo("<p>".t("Availability Minutes",false)." <br>(".t("This month",false).") <i class='demo-icon icon-hourglass'></i>:  <b>{$row['minuti_dispo']} minuti</b></p><br>");
 echo("<p>".t("Services",false).":  <b>{$row['services']}</b></p><br>");
 }
 ?>

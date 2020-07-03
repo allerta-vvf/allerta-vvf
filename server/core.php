@@ -480,9 +480,9 @@ class user{
 }
 
 class translations{
-  public $loaded_languages = ["en"];
+  public $loaded_languages = ["en", "it"];
   public $default_language = "en";
-  public $language = "en";
+  public $language = null;
   public $client_languages = ["en"];
   public $loaded_translations = [];
   public $filename = "";
@@ -513,9 +513,12 @@ class translations{
   public function __construct(){
     $this->client_languages = $this->client_languages();
     foreach($this->client_languages as $language){
-      if(in_array($language, $this->loaded_languages)){
+      if(in_array($language, $this->loaded_languages) && $this->language == null){
         $this->language = $language;
       }
+    }
+    if($this->language == null){
+      $this->language = "en";
     }
   }
 
@@ -531,7 +534,8 @@ class translations{
       if (!file_exists($this->filename))
         throw new Exception ('file does not exist');
       $this->loaded_translations = array_merge(require($this->filename),require("translations/".$this->language."/base.php"));
-      if (!in_array($string, $this->loaded_translations))
+      bdump($this->loaded_translations);
+      if (!array_key_exists($string, $this->loaded_translations))
         throw new Exception ('string does not exist');
       return $this->loaded_translations[$string];
     } catch (\Exception $e) {

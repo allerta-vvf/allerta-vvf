@@ -3,12 +3,7 @@
 
 return [
     "Personal data" => "Personal data",
-    "Name" => "Name",
-    "Available" => "Available",
-    "Foreman" => "Foreman",
-    "Driver" => "Driver",
     "Phone number" => "Phone number",
     "Availability Minutes" => "Availability Minutes",
-    "This week" => "This week",
-    "Services" => "Services"
+    "This month" => "This month",
 ];
