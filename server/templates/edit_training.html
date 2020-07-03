@@ -204,7 +204,7 @@ textarea {
 }
 </style>
 <body>
-{% if training.modalità == "modifica" or training.modalità == "add" %}
+{% if training.modalità == "edit" or training.modalità == "add" %}
 <form method="post">
   <div class="container">
     <label><b>{{ 'Training day'|t }}</b></label>
@@ -267,7 +267,7 @@ textarea {
   </div>
 </form>
 <script>
-//No js Visual Studio Code errors {% if service.modalità == "modifica" %}
+//No js Visual Studio Code errors {% if service.modalità == "edit" %}
 $.each('{{ values.capo|striptags|e("js") }}'.split(','), function( index, value ) {
   $('.capo-'+value).prop('checked', true);
 });
@@ -284,7 +284,7 @@ $('form').submit(function () {
 });
 </script>
 {% endif %}
-{% if training.modalità == "elimina" %}
+{% if training.modalità == "delete" %}
 <style>
 #add {
  outline: none;
@@ -301,7 +301,7 @@ $('form').submit(function () {
 <div style="margin: 0 auto; text-align: center">
 <p>{{ 'Are you sure you want to delete the training?'|t }}</p>
 <form method="post">
-<input id="modalità" type="hidden" value="elimina" name="mod"></input>
+<input id="modalità" type="hidden" value="delete" name="mod"></input>
 <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
 <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
 <input id="incrementa" type="hidden" value="{{ incrementa }}" name="incrementa"></input>

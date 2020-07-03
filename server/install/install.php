@@ -124,7 +124,7 @@ if(!is_cli()){
           <tr>
              <th scope="row"><label for="prefix">Prefisso table</label></th>
              <td><input name="prefix" id="prefix" type="text" aria-describedby="prefix-desc" value="<?php echo $prefixValue; ?>" size="25"></td>
-             <td id="prefix-desc">Modifica questa voce se desideri execre più installazioni di Allerta su un singolo database.</td>
+             <td id="prefix-desc">Edit questa voce se desideri execre più installazioni di Allerta su un singolo database.</td>
           </tr>
        </tbody>
     </table>

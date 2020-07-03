@@ -58,7 +58,7 @@ class FirstCest
         $I->click('Services');
         $I->seeCurrentURLEquals('/services.php');
         $I->click('add service');
-        $I->seeCurrentURLEquals('/modifica_service.php');
+        $I->seeCurrentURLEquals('/edit_service.php');
         $I->fillField('data', '2020-01-01');
         $I->fillField('uscita', '12:12');
         $I->fillField('rientro', '14:14');

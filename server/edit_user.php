@@ -3,7 +3,7 @@ require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
   if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("aggiungo user");
+      bdump("adding user");
       bdump($_POST);
       $capo = isset($_POST["capo"]) ? 1 : 0;
       $autista = isset($_POST["autista"]) ? 1 : 0;
@@ -15,22 +15,22 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
-/*} elseif($tools->validate_form_data('$post-mod', true, "modifica")) {
+/*} elseif($tools->validate_form_data('$post-mod', true, "edit")) {
   if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
-      bdump("modifico service");
+      bdump("editing service");
       $database->change_service($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
       $tools->redirect("services.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
-*/} elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
-  bdump("rimuovo service");
+*/} elseif($tools->validate_form_data('$post-mod', true, "delete")) {
+  bdump("removing service");
   if($tools->validate_form_data(['$post-id', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("rimuovo user");
+      bdump("removing user");
       $user->remove_user($_POST["id"]);
       $tools->redirect("lista.php");
     } else {
@@ -38,10 +38,10 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     }
   }
 } else {
-  if(isset($_GET["add"])||isset($_GET["modifica"])||isset($_GET["elimina"])||isset($_GET["mod"])){
+  if(isset($_GET["add"])||isset($_GET["edit"])||isset($_GET["delete"])||isset($_GET["mod"])){
     $_SESSION["token"] = bin2hex(random_bytes(64));
   }
-  $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["modifica"])) ? "modifica" : ((isset($_GET["elimina"])) ? "elimina" : "add"));
+  $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["edit"])) ? "edit" : ((isset($_GET["delete"])) ? "delete" : "add"));
   bdump($modalità, "modalità");
   $id = "";
   if(isset($_GET["id"])){
@@ -52,14 +52,14 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   } else {
       $values = [];
   }
-  if($modalità=="modifica" || $modalità=="elimina"){
+  if($modalità=="edit" || $modalità=="delete"){
       if(empty($id)){
           $tools->redirect("nonfareilfurbo.php");
       } elseif (!$database->exists("profiles", $id)){
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
+  loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
   bdump($_SESSION['token'], "token");
 }
 ?>

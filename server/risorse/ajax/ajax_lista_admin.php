@@ -96,6 +96,6 @@ th, td {
     </table>
     <br>
     <p style="text-align: center;">
-      <a id='add' href="modifica_user.php?add">add user</a>
+      <a id='add' href="edit_user.php?add">add user</a>
     </p>
 </div>

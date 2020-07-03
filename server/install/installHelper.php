@@ -130,12 +130,12 @@ function generateConfig($host,$user,$password,$db,$prefix,$path=".."){
             exit(6);
         }
         ?>
-        <div class="wp-die-message"><h1>Impossibile modificare il file di configurazioni</h1>
-            <p>Non siamo riusciti a scrivere il file di configurazione <code>config.php</code>, richiesto per il funzionamento del programma.<br>E' tuttavia possibile modificarlo manualmente, seguentdo le seguenti istruzioni:</p>
+        <div class="wp-die-message"><h1>Impossibile editre il file di configurazioni</h1>
+            <p>Non siamo riusciti a scrivere il file di configurazione <code>config.php</code>, richiesto per il funzionamento del programma.<br>E' tuttavia possibile editrlo manualmente, seguentdo le seguenti istruzioni:</p>
             <ul>
                 <li>Accedere alla cartella di installazione di allerta (connettersi via FTP in caso di server sul cloud).</li>
                 <li>Rinominare il file <code>config-sample.php</code> in <code>config.php</code>.</li>
-                <li>Modificare le prime 16 righe del file con il seguente testo:</li>
+                <li>Edit le prime 16 righe del file con il seguente testo:</li>
 <code>
 &lt;?php<br>
 // ** Database settings ** //<br>

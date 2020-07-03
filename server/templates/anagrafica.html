@@ -31,7 +31,7 @@ check();
      method: "POST",
      data: {nameuser: nameuser, dispo:dispo},
      success: function (data) {
-      alert("Hai modificato la disponibilità di " + nameuser + " in caso in allerta.");
+      alert("Hai editto la disponibilità di " + nameuser + " in caso in allerta.");
       $("#lista").load("risorse/ajax/ajax_anagrafica.php?user={{ dacontrollare }}");
      }
     });
