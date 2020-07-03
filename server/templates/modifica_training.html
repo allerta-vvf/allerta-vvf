@@ -204,31 +204,31 @@ textarea {
 }
 </style>
 <body>
-{% if intervento.modalità == "modifica" or intervento.modalità == "add" %}
+{% if training.modalità == "modifica" or training.modalità == "add" %}
 <form method="post">
   <div class="container">
-    <label><b>{{ 'Service day'|t }}</b></label>
+    <label><b>{{ 'Training day'|t }}</b></label>
     <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text" value="{{ values.data }}">
     <br>
     <br>
-    <label><b>{{ 'Code'|t }}</b></label>
-    <input id="progressivo" type="text" name="codice" placeholder="1234/5" required value="{{ values.codice }}">
+    <label><b>{{ 'Name'|t }}</b></label>
+    <input id="name" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
     <br>
     <br>
     <label><b>{{ 'Start time'|t }}</b></label>
-    <input type="time" name="uscita" required value="{{ values.uscita }}">
+    <input type="time" name="start_time" required value="{{ values.inizio }}">
     <br>
     <br>
     <label><b>{{ 'End time'|t }}</b></label>
-    <input type="time" name="rientro" required value="{{ values.rientro }}">
+    <input type="time" name="end_time" required value="{{ values.fine }}">
     <br>
     <br>
     <label><b>{{ 'Foreman'|t }}</b></label>
     <br>
-    {% for user in intervento.personale %}
+    {% for user in training.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input class="capo capo-{{ user.id }}" type="checkbox" name='capo' value='{{ user.id }}'>
+      <input type="checkbox" name='capo' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
         {{ user.name }}
       </label>
@@ -240,84 +240,51 @@ textarea {
     });
     </script>
     <br>
-    <label><b>{{ 'Drivers'|t }}</b></label>
-    <br>
-    {% for user in intervento.personale %}
-    {% if user.autista == 1 %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
-      <label>
-      <input class="autisti autisti-{{ user.id }}" type="checkbox" name='autisti[]' value='{{ user.id }}'>
-      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ user.name }}
-      </label>
-    </div>
-    {% endif %}
-    {% endfor %}
-    <br>
     <label><b>{{ 'Others people'|t }}</b></label>
     <br>
-    {% for user in intervento.personale %}
+    {% for user in training.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
       <label>
-      <input class="personale personale-{{ user.id }}" type="checkbox" name='personale[]' value='{{ user.id }}'>
+      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
       <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
         {{ user.name }}
       </label>
     </div>
     {% endfor %}
     <br>
-    <label><b>{{ 'Service place'|t }}</b></label>
+    <label><b>{{ 'Training place'|t }}</b></label>
     <input type="text" name="luogo" required value="{{ values.luogo }}">
     <br>
     <br>
     <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
-    <textarea name='note' id='note'></textarea>
+    <textarea name='note'></textarea>
     <br>
     <br>
-    <label><b>{{ 'Service type'|t }}</b></label>
-    <br>
-    <select name='tipo' class="tipi">
-    {% for tipo in intervento.tipologie %}
-    <option value='{{ tipo.name }}'>{{ tipo.name }}</option>
-    {% endfor %}
-  </select>
-    <br>
-    <input id="modalità" type="hidden" value="{{ intervento.modalità }}" name="mod"></input>
-    <input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
-    <input id="id" type="hidden" value="{{ intervento.id }}" name="id"></input>
+    <input id="modalità" type="hidden" value="{{ service.modalità }}" name="mod"></input>
+    <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
+    <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
     <button type="submit">{{ 'Submit'|t }}</button>
   </div>
 </form>
 <script>
-//No js Visual Studio Code errors {% if intervento.modalità == "modifica" %}
-$.each('{{ values.capo }}'.split(','), function( index, value ) {
+//No js Visual Studio Code errors {% if service.modalità == "modifica" %}
+$.each('{{ values.capo|striptags|e("js") }}'.split(','), function( index, value ) {
   $('.capo-'+value).prop('checked', true);
 });
-$.each('{{ values.autisti }}'.split(','), function( index, value ) {
-  $('.autisti-'+value).prop('checked', true);
-});
-$.each('{{ values.personale }}'.split(','), function( index, value ) {
+$.each('{{ values.personale|striptags|e("js") }}'.split(','), function( index, value ) {
   $('.personale-'+value).prop('checked', true);
 });
-$( ".tipi" ).val('{{ values.tipo }}');
-$('#note').val('{{ values.note }}');
+$('#note').val('{{ values.note|e("js") }}');
 //{% endif %}
 $('form').submit(function () {
     if(!$('#token').val().endsWith("dJN299u49")){
       $('#token').val($('#token').val() + "");
     }
-    var progressivo_valido = /^[0-9/]{3,6}$/
-    var progressivo = $('#progressivo').val();
-    if(!progressivo_valido.test(progressivo)){
-      var invia_progressivo = confirm("{{ 'The code has been detected as incorrect, do you want to add the service anyway?'|t }}");
-    } else {
-      var invia_progressivo = true;
-    }
-    return invia_progressivo;
+    return true;
 });
 </script>
 {% endif %}
-{% if intervento.modalità == "elimina" %}
+{% if training.modalità == "elimina" %}
 <style>
 #add {
  outline: none;
@@ -332,11 +299,11 @@ $('form').submit(function () {
 }
 </style>
 <div style="margin: 0 auto; text-align: center">
-<p>{{ 'Are you sure you want to delete the service?'|t }}</p>
+<p>{{ 'Are you sure you want to delete the training?'|t }}</p>
 <form method="post">
 <input id="modalità" type="hidden" value="elimina" name="mod"></input>
-<input id="token" type="hidden" value="{{ intervento.token }}" name="token"></input>
-<input id="id" type="hidden" value="{{ intervento.id }}" name="id"></input>
+<input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
+<input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
 <input id="incrementa" type="hidden" value="{{ incrementa }}" name="incrementa"></input>
 <button id="add" type="submit">{{ 'Submit'|t }}</button>
 </form>

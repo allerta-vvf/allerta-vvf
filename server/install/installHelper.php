@@ -176,12 +176,12 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_certificati` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `codice` text NOT NULL,
 `name` text NOT NULL,
-`interventi` text NOT NULL,
+`services` text NOT NULL,
 `url` text NOT NULL,
 `file` text NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_esercitazioni` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `data` date NOT NULL,
 `name` varchar(999) NOT NULL,
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_esercitazioni` (
 `inseritoda` varchar(200) NOT NULL DEFAULT 'test',
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_interventi` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `data` date NOT NULL,
 `codice` text NOT NULL,
@@ -269,8 +269,8 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `caposquadra` tinyint(1) NOT NULL DEFAULT 0,
 `autista` tinyint(1) NOT NULL DEFAULT 0,
 `telefono` varchar(25) DEFAULT NULL,
-`interventi` int(11) NOT NULL DEFAULT 0,
-`esercitazioni` int(11) NOT NULL DEFAULT 0,
+`services` int(11) NOT NULL DEFAULT 0,
+`trainings` int(11) NOT NULL DEFAULT 0,
 `online` tinyint(1) NOT NULL DEFAULT 0,
 `online_time` int(11) NOT NULL DEFAULT 0,
 `minuti_dispo` int(11) NOT NULL DEFAULT 0,

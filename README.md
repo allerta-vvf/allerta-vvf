@@ -10,8 +10,8 @@ This is only a **development version**.
 ||it works :heavy_check_mark:|it's in beta :clock8:|it doesn't work :x:|
 |:-:|:-:|:-:|:-:|
 |Availability|:heavy_check_mark:|||
-|"Interventi"|:heavy_check_mark:|||
-|"Esercitazioni"|:heavy_check_mark:|||
+|"Services"|:heavy_check_mark:|||
+|"Trainings"|:heavy_check_mark:|||
 |Token check|:heavy_check_mark:|||
 |Installation|:heavy_check_mark:|||
 |CLI Installation|:heavy_check_mark:|||

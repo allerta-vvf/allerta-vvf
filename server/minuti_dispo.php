@@ -68,7 +68,7 @@ function array_combine_($keys, $values){
 //print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
 
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, services ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
 $risultato = $database->exec($sql, true);
 
 $profiles_tot = array();
@@ -93,7 +93,7 @@ foreach($incremento as $key=>$user){
     $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '" . $minuti_dispo . "' WHERE name ='" . $user . "'";
     $risultato = $database->exec($sql, true);
 }
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, interventi ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, services ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
 $risultato = $database->exec($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){

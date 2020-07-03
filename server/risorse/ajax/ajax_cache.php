@@ -3,16 +3,16 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$users_sql = "SELECT `id`, `name`, `available`, `caposquadra`, `autista`, `telefono`, `interventi`, `esercitazioni`, `online`, `minuti_dispo`, `immagine` FROM `%PREFIX%_profiles` LIMIT 0 , 30";
+$users_sql = "SELECT `id`, `name`, `available`, `caposquadra`, `autista`, `telefono`, `services`, `trainings`, `online`, `minuti_dispo`, `immagine` FROM `%PREFIX%_profiles` LIMIT 0 , 30";
 $users = $database->exec($users_sql, true);
 
-$interventi_sql="SELECT * FROM `%PREFIX%_interventi` ORDER BY `interventi`.`id` DESC LIMIT 0 , 30";
-$interventi = $database->exec($interventi_sql, true);
+$services_sql="SELECT * FROM `%PREFIX%_services` ORDER BY `services`.`id` DESC LIMIT 0 , 30";
+$services = $database->exec($services_sql, true);
 
-$esercitazioni_sql="SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY `esercitazioni`.`id` DESC LIMIT 0 , 30";
-$esercitazioni = $database->exec($esercitazioni_sql, true);
+$trainings_sql="SELECT * FROM `%PREFIX%_trainings` ORDER BY `trainings`.`id` DESC LIMIT 0 , 30";
+$trainings = $database->exec($trainings_sql, true);
 
-$elenco = ["users" => $users, "interventi" => $interventi, "esercitazioni" => $esercitazioni];
+$elenco = ["users" => $users, "services" => $services, "trainings" => $trainings];
 
 header("Content-Type: application/json; charset=UTF-8");
 echo(json_encode($elenco));

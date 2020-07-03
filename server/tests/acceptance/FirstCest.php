@@ -46,7 +46,7 @@ class FirstCest
         $I->see('Rimozione disponibilita\'');*/
     }
 
-    public function interventiWorks(AcceptanceTester $I)
+    public function servicesWorks(AcceptanceTester $I)
     {
         /**
         * @var FakerGenerator
@@ -55,10 +55,10 @@ class FirstCest
         $faker = \Faker\Factory::create();
 
         $I->amOnPage('/lista.php');
-        $I->click('Interventi');
-        $I->seeCurrentURLEquals('/interventi.php');
-        $I->click('add intervento');
-        $I->seeCurrentURLEquals('/modifica_intervento.php');
+        $I->click('Services');
+        $I->seeCurrentURLEquals('/services.php');
+        $I->click('add service');
+        $I->seeCurrentURLEquals('/modifica_service.php');
         $I->fillField('data', '2020-01-01');
         $I->fillField('uscita', '12:12');
         $I->fillField('rientro', '14:14');
@@ -66,7 +66,7 @@ class FirstCest
         $I->type('luogo', $faker->word);
         $I->type('note', $faker->word);
         $I->click('invia');
-        $I->seeCurrentURLEquals('/interventi.php');
+        $I->seeCurrentURLEquals('/services.php');
         $I->see('type2');
         */
     }

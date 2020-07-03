@@ -2,11 +2,9 @@
 require_once 'vendor/autoload.php';
 use Tracy\Debugger;
 
-try{
-  require_once 'config.php';
-} catch(Exception $e){
-  header('Location: install/install.php');
-}
+if(!file_exists("config.php") && !file_exists("../../config.php")) header('Location: install/install.php');
+
+require_once 'config.php';
 
 session_start();
 date_default_timezone_set('Europe/Rome');
@@ -205,7 +203,7 @@ class database{
   }
   
   public function exists($table, $id){
-      $risultato = $this->exec("SELECT :table FROM `%PREFIX%_interventi` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
+      $risultato = $this->exec("SELECT :table FROM `%PREFIX%_services` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
       return !empty($risultato);
   }
   
@@ -220,86 +218,86 @@ class database{
 
   public function incrementa($incrementa){
     bdump($incrementa);
-    $sql = "UPDATE `%PREFIX%_profiles` SET `interventi`= interventi + 1 WHERE id IN ($incrementa);";
+    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($incrementa);";
     $this->exec($sql, false);
   }
 
   public function getIncrementa($id){
     bdump($id);
-    $sql = "SELECT `incrementa` FROM `%PREFIX%_interventi` WHERE `id` = :id";
+    $sql = "SELECT `incrementa` FROM `%PREFIX%_services` WHERE `id` = :id";
     $incrementa = $this->exec($sql, true, [":id" => $id])[0]['incrementa'];
     bdump($incrementa);
     return $incrementa;
   }
 
   public function diminuisci($id){
-    $sql = "UPDATE `%PREFIX%_profiles` SET `interventi`= interventi - 1 WHERE id IN ({$this->getIncrementa($id)});";
+    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrementa($id)});";
     $this->exec($sql, false);
   }
 
-  public function incrementa_esercitazioni($incrementa){
+  public function incrementa_trainings($incrementa){
     bdump($incrementa);
-    $sql = "UPDATE `%PREFIX%_profiles` SET `esercitazioni`= esercitazioni + 1 WHERE id IN ($incrementa);";
+    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($incrementa);";
     $this->exec($sql, false);
   }
 
-  public function getIncrementa_esercitazioni($id){
+  public function getIncrementa_trainings($id){
     bdump($id);
-    $sql = "SELECT `incrementa` FROM `%PREFIX%_esercitazioni` WHERE `id` = :id";
+    $sql = "SELECT `incrementa` FROM `%PREFIX%_trainings` WHERE `id` = :id";
     $incrementa = $this->exec($sql, true, [":id" => $id])[0]['incrementa'];
     bdump($incrementa);
     return $incrementa;
   }
 
-  public function diminuisci_esercitazioni($id){
-    $sql = "UPDATE `%PREFIX%_profiles` SET `esercitazioni`= esercitazioni - 1 WHERE id IN ({$this->getIncrementa_esercitazioni($id)});";
+  public function diminuisci_trainings($id){
+    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrementa_trainings($id)});";
     $this->exec($sql, false);
   }
 
-  public function add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+  public function add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
     $autisti = implode(",", $autisti);
     bdump($autisti);
     $personale = implode(",", $personale);
     bdump($personale);
     $incrementa = implode(",", $incrementa);
     bdump($incrementa);
-    $sql = "INSERT INTO `%PREFIX%_interventi` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);";
+    $sql = "INSERT INTO `%PREFIX%_services` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);";
     $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]);
     $this->incrementa($incrementa);
   }
 
-  public function remove_intervento($id){
+  public function remove_service($id){
     $this->diminuisci($id);
-    $this->exec("DELETE FROM `%PREFIX%_interventi` WHERE `id` = :id", true, [":id" => $id]);
+    $this->exec("DELETE FROM `%PREFIX%_services` WHERE `id` = :id", true, [":id" => $id]);
   }
 
 
-  public function change_intervento($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
-    $this->remove_intervento($id); // TODO: update, instead of removing and re-adding (with another id)
-    $this->add_intervento($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda);
+  public function change_service($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+    $this->remove_service($id); // TODO: update, instead of removing and re-adding (with another id)
+    $this->add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda);
   }
 
-  public function add_esercitazione($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
+  public function add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
     $personale = implode(",", $personale);
     bdump($personale);
     $incrementa = implode(",", $incrementa);
     bdump($incrementa);
-    $sql = "INSERT INTO `%PREFIX%_esercitazioni` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :incrementa, :inseritoda);";
+    $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :incrementa, :inseritoda);";
     $this->exec($sql, false, [":data" => $data, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":capo" => $capo, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]);
-    $this->incrementa_esercitazioni($incrementa);
+    $this->incrementa_trainings($incrementa);
   }
 
-  public function remove_esercitazione($id){
-    $this->diminuisci_esercitazioni($id);
+  public function remove_training($id){
+    $this->diminuisci_trainings($id);
     bdump($id);
-    $this->exec("DELETE FROM `%PREFIX%_esercitazioni` WHERE `id` = :id", true, [":id" => $id]);
+    $this->exec("DELETE FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id]);
   }
 
 
-  public function change_esercitazione($id, $data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
-    $this->remove_esercitazione($id); // TODO: update, instead of removing and re-adding (with another id)
+  public function change_training($id, $data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
+    $this->remove_training($id); // TODO: update, instead of removing and re-adding (with another id)
     bdump("removed");
-    $this->add_esercitazione($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda);
+    $this->add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda);
   }
 }
 

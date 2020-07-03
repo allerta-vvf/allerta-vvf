@@ -6,7 +6,7 @@ $user->requirelogin();
 $impostazioni['modifica'] = true;
 $impostazioni['elimina'] = true;
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY data DESC, inizio desc", true); // Pesco i dati della table e li ordino in base alla data
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_services` ORDER BY data DESC, uscita desc", true); // Pesco i dati della table e li ordino in base alla data
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
@@ -62,21 +62,23 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY da
     margin-left: 80px;
 }
   </style>
-  <div style='margin: 20px 0;' class="mx-auto">
-  <div style='margin: 2px auto' id="new-search-area"></div>
-  <div class="table-responsive">
-    <div style="overflow-x:auto;">
-    <table id="esercitazioni" cellspacing='0' class="display table table-striped table-bordered dt-responsive nowrap" style="width: 90%; text-align:center;">
+<div style='margin: 20px 0;' class="mx-auto">
+<div style='margin: 2px auto' id="new-search-area"></div>
+<div class="table-responsive">
+  <div style="overflow-x:auto;">
+  <table id="services" cellspacing='0' class="display table table-striped table-bordered dt-responsive nowrap" style="width: 90%; text-align:center;">
     <thead>
     <tr>
      <th><?php t("Date"); ?></th>
-     <th><?php t("Name"); ?></th>
+     <th><?php t("Code"); ?></th>
      <th><?php t("Start time"); ?></th>
      <th><?php t("End time"); ?></th>
      <th><?php t("Foreman"); ?></th>
+     <th><?php t("Drivers"); ?></th>
      <th><?php t("People"); ?></th>
      <th><?php t("Place"); ?></th>
      <th><?php t("Notes"); ?></th>
+     <th><?php t("Type"); ?></th>
      <?php if($impostazioni['modifica']) { echo "<th>".t("Edit", false)."</th>"; } ?>
      <?php if($impostazioni['elimina']) { echo "<th>".t("Remove", false)."</th>"; } ?>
     </tr>
@@ -85,17 +87,17 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` ORDER BY da
 <?php
 foreach($risultato as $row){
       $persone = base64_encode( $row['incrementa'] );
-      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['name'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
+      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['autisti'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td><td>" . $row['tipo'] . "</td>";
       if($impostazioni['modifica']) {
-          echo "<td><a href='modifica_esercitazione.php?modifica&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
+          echo "<td><a href='modifica_service.php?modifica&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
       if($impostazioni['elimina']) {
-          echo "<td><a href='modifica_esercitazione.php?elimina&id={$row['id']}&incrementa={$row['incrementa']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
+          echo "<td><a href='modifica_service.php?elimina&id={$row['id']}&incrementa={$row['incrementa']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
       }
 }
 ?>
-   </tbody>
-  </table>
-</div>
+    </tbody>
+   </table>
+ </div>
 </div>
 </div>

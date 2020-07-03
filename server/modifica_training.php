@@ -3,9 +3,9 @@ require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
   if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("aggiungo esercitazione");
-      $database->add_esercitazione($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
-      $tools->redirect("esercitazioni.php");
+      bdump("aggiungo training");
+      $database->add_training($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+      $tools->redirect("trainings.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
@@ -14,20 +14,20 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   if($tools->validate_form_data(['$post-id', '$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
-      bdump("modifico esercitazione");
-      $database->change_esercitazione($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
-      $tools->redirect("esercitazioni.php");
+      bdump("modifico training");
+      $database->change_training($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+      $tools->redirect("trainings.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "elimina")) {
-  bdump("rimuovo esercitazione");
+  bdump("rimuovo training");
   if($tools->validate_form_data(['$post-id', '$post-incrementa', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
-      bdump("rimuovo esercitazione");
-      $database->remove_esercitazione($_POST["id"], $_POST["incrementa"]);
-      $tools->redirect("esercitazioni.php");
+      bdump("rimuovo training");
+      $database->remove_training($_POST["id"], $_POST["incrementa"]);
+      $tools->redirect("trainings.php");
     } else {
       $tools->redirect("nonfareilfurbo.php");
     }
@@ -43,8 +43,8 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   $id = "";
   if(isset($_GET["id"])){
       $id = $_GET["id"];
-      bdump($database->exists("esercitazioni", $id));
-      $values = $database->exec("SELECT * FROM `%PREFIX%_esercitazioni` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
+      bdump($database->exists("trainings", $id));
+      $values = $database->exec("SELECT * FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
       bdump($values);
   } else {
       $values = [];
@@ -57,11 +57,11 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   if($modalità=="modifica" || $modalità=="elimina"){
       if(empty($id)){
           $tools->redirect("nonfareilfurbo.php");
-      } elseif (!$database->exists("esercitazioni", $id)){
+      } elseif (!$database->exists("trainings", $id)){
           //$tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('modifica_esercitazione.html', ['esercitazione' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' esercitazione']);
+  loadtemplate('modifica_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' training']);
   bdump($_SESSION['token'], "token");
 }
 ?>

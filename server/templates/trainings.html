@@ -5,19 +5,19 @@
     <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <p style="text-align: center;">
-    <a id='add' href="modifica_esercitazione.php?add">{{ 'Add training'|t }}</a>
+    <a id='add' href="modifica_training.php?add">{{ 'Add training'|t }}</a>
     </p>
     <br>
     <div id="lista"></div>
     <script>
-      $.get( "risorse/ajax/ajax_esercitazioni.php", function( data ) {
+      $.get( "risorse/ajax/ajax_trainings.php", function( data ) {
          $( "#lista" ).html( data );
          console.log( "Caricato lista." );
       });
       $(document).ready(function() {
 
         setInterval(function() {
-          $.get( "risorse/ajax/ajax_esercitazioni.php", function( data ) {
+          $.get( "risorse/ajax/ajax_trainings.php", function( data ) {
              $( "#lista" ).html( data );
           });
         }, 10000);

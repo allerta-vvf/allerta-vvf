@@ -7,7 +7,7 @@ $user->requirelogin();
 
 function arraynum(){
 global $database;
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, interventi ASC, name ASC", true); // Pesco i dati della table e li ordino in base alla disponibilità
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, services ASC, name ASC", true); // Pesco i dati della table e li ordino in base alla disponibilità
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
