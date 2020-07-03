@@ -206,48 +206,48 @@ textarea {
 }
 </style>
 <body>
-{% if modalità == "add" %}
+{% if modalità == "edit" or modalità == "add" %}
 <form method="post">
   <div class="container">
-    <label><b>E-mail</b></label>
-    <input id="mail" type="text" name="mail" placeholder="user@providermail.estensione" required>
+    <label><b>{{ 'E-mail'|t }}</b></label>
+    <input id="mail" type="text" name="mail" placeholder="{{ 'user@provider-email-domain.com'|t }}" required>
     <br>
     <br>
-    <label><b>name</b></label>
-    <input id="name" type="text" name="name" placeholder="name Cogname" required>
+    <label><b>{{ 'Name'|t }}</b></label>
+    <input id="name" type="text" name="name" placeholder="{{ 'Name Surname'|t }}" required>
     <br>
     <br>
-    <label><b>Username</b></label>
-    <input id="username" type="text" name="username" placeholder="name.cogname" required>
+    <label><b>{{ 'Username'|t }}</b></label>
+    <input id="username" type="text" name="username" placeholder="{{ 'name.surname'|t }}" required>
     <br>
     <br>
-    <label><b>Password</b></label>
+    <label><b>{{ 'Password'|t }}</b></label>
     <input id="password" type="text" name="password" required>
     <br>
     <br>
-    <label><b>Data di nascita</b></label>
+    <label><b>{{ 'Birthday'|t }}</b></label>
     <input autocomplete="off" class="datepicker" name="birthday" placeholder="DD/MM/YYY" type="text">
     <br>
     <br>
-    <label><b>Caposquadra</b></label><br>
+    <label><b>{{ 'Foreman'|t }}</b></label><br>
     <input type="checkbox" name="capo" data-toggle="toggle">
     <br>
     <br>
-    <label><b>Autista</b></label><br>
+    <label><b>{{ 'Driver'|t }}</b></label><br>
     <input type="checkbox" name="autista" data-toggle="toggle">
     <br>
     <br>
-    <label><b>Visible</b></label><br>
+    <label><b>{{ 'Visible'|t }}</b></label><br>
     <input type="checkbox" name="visible" checked data-toggle="toggle">
     <br>
     <br>
-    <label><b>Enabled</b></label><br>
+    <label><b>{{ 'Enabled'|t }}</b></label><br>
     <input type="checkbox" name="enabled" checked data-toggle="toggle">
     <br>
     <br>
-    <input id="modalità" type="hidden" value="add" name="mod"></input>
+    <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
     <input id="token" type="hidden" value="{{ token }}" name="token"></input>
-    <button type="submit">invia</button>
+    <button type="submit">{{ 'Submit'|t }}</button>
   </div>
 </form>
 <script>
@@ -258,8 +258,6 @@ $('form').submit(function () {
     return true;
 });
 </script>
-{% endif %}
-{% if modalità == "edit" %}
 {% endif %}
 {% if modalità == "delete" %}
 <style>
@@ -276,16 +274,16 @@ $('form').submit(function () {
   }
   </style>
   <div style="margin: 0 auto; text-align: center">
-  <p>Sei sicuro di voler deletere l' utente?</p>
+  <p>{{ 'Are you sure you want to delete the user?'|t }}</p>
   <form method="post">
   <input id="modalità" type="hidden" value="delete" name="mod"></input>
   <input id="token" type="hidden" value="{{ token }}" name="token"></input>
   <input id="id" type="hidden" value="{{ id }}" name="id"></input>
-  <button id="add" type="submit">invia</button>
+  <button id="add" type="submit">{{ 'Submit'|t }}</button>
   </form>
   <script>
   $('form').submit(function () {
-      return confirm("L'azione non può essere annullata. Sei sicuro di voler continuare?");
+      return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
   });
   </script>
   </div>
