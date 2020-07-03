@@ -318,11 +318,11 @@ foreach($risultato as $row){
 $name = ($row['online']==1) ? '<u>' . $row['name'] . "</u>" : $row['name'];
 echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");
 echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
-$disp = vero1($row['avaible'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
+$disp = vero1($row['available'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
 $caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
 $autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
 echo("<p>".t("Name",false).":  <b>$name</b></p><br>");
-echo("<p>".t("Avaible",false).":  <b>{$disp}</b></p><br>");
+echo("<p>".t("Available",false).":  <b>{$disp}</b></p><br>");
 echo("<p>".t("Foreman",false).":  <b>{$caposquadra}</b></p><br>");
 echo("<p>".t("Driver",false).":  <b>{$autista}</b></p><br>");
 echo("<p>".t("Phone number",false)." <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");

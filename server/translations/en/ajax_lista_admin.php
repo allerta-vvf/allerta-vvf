@@ -3,7 +3,7 @@
 
 return [
     "Name" => "Name",
-    "Avaible" => "Avaible",
+    "Available" => "Available",
     "Driver" => "Driver",
     "Call" => "Call",
     "Write" => "Write",

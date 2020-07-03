@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `hidden` BOOLEAN NOT NULL DEFAULT FALSE,
 `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
 `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-`avaible` tinyint(1) NOT NULL DEFAULT 0,
+`available` tinyint(1) NOT NULL DEFAULT 0,
 `caposquadra` tinyint(1) NOT NULL DEFAULT 0,
 `autista` tinyint(1) NOT NULL DEFAULT 0,
 `telefono` varchar(25) DEFAULT NULL,

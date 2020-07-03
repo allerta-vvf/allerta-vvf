@@ -4,7 +4,7 @@
 return [
     "Personal data" => "Personal data",
     "Name" => "Name",
-    "Avaible" => "Avaible",
+    "Available" => "Available",
     "Foreman" => "Foreman",
     "Driver" => "Driver",
     "Phone number" => "Phone number",

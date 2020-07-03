@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -41,7 +41,7 @@ th, td {
 <table style="width: 90%; text-align:center;">
     <tr>
      <th><?php t("Name"); ?></th>
-     <th><?php t("Avaible"); ?></th>
+     <th><?php t("Available"); ?></th>
      <?php
    foreach($risultato as $row){
      if(!in_array($row['name'], $hidden)){
@@ -52,7 +52,7 @@ th, td {
       } else {
           echo "".$user->nameById($row["id"])."</td><td>";
       }
-      if ($row['avaible'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
+      if ($row['available'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
       echo  "</td></tr>";
       }
      }

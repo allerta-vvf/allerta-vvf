@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$users_sql = "SELECT `id`, `name`, `avaible`, `caposquadra`, `autista`, `telefono`, `interventi`, `esercitazioni`, `online`, `minuti_dispo`, `immagine` FROM `%PREFIX%_profiles` LIMIT 0 , 30";
+$users_sql = "SELECT `id`, `name`, `available`, `caposquadra`, `autista`, `telefono`, `interventi`, `esercitazioni`, `online`, `minuti_dispo`, `immagine` FROM `%PREFIX%_profiles` LIMIT 0 , 30";
 $users = $database->exec($users_sql, true);
 
 $interventi_sql="SELECT * FROM `%PREFIX%_interventi` ORDER BY `interventi`.`id` DESC LIMIT 0 , 30";

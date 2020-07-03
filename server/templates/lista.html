@@ -3,7 +3,7 @@
 {% block content %}
     <br>
     <div class="text-center">
-      <p>{{ 'Are you avaible in case of alert?'|t }}</p>
+      <p>{{ 'Are you available in case of alert?'|t }}</p>
       <button class="btn btn-lg btn-success " onclick="Attivo('{{ user.id }}')">{{ 'Active'|t }}</button>
 
       <button class="btn btn-lg btn-danger" style="background-color: red" onclick="NonAttivo('{{ user.id }}')">{{ 'Not Active'|t }}</button>

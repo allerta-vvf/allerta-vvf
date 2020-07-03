@@ -12,7 +12,7 @@ $(document).ready(function(){
         console.log("cleaned");
        }
        db.version(1).stores({
-          users: '++id,name,avaible,caposquadra,autista,telefono,interventi,esercitazioni,online,minuti_dispo,immagine',
+          users: '++id,name,available,caposquadra,autista,telefono,interventi,esercitazioni,online,minuti_dispo,immagine',
           interventi: '++id,data,codice,uscita,rientro,capo,autisti,personale,luogo,note,tipo,incrementa,inseritoda'
        });
        $.each( data.users, function( key, val ) {

@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY avaible DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, interventi ASC, minuti_dispo ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -39,7 +39,7 @@ th, td {
 <table style="width: 90%; text-align:center;">
   <tr>
     <th><?php t("Name"); ?></th>
-    <th><?php t("Avaible"); ?></th>
+    <th><?php t("Available"); ?></th>
     <th><?php t("Driver"); ?></th>
     <th><?php t("Call"); ?></th>
     <th><?php t("Write"); ?></th>
@@ -52,8 +52,8 @@ th, td {
         echo "<tr>
            <td>";
       $name = $user->nameById($row["id"]);
-      $callFunction = ($row['avaible'] == 1) ? "NonAttivo" : "Attivo";
-      $avaible = $row["avaible"];
+      $callFunction = ($row['available'] == 1) ? "NonAttivo" : "Attivo";
+      $available = $row["available"];
       if ($row['caposquadra'] == 1) {
         echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";
       } else {
@@ -64,7 +64,7 @@ th, td {
       } else {
         echo $name."</a></td><td><a onclick='$callFunction(".$row["id"].");'>";
       }
-      if ($row['avaible'] == 1) {
+      if ($row['available'] == 1) {
         echo "<i class='fa fa-check' style='color:green'></i>";
       } else {
         echo "<i class='fa fa-times'  style='color:red'></i>";
@@ -79,7 +79,7 @@ th, td {
       echo "</td>
           <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
  
-      //if ($row['avaible'] == 1) {
+      //if ($row['available'] == 1) {
         $nome_url = urlencode($row['name']);
         echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fa fa-whatsapp' style='color:green'></i></td>";
       /*} else{

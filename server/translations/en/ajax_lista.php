@@ -3,5 +3,5 @@
 
 return [
     "Name" => "Name",
-    "Avaible" => "Avaible"
+    "Available" => "Available"
 ];

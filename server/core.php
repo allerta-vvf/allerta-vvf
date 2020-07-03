@@ -394,12 +394,12 @@ class user{
     return $profiles;
   }
   
-  public function avaible($name){
-    $user = $this->database->exec("SELECT avaible FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
+  public function available($name){
+    $user = $this->database->exec("SELECT available FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
     if(empty($user)){
         return false;
     } else {
-        return $user[0]["avaible"];
+        return $user[0]["available"];
     }
   }
   
