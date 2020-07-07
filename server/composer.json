@@ -19,7 +19,7 @@
     "require-dev": {
         "codeception/codeception": "4.x-dev",
         "codeception/module-asserts": "*",
-        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-phpbrowser": "^1.0.1",
         "codeception/phpbuiltinserver": "*",
         "phpunit/phpunit": "6.*",
         "captbaritone/mailcatcher-codeception-module": "*",
