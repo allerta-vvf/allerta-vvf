@@ -84,8 +84,12 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY data D
     <tbody>
 <?php
 foreach($risultato as $row){
-      $persone = base64_encode( $row['incrementa'] );
-      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['name'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $row['capo'] . "</td><td>" . $row['personale'] . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
+      $foreman = $user->nameById($row["capo"]);
+      $others_people = "";
+      foreach(explode(",", $row['personale']) as $key=>$name){
+        $others_people = $others_people.$user->nameById($name).", ";
+      }
+      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['name'] . "</td><td>" . $row['inizio'] . "</td><td>" . $row['fine'] . "</td><td>" . $foreman . "</td><td>" . $others_people . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td>";
       if($impostazioni['edit']) {
           echo "<td><a href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
