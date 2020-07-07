@@ -180,24 +180,37 @@ class database{
     $this->connection = null;
   }
 
-  public function exec($sql, $fetch=false, $param=null){
+  public function exec($sql1, $fetch=false, $param=null, ...$others_params){
     try{
-      $this->connection->beginTransaction();
-      $this->stmt = $this->connection->prepare(str_replace("%PREFIX%", DB_PREFIX, $sql));
-      if(!is_null($param)){
-        $this->query = $this->stmt->execute($param);
-      } else {
-        $this->query = $this->stmt->execute();
+      //$this->connection->beginTransaction();
+      array_unshift($others_params,$sql1);
+      bdump($others_params);
+      $toReturn = [];
+      foreach($others_params as $sql){
+        $sql = str_replace("%PREFIX%", DB_PREFIX, $sql);
+        bdump($sql);
+        $this->stmt = $this->connection->prepare($sql);
+        if(!is_null($param)){
+          $this->query = $this->stmt->execute($param);
+        } else {
+          $this->query = $this->stmt->execute();
+        }
+        bdump($this->query);
+        
+        if($fetch == true){
+          if(count($others_params) > 1) {
+            $toReturn[] = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+          } else {
+            $toReturn = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+          }
+        }
       }
-      bdump($this->query);
-      $this->connection->commit();
-      if($fetch == true){
-        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
-      }
-      $this->stmt->closeCursor();
+      //$this->connection->commit();
+      //$this->stmt->closeCursor();
+      return $toReturn;
     } catch (PDOException $e) {
       print "Error!: " . $e->getMessage() . "<br/>";
-      $this->connection->rollBack();
+      //$this->connection->rollBack();
       die();
     }
   }

@@ -1,4 +1,7 @@
 <?php
+include_once 'core.php';
+
+init_class();
 $day = 19;
 $ore = 1;
 
@@ -8,52 +11,31 @@ $minuti = 5;
 setlocale(LC_TIME, 'ita', 'it_IT');
 echo date('i') . " - " . date('H') . " - " . date("d") . "<br>";
 
-include_once 'core.php';
-
-init_class();
-
 function resetminuti(){
     global $profiles_tot;
     global $database;
-    $sql = "SELECT * FROM %PREFIX%_profiles"; // Pesco i dati della table e li ordino in base alla disponibilità
+    $sql = "SELECT * FROM %PREFIX%_profiles";
     $risultato = $database->exec($sql, true);
     $disp = array();
     foreach($risultato as $row){
-        $disp[$row['name']] = $row['minuti_dispo'];
+        $disp[$row['id']] = $row['minuti_dispo'];
     }
     print("<br><pre>" . print_r($disp, true) . "</pre><br>");
 
 
-    // pre-5.3:
+    // 5.3:
     $list = implode(', ', array_map(
-       create_function('$k,$v', 'return "$k => $v";'),
+       function ($k, $v) { return "$k = $v;"; },
        array_keys($disp),
        array_values($disp)
     ));
-    $a1 = implode(" - ", array_keys($disp));
-    $a2 = implode(" - ", array_values($disp));
-    echo "<p style='color:red;'>" . $list . "</p><br><p style='color:green;'>" . $a1 . "</p><br><p style='color:blue;'>" . $a2 . "</p><br>";
+    $a1 = implode(";", array_keys($disp));
+    $a2 = implode(";", array_values($disp));
     $mese = strftime("%B");
     $anno = strftime("%Y");
-    echo $mese . " - " . $anno . "<br>";
 
-
-    $sql = "INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')"; // Pesco i dati della table e li ordino in base alla disponibilità
-    $risultato = $database->exec($sql);
-
-    foreach($risultato as $row){
-        $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '0' WHERE name ='" . $user . "'";
-        $risultato = $database->exec($sql);
-        echo "reset effettuato: " . $user . "<br>";
-    }
-
-    if($risultato){
-        echo <<<EOT
-<img src='https://media1.tenor.com/images/768840dae0d91bbc9f215d9255af8170/tenor.gif?itemid=8706004'></img>
-<img src='https://media1.tenor.com/images/4d41eec52c39344dd87e1022cc0eb98c/tenor.gif?itemid=4572479'></img>
-<img src='https://thumbs.gfycat.com/FinishedSnarlingAfricanelephant-max-1mb.gif'></img>
-EOT;
-    }
+    $sql = "INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`, `a1`, `a2`) VALUES (NULL, '$mese', '$anno', '$list', '$a1', '$a2')";
+    $risultato = $database->exec($sql, false, null, "UPDATE %PREFIX%_profiles SET minuti_dispo = '0' WHERE 1;");
 }
 
 //Per quando dovrò (forse) reinserire i valori in table o generare un array
@@ -65,35 +47,35 @@ function array_combine_($keys, $values){
     array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
     return    $result;
 }
-//print("<br><pre>" . print_r(array_combine_(explode(" - ", $a1), explode(" - ", $a2)), true) . "</pre><br>");
 
+if($start && isset($_POST['cron']) && $_POST['cron'] == "cron_job-".$database->getOption("cron_job_code")){
+if($start && isset($_POST['reset']) && $_POST['reset'] == "cron_job-".$database->getOption("cron_job_code")){
+echo("reset");
+resetminuti();
+}
 
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, services ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY name ASC";
 $risultato = $database->exec($sql, true);
 
 $profiles_tot = array();
 $incremento = array();
 $minuti_dispo_old = array();
 foreach($risultato as $row){
-    $profiles_tot[] = $row['name'];
+    $profiles_tot[] = $row['id'];
     if($row['available'] == "1"){
-        $incremento[] = $row['name'];
+        $incremento[] = $row['id'];
         $minuti_dispo_old[] = $row['minuti_dispo'];
     }
 }
 print_r($incremento);
 
-if($start && isset($_POST['cron']) && $_POST['cron'] == "cron-job"){
-if($start && isset($_POST['reset']) && $_POST['reset'] == "cron-job"){
-resetminuti();
-}
-
-foreach($incremento as $key=>$user){
+foreach($incremento as $key=>$id){
     $minuti_dispo = $minuti_dispo_old[$key] + $minuti;
-    $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '" . $minuti_dispo . "' WHERE name ='" . $user . "'";
+    $sql = "UPDATE %PREFIX%_profiles SET minuti_dispo = '" . $minuti_dispo . "' WHERE id ='" . $id . "'";
+    echo $sql;
     $risultato = $database->exec($sql, true);
 }
-$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, services ASC, name ASC"; // Pesco i dati della table e li ordino in base alla disponibilità
+$sql = "SELECT * FROM %PREFIX%_profiles ORDER BY available DESC, caposquadra DESC, services ASC, name ASC";
 $risultato = $database->exec($sql, true);
 $minuti_dispo = array();
 foreach($risultato as $row){
