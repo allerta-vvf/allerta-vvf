@@ -21,7 +21,11 @@ This is only a **development version**.
 |Options|:heavy_check_mark:|||
 |Logs|:heavy_check_mark:|||
 |Graphs|||:x:|
+|User profile editor|||:x:|
 |Images||:clock8:||
+|Api|||:x:|
+|Telegram bot|||:x:|
+|Twilio|||:x:|
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf?ref=badge_large)
