@@ -1,12 +1,14 @@
 {
-    "name": "matteo/allerta",
+    "name": "matteo/allerta-vvf",
     "description": "Un software di allertamento per i vvf",
     "type": "project",
     "require": {
         "twig/twig": "3.x-dev",
         "tracy/tracy": "^2.7@dev",
         "delight-im/auth": "dev-master",
-        "ulrichsg/getopt-php": "dev-master"
+        "ulrichsg/getopt-php": "dev-master",
+        "nikic/fast-route": "^2.0@dev",
+        "spatie/array-to-xml": "^2.12"
     },
     "license": "GPL-3.0-or-later",
     "authors": [
@@ -15,7 +17,7 @@
             "email": "matteo@matteogheza.it"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require-dev": {
         "codeception/codeception": "4.x-dev",
         "codeception/module-asserts": "*",

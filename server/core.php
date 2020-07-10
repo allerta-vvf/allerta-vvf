@@ -559,7 +559,7 @@ class translations{
   }
 }
 
-function init_class(){
+function init_class($enableDebugger=true){
   global $tools, $database, $user, $translations;
   if(!isset($tools) && !isset($database) && !isset($translations)){
     $database = new database();
@@ -567,11 +567,13 @@ function init_class(){
     $user = new user($database, $tools);
     $translations = new translations();
   }
+  if($enableDebugger){
   //if($user->requireRole(Role::DEVELOPER)){
     Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
   //} else {
     //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
   //}
+  }
 }
 
 function t($string, $echo=true){

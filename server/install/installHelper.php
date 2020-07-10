@@ -289,7 +289,7 @@ PRIMARY KEY (`id`),
 UNIQUE KEY `selector` (`selector`),
 KEY `email_expires` (`email`,`expires`),
 KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `".$prefix."_users_remembered` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 `user` int(10) unsigned NOT NULL,
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users_remembered` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `selector` (`selector`),
 KEY `user` (`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `".$prefix."_users_resets` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 `user` int(10) unsigned NOT NULL,
@@ -309,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users_resets` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `selector` (`selector`),
 KEY `user_expires` (`user`,`expires`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `".$prefix."_users_throttling` (
 `bucket` varchar(44) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
 `tokens` float unsigned NOT NULL,
@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users_throttling` (
 `expires_at` int(10) unsigned NOT NULL,
 PRIMARY KEY (`bucket`),
 KEY `expires_at` (`expires_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `".$prefix."_options` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `name` TEXT NOT NULL, `value` MEDIUMTEXT NOT NULL,
@@ -335,6 +335,14 @@ CREATE TABLE `".$prefix."_dbversion` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `".$prefix."_api_keys` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`apikey` VARCHAR(128) NOT NULL,
+`user` INT NOT NULL,
+`permissions` VARCHAR(128) NOT NULL DEFAULT 'ALL',
+PRIMARY KEY (`id`),
+KEY `Id` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());
 INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');");
     } catch (Exception $e) {
