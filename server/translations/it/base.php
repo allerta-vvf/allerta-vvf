@@ -2,6 +2,8 @@
 // Translated by: Matteo Gheza (matteogheza.it; github.com/matteogheza)
 
 return [
+    "Personal data" => "Dati anagrafici",
+    "service" => "Intervento",
     "Availability List" => "Lista disponibilità",
     "Services" => "Interventi",
     "Trainings" => "Esercitazioni",
@@ -14,6 +16,7 @@ return [
     "Available" => "Disponibile",
     "Foreman" => "Caposquadra",
     "Driver" => "Autista",
+    "Drivers" => "Autisti",
     "People" => "Persone",
     "Date" => "Data",
     "Code" => "Codice",

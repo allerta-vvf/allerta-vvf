@@ -13,4 +13,4 @@ if(isset($_POST['name']) & isset($_POST['password'])){
     bdump($errore);
   }
 }
-loadtemplate('index.html', ['errore' => $errore, 'titolo' => 'Login'], false);
+loadtemplate('index.html', ['errore' => $errore, 'titolo' => t('Login',false)], false);

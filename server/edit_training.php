@@ -61,7 +61,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           //$tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' training']);
+  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>

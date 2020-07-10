@@ -59,7 +59,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           $tools->redirect("nonfareilfurbo.php");
       }
   }
-  loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' user']);
+  loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' '.ucfirst(t("user",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>
