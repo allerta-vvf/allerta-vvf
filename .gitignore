@@ -491,7 +491,7 @@ MigrationBackup/
 ### Composer ###
 composer.phar
 /server/vendor/
-
+/server/*/*/vendor/
 *.zip
 
 /server/error-log/*

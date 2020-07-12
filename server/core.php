@@ -139,6 +139,14 @@ class tools{
     }
     return $array2;
   }
+
+  public function createKey($hashCode=false, $lenght=128){
+    $code = str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30)));
+    if($hashCode){
+      $code = $code.".".hash("sha256", $code);
+    }
+    return $code;
+  }
 }
 
 class database{

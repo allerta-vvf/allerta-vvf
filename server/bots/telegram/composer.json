@@ -1,0 +1,19 @@
+{
+    "name": "matteo/allerta-vvf_telegram-bot",
+    "description": "Telegram Bot for matteo/allerta-vvf",
+    "type": "project",
+    "require": {
+        "longman/telegram-bot": "^0.63.1"
+    },
+    "require-dev": {
+        "monolog/monolog": "^2.1"
+    },
+    "license": "GPL3.0",
+    "authors": [
+        {
+            "name": "Matteo Gheza",
+            "email": "matteo.gheza07@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}

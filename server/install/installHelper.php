@@ -343,6 +343,13 @@ CREATE TABLE `".$prefix."_api_keys` (
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `".$prefix."_bot_telegram` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`chat_id` VARCHAR(128) NOT NULL,
+`user` INT NOT NULL,
+PRIMARY KEY (`id`),
+KEY `Id` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());
 INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');");
     } catch (Exception $e) {

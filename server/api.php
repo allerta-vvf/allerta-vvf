@@ -7,6 +7,36 @@ init_class(false);
 $user_info = [];
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+    $r->addRoute('POST', '/login', function($vars)
+    {
+        global $tools, $database, $user;
+        try {
+            $user->auth->loginWithUsername($_POST['username'], $_POST['password']);
+            $apiKey = $tools->createKey(true);
+            $database->exec("INSERT INTO `%PREFIX%_api_keys` (`apikey`, `user`, `permissions`) VALUES (:apiKey, :userId, 'ALL');", true, [":apiKey" => $apiKey, ":userId" => $user->auth->getUserId()]);
+            return ["status" => "ok", "apiKey" => $apiKey];
+        }
+        catch (\Delight\Auth\UnknownUsernameException $e) {
+            http_response_code(401);
+            return ["status" => "error", "message" => "Username unknown"];
+        }
+        catch (\Delight\Auth\AmbiguousUsernameException $e) {
+            http_response_code(401);
+            return ["status" => "error", "message" => "Ambiguous Username"];
+        }
+        catch (\Delight\Auth\InvalidPasswordException $e) {
+            http_response_code(401);
+            return ["status" => "error", "message" => "Wrong password"];
+        }
+        catch (\Delight\Auth\EmailNotVerifiedException $e) {
+            http_response_code(401);
+            return ["status" => "error", "message" => "Email not verified"];
+        }
+        catch (\Delight\Auth\TooManyRequestsException $e) {
+            http_response_code(429);
+            return ["status" => "error", "message" => "Too many requests"];
+        }
+    });
     $r->addRoute('GET', '/users', function($vars)
     {
         requireToken();
@@ -19,6 +49,18 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
             }
             $users_profiles[$key]["email"] = $users[$key]["email"];
         }
+        return $users_profiles;
+    });
+    $r->addRoute('GET', '/user', function($vars)
+    {
+        requireToken();
+        global $database, $user_info;
+        $users = $database->exec("SELECT * FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $user_info["id"]])[0];
+        $users_profiles = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user_info["id"]])[0];
+        if(is_null($users_profiles["name"])){
+            $users_profiles["name"] = $users["username"];
+        }
+        $users_profiles["email"] = $users["email"];
         return $users_profiles;
     });
     $r->addRoute('GET', '/user/{id:\d+}', function($vars)
@@ -109,6 +151,9 @@ bdump($response);
 
 function responseApi($content, $status_code=200){
     global $response, $responseType;
+    if($status_code !== 200){
+        http_response_code($status_code);
+    }
     header("Content-type: ".$responseType);
     if($response == "json"){
         echo(json_encode($content));
@@ -133,17 +178,19 @@ function validToken(){
 
 function requireToken(){
     if(!validToken()){
-        responseApi(["status" => "error", "message" => "Access Denied"], 403);
+        responseApi(["status" => "error", "message" => "Access Denied"], 401);
         exit();
     }
 }
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
-        // ... 404 Not Found
+        http_response_code(404);
+        responseApi(["status" => "error", "message" => "Route not found"]);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
-        // ... 405 Method Not Allowed
+        http_response_code(405);
+        responseApi(["status" => "error", "message" => "Method not allowed"]);
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
