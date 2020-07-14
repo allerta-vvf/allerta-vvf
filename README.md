@@ -32,8 +32,6 @@ This is only a **development version**.
 
 ## Contributors ✨
 
-- [@InveSte](https://github.com/investe), for the first version of Allerta (fireFighter), currently on Github at https://github.com/investe/firefighter
-
 Thanks goes to ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -50,3 +48,5 @@ Thanks goes to ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+PS: You can see the original version of Allerta-VVF at https://github.com/investe/firefighter
