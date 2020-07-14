@@ -22,6 +22,17 @@
         "security",
         "ideas"
       ]
+    },
+    {
+      "login": "Fulvio",
+      "name": "Fulvio",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/48780?v=4",
+      "profile": "https://github.com/fulvio",
+      "contributions": [
+        "design",
+        "security",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
