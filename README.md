@@ -40,6 +40,7 @@ Thanks goes to ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 <table>
   <tr>
     <td align="center"><a href="https://github.com/investe"><img src="https://avatars3.githubusercontent.com/u/32263484?v=4" width="100px;" alt=""/><br /><sub><b>InveSte</b></sub></a><br /><a href="https://github.com/allerta-vvf/allerta-vvf/commits?author=investe" title="Code">💻</a> <a href="#design-investe" title="Design">🎨</a> <a href="https://github.com/allerta-vvf/allerta-vvf/pulls?q=is%3Apr+reviewed-by%3Ainveste" title="Reviewed Pull Requests">👀</a> <a href="#security-investe" title="Security">🛡️</a> <a href="#ideas-investe" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/fulvio"><img src="https://avatars0.githubusercontent.com/u/48780?v=4" width="100px;" alt=""/><br /><sub><b>Fulvio</b></sub></a><br /><a href="#design-Fulvio" title="Design">🎨</a> <a href="#security-Fulvio" title="Security">🛡️</a> <a href="#ideas-Fulvio" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
