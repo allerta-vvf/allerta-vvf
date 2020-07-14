@@ -9,6 +9,21 @@
   "imageSize": 100,
   "commit": true,
   "commitConvention": "atom",
-  "contributors": [],
-  "contributorsPerLine": 7
+  "contributors": [
+    {
+      "login": "investe",
+      "name": "InveSte",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/32263484?v=4",
+      "profile": "https://github.com/investe",
+      "contributions": [
+        "code",
+        "design",
+        "review",
+        "security",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
