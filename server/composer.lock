@@ -733,22 +733,23 @@
         },
         {
             "name": "captbaritone/mailcatcher-codeception-module",
-            "version": "2.1.3",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captbaritone/codeception-mailcatcher-module.git",
-                "reference": "ff545e40228a9e9b1634347dab2cf0237e0879c8"
+                "reference": "fb5e0575e6a219e5f275a84599f0c46caebff7c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captbaritone/codeception-mailcatcher-module/zipball/ff545e40228a9e9b1634347dab2cf0237e0879c8",
-                "reference": "ff545e40228a9e9b1634347dab2cf0237e0879c8",
+                "url": "https://api.github.com/repos/captbaritone/codeception-mailcatcher-module/zipball/fb5e0575e6a219e5f275a84599f0c46caebff7c3",
+                "reference": "fb5e0575e6a219e5f275a84599f0c46caebff7c3",
                 "shasum": ""
             },
             "require": {
                 "codeception/codeception": "^2.2 || ^3.0 || ^4.0",
+                "ext-json": "*",
                 "guzzlehttp/guzzle": "^6.0 || ^7.0",
-                "php": ">=7.0",
+                "php": "^7.2",
                 "zbateson/mail-mime-parser": "^1.2"
             },
             "require-dev": {
@@ -775,7 +776,7 @@
                 }
             ],
             "description": "Test emails in your Codeception acceptance tests",
-            "time": "2020-07-19T14:23:33+00:00"
+            "time": "2020-07-23T08:03:01+00:00"
         },
         {
             "name": "codeception/codeception",
