@@ -473,12 +473,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "5f323819a22d27aecf0a7a764163722bd36d518c"
+                "reference": "550ad82849cba663b77d3cdee724d342ed20a71d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/5f323819a22d27aecf0a7a764163722bd36d518c",
-                "reference": "5f323819a22d27aecf0a7a764163722bd36d518c",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/550ad82849cba663b77d3cdee724d342ed20a71d",
+                "reference": "550ad82849cba663b77d3cdee724d342ed20a71d",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2020-07-07T12:49:00+00:00"
+            "time": "2020-08-02T16:50:15+00:00"
         },
         {
             "name": "twig/twig",
@@ -546,12 +546,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "57ca24c5f3a079aced47dc1b8688ee5752367f15"
+                "reference": "2d2bd8fb638133debcc7573ccfca211eac348d13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/57ca24c5f3a079aced47dc1b8688ee5752367f15",
-                "reference": "57ca24c5f3a079aced47dc1b8688ee5752367f15",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/2d2bd8fb638133debcc7573ccfca211eac348d13",
+                "reference": "2d2bd8fb638133debcc7573ccfca211eac348d13",
                 "shasum": ""
             },
             "require": {
@@ -602,18 +602,6 @@
             ],
             "funding": [
                 {
-                    "url": "https://certification.symfony.com/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://live.symfony.com/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://symfony.com/cloud/",
-                    "type": "custom"
-                },
-                {
                     "url": "https://github.com/fabpot",
                     "type": "github"
                 },
@@ -622,7 +610,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-06T13:35:21+00:00"
+            "time": "2020-08-04T06:19:16+00:00"
         },
         {
             "name": "ulrichsg/getopt-php",
@@ -3903,7 +3891,7 @@
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
