@@ -44,7 +44,7 @@ th, td {
      <th><?php t("Available"); ?></th>
      <?php
    foreach($risultato as $row){
-     if(!in_array($row['name'], $hidden)){
+     if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
       echo "<tr><td>";
       if ($row['caposquadra'] == 1) {echo "<img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<img src='./risorse/images/cascoNero.png' width='20px'>   ";}
       if($row['online'] == 1){

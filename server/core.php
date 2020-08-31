@@ -371,7 +371,7 @@ class user{
   }
 
   public function requireRole($role, $adminGranted=true){
-    return $this->auth->hasRole($role) || $this->auth->hasRole(Role::SUPER_ADMIN) || ($this->auth->hasRole(Role::ADMIN) && $adminGranted);
+    return $this->auth->hasRole($role) || $this->auth->hasRole(Role::SUPER_ADMIN) || ($this->auth->hasRole(Role::ADMIN) && $adminGranted && $role !== Role::DEVELOPER);
   }
 
   public function name($replace=false){
