@@ -541,27 +541,26 @@ class translations{
     if($this->language == null){
       $this->language = "en";
     }
+    $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
+    if(strpos($file_infos['dirname'], 'risorse') !== false) {
+      $this->filename = "../../translations/".$this->language."/".$file_infos['basename'];
+    } else {
+      $this->filename = "translations/".$this->language."/".$file_infos['basename'];
+    }
+    if (file_exists($this->filename)){
+      $this->loaded_translations = array_merge(require("translations/".$this->language."/base.php"),require($this->filename));
+    } else {
+      try{
+        $this->loaded_translations = require("translations/".$this->language."/base.php");
+      } catch(Exception $e) {
+        $this->loaded_translations = require("../../translations/".$this->language."/base.php");
+      }
+    }
   }
 
   public function translate($string){
     bdump($string);
     try {
-      $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
-      if(strpos($file_infos['dirname'], 'risorse') !== false) {
-        $this->filename = "../../translations/".$this->language."/".$file_infos['basename'];
-      } else {
-        $this->filename = "translations/".$this->language."/".$file_infos['basename'];
-      }
-      if (file_exists($this->filename)){
-        $this->loaded_translations = array_merge(require($this->filename),require("translations/".$this->language."/base.php"));
-      } else {
-        try{
-          $this->loaded_translations = require("translations/".$this->language."/base.php");
-        } catch(Exception $e) {
-          $this->loaded_translations = require("../../translations/".$this->language."/base.php");
-        }
-      }
-      bdump($this->loaded_translations);
       if (!array_key_exists($string, $this->loaded_translations))
         throw new Exception ('string does not exist');
       return $this->loaded_translations[$string];
@@ -588,6 +587,8 @@ function init_class($enableDebugger=true){
     //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
   //}
   }
+  bdump(get_included_files());
+  bdump($translations->loaded_translations);
 }
 
 function t($string, $echo=true){
