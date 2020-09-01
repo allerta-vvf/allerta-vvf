@@ -552,9 +552,15 @@ class translations{
       } else {
         $this->filename = "translations/".$this->language."/".$file_infos['basename'];
       }
-      if (!file_exists($this->filename))
-        throw new Exception ('file does not exist');
-      $this->loaded_translations = array_merge(require($this->filename),require("translations/".$this->language."/base.php"));
+      if (file_exists($this->filename)){
+        $this->loaded_translations = array_merge(require($this->filename),require("translations/".$this->language."/base.php"));
+      } else {
+        try{
+          $this->loaded_translations = require("translations/".$this->language."/base.php");
+        } catch(Exception $e) {
+          $this->loaded_translations = require("../../translations/".$this->language."/base.php");
+        }
+      }
       bdump($this->loaded_translations);
       if (!array_key_exists($string, $this->loaded_translations))
         throw new Exception ('string does not exist');
