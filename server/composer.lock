@@ -4751,16 +4751,16 @@
         },
         {
             "name": "zbateson/stream-decorators",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/stream-decorators.git",
-                "reference": "a1873c22d2d6189931dd145d766157c6f75cc8d7"
+                "reference": "6f54738dfecc65e1d5bfb855035836748083a6dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/stream-decorators/zipball/a1873c22d2d6189931dd145d766157c6f75cc8d7",
-                "reference": "a1873c22d2d6189931dd145d766157c6f75cc8d7",
+                "url": "https://api.github.com/repos/zbateson/stream-decorators/zipball/6f54738dfecc65e1d5bfb855035836748083a6dd",
+                "reference": "6f54738dfecc65e1d5bfb855035836748083a6dd",
                 "shasum": ""
             },
             "require": {
@@ -4798,7 +4798,13 @@
                 "stream",
                 "uuencode"
             ],
-            "time": "2020-02-10T00:22:40+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/zbateson",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-08-10T18:59:43+00:00"
         }
     ],
     "aliases": [],
