@@ -261,7 +261,7 @@
           </style>
           <script>
             /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-            function myFunction() {
+            function menu() {
               var x = document.getElementById("myTopnav");
               //var z = document.getElementById("logout");
               if (x.className === "topnav") {
@@ -301,13 +301,9 @@
       });
       </script>
       <script>
-      ciao = 0;
-      function onLine() {
-          ciao = ciao + 1;
-          console.log(ciao);
-      	console.log("onLine");
+      function check() {
       	var xhr = new XMLHttpRequest();
-      	xhr.open('GET', '{{ urlsoftware }}online_check.php?user={{ user.name }}');
+        xhr.open('GET', '{{ urlsoftware }}online_check.php');
       	xhr.onload = function () {
       		if (xhr.status === 200) {
       			console.log('Text ' + xhr.responseText);
@@ -318,21 +314,10 @@
       	xhr.send();
       }
 
-      function offLine() {
-      	console.log("offLine");
-      }
-
-      function check() {
-      	var i = new Image();
-      	i.onload = onLine;
-      	i.onerror = offLine;
-      	i.src = 'https://www.google-analytics.com/__utm.gif';
-      }
-
       check();
       setInterval(function() {
       check();
-      }, 10000);
+      }, 30000);
       </script>
       {% block menu %}
         <!-- Menu -->
@@ -344,7 +329,7 @@
         <a {# href="{{ urlsoftware }}grafici.php" #}>{{ 'Graphics'|t }}</a>
         {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
         <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">☰</a>
+        <a href="javascript:void(0);" class="icon" onclick="menu()">☰</a>
         </div>
         <!-- /Menu -->
       {% endblock %}

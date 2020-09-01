@@ -271,7 +271,6 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `telefono` varchar(25) DEFAULT NULL,
 `services` int(11) NOT NULL DEFAULT 0,
 `trainings` int(11) NOT NULL DEFAULT 0,
-`online` tinyint(1) NOT NULL DEFAULT 0,
 `online_time` int(11) NOT NULL DEFAULT 0,
 `minuti_dispo` int(11) NOT NULL DEFAULT 0,
 `immagine` varchar(1000) DEFAULT NULL,

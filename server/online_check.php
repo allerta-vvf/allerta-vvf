@@ -1,22 +1,14 @@
 <?php
-error_reporting(1);
-$start = true;
-$minuti = date('i');
-
-include_once 'core.php';
+require 'core.php';
 
 init_class();
+$user->requirelogin();
+$id = $user->auth->getUserId();
+$time = time();
 
-$sql = "SELECT name, online, online_time FROM `%PREFIX%_profiles`";
-$risultato = $database->exec($sql, true);
-var_dump($risultato);
-foreach($risultato as $row){
-print("<pre>" . print_r($row, true) . "</pre>");
-}
-
-if(isset($_GET) && !is_null($_GET['user'])){
-  $sql = "UPDATE `%PREFIX%_profiles` SET online = '1', online_time = '$minuti' WHERE name = '" . urldecode($_GET['user']) . "'";
+if(!is_null($id)){
+  $sql = "UPDATE `%PREFIX%_profiles` SET online_time = '$time' WHERE id = '" . $id ."'";
   $risultato = $database->exec($sql, true);
-  var_dump($risultato);
+  echo(json_encode(["id" => $id, "time" => $time, "sql" => $sql]));
 }
 ?>

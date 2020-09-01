@@ -47,7 +47,7 @@ th, td {
      if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
       echo "<tr><td>";
       if ($row['caposquadra'] == 1) {echo "<img src='./risorse/images/cascoRosso.png' width='20px'>   ";} else{echo "<img src='./risorse/images/cascoNero.png' width='20px'>   ";}
-      if($row['online'] == 1){
+      if((time()-$row["online_time"])<=30){
           echo "<u>".$user->nameById($row["id"])."</u></td><td>";
       } else {
           echo "".$user->nameById($row["id"])."</td><td>";

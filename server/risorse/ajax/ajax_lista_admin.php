@@ -59,7 +59,7 @@ th, td {
       } else {
         echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";
       }
-      if($row['online'] == 1){
+      if((time()-$row["online_time"])<=30){
         echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
       } else {
         echo $name."</a></td><td><a onclick='$callFunction(".$row["id"].");'>";
