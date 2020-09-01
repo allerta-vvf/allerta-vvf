@@ -137,7 +137,7 @@ if(!is_cli()){
     generateConfig($_POST["dbhost"],$_POST["uname"],$_POST["pwd"],$_POST["dbname"],$_POST["prefix"]);
 ?>
     <h1 class="screen-reader-text">File di configurazione creato con successo!</h1>
-    <p>Ottimo lavoro, amico! Hai completato questa parte dell'installazione. Ora WordPress può comunicare con il database. Se sei pronto, ora è il momento di…</p>
+    <p>Ottimo lavoro, amico! Hai completato questa parte dell'installazione. Ora Allerta può comunicare con il database. Se sei pronto, ora è il momento di…</p>
     <p class="step">
     <form method="POST">
     <input type="hidden" name="step" value="4">
