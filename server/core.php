@@ -509,7 +509,11 @@ class translations{
   public $filename = "";
 
   public function client_languages() {
-    $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+      $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    } else {
+      $client_languages = "en-US;q=0.5,en;q=0.3";
+    }
     if(strpos($client_languages, ';') == false){
         if(strpos($client_languages, '-') !== false){
             return [substr($client_languages, 0, 5)];

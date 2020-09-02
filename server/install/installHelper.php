@@ -231,11 +231,9 @@ PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_minuti` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`mese` enum('gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre') NOT NULL,
-`anno` varchar(4) NOT NULL,
+`mese` int(2) NOT NULL,
+`anno` int(2) NOT NULL,
 `list` mediumtext NOT NULL,
-`a1` mediumtext NOT NULL,
-`a2` mediumtext NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_tipo` (
@@ -406,23 +404,26 @@ function initOptions($name, $visible, $password, $report_email, $owner){
         $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('11', 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('10', 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('1', 'report_email', :report_email, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('2', 'owner', :owner, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('3', 'web_url', :web_url, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('4', 'use_custom_error_sound', 0, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('5', 'use_custom_error_image', 0, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('6', 'intrusion_save', 1, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('7', 'intrusion_save_info', 1, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('8', 'enable_technical_support', 0, '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('9', 'technical_support_key', '', '1', current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('10', 'cron_job_code', :cron_job_code, '1', current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'report_email', :report_email, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'owner', :owner, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'web_url', :web_url, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_custom_error_sound', 0, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_custom_error_image', 0, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'intrusion_save', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'intrusion_save_info', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'enable_technical_support', 0, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'technical_support_key', '', 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_code', :cron_job_code, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_enabled', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_time', :cron_job_time, 1, current_timestamp(), current_timestamp(), '1');
 $option_check_cf_ip");
         mt_srand(10);
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        
         $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
         $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
         $prep->bindValue(':web_url', str_replace("install/install.php", "", full_path()), PDO::PARAM_STR);
-        $prep->bindValue(':cron_job_code', uniqid().mt_rand(), PDO::PARAM_STR);
+        $prep->bindValue(':cron_job_code', str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30))), PDO::PARAM_STR);
+        $prep->bindValue(':cron_job_time', "01;00:00", PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
         if(is_cli()){
