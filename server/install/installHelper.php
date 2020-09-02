@@ -73,11 +73,11 @@ function checkConnection($host, $user, $password, $database, $return=false){
     if($connectionOk){
         try{
             try{
-            $connection->exec("CREATE DATABASE IF NOT EXISTS " . /*preg_replace('/[^a-zA-Z0-9]/', '', */trim($database)/*)*/);
+                $connection->exec("CREATE DATABASE IF NOT EXISTS " . trim($database));
             } catch(Exception $e) {
                 //nothing
             }
-        $connection->exec("use " . /*preg_replace('/[^a-zA-Z0-9]/', '', */trim($database)/*)*/);
+        $connection->exec("use " . trim($database));
         } catch (PDOException $e){
             if($return){
                 return false;
@@ -229,10 +229,10 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `time` varchar(100) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_minuti` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_minutes` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`mese` int(2) NOT NULL,
-`anno` int(2) NOT NULL,
+`month` int(2) NOT NULL,
+`year` int(2) NOT NULL,
 `list` mediumtext NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `services` int(11) NOT NULL DEFAULT 0,
 `trainings` int(11) NOT NULL DEFAULT 0,
 `online_time` int(11) NOT NULL DEFAULT 0,
-`minuti_dispo` int(11) NOT NULL DEFAULT 0,
+`availability_minutes` int(11) NOT NULL DEFAULT 0,
 `immagine` varchar(1000) DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)

@@ -25,22 +25,22 @@ class FirstCest
         $I->fillField('name', 'admin_user');
         $I->fillField('password', 'password');
         $I->click('login');
-        $I->seeCurrentURLEquals('/lista.php');
+        $I->seeCurrentURLEquals('/list.php');
         $I->see('admin_user');
     }
 
     public function logsWorks(AcceptanceTester $I)
     {
-        //$I->amOnPage('/lista.php'); TODO: Fix github action
+        //$I->amOnPage('/list.php'); TODO: Fix github action
         //$I->click('Attivo');
         //$I->click('Log');
         /*$I->seeCurrentURLEquals('/log.php');
         $I->see('Attivazione disponibilita\'');
 
         $I->click('Lista Disponibilità');
-        $I->seeCurrentURLEquals('/lista.php');
+        $I->seeCurrentURLEquals('/list.php');
         $I->click('Non Attivo');
-        $I->seeCurrentURLEquals('/lista.php');
+        $I->seeCurrentURLEquals('/list.php');
         $I->click('Log');
         $I->seeCurrentURLEquals('/log.php');
         $I->see('Rimozione disponibilita\'');*/
@@ -54,7 +54,7 @@ class FirstCest
         /* TODO: Add more users
         $faker = \Faker\Factory::create();
 
-        $I->amOnPage('/lista.php');
+        $I->amOnPage('/list.php');
         $I->click('Services');
         $I->seeCurrentURLEquals('/services.php');
         $I->click('add service');

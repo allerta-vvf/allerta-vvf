@@ -2,7 +2,7 @@
 <html lang="it">
     <head>
         {% block head %}
-          <title>{{ titolo }} - ALLERTA sistema gestionale {{ owner }}</title>
+          <title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>
           <link href="{{ urlsoftware }}/risorse/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
           <meta name="viewport" content="user-scalable=no, initial-scale=1">
           <style>
@@ -322,7 +322,7 @@
       {% block menu %}
         <!-- Menu -->
         <div class="topnav" id="myTopnav">
-        <a href="{{ urlsoftware }}lista.php" class="active">{{ 'Availability List'|t }}</a>
+        <a href="{{ urlsoftware }}list.php" class="active">{{ 'Availability List'|t }}</a>
         <a href="{{ urlsoftware }}services.php">{{ 'Services'|t }}</a>
         <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
         <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>

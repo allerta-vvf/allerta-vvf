@@ -7,7 +7,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->add_training($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("trainings.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "edit")) {
@@ -18,7 +18,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->change_training($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("trainings.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "delete")) {
@@ -29,7 +29,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->remove_training($_POST["id"], $_POST["incrementa"]);
       $tools->redirect("trainings.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } else {
@@ -56,12 +56,12 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   }
   if($modalità=="edit" || $modalità=="delete"){
       if(empty($id)){
-          $tools->redirect("nonfareilfurbo.php");
+          $tools->redirect("accessdenied.php");
       } elseif (!$database->exists("trainings", $id)){
-          //$tools->redirect("nonfareilfurbo.php");
+          //$tools->redirect("accessdenied.php");
       }
   }
-  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
+  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>

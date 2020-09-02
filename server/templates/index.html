@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-{% if errore %}
+{% if error %}
 <div class='text-center' id="err">
 <script>
 var sound = new Howl({
@@ -17,7 +17,7 @@ sound.play();
 <script>
 $("#err").delay(5000).fadeOut(300);
 </script>
-{{ errore.text }}
+{{ error.text }}
 <img src='{{ urlsoftware }}/risorse/images/{{ error_image }}'></img>
 </div>
 {% endif %}

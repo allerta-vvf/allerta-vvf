@@ -8,20 +8,18 @@
     <a id='add' href="edit_service.php?add">{{ 'Add service'|t }}</a>
     </p>
     <br>
-    <div id="lista"></div>
+    <div id="list"></div>
     <script>
       $.get( "risorse/ajax/ajax_services.php", function( data ) {
-         $( "#lista" ).html( data );
+         $( "#list" ).html( data );
          console.log( "List loaded." );
       });
       $(document).ready(function() {
-
         setInterval(function() {
           $.get( "risorse/ajax/ajax_services.php", function( data ) {
-             $( "#lista" ).html( data );
+             $( "#list" ).html( data );
           });
         }, 10000);
-
       });
     </script>
     <br>

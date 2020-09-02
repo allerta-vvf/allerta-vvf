@@ -44,22 +44,22 @@
     <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <br>
-    <div id="lista"></div>
+    <div id="list"></div>
 {% if user.full_viewer == false %}
 <script>
-$( "#lista" ).load("risorse/ajax/ajax_lista.php");
+$( "#list" ).load("risorse/ajax/ajax_list.php");
 $(document).ready(function() {
   setInterval(function() {
-    $( "#lista" ).load("risorse/ajax/ajax_lista.php");
+    $( "#list" ).load("risorse/ajax/ajax_list.php");
   }, 10000);
 });
 </script>
 {% elseif user.full_viewer == true %}
 <script>
-$( "#lista" ).load("risorse/ajax/ajax_lista_admin.php");
+$( "#list" ).load("risorse/ajax/ajax_admin_list.php");
 $(document).ready(function() {
   setInterval(function() {
-    $( "#lista" ).load("risorse/ajax/ajax_lista_admin.php");
+    $( "#list" ).load("risorse/ajax/ajax_admin_list.php");
   }, 10000);
 });
 </script>
@@ -75,7 +75,7 @@ $(document).ready(function() {
    border: solid 1px #0076a3;
    background: #0095cd;
   }
-  
+
   #href {
    outline: none;
    cursor: pointer;

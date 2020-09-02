@@ -44,10 +44,10 @@ if($start){
         if(count($profiles) > 0){
             $list = [];
             foreach($profiles as $profile){
-                $list[] = [$profile["id"] => $profile["minuti_dispo"]];
+                $list[] = [$profile["id"] => $profile["availability_minutes"]];
             }
-            $database->exec("INSERT INTO `%PREFIX%_minuti` (`id`, `mese`, `anno`, `list`) VALUES (NULL, :month, :year, :list)",false,[":month" => $execDateTime->month,":year" => $execDateTime->year,":list"=>json_encode($list)]);
-            $database->exec("UPDATE %PREFIX%_profiles SET minuti_dispo = 0");
+            $database->exec("INSERT INTO `%PREFIX%_minutes` (`id`, `month`, `year`, `list`) VALUES (NULL, :month, :year, :list)",false,[":month" => $execDateTime->month,":year" => $execDateTime->year,":list"=>json_encode($list)]);
+            $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = 0");
         }
     }
     $action .= "update";
@@ -60,10 +60,10 @@ if($start){
         $output_status = "ok";
         $queries = [];
         foreach ($profiles as $row) {
-            $value = (int)$row["minuti_dispo"]+5;
+            $value = (int)$row["availability_minutes"]+5;
             $id = $row["id"];
             $increment[$id] = $value;
-            $database->exec("UPDATE %PREFIX%_profiles SET minuti_dispo = :value WHERE id = :id", true, [":value" => $value, ":id" => $id]);
+            $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = :value WHERE id = :id", true, [":value" => $value, ":id" => $id]);
             $tmp = $id . " - " . $value . " ";
             $tmp .= count($database->stmt->rowCount()) == 1 ? "success" : "fail";
             $queries[] = $tmp;

@@ -1,4 +1,4 @@
 <?php
 require_once 'ui.php';
-loadtemplate('services.html', ['titolo' => t('Services',false)]);
+loadtemplate('services.html', ['title' => t('Services',false)]);
 ?>

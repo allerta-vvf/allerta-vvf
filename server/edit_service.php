@@ -7,7 +7,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->add_service($_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
       $tools->redirect("services.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "edit")) {
@@ -18,7 +18,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->change_service($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
       $tools->redirect("services.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } elseif($tools->validate_form_data('$post-mod', true, "delete")) {
@@ -29,7 +29,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->remove_service($_POST["id"], $_POST["incrementa"]);
       $tools->redirect("services.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } else {
@@ -58,12 +58,12 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   }
   if($modalità=="edit" || $modalità=="delete"){
       if(empty($id)){
-          $tools->redirect("nonfareilfurbo.php");
+          $tools->redirect("accessdenied.php");
       } elseif (!$database->exists("services", $id)){
-          $tools->redirect("nonfareilfurbo.php");
+          $tools->redirect("accessdenied.php");
       }
   }
-  loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'incrementa' => $incrementa, 'titolo' => ucfirst($modalità) . ' '.ucfirst(t("service",false))]);
+  loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'incrementa' => $incrementa, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>

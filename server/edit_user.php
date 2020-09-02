@@ -10,9 +10,9 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $hidden = isset($_POST["visible"]) ? 0 : 1;
       $disabled = isset($_POST["enabled"]) ? 0 : 1;
       $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
-      $tools->redirect("lista.php");
+      $tools->redirect("list.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 /*} elseif($tools->validate_form_data('$post-mod', true, "edit")) {
@@ -23,7 +23,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       $database->change_service($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
       $tools->redirect("services.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 */} elseif($tools->validate_form_data('$post-mod', true, "delete")) {
@@ -32,9 +32,9 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("removing user");
       $user->remove_user($_POST["id"]);
-      $tools->redirect("lista.php");
+      $tools->redirect("list.php");
     } else {
-      $tools->redirect("nonfareilfurbo.php");
+      $tools->redirect("accessdenied.php");
     }
   }
 } else {
@@ -54,12 +54,12 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   }
   if($modalità=="edit" || $modalità=="delete"){
       if(empty($id)){
-          $tools->redirect("nonfareilfurbo.php");
+          $tools->redirect("accessdenied.php");
       } elseif (!$database->exists("profiles", $id)){
-          $tools->redirect("nonfareilfurbo.php");
+          $tools->redirect("accessdenied.php");
       }
   }
-  loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'titolo' => ucfirst($modalità) . ' '.ucfirst(t("user",false))]);
+  loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'title' => ucfirst($modalità) . ' '.ucfirst(t("user",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>

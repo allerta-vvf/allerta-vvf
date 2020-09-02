@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, services ASC, minuti_dispo ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -78,18 +78,14 @@ th, td {
       };
       echo "</td>
           <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
- 
-      //if ($row['available'] == 1) {
-        $nome_url = urlencode($row['name']);
-        echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fa fa-whatsapp' style='color:green'></i></td>";
-      /*} else{
-        echo "";
-      };*/
- 
+
+      $nome_url = urlencode($row['name']);
+      echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fa fa-whatsapp' style='color:green'></i></td>";
+
       $services = $row['services'];
-      $minuti = $row['minuti_dispo'];
+      $minutes = $row['availability_minutes'];
       $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
-      echo "<td>$services</td><td>$minuti</td><td><a href='$u'><p>".t("Others infos",false)."</p></a></td></tr>";
+      echo "<td>$services</td><td>$minutes</td><td><a href='$u'><p>".t("Others infos",false)."</p></a></td></tr>";
       }
     }
     ?>
