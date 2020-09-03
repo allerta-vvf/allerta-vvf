@@ -371,7 +371,7 @@ class user{
   }
 
   public function requireRole($role, $adminGranted=true){
-    return $this->auth->hasRole($role) || $this->auth->hasRole(Role::SUPER_ADMIN) || ($this->auth->hasRole(Role::ADMIN) && $adminGranted && $role !== Role::DEVELOPER);
+    return $this->auth->hasRole($role) || $adminGranted && $role !== Role::DEVELOPER && $this->auth->hasRole(Role::ADMIN) || $role !== Role::DEVELOPER && $this->auth->hasRole(Role::SUPER_ADMIN);
   }
 
   public function name($replace=false){
@@ -423,7 +423,7 @@ class user{
   }
   
   public function info(){
-    return array("id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
+    return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
   }
 
   public function login($name, $password, $twofa=null){
@@ -585,11 +585,11 @@ function init_class($enableDebugger=true){
     $translations = new translations();
   }
   if($enableDebugger){
-  //if($user->requireRole(Role::DEVELOPER)){
-    Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-  //} else {
-    //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-  //}
+    if($user->requireRole(Role::DEVELOPER)){
+      Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
+    } else {
+      Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+    }
   }
   bdump(get_included_files());
   bdump($translations->loaded_translations);

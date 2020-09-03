@@ -222,7 +222,17 @@ if(!is_cli()){
 						<label for="admin_visible"><input name="admin_visible" type="checkbox" id="admin_visible" value="0">
 						Rendi l'user admin visibile agli altri user</label>
 						<p class="description">Attivando questa opzione, l'user che verrà creato sarà visibile negli elenchi e nelle procedure.</p>
-						</fieldset>
+				</fieldset>
+			</td>
+        </tr>
+        <tr>
+			<th scope="row">Aggiungi i permessi di sviluppatore</th>
+			<td>
+				<fieldset>
+						<label for="developer"><input name="developer" type="checkbox" id="developer" value="0">
+						Aggiungi all'utente admin i permessi di sviluppatore</label>
+						<p class="description">Attivando questa opzione, l'utente potrà eseguire il debug e accedere a varie console amministrative.</p>
+				</fieldset>
 			</td>
 	    </tr>
 		<tr>
@@ -242,7 +252,7 @@ if(!is_cli()){
     </p>
 <?php
 } else if (in_array("5",$_POST)) {
-    initOptions($_POST["user_name"], isset($_POST["admin_visible"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
+    initOptions($_POST["user_name"], isset($_POST["admin_visible"]), isset($_POST["developer"]), $_POST["admin_password"], $_POST["admin_email"], $_POST["owner"]);
     header("Location: install.php");
 } else if ($userPopulated) {
 ?>

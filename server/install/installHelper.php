@@ -369,14 +369,6 @@ INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'ty
     }
 }
 
-final class Role {
-    //https://github.com/delight-im/PHP-Auth/blob/master/src/Role.php
-    const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
-  
-    public function __construct() {}
-  
-}
-
 function full_path()
 {
     $s = &$_SERVER;
@@ -393,14 +385,17 @@ function full_path()
     return $url;
 }
 
-function initOptions($name, $visible, $password, $report_email, $owner){
+function initOptions($name, $visible, $developer, $password, $report_email, $owner){
     try{
         require_once "../config.php";
         $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $prefix = DB_PREFIX;
         $auth = new \Delight\Auth\Auth($connection, $_SERVER['REMOTE_ADDR'], $prefix."_");
         $userId = $auth->register($report_email, $password, $name);
-        $auth->admin()->addRoleForUserById($userId, Role::SUPER_ADMIN);
+        $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::SUPER_ADMIN);
+        if($developer){
+            $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::DEVELOPER);
+        }
         $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('11', 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('10', 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
