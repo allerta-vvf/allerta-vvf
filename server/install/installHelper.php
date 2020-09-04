@@ -2,6 +2,65 @@
 use GetOpt\GetOpt as Getopt;
 use GetOpt\Option;
 
+function client_languages() {
+    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+        $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    } else {
+        $client_languages = "en-US;q=0.5,en;q=0.3";
+    }
+    if(strpos($client_languages, ';') == false){
+        if(strpos($client_languages, '-') !== false){
+            return [substr($client_languages, 0, 5)];
+        } else {
+            return [substr($client_languages, 0, 2)];
+        }
+    } else {
+        $client_languages = explode(",", $client_languages);
+        $tmp_languages = [];
+        foreach($client_languages as $key=>$language){
+            if(strpos($language, ';') == false){
+                $tmp_languages[$language] = 1;
+            } else {
+                $tmp_languages[explode(";q=",$language)[0]] = (float) explode(";q=",$language)[1];
+            }
+        }
+        arsort($tmp_languages);
+        return array_keys($tmp_languages);
+    }
+}
+
+$client_languages = client_languages();
+$loaded_languages = ["en", "it"];
+$default_language = "en";
+$language = null;
+foreach($client_languages as $tmp_language){
+    if(in_array($tmp_language, $loaded_languages) && $language == null){
+        $language = $tmp_language;
+    }
+}
+
+if (file_exists("translations/".$language.".php")){
+    $loaded_translations = require("translations/".$language.".php");
+} else {
+    $loaded_translations = require("translations/en.php");
+}
+
+function t($string, $echo=true){
+    global $loaded_translations;
+    try {
+        if (!array_key_exists($string, $loaded_translations))
+          throw new Exception ('string does not exist');
+        $string = $loaded_translations[$string];
+    } catch (\Exception $e) {
+        print("no");
+    }
+    if ($echo){
+        echo "<u>".$string."</u>";
+    } else {
+        return "<u>".$string."</u>";
+    }
+}
+
 function is_cli() //https://www.binarytides.com/php-check-running-cli/
 {
 	if( defined('STDIN') )
@@ -52,19 +111,19 @@ function checkConnection($host, $user, $password, $database, $return=false){
             }
             $connectionOk = false;
         ?>
-        <div class="wp-die-message"><h1>Errore nello stabilire una connection al database</h1>
-            <p>Questo potrebbe voler dire che name user e password nel file <code>config.php</code> sono sbagliate o che non possiamo contattare il database <code><?php echo $database; ?></code>. Potrebbe voler dire che il tuo database è irraddbile.</p>
+        <div class="wp-die-message"><h1><?php t("Error establishing a database connection"); ?></h1>
+            <p><?php printf(t("This could mean that %s and %s in file %s are wrong or that we cannot contact database %s. It could mean that your database is unreachable", false), t("DB username",false), t("DB password",false), "<code>config.php</code>", "<code>$database</code>"); ?>.</p>
             <ul>
-                <li>Sei sicuro di avere name user e password corretti?</li>
-                <li>Sei sicuro di aver scritto l'hostname corretto?</li>
-                <li>Sei sicuro che il server del database sia attivo?</li>
+                <li><?php printf(t("Are you sure that %s and %s correct?", false), t("DB username",false), t("DB password",false)); ?></li>
+                <li><?php t("Are you sure you have entered the correct hostname?"); ?></li>
+                <li><?php t("Are you sure the database server is up and running?"); ?></li>
             </ul>
-            <p>Se non sei sicuro di cosa vogliano dire questi termini prova a contattare il tuo fornitore di hosting. Prova a fornire le seguenti informazioni:</p>
+            <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
             <details>
-                <summary>Informazioni avanzate</summary>
+                <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
         </div>
         <?php
             exit();
@@ -87,19 +146,19 @@ function checkConnection($host, $user, $password, $database, $return=false){
                     exit(7);
                 }
             ?>
-            <div class="wp-die-message"><h1>Impossibile selezionare il database</h1>
-                <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a selezionare il database <code><?php echo $database; ?></code>.</p>
+            <div class="wp-die-message"><h1><?php t("Cannot select database"); ?></h1>
+                <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we could not select the database"); ?> <code><?php echo $database; ?></code>.</p>
                 <ul>
-                    <li>Sei sicuro che esista?</li>
-                    <li>L'user <code><?php echo $user; ?></code> ha i permessi per usare il database <code><?php echo $database; ?></code>?</li>
-                    <li>In alcuni sistemi il name del tuo database ha il tuo name user come prefisso, ovvero <code><?php echo $user; ?>_<?php echo $database; ?></code>. Potrebbe essere questo il problema?</li>
+                    <li><?php t("Are you sure that it exists?"); ?></li>
+                    <li><?php printf(t("Does user %s have permissions to use database %s?", false), "<code>$user</code>", "<code>$database</code>"); ?></li>
+                    <li><?php printf(t("In some systems your database name has your username as a prefix, which is %s. Could this be the problem?", false), "<code>".$user."_".$database."</code>"); ?> </li>
                 </ul>
-                <p>Se non sei sicuro di cosa vogliano dire questi termini prova a contattare il tuo fornitore di hosting. Prova a fornire le seguenti informazioni:</p>
+                <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
                 <details>
-                    <summary>Informazioni avanzate</summary>
+                    <summary><?php t("Advanced informations"); ?></summary>
                     <pre><?php echo($e); ?></pre>
                 </details>
-                <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large">Riprova</a></p>
+                <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
             </div>
             <?php
                 exit();
@@ -130,12 +189,12 @@ function generateConfig($host,$user,$password,$db,$prefix,$path=".."){
             exit(6);
         }
         ?>
-        <div class="wp-die-message"><h1>Impossibile editre il file di configurazioni</h1>
-            <p>Non siamo riusciti a scrivere il file di configurazione <code>config.php</code>, richiesto per il funzionamento del programma.<br>E' tuttavia possibile editrlo manualmente, seguentdo le seguenti istruzioni:</p>
+        <div class="wp-die-message"><h1></h1>
+            <p><?php printf(t("We were unable to write the configuration file %s, which is required for the program to work", false), "<code>config.php</code>"); echo ".<br>"; t("It is however possible to edit it manually by following the instructions below:"); ?></p>
             <ul>
-                <li>Accedere alla cartella di installazione di allerta (connettersi via FTP in caso di server sul cloud).</li>
-                <li>Rinominare il file <code>config-sample.php</code> in <code>config.php</code>.</li>
-                <li>Edit le prime 16 righe del file con il seguente testo:</li>
+                <li><?php t("Access the Allerta installation folder (connect via FTP in case of cloud server)"); ?>.</li>
+                <li><?php printf(t("Rename the file %s to %s", false), "<code>config-sample.php</code>", "<code>config.php</code>"); ?>.</li>
+                <li><?php t("Replace the first 16 lines of the file with the following text:"); ?></li>
 <code>
 &lt;?php<br>
 // ** Database settings ** //<br>
@@ -155,12 +214,12 @@ define( 'DB_HOST', '<?php echo $host; ?>' );<br>
 define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
 </code>
             </ul>
-            <p>Se non sei sicuro di cosa vogliano dire questi termini prova a contattare il tuo fornitore di hosting. Prova a fornire le seguenti informazioni:</p>
+            <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
             <details>
-                <summary>Informazioni avanzate</summary>
+                <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
         </div>
         <?php
         exit();
@@ -355,14 +414,14 @@ INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'ty
             exit(10);
         }
         ?>
-        <div class="wp-die-message"><h1>Impossibile creare le tabelle</h1>
-            <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a creare le tabelle.</p>
-            <p>Se non sei sicuro di cosa vogliano dire questi termini prova a contattare il tuo fornitore di hosting. Prova a fornire le seguenti informazioni:</p>
+        <div class="wp-die-message"><h1><?php t("Unable to create tables"); ?></h1>
+            <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we were unable to create the tables"); ?>.</p>
+            <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
             <details>
-                <summary>Informazioni avanzate</summary>
+                <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
         </div>
         <?php
         exit();
@@ -426,14 +485,14 @@ $option_check_cf_ip");
             exit(11);
         }
         ?>
-        <div class="wp-die-message"><h1>Impossibile riempire le tabelle</h1>
-            <p>Siamo riusciti a connetterci al server del database (il che significa che il tuo name user e password sono ok), ma non siamo riusciti a riempire le tabelle.</p>
-            <p>Se non sei sicuro di cosa vogliano dire questi termini prova a contattare il tuo fornitore di hosting. Prova a fornire le seguenti informazioni:</p>
+        <div class="wp-die-message"><h1><?php t("Unable to fill in the tables"); ?></h1>
+            <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we were unable to fill in the tables"); ?>.</p>
+            <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
             <details>
-                <summary>Informazioni avanzate</summary>
+                <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
-            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large">Riprova</a></p>
+            <p class="step"><a href="#" onclick="javascript:history.go(-1);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
         </div>
         <?php
         exit();
@@ -464,7 +523,7 @@ function cli_helper($action, $options){
             $path = isset($options->getOptions["path"]) ? "." : "..";
             checkConnection($db_host, $db_username, $db_password, $db_name);
             generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix,$path);
-            echo("Config created successful");
+            t("Config created successful");
             exit(0);
         case "populate":
             $name = validate_arg($options, "name", "admin");
@@ -474,7 +533,7 @@ function cli_helper($action, $options){
             $owner = validate_arg($options, "owner", "Owner");
             initDB();
             initOptions($name, $visible, $password, $report_email, $owner);
-            echo("DB Populated successful");
+            t("DB Populated successful");
             unlink("runInstall.php");
             exit(0);
     }
@@ -485,65 +544,66 @@ function run_cli(){
     $getopt->addCommands([ 
         \GetOpt\Command::create('config', 'conf', [
             \GetOpt\Option::create('n', 'db_name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('DB name')
-                ->setArgumentName('DB name'),
+                ->setDescription(t("DB name",false))
+                ->setArgumentName(t("DB name",false)),
             \GetOpt\Option::create('u', 'db_username', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('DB username')
-                ->setArgumentName('DB username'),
+                ->setDescription(t("DB username",false))
+                ->setArgumentName(t("DB username",false)),
             \GetOpt\Option::create('a', 'db_password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('DB password')
-                ->setArgumentName('DB password'),
+                ->setDescription(t("DB password",false))
+                ->setArgumentName(t("DB password",false)),
             \GetOpt\Option::create('o', 'db_host', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('DB host')
-                ->setArgumentName('DB host'),
+                ->setDescription(t("DB host",false))
+                ->setArgumentName(t("DB host",false)),
             \GetOpt\Option::create('r', 'db_prefix', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('DB prefix')
-                ->setArgumentName('DB prefix')
+                ->setDescription(t("DB prefix",false))
+                ->setArgumentName(t("DB prefix",false))
         ])->setDescription(
-            'Creates the config file "config.php".' . PHP_EOL .
+            t("Create the config file",false).' "config.php".' . PHP_EOL .
             PHP_EOL .
-            'This file is required for running "populate".'
-        )->setShortDescription('Create a new config file'),
+            sprintf(t("This file is required for running %s",false),'"populate"') . "."
+        )->setShortDescription(t("Create a new config file",false)),
 
         \GetOpt\Command::create('populate', 'Populate', [
             \GetOpt\Option::create('m', 'name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('Admin name')
-                ->setArgumentName('Admin name'),
+                ->setDescription(t("Admin name",false))
+                ->setArgumentName(t("Admin name",false)),
             \GetOpt\Option::create('b', 'visible', \GetOpt\GetOpt::NO_ARGUMENT)
-                ->setDescription('Is admin visible?')
-                ->setArgumentName('Is admin visible?'),
+                ->setDescription(t("Is admin visible?",false))
+                ->setArgumentName(t("Is admin visible?",false)),
             \GetOpt\Option::create('s', 'password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('Admin password')
-                ->setArgumentName('Admin password'),
+                ->setDescription(t("Admin password",false))
+                ->setArgumentName(t("Admin password",false)),
             \GetOpt\Option::create('w', 'owner', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('Owner')
-                ->setArgumentName('Owner'),
+                ->setDescription(t("Owner",false))
+                ->setArgumentName(t("Owner",false)),
             \GetOpt\Option::create('e', 'report_email', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription('Report email')
-                ->setArgumentName('Report email')
+                ->setDescription(t("Report email",false))
+                ->setArgumentName(t("Report email",false))
         ])->setDescription(
-            'Populate Allerta database.' . PHP_EOL .
+            t("Populate Allerta database",false) . "." . PHP_EOL .
             PHP_EOL .
-            'This require a working config.php file.'
-        )->setShortDescription('Populate DB')
+            sprintf(t("This require a working %s file",false),"config.php") . "."
+        )->setShortDescription(t("Populate DB",false))
     ]);
 
     $getopt->addOptions([
         Option::create('v', 'version', \GetOpt\GetOpt::NO_ARGUMENT)
-            ->setDescription('Show version information and quit'),
+            ->setDescription(t("Show version information and quit",false)),
         
         Option::create('h', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
-            ->setDescription('Show this help and quit'),
+            ->setDescription(t("Show this help and quit",false)),
 
         Option::create("p", 'path', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-            ->setDescription('Destination path')
+            ->setDescription(t("Destination path",false))
             ->setArgumentName('path')
             ->setValidation('is_writable', function($operand, $value) {
                 if(file_exists($value)){
-                    echo($value . ' is not writable. Directory permissions: ' . @fileperms($value));
+                    printf(t("%s is not writable. Directory permissions: %s"),$value,@fileperms($value));
                     exit(4);
                 } else {
-                    echo($value . ' not exists.');
+                    printf(t("%s not exists"),$value);
+                    echo(".");
                     exit(3);
                 }
             })
