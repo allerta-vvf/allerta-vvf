@@ -30,12 +30,15 @@ class FirstCest
         $I->see('admin');
     }
 
+    /**
+     * @depends installWorks
+     */
     public function logsWorks(AcceptanceTester $I)
     {
-        //$I->amOnPage('/list.php'); TODO: Fix github action
-        //$I->click('Attivo');
-        //$I->click('Log');
-        /*$I->seeCurrentURLEquals('/log.php');
+        $I->amOnPage('/list.php');
+        $I->click('Attivo');
+        $I->click('Log');
+        $I->seeCurrentURLEquals('/log.php');
         $I->see('Attivazione disponibilita\'');
 
         $I->click('Lista Disponibilità');
@@ -44,7 +47,7 @@ class FirstCest
         $I->seeCurrentURLEquals('/list.php');
         $I->click('Log');
         $I->seeCurrentURLEquals('/log.php');
-        $I->see('Rimozione disponibilita\'');*/
+        $I->see('Rimozione disponibilita\'');
     }
 
     public function servicesWorks(AcceptanceTester $I)
