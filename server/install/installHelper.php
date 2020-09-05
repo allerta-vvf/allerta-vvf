@@ -52,12 +52,12 @@ function t($string, $echo=true){
           throw new Exception ('string does not exist');
         $string = $loaded_translations[$string];
     } catch (\Exception $e) {
-        print("no");
+        //nothing
     }
     if ($echo){
-        echo "<u>".$string."</u>";
+        echo $string;
     } else {
-        return "<u>".$string."</u>";
+        return $string;
     }
 }
 

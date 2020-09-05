@@ -84,7 +84,7 @@ if(!is_cli()){
     <p>
     <?php t("We will use this informations for creating a file"); ?> <code>config.php</code>.	<strong>
     <?php printf(t("If for any reason automatic file creation doesn't work, don't worry. You can just open %s in a text editor, enter your details, and save it as", false), "<code>config-sample.php</code>"); ?> <code>config.php</code>.	</strong>
-    <p><?php t("In all likelihood, this information has already been provided to you by your hosting provider. If you don't have this information, you'll need to contact your provider before you can continue. But if everything is ready ..."); ?></p>
+    <p><?php t("In all likelihood, this information has already been provided to you by your hosting provider. If you don't have this information, you'll need to contact your provider before you can continue. But if everything is ready..."); ?></p>
 
     <p class="step">
     <form method="POST">
@@ -151,7 +151,7 @@ if(!is_cli()){
     header("Location: install.php");
 } else if ($populated && !$userPopulated && !in_array("5",$_POST)) {
 ?>
-    <h1 class="screen-reader-text"><?php t("Urray!"); ?></h1>
+    <h1 class="screen-reader-text"><?php t("Hurray!"); ?></h1>
     <p><?php t("You are almost finished installing Allerta, you just need to enter some information"); ?>.</p>
     <h2><?php t("Necessary informations:"); ?></h2>
     <p class="step">
@@ -226,7 +226,7 @@ if(!is_cli()){
 				</fieldset>
 			</td>
         </tr>
-        <tr>
+        <tr style="display:none">
 			<th scope="row"><?php t("Add developer permissions to admin user"); ?></th>
 			<td>
 				<fieldset>
