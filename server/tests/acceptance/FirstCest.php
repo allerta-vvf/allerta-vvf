@@ -4,7 +4,7 @@ class FirstCest
 {
     public function installWorks(AcceptanceTester $I)
     {
-        $i->haveServerParameter('HTTP_ACCEPT_LANGUAGE', 'en-US;q=0.5,en;q=0.3');
+        $I->haveServerParameter('HTTP_ACCEPT_LANGUAGE', 'en-US;q=0.5,en;q=0.3');
         $I->amOnPage('/install/install.php');
         $I->click('Submit');
         $I->seeCurrentURLEquals('/install/install.php');
