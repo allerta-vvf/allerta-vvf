@@ -4,29 +4,30 @@ class FirstCest
 {
     public function installWorks(AcceptanceTester $I)
     {
+        $i->haveServerParameter('HTTP_ACCEPT_LANGUAGE', 'en-US;q=0.5,en;q=0.3');
         $I->amOnPage('/install/install.php');
-        $I->click('Invia');
+        $I->click('Submit');
         $I->seeCurrentURLEquals('/install/install.php');
         $I->fillField('dbhost', '127.0.0.1');
         $I->fillField('uname', 'root');
         $I->fillField('pwd', 'password');
-        $I->click('submit');
+        $I->click('Submit');
         
-        $I->click('Popolare il database');
+        $I->click('Populate DB');
 
-        $I->fillField('user_name', 'admin_user');
+        $I->fillField('user_name', 'admin');
         $I->fillField('admin_password', 'password');
         $I->checkOption('admin_visible');
         $I->fillField('admin_email', 'allerta@example.com');
         $I->fillField('owner', 'owner');
-        $I->click('Submit');
-        $I->see('execre il login');
-        $I->click('execre il login');
-        $I->fillField('name', 'admin_user');
+        $I->click('Install Allerta');
+        $I->see('Login');
+        $I->click('Login');
+        $I->fillField('name', 'admin');
         $I->fillField('password', 'password');
-        $I->click('login');
+        $I->click('Login');
         $I->seeCurrentURLEquals('/list.php');
-        $I->see('admin_user');
+        $I->see('admin');
     }
 
     public function logsWorks(AcceptanceTester $I)
