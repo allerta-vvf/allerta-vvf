@@ -7,6 +7,11 @@ init_class(false);
 $user_info = [];
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '/healthcheck', function($vars)
+    {
+        header("Access-Control-Allow-Origin: *");
+        return ["state" => "SUCCESS", "description" => ""];
+    });
     $r->addRoute('POST', '/login', function($vars)
     {
         global $tools, $database, $user;
