@@ -8,60 +8,6 @@ $impostazioni['delete'] = true;
 
 $risultato = $database->exec("SELECT * FROM `%PREFIX%_services` ORDER BY data DESC, uscita desc", true); // Pesco i dati della table e li ordino in base alla data
 ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-
-#add {
- outline: none;
- cursor: pointer;
- text-align: center;
- text-decoration: none;
- font: bold 12px Arial, Helvetica, sans-serif;
- color: #fff;
- padding: 10px 20px;
- border: solid 1px #0076a3;
- background: #0095cd;
-}
-
-#href {
- outline: none;
- cursor: pointer;
- text-align: center;
- text-decoration: none;
- font: bold 12px Arial, Helvetica, sans-serif;
- color: #fff;
- padding: 10px 20px;
- border: solid 1px #0076a3;
- background: #0095cd;
-}
-
-   th, td {
-    border: 1px solid grey;
-    border-collapse: collapse;
-    padding: 5px;
-   }
-
-
-   table {
-    box-shadow: 0px 3px 15px rgba(0,0,0,0.5);
-    border-radius: 5px;
-    margin: auto;
-   }
-
-#new-search-area {
-    width: 100%;
-    clear: both;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-#new-search-area input {
-    width: 600px;
-    font-size: 20px;
-    padding: 5px;
-    margin-right: 150px;
-    margin-left: 80px;
-}
-  </style>
 <div style='margin: 20px 0;' class="mx-auto">
 <div style='margin: 2px auto' id="new-search-area"></div>
 <div class="table-responsive">
@@ -95,7 +41,7 @@ foreach($risultato as $row){
       foreach(explode(",", $row['personale']) as $key=>$name){
         $others_people = $others_people.$user->nameById($name).", ";
       }
-      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $foreman . "</td><td>" . $drivers . "</td><td>" . $others_people . "</td><td>" . $row['luogo'] . "</td><td>" . $row['note'] . "</td><td>" . $row['tipo'] . "</td>";
+      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $foreman . "</td><td>" . $drivers . "</td><td>" . $others_people . "</td><td>" . s($row['luogo'],false,true) . "</td><td>" . s($row['note'],false,true) . "</td><td>" . s($row['tipo'],false,true) . "</td>";
       if($impostazioni['edit']) {
           echo "<td><a href='edit_service.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }

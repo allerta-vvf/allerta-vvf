@@ -7,7 +7,6 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY availab
 
 $hidden = $user->hidden();
 ?>
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <style>
 th, td {
     border: 1px solid grey;
@@ -48,7 +47,7 @@ th, td {
     <th><?php t("Other"); ?></th>
     <?php
     foreach($risultato as $row){
-      if(!in_array($row['name'], $hidden) OR in_array($user->name(), $hidden)){
+      if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
         echo "<tr>
            <td>";
       $name = $user->nameById($row["id"]);

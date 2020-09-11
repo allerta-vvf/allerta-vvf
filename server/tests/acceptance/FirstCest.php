@@ -36,22 +36,41 @@ class FirstCest
     public function logsWorks(AcceptanceTester $I)
     {
         $I->amOnPage('/list.php');
-        $I->click('Attivo');
+        $I->click('Active');
         $I->click('Log');
         $I->seeCurrentURLEquals('/log.php');
         $I->see('Attivazione disponibilita\'');
 
         $I->click('Lista Disponibilità');
         $I->seeCurrentURLEquals('/list.php');
-        $I->click('Non Attivo');
+        $I->click('Not Active');
         $I->seeCurrentURLEquals('/list.php');
         $I->click('Log');
         $I->seeCurrentURLEquals('/log.php');
         $I->see('Rimozione disponibilita\'');
     }
 
-    public function servicesWorks(AcceptanceTester $I)
+    /**
+     * @depends installWorks
+     */
+    public function addUsersWorks(AcceptanceTester $I)
     {
+        $I->amOnPage('/list.php');
+        $I->click('Add user');
+        $I->seeCurrentURLEquals('/edit_user.php?add');
+        /* TODO
+        $I->click('Lista Disponibilità');
+        $I->seeCurrentURLEquals('/list.php');
+        $I->click('Not Active');
+        $I->seeCurrentURLEquals('/list.php');
+        $I->click('Log');
+        $I->seeCurrentURLEquals('/log.php');
+        $I->see('Rimozione disponibilita\'');
+        */
+    }
+
+    //public function servicesWorks(AcceptanceTester $I)
+    //{
         /**
         * @var FakerGenerator
         */
@@ -73,6 +92,6 @@ class FirstCest
         $I->seeCurrentURLEquals('/services.php');
         $I->see('type2');
         */
-    }
+    //}
 }
                 

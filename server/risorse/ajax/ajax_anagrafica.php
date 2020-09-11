@@ -315,7 +315,7 @@ function vero1($text, $img1 = "", $img2 = ""){
 }
 //var_dump($risultato);
 foreach($risultato as $row){
-$name = ($row['online']==1) ? '<u>' . $row['name'] . "</u>" : $row['name'];
+  $name = ($row['online']==1) ? '<u>' . $user->nameById($row["id"]) . "</u>" : $user->nameById($row["id"]);
 echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");
 echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
 $disp = vero1($row['available'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");

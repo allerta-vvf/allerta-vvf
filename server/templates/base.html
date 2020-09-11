@@ -11,12 +11,13 @@
             overflow-x: hidden;
           }
           </style>
-          <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-          <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-          <script async src='https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.14/howler.js'></script>
-          <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
-          <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+          <script src="risorse/js/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+          <link rel="stylesheet" href="risorse/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+          <link rel="stylesheet" href="risorse/css/font-awesome.min.css">
+          <script defer src="risorse/js/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+          <script async src='risorse/js/howler.min.js'></script>
+          <script src="risorse/js/cookieconsent.min.js"></script>
+          <script src="risorse/js/dexie.min.js"></script>
           {% if enable_technical_support and technical_support_open %}
           <!-- Smartsupp Live Chat script -->
           <script type='text/javascript'>
@@ -276,8 +277,7 @@
           {% endblock %}
     </head>
     <body>
-      <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-      <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+      <link rel="stylesheet" type="text/css" href="risorse/css/cookieconsent.min.css" />
       <script>
       window.cookieconsent.initialise({
         "palette": {

@@ -147,6 +147,20 @@ class tools{
     }
     return $code;
   }
+
+  public function sanitize($string, $htmlAllowed=false, $htmlPurifierOptions=[]){
+    if($htmlAllowed){
+      $config = HTMLPurifier_Config::createDefault();
+      foreach ($htmlPurifierOptions as $key => $value) {
+        $config->set($key, $value);
+      }
+      $purifier = new HTMLPurifier($config);
+      $string = $purifier->purify($string);
+    } else {
+      $string = htmlspecialchars($string);
+    }
+    return $string;
+  }
 }
 
 class database{
@@ -390,12 +404,12 @@ class user{
     $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
     if(!empty($profiles)){
       if(!is_null($profiles[0]["name"])){
-        return($profiles[0]["name"]);
+        return(s($profiles[0]["name"],false));
       } else {
         $user = $this->database->exec("SELECT `username` FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
         if(!empty($user)){
           if(!is_null($user[0]["username"])){
-            return($user[0]["username"]);
+            return(s($user[0]["username"],false));
           } else {
             return false;
           }
@@ -576,13 +590,20 @@ class translations{
   }
 }
 
-function init_class($enableDebugger=true){
+function init_class($enableDebugger=true, $headers=true){
   global $tools, $database, $user, $translations;
   if(!isset($tools) && !isset($database) && !isset($translations)){
     $database = new database();
     $tools = new tools($database->getOption("check_cf_ip"));
     $user = new user($database, $tools);
     $translations = new translations();
+  }
+  if($headers){
+    header("Content-Security-Policy: default-src 'unsafe-eval' 'unsafe-inline' 'self'");
+    header("X-XSS-Protection: 1; mode=block");
+    header("X-Frame-Options: DENY");
+    header("X-Content-Type-Options: nosniff");
+    header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
   }
   if($enableDebugger){
     if($user->requireRole(Role::DEVELOPER)){
@@ -601,5 +622,14 @@ function t($string, $echo=true){
     echo $translations->translate($string);
   } else {
     return $translations->translate($string);
+  }
+}
+
+function s($string, $echo=true, $htmlAllowed=false, $htmlPurifierOptions=[]){
+  global $tools;
+  if($echo){
+    echo $tools->sanitize($string, $htmlAllowed, $htmlPurifierOptions);
+  } else {
+    return $tools->sanitize($string, $htmlAllowed, $htmlPurifierOptions);
   }
 }
