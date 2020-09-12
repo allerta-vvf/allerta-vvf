@@ -11,13 +11,7 @@
             overflow-x: hidden;
           }
           </style>
-          <script src="risorse/js/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-          <link rel="stylesheet" href="risorse/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-          <link rel="stylesheet" href="risorse/css/font-awesome.min.css">
-          <script defer src="risorse/js/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-          <script async src='risorse/js/howler.min.js'></script>
-          <script src="risorse/js/cookieconsent.min.js"></script>
-          <script src="risorse/js/dexie.min.js"></script>
+          <script src="risorse/dist/main.js"></script>
           {% if enable_technical_support and technical_support_open %}
           <!-- Smartsupp Live Chat script -->
           <script type='text/javascript'>
@@ -277,29 +271,13 @@
           {% endblock %}
     </head>
     <body>
-      <link rel="stylesheet" type="text/css" href="risorse/css/cookieconsent.min.css" />
-      <script>
-      window.cookieconsent.initialise({
-        "palette": {
-          "popup": {
-            "background": "#eaf7f7",
-            "text": "#5c7291"
-          },
-          "button": {
-            "background": "#56cbdb",
-            "text": "#ffffff"
-          }
-        },
-        "theme": "classic",
-        "position": "bottom-right",
-        "content": {
-          "message": "Questo sito usa cookie tecnici per garantirti sicurezza nella navizione. NON condividiamo i tuoi dati con terze parti, se non strettamente necessario. E' NECESSARIA l' abilitazione dei cookies per l' utilizzo dell' applicativo.",
-          "dismiss": "Ho capito",
-          "link": "Leggi altro",
-          "href": "javascript:alert('todo');"
-        }
-      });
-      </script>
+      <div class="alert text-center cookiealert" role="alert">
+        <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
+
+        <button type="button" class="btn btn-primary btn-sm acceptcookies">
+            I agree
+        </button>
+    </div>
       {% if user.autenticated %}
       <script>
       function check() {

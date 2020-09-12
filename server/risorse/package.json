@@ -1,0 +1,29 @@
+{
+  "name": "allertavvf_webpack",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "prod": "webpack -p",
+    "dev": "webpack -d",
+    "watch": "webpack -w -d"
+  },
+  "author": "",
+  "license": "GPL3",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "bootstrap": "^4.5.2",
+    "bootstrap-cookie-alert": "^1.2.1",
+    "css-loader": "^4.3.0",
+    "expose-loader": "^1.0.0",
+    "file-loader": "^6.1.0",
+    "font-awesome": "^4.7.0",
+    "howler": "^2.2.0",
+    "jquery": "^3.5.1",
+    "pickadate": "^5.0.0-alpha.3",
+    "popper.js": "^1.16.1",
+    "sass": "^1.26.10",
+    "sass-loader": "^10.0.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1"
+  }
+}

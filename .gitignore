@@ -494,6 +494,9 @@ composer.phar
 /server/*/*/vendor/
 *.zip
 
+/server/risorse/dist/*
+/server/risorse/dist/fonts/.gitkeep
+
 /server/error-log/*
 !/server/error-log/index.html
 

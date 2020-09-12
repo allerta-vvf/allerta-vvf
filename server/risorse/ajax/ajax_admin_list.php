@@ -79,7 +79,7 @@ th, td {
           <td><a href='tel:+" . $row['telefono'] . "'><i class='fa fa-phone'></i></a></td><td>";
 
       $nome_url = urlencode($row['name']);
-      echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fa fa-whatsapp' style='color:green'></i></td>";
+      echo "  <a href='https://api.whatsapp.com/send?phone=" . $row['telefono'] . "&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$nome_url'><i class='fab fa-whatsapp' style='color:green'></i></td>";
 
       $services = $row['services'];
       $minutes = $row['availability_minutes'];
