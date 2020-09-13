@@ -357,16 +357,18 @@ class user{
   private $database = null;
   private $tools = null;
   public $auth = null;
+  public $authenticated = false;
 
   public function __construct($database, $tools){
     $this->database = $database;
     $this->tools = $tools;
     $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
+    $this->authenticated = $this->auth->isLoggedIn();
     define("LOGIN", "OK");
   }
 
   public function authenticated(){
-    return $this->auth->isLoggedIn();
+    return $this->authenticated;
   }
 
   public function requirelogin(){

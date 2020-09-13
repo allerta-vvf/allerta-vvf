@@ -1,6 +1,6 @@
 <?php
 require_once 'ui.php';
-if($user->authenticated()){
+if($user->authenticated){
   $tools->redirect("list.php");
 }
 $error = false;
