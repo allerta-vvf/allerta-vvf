@@ -7,11 +7,12 @@ on:
 jobs:
   tests:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
-    env:
-      working-directory: ./server
+    defaults:
+      run:
+        working-directory: ./server
     runs-on: ubuntu-latest
     strategy:
-      matrix:        
+      matrix:
         php-versions: ['7.3', '7.4']
     name: PHP ${{ matrix.php-versions }}
     steps:
@@ -30,8 +31,19 @@ jobs:
         php-version: ${{ matrix.php-versions }}
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
-        coverage: xdebug, pcov    
+        coverage: xdebug, pcov
         #tools: php-cs-fixer, phpunit
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: WebPack Setup
+      run: |
+        cd risorse
+        npm install
+        webpack -d
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
@@ -46,35 +58,31 @@ jobs:
 
     - name: Validate composer.json and composer.lock
       run: composer validate
-      working-directory: ${{env.working-directory}}
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
-      working-directory: ${{env.working-directory}}
-
-    #- name: A little hack for running test suite
-    #  run: |
-    #    mv index.php index.old.php
-    #    touch index.php
-    #  working-directory: ${{env.working-directory}}
 
     - name: Run test suite
       run: vendor/bin/codecept run --steps
-      working-directory: ${{env.working-directory}}
-    
+
     - name: Upload Tests Artifact
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: tests output (php ${{ matrix.php-versions }})
         path: ./server/tests/_output
-    
+
     - name: Remove devs files and dirs
       if: "${{ success() }}"
       run: |
-        rm server/codeception.yml
-        sudo rm server/tests -r
-        sudo rm server/vendor -r
+        rm codeception.yml
+        sudo rm tests vendor -r
+        cd risorse
+        webpack -p
+        sudo rm node_modules src -r
+        rm package*.json
+        rm webpack.*.js
+        cd ..
         composer install --no-dev --no-progress --no-suggest -o -n -d server
 
     - name: Upload prod build
@@ -82,5 +90,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: prod build (php ${{ matrix.php-versions }})
-        path: ./server/
-        
+
