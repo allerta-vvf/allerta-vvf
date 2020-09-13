@@ -605,13 +605,13 @@ function init_class($enableDebugger=true, $headers=true){
     header("X-Content-Type-Options: nosniff");
     header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
   }
-  if($enableDebugger){
-    if($user->requireRole(Role::DEVELOPER)){
+  //if($enableDebugger){
+    //if($user->requireRole(Role::DEVELOPER)){
       Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-    } else {
-      Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-    }
-  }
+    //} else {
+      //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+    //}
+  //}
   bdump(get_included_files());
   bdump($translations->loaded_translations);
 }
