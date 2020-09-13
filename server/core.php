@@ -605,6 +605,8 @@ function init_class($enableDebugger=true, $headers=true){
     header("X-Content-Type-Options: nosniff");
     header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
   }
+  var_dump($user);
+  exit();
   //if($enableDebugger){
     //if($user->requireRole(Role::DEVELOPER)){
       Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
