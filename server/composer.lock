@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d54de5193df865178012ce3fdeddbe2",
+    "content-hash": "43cb5c10777a8fef07e8e4e1e1b0627c",
     "packages": [
         {
             "name": "delight-im/auth",
@@ -316,16 +316,16 @@
         },
         {
             "name": "spatie/array-to-xml",
-            "version": "2.13.0",
+            "version": "2.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/array-to-xml.git",
-                "reference": "9067a5b041a04e74d08657519c2d8ffed91b4879"
+                "reference": "15b5229fe8c9c14954b21f2bac0cc003ffbc54a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/9067a5b041a04e74d08657519c2d8ffed91b4879",
-                "reference": "9067a5b041a04e74d08657519c2d8ffed91b4879",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/15b5229fe8c9c14954b21f2bac0cc003ffbc54a5",
+                "reference": "15b5229fe8c9c14954b21f2bac0cc003ffbc54a5",
                 "shasum": ""
             },
             "require": {
@@ -362,7 +362,7 @@
                 "convert",
                 "xml"
             ],
-            "time": "2020-08-22T08:46:19+00:00"
+            "time": "2020-09-14T19:07:17+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
