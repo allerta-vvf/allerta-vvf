@@ -161,33 +161,36 @@ if(!is_cli()){
         var pwd = document.getElementById("pass1").value;
         result = zxcvbn(pwd);
         switch(result.score) {
-            case 1:
+            case 0:
                 document.getElementById("pass1").className = "short";
                 document.getElementById("pass-strength-result").className = "short";
                 document.getElementById("pass-strength-result").innerHTML = "<?php t("Very weak"); ?>";
                 break;
-            case 2:
+            case 1:
                 document.getElementById("pass1").className = "bad";
                 document.getElementById("pass-strength-result").className = "bad";
                 document.getElementById("pass-strength-result").innerHTML = "<?php t("Weak"); ?>";
                 break;
-            case 3:
+            case 2:
                 document.getElementById("pass1").className = "good";
                 document.getElementById("pass-strength-result").className = "good";
                 document.getElementById("pass-strength-result").innerHTML = "<?php t("Good"); ?>";
                 break;
-            case 4:
+            case 3:
                 document.getElementById("pass1").className = "strong";
                 document.getElementById("pass-strength-result").className = "strong";
                 document.getElementById("pass-strength-result").innerHTML = "<?php t("Strong"); ?>";
                 break;
-            case 5:
+            case 4:
                 document.getElementById("pass1").className = "strong";
                 document.getElementById("pass-strength-result").className = "strong";
                 document.getElementById("pass-strength-result").innerHTML = "<?php t("Very strong"); ?>";
                 break;
             default:
-                // code block
+                document.getElementById("pass1").className = "short";
+                document.getElementById("pass-strength-result").className = "short";
+                document.getElementById("pass-strength-result").innerHTML = "<?php t("Very weak"); ?>";
+                break;
         }
     }
     </script>
@@ -260,7 +263,7 @@ if(!is_cli()){
     <h1 class="screen-reader-text"><?php t("Installation completed successfully"); ?>.</h1>
     <p><?php t("Great job, man!"); echo(" "); t("You have completed the installation. Allerta can now function properly"); echo(".<br> "); t("If you are ready, it's time to..."); ?></p>
     <p class="step">
-    <a href="../index.php"><?php t("Login"); ?></a>
+    <a href="../index.php" class="login"><?php t("Login"); ?></a>
     </p>
 <?php
     unlink("runInstall.php");

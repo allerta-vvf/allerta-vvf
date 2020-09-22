@@ -23,7 +23,7 @@ return [
     "Your" => "Il tuo",
     "If %s doesn't work, you can get this information from your hosting provider" => "Se %s non funziona, richiedi queste informazioni al tuo fornitore di hosting",
     "Edit this item if you want to perform multiple Alert installations on a single database" => "Modifica questo campo se vuoi installare più volte Allerta sullo stesso database",
-    "Error establishing a database connection" => "Errore nela connessione con il database",
+    "Error establishing a database connection" => "Errore nella connessione con il database",
     "This could mean that %s and %s in file %s are wrong or that we cannot contact database %s. It could mean that your database is unreachable" => "Questo può significare che %s e %s nel file %s sono sbagliati o che il database %s non funziona. Può significare che il database non funziona",
     "Are you sure that %s and %s correct?" => "Sei sicuro che %s e %s siano corretti?",
     "Are you sure you have entered the correct hostname?" => "Sei sicuro che l'hostname sia corretto?",
