@@ -282,8 +282,8 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `action` varchar(100) NOT NULL,
-`changed` varchar(100) NOT NULL,
-`editor` varchar(100) NOT NULL,
+`changed` varchar(100),
+`editor` varchar(100),
 `date` varchar(100) NOT NULL,
 `time` varchar(100) NOT NULL,
 PRIMARY KEY (`id`)

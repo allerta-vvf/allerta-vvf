@@ -80,6 +80,33 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $users_profiles["email"] = $users["email"];
         return $users_profiles;
     });
+    $r->addRoute('POST', '/user', function($vars)
+    {
+        requireToken();
+        global $user, $user_info;
+        $capo = isset($_POST["capo"]) ? $_POST["capo"]==1 : false;
+        $autista = isset($_POST["autista"]) ? $_POST["autista"]==1 : false;
+        $hidden = isset($_POST["hidden"]) ? $_POST["hidden"]==1 : false;
+        $disabled = isset($_POST["disabled"]) ? $_POST["disabled"]==1 : false;
+        if(isset($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"])){
+            try{
+                $userId = $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user_info["id"]);
+            } catch (\Delight\Auth\InvalidEmailException $e) {
+                return ["status" => "error", "message" => "Invalid email address"];
+            } catch (\Delight\Auth\InvalidPasswordException $e) {
+                return ["status" => "error", "message" => "Invalid password"];
+            } catch (\Delight\Auth\UserAlreadyExistsException $e) {
+                return ["status" => "error", "message" => "User already exists"];
+            }
+            if($userId){
+                return ["userId" => $userId];
+            } else {
+                return ["status" => "error", "message" => "Unknown error"];
+            }
+        } else {
+            return ["status" => "error", "message" => "User info required"];
+        }
+    });
     $r->addRoute('GET', '/availability', function($vars)
     {
         requireToken();
@@ -169,7 +196,7 @@ function responseApi($content, $status_code=200){
 
 function validToken(){
     global $database, $user_info;
-    $token = isset($_SERVER['HTTP_TOKEN']) ? $_SERVER['HTTP_TOKEN'] : (isset($_SERVER['HTTP_token']) ? $_SERVER['HTTP_token'] : (isset($_SERVER['HTTP_Token']) ? $_SERVER['HTTP_Token'] : (isset($_POST['TOKEN']) ? $_POST['TOKEN'] : false)));
+    $token = isset($_POST['apiKey']) ? $_POST['apiKey'] : (isset($_GET['apiKey']) ? $_GET['apiKey'] : (isset($_SERVER['apiKey']) ? $_SERVER['apiKey'] : false));
     if($token == false){
         return false;
     }

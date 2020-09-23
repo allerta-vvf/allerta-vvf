@@ -81,7 +81,17 @@ select::-ms-expand {
      <?php
      foreach($risultato as $row){
      if(!in_array($row['changed'], $hidden) OR in_array($user->name(), $hidden)){
-      echo "<tr><td>" . $row["action"] . "</td><td>" . $user->nameById($row["changed"]) . "</td><td>" . $user->nameById($row["editor"]) ."</td><td>" . $row['date'] . " - ore " . $row['time'] . "</tr>";
+      if(!is_null($row["changed"])){
+        $changedName = $user->nameById($row["changed"]);
+      } else {
+        $changedName = "N/A";
+      }
+      if(!is_null($row["editor"])){
+        $editorName = $user->nameById($row["editor"]);
+      } else {
+        $editorName = "N/A";
+      }
+      echo "<tr><td>" . $row["action"] . "</td><td>" . $changedName . "</td><td>" . $editorName ."</td><td>" . $row['date'] . " - ore " . $row['time'] . "</tr>";
       }
      }
      ?>
