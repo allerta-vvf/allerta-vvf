@@ -65,7 +65,7 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
-        record: true,
+        record: true
         start: php -S 0.0.0.0:8080
         working-directory: server
         tag: php-${{ matrix.php-versions }}
