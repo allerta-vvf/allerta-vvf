@@ -60,6 +60,7 @@ jobs:
       run: |
         composer install --prefer-dist --no-progress
         npm init --yes
+        npm install --save-dev cypress
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
