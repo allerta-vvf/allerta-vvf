@@ -8,7 +8,7 @@ describe("Availability", () => {
             expect(txt).to.contains('Thanks, admin, you have given your availability in case of alert.');
         })
         cy.get(".fa-check").should('be.visible')
-        cy.contains("Logs").click()
+        cy.visit("/log.php")
         cy.contains("Attivazione disponibilita'")
         cy.visit("/")
     })
@@ -19,7 +19,7 @@ describe("Availability", () => {
             expect(txt).to.contains('Thanks, admin, you have removed your availability in case of alert.');
         })
         cy.get(".fa-times").should('be.visible')
-        cy.contains("Logs").click()
+        cy.visit("/log.php")
         cy.contains("Rimozione disponibilita'")
         cy.visit("/")
     })

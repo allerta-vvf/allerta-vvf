@@ -2,7 +2,6 @@ describe("Installation", () => {
     before(() => {
         cy.exec("rm config.old.php", {failOnNonZeroExit: false});
         cy.exec("mv config.php config.old.php", {failOnNonZeroExit: false});
-        cy.exec("touch install/runInstall.php", {failOnNonZeroExit: false});
         cy.visit("/");
         cy.get(".button").click();
     })
@@ -104,6 +103,7 @@ describe("Installation", () => {
 
         cy.get(".button").click();
         cy.contains("Great job, man!");
+        cy.exec("touch install/runInstall.php", {failOnNonZeroExit: false});
         cy.get(".login").click();
         cy.contains("Login");
         cy.get(".acceptcookies").should('be.visible');

@@ -28,6 +28,16 @@ Cypress.Commands.add("login", (username="admin", password="correcthorsebatteryst
 
     cy.get("input[name='login']").click()
 })
+
+Cypress.Commands.add("getApiKey", (username="admin", password="correcthorsebatterystaple") => {
+    cy.request({ method: 'POST', url: '/api.php/login', form: true, body: { username: username, password: password }})
+        .then((response) => {
+            expect(response.status).to.eq(200)
+            expect(response.body).to.have.property('apiKey')
+            console.log(response.body)
+            return response.body.apiKey
+        })
+})
 //
 //
 // -- This is a child command --
