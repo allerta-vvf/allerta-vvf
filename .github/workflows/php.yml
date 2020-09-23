@@ -48,13 +48,10 @@ jobs:
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
 
-    - name: Start MariaDB
-      uses: getong/mariadb-action@v1.1
+    - uses: mirromutth/mysql-action@v1.1
       with:
-        mysql root password: password
-        mysql database: allerta
-        mysql user: user
-        mysql password: password
+        mysql user: 'user'
+        mysql password: 'password'
 
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -62,28 +59,36 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run test suite
-      run: vendor/bin/codecept run --steps
-
-    - name: Upload Tests Artifact
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
       with:
-        name: tests output (php ${{ matrix.php-versions }})
-        path: ./server/tests/_output
+        record: true
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        record: true,
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        start: php -S 0.0.0.0:8080
+        working-directory: server
+        tag: php-${{ matrix.php-versions }}
+
+    - uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: cypress_screenshots_php-${{ matrix.php-versions }}
+        path: cypress/screenshots
 
     - name: Remove devs files and dirs
       if: "${{ success() }}"
       run: |
-        rm codeception.yml
-        sudo rm tests vendor -r
+        rm *.json *.lock
+        sudo rm cypress vendor -r
         cd risorse
         webpack -p
         sudo rm node_modules src -r
         rm package*.json
         rm webpack.*.js
         cd ..
-        composer install --no-dev --no-progress --no-suggest -o -n -d server
+        composer install --no-dev --no-progress --no-suggest -o -n
 
     - name: Upload prod build
       if: "${{ success() }}"
