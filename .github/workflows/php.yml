@@ -57,7 +57,9 @@ jobs:
       run: composer validate
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: |
+        composer install --prefer-dist --no-progress
+        npm init --yes
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
