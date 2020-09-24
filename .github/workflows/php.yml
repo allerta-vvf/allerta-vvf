@@ -50,6 +50,7 @@ jobs:
 
     - uses: mirromutth/mysql-action@v1.1
       with:
+        mysql root password: 'password'
         mysql user: 'user'
         mysql password: 'password'
 
@@ -64,7 +65,7 @@ jobs:
 
     - name: DB connection test
       run: |
-        mysql -u root -h "127.0.0.1" -p "" -e "SHOW DATABASES;"
+        mysql -u root -h "127.0.0.1" -p "password" -e "SHOW DATABASES;"
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
