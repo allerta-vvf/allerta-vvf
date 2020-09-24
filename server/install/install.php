@@ -43,7 +43,7 @@ if (file_exists("../config.php")) {
         $dbnameValue = "allerta";
         $unameValue = t("user", false);
         $pwdValue = t("password", false);
-        $dbhostValue = "localhost";
+        $dbhostValue = "127.0.0.1";
         $prefixValue = "allerta01";
         $configOk = false;
     }
@@ -51,7 +51,7 @@ if (file_exists("../config.php")) {
     $dbnameValue = "allerta";
     $unameValue = t("user", false);
     $pwdValue = t("password", false);
-    $dbhostValue = "localhost";
+    $dbhostValue = "127.0.0.1";
     $prefixValue = "allerta01";
     $configOk = false;
 }
