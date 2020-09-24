@@ -63,8 +63,8 @@ describe("User management", () => {
                                 birthday: user.birthday,
                                 capo: user.foreman | 0,
                                 autista: user.driver | 0,
-                                hidden: 0,
-                                disabled: 0
+                                hidden: false,
+                                disabled: false
                             }})
                                 .then((response) => {
                                     console.log(response.body)
