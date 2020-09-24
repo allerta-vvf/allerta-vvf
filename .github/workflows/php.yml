@@ -62,6 +62,10 @@ jobs:
         npm init --yes
         npm install --save-dev cypress
 
+    - name: DB connection test
+      run: |
+        mysql -uroot -e "SHOW DATABASES;"
+
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
