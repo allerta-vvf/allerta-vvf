@@ -506,14 +506,14 @@ class user{
     $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     if($userId){
       if($hidden){
-        $hidden = "true";
+        $hidden = 1;
       } else {
-        $hidden = "false";
+        $hidden = 0;
       }
       if($disabled){
-        $disabled = "true";
+        $disabled = 1;
       } else {
-        $disabled = "false";
+        $disabled = 0;
       }
       $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
       $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
