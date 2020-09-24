@@ -505,16 +505,10 @@ class user{
   public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
     $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     if($userId){
-      if($hidden){
-        $hidden = 1;
-      } else {
-        $hidden = 0;
-      }
-      if($disabled){
-        $disabled = 1;
-      } else {
-        $disabled = 0;
-      }
+      $hidden = $hidden ? 1 : 0;
+      $disabled = $disabled ? 1 : 0;
+      $capo = $capo ? 1 : 0;
+      $autista = $autista ? 1 : 0;
       $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
       $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
       if($capo == 1){
