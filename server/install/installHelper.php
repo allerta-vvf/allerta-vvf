@@ -119,7 +119,7 @@ function checkConnection($host, $user, $password, $database, $return=false){
                 <li><?php t("Are you sure the database server is up and running?"); ?></li>
             </ul>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
-            <details>
+            <details open>
                 <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
@@ -154,7 +154,7 @@ function checkConnection($host, $user, $password, $database, $return=false){
                     <li><?php printf(t("In some systems your database name has your username as a prefix, which is %s. Could this be the problem?", false), "<code>".$user."_".$database."</code>"); ?> </li>
                 </ul>
                 <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
-                <details>
+                <details open>
                     <summary><?php t("Advanced informations"); ?></summary>
                     <pre><?php echo($e); ?></pre>
                 </details>
@@ -215,7 +215,7 @@ define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
 </code>
             </ul>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
-            <details>
+            <details open>
                 <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
@@ -417,7 +417,7 @@ INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'ty
         <div class="wp-die-message"><h1><?php t("Unable to create tables"); ?></h1>
             <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we were unable to create the tables"); ?>.</p>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
-            <details>
+            <details open>
                 <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
@@ -488,7 +488,7 @@ $option_check_cf_ip");
         <div class="wp-die-message"><h1><?php t("Unable to fill in the tables"); ?></h1>
             <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we were unable to fill in the tables"); ?>.</p>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
-            <details>
+            <details open>
                 <summary><?php t("Advanced informations"); ?></summary>
                 <pre><?php echo($e); ?></pre>
             </details>
