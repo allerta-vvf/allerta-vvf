@@ -64,7 +64,7 @@ jobs:
 
     - name: DB connection test
       run: |
-        mysql -uroot -e "SHOW DATABASES;"
+        mysql -u root -h "127.0.0.1" -e "SHOW DATABASES;"
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
