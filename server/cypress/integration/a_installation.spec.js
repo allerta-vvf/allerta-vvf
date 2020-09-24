@@ -36,6 +36,7 @@ describe("Installation", () => {
 
         cy.get("input[name='pwd']")
           .clear()
+          .type(Cypress.env("DB_PASSWORD"))
           .should('have.value', Cypress.env("DB_PASSWORD"))
 
         cy.get(".button").click();
