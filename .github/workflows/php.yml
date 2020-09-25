@@ -84,7 +84,7 @@ jobs:
         name: cypress_screenshots_php-${{ matrix.php-versions }}
         path: cypress/screenshots
 
-    - name: Remove devs files and dirs
+    - name: Remove dev files and dirs
       if: "${{ success() }}"
       run: |
         sudo rm cypress vendor -r
@@ -102,4 +102,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: prod build (php ${{ matrix.php-versions }})
+        path: .
 
