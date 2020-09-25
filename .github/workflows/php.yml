@@ -87,7 +87,6 @@ jobs:
     - name: Remove devs files and dirs
       if: "${{ success() }}"
       run: |
-        rm *.json *.lock
         sudo rm cypress vendor -r
         cd risorse
         webpack -p
@@ -96,6 +95,7 @@ jobs:
         rm webpack.*.js
         cd ..
         composer install --no-dev --no-progress --no-suggest -o -n
+        rm *.json *.lock
 
     - name: Upload prod build
       if: "${{ success() }}"
