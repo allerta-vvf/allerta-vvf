@@ -84,23 +84,3 @@ jobs:
         name: cypress_screenshots_php-${{ matrix.php-versions }}
         path: cypress/screenshots
 
-    - name: Remove dev files and dirs
-      if: "${{ success() }}"
-      run: |
-        sudo rm cypress vendor -r
-        cd risorse
-        webpack -p
-        sudo rm node_modules src -r
-        rm package*.json
-        rm webpack.*.js
-        cd ..
-        composer install --no-dev --no-progress --no-suggest -o -n
-        rm *.json *.lock
-
-    - name: Upload prod build
-      if: "${{ success() }}"
-      uses: actions/upload-artifact@v2
-      with:
-        name: prod build (php ${{ matrix.php-versions }})
-        path: .
-
