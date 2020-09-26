@@ -206,7 +206,7 @@ class database{
       $this->options_cache_file = "options.txt";
     }
     if($this->load_from_file){
-      if(file_exists($this->options_cache_file)){
+      if(file_exists($this->options_cache_file)/* && time()-@filemtime($this->options_cache_file) < 604800*/){
         $this->options = unserialize(file_get_contents($this->options_cache_file), ['allowed_classes' => false]);
       } else {
         $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
