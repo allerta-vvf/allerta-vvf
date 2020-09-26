@@ -250,14 +250,6 @@ textarea {
     <button type="submit">{{ 'Submit'|t }}</button>
   </div>
 </form>
-<script>
-$('form').submit(function () {
-    if(!$('#token').val().endsWith("dJN299u49")){
-      $('#token').val($('#token').val() + "");
-    }
-    return true;
-});
-</script>
 {% endif %}
 {% if modalità == "delete" %}
 <style>
