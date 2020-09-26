@@ -171,6 +171,9 @@ class database{
   public $connection = null;
   public $query = null;
   public $stmt = null;
+  public $load_from_file = true;
+  public $options = [];
+  public $options_cache_file = null;
 
   public function connect(){
     try {
@@ -195,6 +198,20 @@ class database{
     $this->connect();
     if($this->isOptionsEmpty()){
       header('Location: install/install.php');
+    }
+    $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
+    if(strpos($file_infos['dirname'], 'risorse') !== false) {
+      $this->options_cache_file = "../../options.txt";
+    } else {
+      $this->options_cache_file = "options.txt";
+    }
+    if($this->load_from_file){
+      if(file_exists($this->options_cache_file)){
+        $this->options = unserialize(file_get_contents($this->options_cache_file), ['allowed_classes' => false]);
+      } else {
+        $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
+        file_put_contents($this->options_cache_file, serialize( $this->options ));
+      }
     }
   }
 
@@ -246,8 +263,13 @@ class database{
     if(defined($name)){
       return constant($name);
     } else {
-      $option = $this->exec("SELECT `value` FROM `%PREFIX%_options` WHERE `name` = :name AND `enabled` = 1;", true, [":name" => $name]);
-      return empty($option) ? "" : $option[0]["value"];
+      //$option = $this->exec("SELECT `value` FROM `%PREFIX%_options` WHERE `name` = :name AND `enabled` = 1;", true, [":name" => $name]);
+      //return empty($option) ? "" : $option[0]["value"];
+      foreach($this->options as $option){
+        if($name == $option["name"]){
+          return empty($option["value"]) ? "" : $option["value"];
+        }
+      }
     }
   }
 
