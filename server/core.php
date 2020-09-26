@@ -464,11 +464,18 @@ class user{
     return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
   }
 
-  public function login($name, $password, $twofa=null){
+  public function login($name, $password, $remember_me, $twofa=null){
     if(!empty($name)){
       if(!empty($password)){
         try {
-          $this->auth->loginWithUsername($name, $password);
+          if ($remember_me) {
+            // keep logged in for one year
+            $rememberDuration = (int) (60 * 60 * 24 * 365.25);
+          } else {
+            // do not keep logged in after session ends
+            $rememberDuration = null;
+          }
+          $this->auth->loginWithUsername($name, $password, $rememberDuration);
         }
         catch (\Delight\Auth\InvalidEmailException $e) {
           return ["status" => "error", "code" => 010, "text" => "Wrong email address"];

@@ -5,7 +5,7 @@ if($user->authenticated){
 }
 $error = false;
 if(isset($_POST['name']) & isset($_POST['password'])){
-  $login = $user->login($_POST['name'], $_POST['password']);
+  $login = $user->login($_POST['name'], $_POST['password'], isset($_POST["remember_me"]));
   if($login===true){
     $tools->redirect("list.php");
   } else {
