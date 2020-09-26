@@ -232,11 +232,11 @@ h1 small {
 }
 @font-face {
       font-family: 'test';
-      src: url('./risorse/font/test.eot?93129191');
-      src: url('./risorse/font/test.eot?93129191#iefix') format('embedded-opentype'),
-           url('./risorse/font/test.woff?93129191') format('woff'),
-           url('./risorse/font/test.ttf?93129191') format('truetype'),
-           url('./risorse/font/test.svg?93129191#test') format('svg');
+      src: url('./resources/font/test.eot?93129191');
+      src: url('./resources/font/test.eot?93129191#iefix') format('embedded-opentype'),
+           url('./resources/font/test.woff?93129191') format('woff'),
+           url('./resources/font/test.ttf?93129191') format('truetype'),
+           url('./resources/font/test.svg?93129191#test') format('svg');
       font-weight: normal;
       font-style: normal;
     }
@@ -317,13 +317,13 @@ function vero1($text, $img1 = "", $img2 = ""){
 foreach($risultato as $row){
   $name = ($row['online']==1) ? '<u>' . $user->nameById($row["id"]) . "</u>" : $user->nameById($row["id"]);
 echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");
-echo('<img alt="VVF" src="./risorse/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
+echo('<img alt="VVF" src="./resources/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
 $disp = vero1($row['available'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
-$caposquadra = vero1($row['caposquadra'], "<img src='./risorse/images/cascoRosso.png' width='22px'>", "<img src='./risorse/images/cascoNero.png' width='22px'>");
-$autista = vero1($row['autista'], "<img src='./risorse/images/volante.png' width='22px'>");
+$foreman = vero1($row['foreman'], "<img src='./resources/images/cascoRosso.png' width='22px'>", "<img src='./resources/images/cascoNero.png' width='22px'>");
+$autista = vero1($row['autista'], "<img src='./resources/images/volante.png' width='22px'>");
 echo("<p>".t("Name",false).":  <b>$name</b></p><br>");
 echo("<p>".t("Available",false).":  <b>{$disp}</b></p><br>");
-echo("<p>".t("Foreman",false).":  <b>{$caposquadra}</b></p><br>");
+echo("<p>".t("Foreman",false).":  <b>{$foreman}</b></p><br>");
 echo("<p>".t("Driver",false).":  <b>{$autista}</b></p><br>");
 echo("<p>".t("Phone number",false)." <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");
 echo("<p>".t("Availability Minutes",false)." <br>(".t("This month",false).") <i class='demo-icon icon-hourglass'></i>:  <b>{$row['availability_minutes']} minutes</b></p><br>");

@@ -55,7 +55,7 @@
   }
     </style>
     <br>
-    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <p style="text-align: center;">
     <a id='add' href="edit_training.php?add">{{ 'Add training'|t }}</a>
@@ -63,13 +63,13 @@
     <br>
     <div id="list"></div>
     <script>
-      $.get( "risorse/ajax/ajax_trainings.php", function( data ) {
+      $.get( "resources/ajax/ajax_trainings.php", function( data ) {
          $( "#list" ).html( data );
          console.log( "Loaded list." );
       });
       $(document).ready(function() {
         setInterval(function() {
-          $.get( "risorse/ajax/ajax_trainings.php", function( data ) {
+          $.get( "resources/ajax/ajax_trainings.php", function( data ) {
              $( "#list" ).html( data );
           });
         }, 10000);

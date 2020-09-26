@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, caposquadra DESC, services ASC, availability_minutes ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, foreman DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -53,10 +53,10 @@ th, td {
       $name = $user->nameById($row["id"]);
       $callFunction = ($row['available'] == 1) ? "NonAttivo" : "Attivo";
       $available = $row["available"];
-      if ($row['caposquadra'] == 1) {
-        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./risorse/images/cascoRosso.png' width='20px'>   ";
+      if ($row['foreman'] == 1) {
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoRosso.png' width='20px'>   ";
       } else {
-        echo "<a onclick='Attivo(".$row["id"].");'><img src='./risorse/images/cascoNero.png' width='20px'>   ";
+        echo "<a onclick='Attivo(".$row["id"].");'><img src='./resources/images/cascoNero.png' width='20px'>   ";
       }
       if((time()-$row["online_time"])<=30){
         echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
@@ -71,7 +71,7 @@ th, td {
         echo  "</a></td>
         <td>";
       if ($row['autista'] == 1) {
-        echo "<img src='./risorse/images/volante.png' width='20px'>";
+        echo "<img src='./resources/images/volante.png' width='20px'>";
       } else {
         echo "";
       };
@@ -83,7 +83,7 @@ th, td {
 
       $services = $row['services'];
       $minutes = $row['availability_minutes'];
-      $u = 'anagrafica.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
+      $u = 'user_details.php?user=' . str_replace(' ', '_', urldecode(strtolower($row["id"])));
       echo "<td>$services</td><td>$minutes</td><td><a href='$u'><p>".t("Others infos",false)."</p></a></td></tr>";
       }
     }

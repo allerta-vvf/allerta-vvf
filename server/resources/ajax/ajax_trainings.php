@@ -40,7 +40,7 @@ foreach($risultato as $row){
           echo "<td><a href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
       if($impostazioni['delete']) {
-          echo "<td><a href='edit_training.php?delete&id={$row['id']}&incrementa={$row['incrementa']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
+          echo "<td><a href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a></td></tr>";
       }
 }
 ?>

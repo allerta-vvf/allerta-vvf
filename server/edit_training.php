@@ -23,10 +23,10 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   }
 } elseif($tools->validate_form_data('$post-mod', true, "delete")) {
   bdump("removing training");
-  if($tools->validate_form_data(['$post-id', '$post-incrementa', '$post-token'])) {
+  if($tools->validate_form_data(['$post-id', '$post-increment', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("removing training");
-      $database->remove_training($_POST["id"], $_POST["incrementa"]);
+      $database->remove_training($_POST["id"], $_POST["increment"]);
       $tools->redirect("trainings.php");
     } else {
       $tools->redirect("accessdenied.php");
@@ -49,10 +49,10 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
   } else {
       $values = [];
   }
-  if(isset($_GET["incrementa"])){
-      $incrementa = $_GET["incrementa"];
+  if(isset($_GET["increment"])){
+      $increment = $_GET["increment"];
   } else {
-      $incrementa = "";
+      $increment = "";
   }
   if($modalità=="edit" || $modalità=="delete"){
       if(empty($id)){
@@ -61,7 +61,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
           //$tools->redirect("accessdenied.php");
       }
   }
-  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'incrementa' => $incrementa, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
+  loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
   bdump($_SESSION['token'], "token");
 }
 ?>

@@ -41,7 +41,7 @@ jobs:
 
     - name: WebPack Setup
       run: |
-        cd risorse
+        cd resources
         npm install
         webpack -d
 

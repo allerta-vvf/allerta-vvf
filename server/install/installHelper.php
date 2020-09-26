@@ -250,8 +250,8 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
 `capo` text NOT NULL,
 `luogo` text NOT NULL,
 `note` text NOT NULL,
-`incrementa` varchar(999) NOT NULL DEFAULT 'test',
-`inseritoda` varchar(200) NOT NULL DEFAULT 'test',
+`increment` varchar(999) NOT NULL DEFAULT 'test',
+`inserted_by` varchar(200) NOT NULL DEFAULT 'test',
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
@@ -266,13 +266,13 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
 `luogo` varchar(999) NOT NULL DEFAULT 'test',
 `note` varchar(999) NOT NULL DEFAULT 'test',
 `tipo` text NOT NULL,
-`incrementa` varchar(999) NOT NULL,
-`inseritoda` varchar(200) NOT NULL,
+`increment` varchar(999) NOT NULL,
+`inserted_by` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_intrusions` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`pagina` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
+`page` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
 `data` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
 `ora` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
 `ip` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -323,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
 `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 `available` tinyint(1) NOT NULL DEFAULT 0,
-`caposquadra` tinyint(1) NOT NULL DEFAULT 0,
+`foreman` tinyint(1) NOT NULL DEFAULT 0,
 `autista` tinyint(1) NOT NULL DEFAULT 0,
 `telefono` varchar(25) DEFAULT NULL,
 `services` int(11) NOT NULL DEFAULT 0,

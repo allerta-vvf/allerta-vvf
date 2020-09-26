@@ -11,7 +11,7 @@
     <script defer>
       function Attivo(id){
         $.ajax({
-          url: "risorse/ajax/ajax_aggiornadispo.php",
+          url: "resources/ajax/ajax_change_availability.php",
           method: "POST",
           data: {
             change_id: id,
@@ -27,7 +27,7 @@
 
       function NonAttivo(id){
         $.ajax({
-          url: "risorse/ajax/ajax_aggiornadispo.php",
+          url: "resources/ajax/ajax_change_availability.php",
           method: "POST",
           data: {
             change_id: id,
@@ -43,25 +43,25 @@
     </script>
     <br>
     <br>
-    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <br>
     <div id="list"></div>
 {% if user.full_viewer == false %}
 <script>
-$( "#list" ).load("risorse/ajax/ajax_list.php");
+$( "#list" ).load("resources/ajax/ajax_list.php");
 $(document).ready(function() {
   setInterval(function() {
-    $( "#list" ).load("risorse/ajax/ajax_list.php");
+    $( "#list" ).load("resources/ajax/ajax_list.php");
   }, 10000);
 });
 </script>
 {% elseif user.full_viewer == true %}
 <script>
-$( "#list" ).load("risorse/ajax/ajax_admin_list.php");
+$( "#list" ).load("resources/ajax/ajax_admin_list.php");
 $(document).ready(function() {
   setInterval(function() {
-    $( "#list" ).load("risorse/ajax/ajax_admin_list.php");
+    $( "#list" ).load("resources/ajax/ajax_admin_list.php");
   }, 10000);
 });
 </script>
@@ -91,7 +91,7 @@ $(document).ready(function() {
   }
   </style>
 {% endif %}
-<script defer type="text/javascript" src="risorse/js/cache.js"></script>
+<script defer type="text/javascript" src="resources/js/cache.js"></script>
     <br>
     <br>
 {% endblock %}

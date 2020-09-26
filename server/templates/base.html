@@ -3,7 +3,7 @@
     <head>
         {% block head %}
           <title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>
-          <link href="{{ urlsoftware }}/risorse/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+          <link href="{{ urlsoftware }}/resources/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
           <meta name="viewport" content="user-scalable=no, initial-scale=1">
           <style>
           body:not(table){
@@ -11,7 +11,7 @@
             overflow-x: hidden;
           }
           </style>
-          <script src="risorse/dist/main.js"></script>
+          <script src="resources/dist/main.js"></script>
           {% if enable_technical_support and technical_support_open %}
           <!-- Smartsupp Live Chat script -->
           <script type='text/javascript'>
@@ -306,7 +306,7 @@
         <a href="{{ urlsoftware }}services.php">{{ 'Services'|t }}</a>
         <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
         <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>
-        <a {# href="{{ urlsoftware }}grafici.php" #}>{{ 'Graphics'|t }}</a>
+        <a {# href="{{ urlsoftware }}graphics.php" #}>{{ 'Graphics'|t }}</a>
         {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
         <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
         <a href="javascript:void(0);" class="icon" onclick="menu()">☰</a>

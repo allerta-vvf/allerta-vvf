@@ -13,7 +13,6 @@ class tools{
   public $check_cf_ip;
 
   public function __construct($check_cf_ip){
-    define("TOOLS", "OK");
     $this->check_cf_ip = $check_cf_ip;
   }
 
@@ -192,15 +191,12 @@ class database{
   }
 
   public function __construct(){
-    if(!defined("DATABASE")){
-      define("DATABASE", "OK");
-    }
     $this->connect();
     if($this->isOptionsEmpty()){
       header('Location: install/install.php');
     }
     $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
-    if(strpos($file_infos['dirname'], 'risorse') !== false) {
+    if(strpos($file_infos['dirname'], 'resources') !== false) {
       $this->options_cache_file = "../../options.txt";
     } else {
       $this->options_cache_file = "options.txt";
@@ -273,88 +269,88 @@ class database{
     }
   }
 
-  public function incrementa($incrementa){
-    bdump($incrementa);
-    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($incrementa);";
+  public function increment($increment){
+    bdump($increment);
+    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($increment);";
     $this->exec($sql, false);
   }
 
-  public function getIncrementa($id){
+  public function getIncrement($id){
     bdump($id);
-    $sql = "SELECT `incrementa` FROM `%PREFIX%_services` WHERE `id` = :id";
-    $incrementa = $this->exec($sql, true, [":id" => $id])[0]['incrementa'];
-    bdump($incrementa);
-    return $incrementa;
+    $sql = "SELECT `increment` FROM `%PREFIX%_services` WHERE `id` = :id";
+    $increment = $this->exec($sql, true, [":id" => $id])[0]['increment'];
+    bdump($increment);
+    return $increment;
   }
 
-  public function diminuisci($id){
-    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrementa($id)});";
+  public function decrease($id){
+    $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrement($id)});";
     $this->exec($sql, false);
   }
 
-  public function incrementa_trainings($incrementa){
-    bdump($incrementa);
-    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($incrementa);";
+  public function increment_trainings($increment){
+    bdump($increment);
+    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($increment);";
     $this->exec($sql, false);
   }
 
-  public function getIncrementa_trainings($id){
+  public function getIncrement_trainings($id){
     bdump($id);
-    $sql = "SELECT `incrementa` FROM `%PREFIX%_trainings` WHERE `id` = :id";
-    $incrementa = $this->exec($sql, true, [":id" => $id])[0]['incrementa'];
-    bdump($incrementa);
-    return $incrementa;
+    $sql = "SELECT `increment` FROM `%PREFIX%_trainings` WHERE `id` = :id";
+    $increment = $this->exec($sql, true, [":id" => $id])[0]['increment'];
+    bdump($increment);
+    return $increment;
   }
 
-  public function diminuisci_trainings($id){
-    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrementa_trainings($id)});";
+  public function decrease_trainings($id){
+    $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrement_trainings($id)});";
     $this->exec($sql, false);
   }
 
-  public function add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+  public function add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by){
     $autisti = implode(",", $autisti);
     bdump($autisti);
     $personale = implode(",", $personale);
     bdump($personale);
-    $incrementa = implode(",", $incrementa);
-    bdump($incrementa);
-    $sql = "INSERT INTO `%PREFIX%_services` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :incrementa, :inseritoda);";
-    $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]);
-    $this->incrementa($incrementa);
+    $increment = implode(",", $increment);
+    bdump($increment);
+    $sql = "INSERT INTO `%PREFIX%_services` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `increment`, `inserted_by`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :increment, :inserted_by);";
+    $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+    $this->increment($increment);
   }
 
   public function remove_service($id){
-    $this->diminuisci($id);
+    $this->decrease($id);
     $this->exec("DELETE FROM `%PREFIX%_services` WHERE `id` = :id", true, [":id" => $id]);
   }
 
 
-  public function change_service($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda){
+  public function change_service($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by){
     $this->remove_service($id); // TODO: update, instead of removing and re-adding (with another id)
-    $this->add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $incrementa, $inseritoda);
+    $this->add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by);
   }
 
-  public function add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
+  public function add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by){
     $personale = implode(",", $personale);
     bdump($personale);
-    $incrementa = implode(",", $incrementa);
-    bdump($incrementa);
-    $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `incrementa`, `inseritoda`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :incrementa, :inseritoda);";
-    $this->exec($sql, false, [":data" => $data, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":capo" => $capo, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":incrementa" => $incrementa, ":inseritoda" => $inseritoda]);
-    $this->incrementa_trainings($incrementa);
+    $increment = implode(",", $increment);
+    bdump($increment);
+    $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `increment`, `inserted_by`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :increment, :inserted_by);";
+    $this->exec($sql, false, [":data" => $data, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":capo" => $capo, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+    $this->increment_trainings($increment);
   }
 
   public function remove_training($id){
-    $this->diminuisci_trainings($id);
+    $this->decrease_trainings($id);
     bdump($id);
     $this->exec("DELETE FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id]);
   }
 
 
-  public function change_training($id, $data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda){
+  public function change_training($id, $data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by){
     $this->remove_training($id); // TODO: update, instead of removing and re-adding (with another id)
     bdump("removed");
-    $this->add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $incrementa, $inseritoda);
+    $this->add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by);
   }
 }
 
@@ -386,7 +382,6 @@ class user{
     $this->tools = $tools;
     $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
     $this->authenticated = $this->auth->isLoggedIn();
-    define("LOGIN", "OK");
   }
 
   public function authenticated(){
@@ -397,11 +392,11 @@ class user{
    if(!$this->authenticated()){
       if($this->database->getOption("intrusion_save")){
         if($this->database->getOption("intrusion_save_info")){
-          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
+          $params = [":page" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
         } else {
-          $params = [":pagina" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
+          $params = [":page" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
         }
-        $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `pagina`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :pagina, :data, :ora, :ip, :servervar)";
+        $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `page`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :page, :data, :ora, :ip, :servervar)";
         $this->database->exec($sql, false, $params);
       }
       $this->tools->redirect($this->database->getOption("web_url"));
@@ -504,7 +499,7 @@ class user{
             }
             $_SESSION['_user_hidden'] = $user[0]["hidden"];
             $_SESSION['_user_disabled'] = $user[0]["disabled"];
-            $_SESSION['_user_caposquadra'] = $user[0]["caposquadra"];
+            $_SESSION['_user_foreman'] = $user[0]["foreman"];
             return true;
           }
         }
@@ -531,28 +526,28 @@ class user{
     }
   }
 
-  public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inseritoda){
+  public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inserted_by){
     $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     if($userId){
       $hidden = $hidden ? 1 : 0;
       $disabled = $disabled ? 1 : 0;
       $capo = $capo ? 1 : 0;
       $autista = $autista ? 1 : 0;
-      $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `caposquadra`, `autista`) VALUES (:hidden, :disabled, :name, :caposquadra, :autista)";
-      $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":caposquadra" => $capo, ":autista" => $autista]);
+      $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `foreman`, `autista`) VALUES (:hidden, :disabled, :name, :foreman, :autista)";
+      $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":foreman" => $capo, ":autista" => $autista]);
       if($capo == 1){
         $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
       }
-      $this->log("User created", $userId, $inseritoda, date("d/m/Y"), date("H:i.s"));
+      $this->log("User created", $userId, $inserted_by, date("d/m/Y"), date("H:i.s"));
       return $userId;
     } else {
       return $false;
     }
   }
 
-  public function remove_user($id, $rimossoda){
+  public function remove_user($id, $removed_by){
     $this->database->exec("DELETE FROM `%PREFIX%_users` WHERE `id` = :id", true, [":id" => $id], "DELETE FROM `%PREFIX%_profiles` WHERE `id` = :id");
-    $this->log("User removed", null, $rimossoda, date("d/m/Y"), date("H:i.s"));
+    $this->log("User removed", null, $removed_by, date("d/m/Y"), date("H:i.s"));
   }
 }
 
@@ -602,7 +597,7 @@ class translations{
       $this->language = "en";
     }
     $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
-    if(strpos($file_infos['dirname'], 'risorse') !== false) {
+    if(strpos($file_infos['dirname'], 'resources') !== false) {
       $this->filename = "../../translations/".$this->language."/".$file_infos['basename'];
     } else {
       $this->filename = "translations/".$this->language."/".$file_infos['basename'];

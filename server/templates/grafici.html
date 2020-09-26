@@ -2,19 +2,19 @@
 
 {% block content %}
     <br>
-    <img alt="VVF" src="./risorse/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
+    <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
     <br>
     <div id="list" hidden></div>
     <b>TODO</b>
     <script>
-      $.get( "risorse/ajax/ajax_log.php", function( data ) {
+      $.get( "resources/ajax/ajax_log.php", function( data ) {
          $( "#list" ).html( data );
          console.log( "Loaded list." );
       });
       $(document).ready(function() {
 
         setInterval(function() {
-          $.get( "risorse/ajax/ajax_log.php", function( data ) {
+          $.get( "resources/ajax/ajax_log.php", function( data ) {
              $( "#list" ).html( data );
           });
         }, 10000);
