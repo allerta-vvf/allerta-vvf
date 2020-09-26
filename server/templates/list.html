@@ -15,7 +15,8 @@
           method: "POST",
           data: {
             change_id: id,
-            dispo: 1
+            dispo: 1,
+            token_list: "{{ token_list }}"
           },
           success: function(data) {
             alert("{{ 'Thanks, %s, you have given your availability in case of alert.'|t|format(user.name) }}");
@@ -30,7 +31,8 @@
           method: "POST",
           data: {
             change_id: id,
-            dispo: 0
+            dispo: 0,
+            token_list: "{{ token_list }}"
           },
           success: function(data) {
             alert("{{ 'Thanks, %s, you have removed your availability in case of alert.'|t|format(user.name) }}");

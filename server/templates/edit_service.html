@@ -303,9 +303,6 @@ $( ".tipi" ).val('{{ values.tipo }}');
 $('#note').val('{{ values.note }}');
 //{% endif %}
 $('form').submit(function () {
-    if(!$('#token').val().endsWith("dJN299u49")){
-      $('#token').val($('#token').val() + "");
-    }
     var progressivo_valido = /^[0-9/]{3,6}$/
     var progressivo = $('#progressivo').val();
     if(!progressivo_valido.test(progressivo)){
