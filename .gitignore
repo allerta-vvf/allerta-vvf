@@ -512,3 +512,6 @@ config.old.php
 *password*
 
 custom-*.*
+
+*.log
+*.txt

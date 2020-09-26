@@ -1,0 +1,39 @@
+<IfModule mod_php4.c>
+  php_flag display_errors Off
+</IfModule>
+
+<IfModule mod_php5.c>
+  php_flag display_errors Off
+</IfModule>
+
+<IfModule mod_php7.c>
+  php_flag display_errors Off
+</IfModule>
+
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header unset X-Powered-By
+  Header unset X-Pingback
+  Header unset SERVER
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK) [NC]
+  RewriteRule ^(.*)$ - [F,L]
+</IfModule>
+
+<FilesMatch "(config|config.old|config-sample|core|ui)\.php">
+  Order Deny,Allow
+  Deny from all
+</FilesMatch>
+
+<FilesMatch "\.(log|txt)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+ServerSignature Off
