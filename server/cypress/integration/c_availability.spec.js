@@ -3,7 +3,7 @@ describe("Availability", () => {
         cy.login()
     })
     it('Change availability to available', function () {
-        cy.contains('Active').click()
+        cy.contains('Activate').click()
         cy.on('window:alert',(txt)=>{
             expect(txt).to.contains('Thanks, admin, you have given your availability in case of alert.');
         })
@@ -14,7 +14,7 @@ describe("Availability", () => {
     })
 
     it('Change availability to not available', function () {
-        cy.contains('Not Active').click()
+        cy.contains('Deactivate').click()
         cy.on('window:alert',(txt)=>{
             expect(txt).to.contains('Thanks, admin, you have removed your availability in case of alert.');
         })

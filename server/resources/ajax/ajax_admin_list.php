@@ -51,12 +51,12 @@ th, td {
         echo "<tr>
            <td>";
       $name = $user->nameById($row["id"]);
-      $callFunction = ($row['available'] == 1) ? "NonAttivo" : "Attivo";
+      $callFunction = ($row['available'] == 1) ? "Deactivate" : "Activate";
       $available = $row["available"];
       if ($row['foreman'] == 1) {
-        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoRosso.png' width='20px'>   ";
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoRosso.png' width='20px'>";
       } else {
-        echo "<a onclick='Attivo(".$row["id"].");'><img src='./resources/images/cascoNero.png' width='20px'>   ";
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoNero.png' width='20px'>";
       }
       if((time()-$row["online_time"])<=30){
         echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
