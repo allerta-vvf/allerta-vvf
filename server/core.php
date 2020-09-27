@@ -499,7 +499,7 @@ class user{
             }
             $_SESSION['_user_hidden'] = $user[0]["hidden"];
             $_SESSION['_user_disabled'] = $user[0]["disabled"];
-            $_SESSION['_user_foreman'] = $user[0]["foreman"];
+            $_SESSION['_user_chief'] = $user[0]["chief"];
             return true;
           }
         }
@@ -533,8 +533,8 @@ class user{
       $disabled = $disabled ? 1 : 0;
       $capo = $capo ? 1 : 0;
       $autista = $autista ? 1 : 0;
-      $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `foreman`, `autista`) VALUES (:hidden, :disabled, :name, :foreman, :autista)";
-      $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":foreman" => $capo, ":autista" => $autista]);
+      $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `chief`, `autista`) VALUES (:hidden, :disabled, :name, :chief, :autista)";
+      $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":chief" => $capo, ":autista" => $autista]);
       if($capo == 1){
         $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
       }

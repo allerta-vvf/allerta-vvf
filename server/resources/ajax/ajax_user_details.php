@@ -318,11 +318,11 @@ foreach($risultato as $row){
 echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");
 echo('<img alt="VVF" src="./resources/images/distaccamento.png" width="150" class="img-resposive"><br><br><br>');
 $disp = vero1($row['available'], "<i class='fa fa-check' style='color:green' width='22px'></i>", "<i class='fa fa-times'  style='color:red' width='22px'></i>");
-$foreman = vero1($row['foreman'], "<img src='./resources/images/cascoRosso.png' width='22px'>", "<img src='./resources/images/cascoNero.png' width='22px'>");
-$autista = vero1($row['autista'], "<img src='./resources/images/volante.png' width='22px'>");
+$chief = vero1($row['chief'], "<img src='./resources/images/red_helmet.png' width='22px'>", "<img src='./resources/images/black_helmet.png' width='22px'>");
+$autista = vero1($row['autista'], "<img src='./resources/images/wheel.png' width='22px'>");
 echo("<p>".t("Name",false).":  <b>$name</b></p><br>");
 echo("<p>".t("Available",false).":  <b>{$disp}</b></p><br>");
-echo("<p>".t("Foreman",false).":  <b>{$foreman}</b></p><br>");
+echo("<p>".t("Chief",false).":  <b>{$chief}</b></p><br>");
 echo("<p>".t("Driver",false).":  <b>{$autista}</b></p><br>");
 echo("<p>".t("Phone number",false)." <i class='fa fa-phone' style='color:green' width='22px'></i>:  <b><a href='tel:{$row['telefono']}'>{$row['telefono']}</a></b></p><br>");
 echo("<p>".t("Availability Minutes",false)." <br>(".t("This month",false).") <i class='demo-icon icon-hourglass'></i>:  <b>{$row['availability_minutes']} minutes</b></p><br>");

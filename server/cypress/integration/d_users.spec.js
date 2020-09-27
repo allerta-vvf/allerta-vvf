@@ -37,7 +37,7 @@ describe("User management", () => {
                                 .clear()
                                 .type(user.birthday)
                                 .should('have.value', user.birthday)
-                            if(user.foreman){
+                            if(user.chief){
                                 cy.get("input[name='capo']")
                                     .check({force: true})
                             }
@@ -61,7 +61,7 @@ describe("User management", () => {
                                 username: user.username,
                                 password: user.password,
                                 birthday: user.birthday,
-                                capo: user.foreman | 0,
+                                capo: user.chief | 0,
                                 autista: user.driver | 0,
                                 hidden: 0,
                                 disabled: 0

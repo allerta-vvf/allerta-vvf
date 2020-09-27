@@ -4,7 +4,7 @@
   "username": "kathy.jordan",
   "password": "4jpbly8g6a",
   "birthday": "08/08/1995",
-  "foreman": false,
+  "chief": false,
   "driver": false
 }, {
   "email": "user2@mail.local",
@@ -12,7 +12,7 @@
   "username": "natalie.jordan",
   "password": "kf343di74s",
   "birthday": "04/05/2011",
-  "foreman": true,
+  "chief": true,
   "driver": false
 }, {
   "email": "user3@mail.local",
@@ -20,7 +20,7 @@
   "username": "keith.li",
   "password": "3ojvgk4fpv",
   "birthday": "11/04/2019",
-  "foreman": true,
+  "chief": true,
   "driver": true
 }, {
   "email": "user4@mail.local",
@@ -28,7 +28,7 @@
   "username": "pellegrino.scotto",
   "password": "e0ou92taw3",
   "birthday": "20/10/1983",
-  "foreman": true,
+  "chief": true,
   "driver": false
 }, {
   "email": "user5@mail.local",
@@ -36,7 +36,7 @@
   "username": "william.torres",
   "password": "0fso8sxxe0",
   "birthday": "16/07/2000",
-  "foreman": false,
+  "chief": false,
   "driver": true
 }, {
   "email": "user6@mail.local",
@@ -44,7 +44,7 @@
   "username": "napoleone.tomasetti",
   "password": "so7ykv8a7g",
   "birthday": "27/12/1978",
-  "foreman": true,
+  "chief": true,
   "driver": true
 }, {
   "email": "user7@mail.local",
@@ -52,7 +52,7 @@
   "username": "gelsomina.murray",
   "password": "x1js0s6zao",
   "birthday": "22/10/1994",
-  "foreman": true,
+  "chief": true,
   "driver": true
 }, {
   "email": "user8@mail.local",
@@ -60,7 +60,7 @@
   "username": "letizia.petrucelli",
   "password": "k1hsbdt3cv",
   "birthday": "24/04/1981",
-  "foreman": true,
+  "chief": true,
   "driver": false
 }, {
   "email": "user9@mail.local",
@@ -68,7 +68,7 @@
   "username": "giampaolo.surian",
   "password": "et52m65s4g",
   "birthday": "10/06/1972",
-  "foreman": true,
+  "chief": true,
   "driver": true
 }, {
   "email": "user10@mail.local",
@@ -76,6 +76,6 @@
   "username": "cassandra.jensen",
   "password": "9h3fb37ccw",
   "birthday": "28/10/1985",
-  "foreman": true,
+  "chief": true,
   "driver": false
 }]

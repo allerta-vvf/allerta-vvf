@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, foreman DESC, services ASC, availability_minutes ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -53,10 +53,10 @@ th, td {
       $name = $user->nameById($row["id"]);
       $callFunction = ($row['available'] == 1) ? "Deactivate" : "Activate";
       $available = $row["available"];
-      if ($row['foreman'] == 1) {
-        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoRosso.png' width='20px'>";
+      if ($row['chief'] == 1) {
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/red_helmet.png' width='20px'>";
       } else {
-        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/cascoNero.png' width='20px'>";
+        echo "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/black_helmet.png' width='20px'>";
       }
       if((time()-$row["online_time"])<=30){
         echo "<u>".$name."</u></a></td><td><a onclick='$callFunction(".$row["id"].");'>";
@@ -71,7 +71,7 @@ th, td {
         echo  "</a></td>
         <td>";
       if ($row['autista'] == 1) {
-        echo "<img src='./resources/images/volante.png' width='20px'>";
+        echo "<img src='./resources/images/wheel.png' width='20px'>";
       } else {
         echo "";
       };

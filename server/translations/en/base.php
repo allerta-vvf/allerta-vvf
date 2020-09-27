@@ -18,7 +18,7 @@ return [
     "Logout" => "Logout",
     "Name" => "Name",
     "Available" => "Available",
-    "Foreman" => "Foreman",
+    "Chief" => "Chief",
     "Driver" => "Driver",
     "Drivers" => "Drivers",
     "People" => "People",

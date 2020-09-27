@@ -323,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
 `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 `available` tinyint(1) NOT NULL DEFAULT 0,
-`foreman` tinyint(1) NOT NULL DEFAULT 0,
+`chief` tinyint(1) NOT NULL DEFAULT 0,
 `autista` tinyint(1) NOT NULL DEFAULT 0,
 `telefono` varchar(25) DEFAULT NULL,
 `services` int(11) NOT NULL DEFAULT 0,

@@ -3,7 +3,7 @@ include_once("../../core.php");
 init_class();
 $user->requirelogin();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, foreman DESC, services ASC, availability_minutes ASC, name ASC;", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
 $hidden = $user->hidden();
 ?>
@@ -45,7 +45,7 @@ th, td {
    foreach($risultato as $row){
      if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
       echo "<tr><td>";
-      if ($row['foreman'] == 1) {echo "<img src='./resources/images/cascoRosso.png' width='20px'>   ";} else{echo "<img src='./resources/images/cascoNero.png' width='20px'>   ";}
+      if ($row['chief'] == 1) {echo "<img src='./resources/images/red_helmet.png' width='20px'>   ";} else{echo "<img src='./resources/images/black_helmet.png' width='20px'>   ";}
       if((time()-$row["online_time"])<=30){
           echo "<u>".$user->nameById($row["id"])."</u></td><td>";
       } else {

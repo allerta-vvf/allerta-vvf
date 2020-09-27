@@ -18,7 +18,7 @@ return [
     "Logout" => "Logout",
     "Name" => "Nome",
     "Available" => "Disponibile",
-    "Foreman" => "Caposquadra",
+    "Chief" => "Caposquadra",
     "Driver" => "Autista",
     "Drivers" => "Autisti",
     "People" => "Persone",

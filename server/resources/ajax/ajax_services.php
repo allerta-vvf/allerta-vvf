@@ -19,7 +19,7 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_services` ORDER BY data DE
      <th><?php t("Code"); ?></th>
      <th><?php t("Start time"); ?></th>
      <th><?php t("End time"); ?></th>
-     <th><?php t("Foreman"); ?></th>
+     <th><?php t("Chief"); ?></th>
      <th><?php t("Drivers"); ?></th>
      <th><?php t("People"); ?></th>
      <th><?php t("Place"); ?></th>
@@ -32,7 +32,7 @@ $risultato = $database->exec("SELECT * FROM `%PREFIX%_services` ORDER BY data DE
     <tbody>
 <?php
 foreach($risultato as $row){
-      $foreman = $user->nameById($row["capo"]);
+      $chief = $user->nameById($row["capo"]);
       $drivers = "";
       foreach(explode(",", $row['autisti']) as $key=>$name){
         $drivers = $drivers.$user->nameById($name).", ";
@@ -41,7 +41,7 @@ foreach($risultato as $row){
       foreach(explode(",", $row['personale']) as $key=>$name){
         $others_people = $others_people.$user->nameById($name).", ";
       }
-      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $foreman . "</td><td>" . $drivers . "</td><td>" . $others_people . "</td><td>" . s($row['luogo'],false,true) . "</td><td>" . s($row['note'],false,true) . "</td><td>" . s($row['tipo'],false,true) . "</td>";
+      echo "<tr><td>" . $row['data'] . "</td><td>" . $row['codice'] . "</td><td>" . $row['uscita'] . "</td><td>" . $row['rientro'] . "</td><td>" . $chief . "</td><td>" . $drivers . "</td><td>" . $others_people . "</td><td>" . s($row['luogo'],false,true) . "</td><td>" . s($row['note'],false,true) . "</td><td>" . s($row['tipo'],false,true) . "</td>";
       if($impostazioni['edit']) {
           echo "<td><a href='edit_service.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a></td>";
       }
