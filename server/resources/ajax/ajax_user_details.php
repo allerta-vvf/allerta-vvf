@@ -313,7 +313,6 @@ function vero1($text, $img1 = "", $img2 = ""){
         return "no " . $img2;
     }
 }
-//var_dump($risultato);
 foreach($risultato as $row){
   $name = ($row['online']==1) ? '<u>' . $user->nameById($row["id"]) . "</u>" : $user->nameById($row["id"]);
 echo("<h1>".t("Personal data",false)." <b>$name</b></h1><br><br>");

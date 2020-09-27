@@ -8,39 +8,6 @@
 
       <button class="btn btn-lg btn-danger" style="background-color: red" onclick="NonAttivo('{{ user.id }}')">{{ 'Not Active'|t }}</button>
     </div>
-    <script defer>
-      function Attivo(id){
-        $.ajax({
-          url: "resources/ajax/ajax_change_availability.php",
-          method: "POST",
-          data: {
-            change_id: id,
-            dispo: 1,
-            token_list: "{{ token_list }}"
-          },
-          success: function(data) {
-            alert("{{ 'Thanks, %s, you have given your availability in case of alert.'|t|format(user.name) }}");
-            location.reload();
-          }
-        });
-      }
-
-      function NonAttivo(id){
-        $.ajax({
-          url: "resources/ajax/ajax_change_availability.php",
-          method: "POST",
-          data: {
-            change_id: id,
-            dispo: 0,
-            token_list: "{{ token_list }}"
-          },
-          success: function(data) {
-            alert("{{ 'Thanks, %s, you have removed your availability in case of alert.'|t|format(user.name) }}");
-            location.reload();
-          }
-        });
-      }
-    </script>
     <br>
     <br>
     <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">

@@ -22,19 +22,4 @@ check();
 
 });
 </script>
-
-     <script>
-   function AttivoAdmin(nameuser, dispo){
-    dispo = +!dispo;
-    $.ajax({
-     url:"ajax_change_availability.php",
-     method: "POST",
-     data: {nameuser: nameuser, dispo:dispo},
-     success: function (data) {
-      alert("Hai editto la disponibilità di " + nameuser + " in caso in allerta.");
-      $("#list").load("resources/ajax/ajax_user_details.php?user={{ view_user }}");
-     }
-    });
-   };
-   </script>
 {% endblock %}
