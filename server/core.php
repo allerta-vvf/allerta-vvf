@@ -636,7 +636,10 @@ function init_class($enableDebugger=true, $headers=true){
     $translations = new translations();
   }
   if($headers){
-    header("Content-Security-Policy: default-src 'unsafe-eval' 'unsafe-inline' 'self'");
+    $csp = "default-src 'self' data: *.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; object-src; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'style';";
+    header("Content-Security-Policy: $csp");
+    header("X-Content-Security-Policy: $csp");
+    header("X-WebKit-CSP: $csp");
     header("X-XSS-Protection: 1; mode=block");
     header("X-Frame-Options: DENY");
     header("X-Content-Type-Options: nosniff");

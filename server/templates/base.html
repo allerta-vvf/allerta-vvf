@@ -66,6 +66,7 @@
               setCookie("chat", "true", 1);
               location.reload();
             }
+            window.addEventListener('securitypolicyviolation',console.error.bind(console));
           </script>
           <script>
             function loadScript(directory, files) {
