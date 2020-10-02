@@ -409,13 +409,19 @@ class user{
 
   public function name($replace=false){
     if(isset($_SESSION['_user_name'])){
-      if($replace){
-        return str_replace(" ", "_", $_SESSION['_user_name']);
-      } else {
-        return $_SESSION['_user_name'];
-      }
+      $return_name = $_SESSION['_user_name'];
     } else {
-        return "not authenticated";
+      $check_name = $this->nameById($this->auth->getUserId());
+      if($check_name){
+        $return_name = $check_name;
+      } else {
+        $return_name = "not authenticated";
+      }
+    }
+    if($replace){
+      return str_replace(" ", "_", $return_name);
+    } else {
+      return $return_name;
     }
   }
   
@@ -518,8 +524,9 @@ class user{
 
   public function logout(){
     try {
-      $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+      $this->auth->logOut();
       $this->auth->destroySession();
+      $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
     }
     catch (\Delight\Auth\NotLoggedInException $e) {
       die('Not logged in');
@@ -636,7 +643,7 @@ function init_class($enableDebugger=true, $headers=true){
     $translations = new translations();
   }
   if($headers){
-    $csp = "default-src 'self' data: *.tile.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; object-src; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'style';";
+    $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'style';";
     header("Content-Security-Policy: $csp");
     header("X-Content-Security-Policy: $csp");
     header("X-WebKit-CSP: $csp");
@@ -647,13 +654,13 @@ function init_class($enableDebugger=true, $headers=true){
   }
   //var_dump($user);
   //exit();
-  //if($enableDebugger){
+  if($enableDebugger){
     //if($user->requireRole(Role::DEVELOPER)){
       Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
     //} else {
       //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
     //}
-  //}
+  }
   bdump(get_included_files());
   bdump($translations->loaded_translations);
 }
