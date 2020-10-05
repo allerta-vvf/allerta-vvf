@@ -2,7 +2,7 @@
 require 'core.php';
 
 init_class();
-$user->requirelogin();
+$user->requirelogin(false);
 $id = $user->auth->getUserId();
 $time = time();
 

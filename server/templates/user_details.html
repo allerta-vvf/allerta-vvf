@@ -5,21 +5,11 @@
 <div id='list'>
 </div>
 <script>
-$("#list").load("resources/ajax/ajax_user_details.php?user={{ view_user }}");
 $(document).ready(function() {
-
-setInterval(function() {
-$("#list").load("resources/ajax/ajax_user_details.php?user={{ view_user }}");
-}, 10000);
-
-});
-check();
-$(document).ready(function() {
-
-setInterval(function() {
-check();
-}, 10000);
-
+  $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
+  setInterval(function() {
+    $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
+  }, 10000);
 });
 </script>
 {% endblock %}

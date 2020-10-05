@@ -63,17 +63,12 @@
     <br>
     <div id="list"></div>
     <script>
-      $.get( "resources/ajax/ajax_trainings.php", function( data ) {
-         $( "#list" ).html( data );
-         console.log( "Loaded list." );
-      });
-      $(document).ready(function() {
-        setInterval(function() {
-          $.get( "resources/ajax/ajax_trainings.php", function( data ) {
-             $( "#list" ).html( data );
-          });
-        }, 10000);
-      });
+$(document).ready(function() {
+  $( "#list" ).load("resources/ajax/ajax_trainings.php?"+Math.random());
+  setInterval(function() {
+    $( "#list" ).load("resources/ajax/ajax_trainings.php?"+Math.random());
+  }, 10000);
+});
     </script>
     <br>
     <br>

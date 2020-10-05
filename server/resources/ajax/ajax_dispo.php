@@ -3,7 +3,7 @@ $start = true;
 $minutes = 5;
 include_once "../../core.php";
 init_class();
-$user->requirelogin();
+$user->requirelogin(false);
 
 function arraynum(){
 global $database;

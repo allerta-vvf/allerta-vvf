@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$user->requirelogin();
+$user->requirelogin(false);
 
 $risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
 

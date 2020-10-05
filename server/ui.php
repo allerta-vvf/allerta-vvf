@@ -2,6 +2,7 @@
 require_once 'core.php';
 init_class();
 
+p_start("Load Twig");
 try {
     $loader = new \Twig\Loader\FilesystemLoader('templates');
 } catch (Exception $e) {
@@ -15,10 +16,12 @@ $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
 $twig->addFilter($filter);
+p_stop();
 
 $template = NULL;
 function loadtemplate($templatename, $data, $requirelogin=true){
   global $database, $user, $twig, $template;
+  p_start("Render Twig template");
   if($requirelogin){
     $user->requirelogin();
   }
@@ -40,4 +43,5 @@ function loadtemplate($templatename, $data, $requirelogin=true){
   }
   $template = $twig->load($templatename);
   echo $template->render($data);
+  p_stop();
 }

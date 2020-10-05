@@ -1,6 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
 use Tracy\Debugger;
+use Netpromotion\Profiler\Profiler;
 
 if(!file_exists("config.php") && !file_exists("../../config.php")) header('Location: install/install.php');
 
@@ -11,9 +12,12 @@ date_default_timezone_set('Europe/Rome');
 
 class tools{
   public $check_cf_ip;
+  public $profiler_enabled;
+  public $profiler_last_name = "";
 
-  public function __construct($check_cf_ip){
+  public function __construct($check_cf_ip, $profiler_enabled){
     $this->check_cf_ip = $check_cf_ip;
+    $this->profiler_enabled = $profiler_enabled;
   }
 
   public function validate_form_data($data, $noempty=true, $value=null){
@@ -118,6 +122,7 @@ class tools{
     }
   }
   function extract_unique($data){
+    $this->profiler_start("Extract unique");
     $array2=[];
     foreach($data as $arr){
         if(is_array($arr)){
@@ -136,18 +141,22 @@ class tools{
             }
         }
     }
+    $this->profiler_stop();
     return $array2;
   }
 
   public function createKey($hashCode=false, $lenght=128){
+    $this->profiler_start("Create key");
     $code = str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30)));
     if($hashCode){
       $code = $code.".".hash("sha256", $code);
     }
+    $this->profiler_stop();
     return $code;
   }
 
   public function sanitize($string, $htmlAllowed=false, $htmlPurifierOptions=[]){
+    $this->profiler_start("Sanitize");
     if($htmlAllowed){
       $config = HTMLPurifier_Config::createDefault();
       foreach ($htmlPurifierOptions as $key => $value) {
@@ -158,7 +167,26 @@ class tools{
     } else {
       $string = htmlspecialchars($string);
     }
+    $this->profiler_stop();
     return $string;
+  }
+
+  public function profiler_start($name=null){
+    if($this->profiler_enabled){
+      if(is_null($name)){
+        $name = $this->profiler_last_name;
+      }
+      Profiler::start($name);
+    }
+  }
+
+  public function profiler_stop($name=null){
+    if($this->profiler_enabled){
+      if(is_null($name)){
+        $name = $this->profiler_last_name;
+      }
+      Profiler::finish($name);
+    }
   }
 }
 
@@ -388,7 +416,8 @@ class user{
     return $this->authenticated;
   }
 
-  public function requirelogin(){
+  public function requirelogin($redirect=true){
+    $this->tools->profiler_start("Require login");
    if(!$this->authenticated()){
       if($this->database->getOption("intrusion_save")){
         if($this->database->getOption("intrusion_save_info")){
@@ -399,8 +428,11 @@ class user{
         $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `page`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :page, :data, :ora, :ip, :servervar)";
         $this->database->exec($sql, false, $params);
       }
-      $this->tools->redirect($this->database->getOption("web_url"));
+      if($redirect){
+        $this->tools->redirect($this->database->getOption("web_url"));
+      }
    }
+   $this->tools->profiler_stop();
   }
 
   public function requireRole($role, $adminGranted=true){
@@ -466,6 +498,7 @@ class user{
   }
 
   public function login($name, $password, $remember_me, $twofa=null){
+    $this->tools->profiler_start("Login");
     if(!empty($name)){
       if(!empty($password)){
         try {
@@ -479,20 +512,20 @@ class user{
           $this->auth->loginWithUsername($name, $password, $rememberDuration);
         }
         catch (\Delight\Auth\InvalidEmailException $e) {
+          $this->tools->profiler_stop();
           return ["status" => "error", "code" => 010, "text" => "Wrong email address"];
-          die('Wrong email address');
         }
         catch (\Delight\Auth\InvalidPasswordException $e) {
+          $this->tools->profiler_stop();
           return ["status" => "error", "code" => 011, "text" => "Wrong password"];
-          die('Wrong password');
         }
         catch (\Delight\Auth\EmailNotVerifiedException $e) {
+          $this->tools->profiler_stop();
           return ["status" => "error", "code" => 012, "text" => "Email not verified"];
-          die('Email not verified');
         }
         catch (\Delight\Auth\TooManyRequestsException $e) {
+          $this->tools->profiler_stop();
           return ["status" => "error", "code" => 020, "text" => "Too many requests"];
-          die('Too many requests');
         }
         if($this->auth->isLoggedIn()){
           $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
@@ -506,20 +539,25 @@ class user{
             $_SESSION['_user_hidden'] = $user[0]["hidden"];
             $_SESSION['_user_disabled'] = $user[0]["disabled"];
             $_SESSION['_user_chief'] = $user[0]["chief"];
+            $this->tools->profiler_stop();
             return true;
           }
         }
       } else {
+        $this->tools->profiler_stop();
         return ["status" => "error", "code" => 002];
       }
     } else {
+      $this->tools->profiler_stop();
       return ["status" => "error", "code" => 001];
     }
   }
   public function log($action, $changed, $editor, $date, $time){
+    $this->tools->profiler_start("Log");
     $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":date" => $date, ":time" => $time];
     $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `date`, `time`) VALUES (NULL, :action, :changed, :editor, :date, :time)";
     $this->database->exec($sql, false, $params);
+    $this->tools->profiler_stop();
   }
 
   public function logout(){
@@ -534,6 +572,7 @@ class user{
   }
 
   public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inserted_by){
+    $this->tools->profiler_start("Add user");
     $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
     if($userId){
       $hidden = $hidden ? 1 : 0;
@@ -546,15 +585,19 @@ class user{
         $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
       }
       $this->log("User created", $userId, $inserted_by, date("d/m/Y"), date("H:i.s"));
+      $this->tools->profiler_stop();
       return $userId;
     } else {
+      $this->tools->profiler_stop();
       return $false;
     }
   }
 
   public function remove_user($id, $removed_by){
+    $this->tools->profiler_start("Remove user");
     $this->database->exec("DELETE FROM `%PREFIX%_users` WHERE `id` = :id", true, [":id" => $id], "DELETE FROM `%PREFIX%_profiles` WHERE `id` = :id");
     $this->log("User removed", null, $removed_by, date("d/m/Y"), date("H:i.s"));
+    $this->tools->profiler_stop();
   }
 }
 
@@ -638,7 +681,7 @@ function init_class($enableDebugger=true, $headers=true){
   global $tools, $database, $user, $translations;
   if(!isset($tools) && !isset($database) && !isset($translations)){
     $database = new database();
-    $tools = new tools($database->getOption("check_cf_ip"));
+    $tools = new tools($database->getOption("check_cf_ip"), $enableDebugger);
     $user = new user($database, $tools);
     $translations = new translations();
   }
@@ -655,11 +698,13 @@ function init_class($enableDebugger=true, $headers=true){
   //var_dump($user);
   //exit();
   if($enableDebugger){
-    //if($user->requireRole(Role::DEVELOPER)){
+    if($user->requireRole(Role::DEVELOPER)){
       Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-    //} else {
-      //Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-    //}
+      Profiler::enable();
+      Debugger::getBar()->addPanel( new Netpromotion\Profiler\Adapter\TracyBarAdapter() );
+    } else {
+      Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+    }
   }
   bdump(get_included_files());
   bdump($translations->loaded_translations);
@@ -681,4 +726,14 @@ function s($string, $echo=true, $htmlAllowed=false, $htmlPurifierOptions=[]){
   } else {
     return $tools->sanitize($string, $htmlAllowed, $htmlPurifierOptions);
   }
+}
+
+function p_start($name=null){
+  global $tools;
+  $tools->profiler_start($name);
+}
+
+function p_stop($name=null){
+  global $tools;
+  $tools->profiler_stop($name);
 }

@@ -16,19 +16,19 @@
     <div id="list"></div>
 {% if user.full_viewer == false %}
 <script>
-$( "#list" ).load("resources/ajax/ajax_list.php");
 $(document).ready(function() {
+  $( "#list" ).load("resources/ajax/ajax_list.php?"+Math.random());
   setInterval(function() {
-    $( "#list" ).load("resources/ajax/ajax_list.php");
+    $( "#list" ).load("resources/ajax/ajax_list.php?"+Math.random());
   }, 10000);
 });
 </script>
 {% elseif user.full_viewer == true %}
 <script>
-$( "#list" ).load("resources/ajax/ajax_admin_list.php");
 $(document).ready(function() {
+  $( "#list" ).load("resources/ajax/ajax_admin_list.php?"+Math.random());
   setInterval(function() {
-    $( "#list" ).load("resources/ajax/ajax_admin_list.php");
+    $( "#list" ).load("resources/ajax/ajax_admin_list.php?"+Math.random());
   }, 10000);
 });
 </script>

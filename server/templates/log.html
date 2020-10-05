@@ -6,29 +6,12 @@
     <br>
     <div id="list"></div>
     <script>
-      $.get( "resources/ajax/ajax_log.php", function( data ) {
-         $( "#list" ).html( data );
-         console.log( "Loaded list." );
-      });
-      $(document).ready(function() {
-
-        setInterval(function() {
-          $.get( "resources/ajax/ajax_log.php", function( data ) {
-             $( "#list" ).html( data );
-          });
-        }, 10000);
-
-      });
-/*
-      check();
-      $(document).ready(function() {
-
-        setInterval(function() {
-          check();
-        }, 10000);
-
-      });
-      */
+$(document).ready(function() {
+  $( "#list" ).load("resources/ajax/ajax_log.php?"+Math.random());
+  setInterval(function() {
+    $( "#list" ).load("resources/ajax/ajax_log.php?"+Math.random());
+  }, 10000);
+});
     </script>
     <br>
     <br>

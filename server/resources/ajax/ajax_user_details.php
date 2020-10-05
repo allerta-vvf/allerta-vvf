@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$user->requirelogin();
+$user->requirelogin(false);
 
 $risultato = $database->exec('SELECT * FROM `%PREFIX%_profiles` WHERE id = :id', true, array(":id" => $_GET['user'])); // Pesco i dati della table
 

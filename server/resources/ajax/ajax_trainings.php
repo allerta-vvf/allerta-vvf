@@ -1,7 +1,7 @@
 <?php
 include_once("../../core.php");
 init_class();
-$user->requirelogin();
+$user->requirelogin(false);
 
 $impostazioni['edit'] = true;
 $impostazioni['delete'] = true;
