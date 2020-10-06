@@ -1,10 +1,22 @@
 window.$ = window.jQuery = $;
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import '../node_modules/font-awesome/css/font-awesome.css';
-import './font-awesome.scss'
+import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+import '../node_modules/@fortawesome/fontawesome-free/js/all.js'; // thanks to https://medium.com/@bshelling/use-fontawesome-with-webpack-24f629d7b962 and https://stackoverflow.com/questions/52376720/how-to-make-font-awesome-5-work-with-webpack
 import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
 import pickadate from 'pickadate'
+
+import L from 'leaflet';
+import 'leaflet.locatecontrol';
+import '../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css'
+import '../node_modules/leaflet/dist/leaflet.css';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'resources/dist/marker-icon-2x.png',
+  iconUrl: 'resources/dist/marker-icon.png',
+  shadowUrl: 'resources/dist/marker-shadow.png',
+});
 
 $( document ).ready(function() {
     // From https://github.com/Wruczek/Bootstrap-Cookie-Alert/blob/gh-pages/cookiealert.js

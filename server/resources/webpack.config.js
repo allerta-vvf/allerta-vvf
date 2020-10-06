@@ -1,5 +1,6 @@
 const path = require('path');
 var webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './src/src.js',
@@ -15,12 +16,7 @@ module.exports = {
       },
       {
         test: /\.s(a|c)ss$/,
-        use: ['style-loader', {
-          loader:'css-loader',
-          options: {
-               url: false
-          }
-       }, 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: require.resolve('jquery'),
@@ -37,7 +33,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(woff(2)?|ttf|eot|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
             loader: 'file-loader',
@@ -51,6 +47,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.ProvidePlugin({
         jQuery: 'jquery',
         $: 'jquery',

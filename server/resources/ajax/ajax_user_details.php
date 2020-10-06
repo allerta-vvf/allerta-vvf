@@ -230,54 +230,7 @@ h1 small {
 .i-code {
   display: none;
 }
-@font-face {
-      font-family: 'test';
-      src: url('./resources/font/test.eot?93129191');
-      src: url('./resources/font/test.eot?93129191#iefix') format('embedded-opentype'),
-           url('./resources/font/test.woff?93129191') format('woff'),
-           url('./resources/font/test.ttf?93129191') format('truetype'),
-           url('./resources/font/test.svg?93129191#test') format('svg');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-
-    .demo-icon
-    {
-      font-family: "test";
-      font-style: normal;
-      font-weight: normal;
-      speak: none;
-
-      display: inline-block;
-      text-decoration: inherit;
-      width: 1em;
-      margin-right: .2em;
-      text-align: center;
-      /* opacity: .8; */
-
-      /* For safety - reset parent styles, that can break glyph codes*/
-      font-variant: normal;
-      text-transform: none;
-
-      /* fix buttons height, for twitter bootstrap */
-      line-height: 1em;
-
-      /* Animation center compensation - margins should be symmetric */
-      /* remove if not needed */
-      margin-left: .2em;
-
-      /* You can be more comfortable with increased icons size */
-      /* font-size: 120%; */
-
-      /* Font smoothing. That was taken from TWBS */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-
-      /* Uncomment for 3D effect */
-      /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
-    }
-     </style>
+</style>
 <style>
 th, td {
     border: 1px solid grey;
