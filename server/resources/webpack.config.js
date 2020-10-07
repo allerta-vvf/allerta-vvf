@@ -3,9 +3,12 @@ var webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './src/src.js',
+  entry: {
+    main: path.resolve(__dirname, './src/main.js'),
+    maps: path.resolve(__dirname, 'src/maps.js')
+  },
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
@@ -33,7 +36,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(gif|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
             loader: 'file-loader',
@@ -43,15 +46,28 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/',    // where the fonts will go
+            publicPath: 'resources/dist/fonts'       // override the default path
+          }
+        }]
       }
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.ProvidePlugin({
-        jQuery: 'jquery',
         $: 'jquery',
         popper: 'popper.js'
     }),
   ],
+  optimization: {
+    mergeDuplicateChunks: true
+  },
 };

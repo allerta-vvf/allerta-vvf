@@ -7,6 +7,7 @@ init_class(false);
 		<title>Location picker example</title>
 
 		<script src="resources/dist/main.js"></script>
+		<script src="resources/dist/maps.js"></script>
 	</head>
 	<body>
 		<style>
@@ -55,7 +56,7 @@ function load_map() {
 	    }
     });
 
-	var lc = new L.Control.CustomLocate({ flyTo: true, icon: "fa fa-map-marker-alt", drawCircle: false }).addTo(map);
+	var lc = new L.Control.CustomLocate({ icon: "fa fa-map-marker" }).addTo(map);
 }
 
 function chooseAddr(lat1, lng1, lat2, lng2, osm_type, lat, lng) {
@@ -63,6 +64,7 @@ function chooseAddr(lat1, lng1, lat2, lng2, osm_type, lat, lng) {
 	var loc2 = new L.LatLng(lat2, lng2);
 	var bounds = new L.LatLngBounds(loc1, loc2);
 	console.log(lat1, lng1, lat2, lng2, osm_type);
+	set_marker(new L.LatLng(lat, lng));
 	if (feature) {
 		map.removeLayer(feature);
 	}
@@ -75,7 +77,6 @@ function chooseAddr(lat1, lng1, lat2, lng2, osm_type, lat, lng) {
 		feature = L.polyline( [loc1, loc4, loc2, loc3, loc1], {color: 'red'}).addTo(map);
 		map.fitBounds(bounds);
 	}
-	set_marker(new L.LatLng(lat, lng));
 }
 
 function addr_search() {
@@ -129,6 +130,13 @@ div#results {
 	font-style: sans-serif;
 	color: black;
 	font-size: 75%;
+}
+.fa {
+	vertical-align: middle;
+	font-size: 25px;
+}
+.leaflet-pane.leaflet-shadow-pane {
+	display: none;
 }
 </style>
 	</body>
