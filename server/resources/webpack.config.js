@@ -1,6 +1,7 @@
 const path = require('path');
 var webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -66,6 +67,11 @@ module.exports = {
         $: 'jquery',
         popper: 'popper.js'
     }),
+    new workboxPlugin.GenerateSW({
+      swDest: 'sw.js',
+      clientsClaim: true,
+      skipWaiting: true,
+    })
   ],
   optimization: {
     mergeDuplicateChunks: true
