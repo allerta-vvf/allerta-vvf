@@ -67,10 +67,18 @@ module.exports = {
         $: 'jquery',
         popper: 'popper.js'
     }),
-    new workboxPlugin.GenerateSW({
+    new workboxPlugin.InjectManifest({
+      swSrc: './src/sw.js',
       swDest: 'sw.js',
-      clientsClaim: true,
-      skipWaiting: true,
+      include: [
+        /\.html$/,
+        /\.js$/,
+        /\.css$/,
+        /\.woff2$/,
+        /\.jpg$/,
+        /\.png$/
+      ],
+      maximumFileSizeToCacheInBytes: 100 * 1024 * 1024
     })
   ],
   optimization: {
