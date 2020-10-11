@@ -11,6 +11,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/resources/dist/',
   },
   module: {
     rules: [
@@ -54,8 +55,8 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'fonts/',    // where the fonts will go
-            publicPath: 'resources/dist/fonts'       // override the default path
+            outputPath: 'fonts/',
+            publicPath: 'resources/dist/fonts'
           }
         }]
       }
@@ -69,15 +70,7 @@ module.exports = {
     }),
     new workboxPlugin.InjectManifest({
       swSrc: './src/sw.js',
-      swDest: 'sw.js',
-      include: [
-        /\.html$/,
-        /\.js$/,
-        /\.css$/,
-        /\.woff2$/,
-        /\.jpg$/,
-        /\.png$/
-      ],
+      swDest: '../../sw.js',
       maximumFileSizeToCacheInBytes: 100 * 1024 * 1024
     })
   ],
