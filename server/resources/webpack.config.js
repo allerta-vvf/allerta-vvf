@@ -1,15 +1,18 @@
 const path = require('path');
 var webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const workboxPlugin = require('workbox-webpack-plugin');
+//const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
     main: path.resolve(__dirname, './src/main.js'),
-    maps: path.resolve(__dirname, 'src/maps.js')
+    maps: path.resolve(__dirname, './src/maps.js'),
+    sw: path.resolve(__dirname, './src/sw.js'),
   },
   output: {
-    filename: '[name].js',
+    filename: (pathData) => {
+      return pathData.chunk.name === 'sw' ? '../../sw.js': '[name].js';
+    },
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/resources/dist/',
   },
@@ -67,11 +70,6 @@ module.exports = {
     new webpack.ProvidePlugin({
         $: 'jquery',
         popper: 'popper.js'
-    }),
-    new workboxPlugin.InjectManifest({
-      swSrc: './src/sw.js',
-      swDest: '../../sw.js',
-      maximumFileSizeToCacheInBytes: 100 * 1024 * 1024
     })
   ],
   optimization: {
