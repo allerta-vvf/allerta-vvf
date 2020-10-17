@@ -6,55 +6,56 @@ $user->requirelogin(false);
 $risultato = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
 $hidden = $user->hidden();
-?>
-<style>
 
-
-th, td {
-    border: 1px solid grey;
-    border-collapse: collapse;
- padding: 5px;
-}
-
-#href {
- outline: none;
- cursor: pointer;
- text-align: center;
- text-decoration: none;
- font: bold 12px Arial, Helvetica, sans-serif;
- color: #fff;
- padding: 10px 20px;
- border: solid 1px #0076a3;
- background: #0095cd;
-}
-
- table {
-   box-shadow: 2px 2px 25px rgba(0,0,0,0.5);
-    border-radius: 15px;
-  margin: auto;
- }
-
-
-</style>
-<div style="overflow-x:auto;">
-<table style="width: 90%; text-align:center;">
-    <tr>
-     <th><?php t("Name"); ?></th>
-     <th><?php t("Available"); ?></th>
-     <?php
-   foreach($risultato as $row){
-     if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
-      echo "<tr><td>";
-      if ($row['chief'] == 1) {echo "<img src='./resources/images/red_helmet.png' width='20px'>   ";} else{echo "<img src='./resources/images/black_helmet.png' width='20px'>   ";}
-      if((time()-$row["online_time"])<=30){
-          echo "<u>".$user->nameById($row["id"])."</u></td><td>";
+$response = [];
+foreach($risultato as $row){
+  if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
+    if(isset($_GET["only_data"])){
+      if($user->requireRole(Role::FULL_VIEWER)){
+        $response[] = [
+          "id" => $row["id"],
+          "available" => $row["available"],
+          "chief" => $row['chief'],
+          "online" => (time()-$row["online_time"])<=30 ? 1 : 0,
+          "driver" => $row['autista'],
+          "phone" => $row['telefono'],
+          "services" => $row['services'],
+          "availability_minutes" => $row['availability_minutes']
+        ];
       } else {
-          echo "".$user->nameById($row["id"])."</td><td>";
+        $response[] = [
+          "id" => $row["id"],
+          "available" => $row["available"],
+          "online" => (time()-$row["online_time"])<=30 ? 1 : 0
+        ];
       }
-      if ($row['available'] == 1) {echo "<i class='fa fa-check' style='color:green'></i>";} else{echo "<i class='fa fa-times'  style='color:red'></i>";};
-      echo  "</td></tr>";
+    } else {
+      if($user->requireRole(Role::FULL_VIEWER)){
+        $name = $user->nameById($row["id"]);
+        $name_encoded = urlencode($name);
+        $functionName = $row["available"] ? "Deactivate" : "Activate";
+        $firstCell = $row["chief"] ? "<a onclick='$functionName(".$row["id"].");'><img src='./resources/images/red_helmet.png' width='20px'>$name</a>" : "<a onclick='$callFunction(".$row["id"].");'><img src='./resources/images/black_helmet.png' width='20px'>$name</a>";
+        $secondCell = $row["available"] ? "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-check' style='color:green'></i></a>" : "<a onclick='$callFunction(".$row["id"].");'><i class='fa fa-times'  style='color:red'></i></a>";
+        $response[] = [
+          (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
+          $secondCell,
+          $row['autista'] ? "<img src='./resources/images/wheel.png' width='20px'>" : "",
+          $row['telefono'] ? "<a href='tel:+".$row['telefono']."'><i class='fa fa-phone'></i></a>" : "",
+          $row['telefono'] ? "<a href='https://api.whatsapp.com/send?phone=+".$row['telefono']."text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
+          $row['services'],
+          $row['availability_minutes'],
+          "<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>"
+        ];
+      } else {
+        $response[] = [
+          "id" => $row["id"],
+          "available" => $row["available"],
+          "online" => (time()-$row["online_time"])<=30 ? 1 : 0
+        ];
       }
-     }
-     ?>
-   </table>
-</div>
+    }
+  }
+}
+header("Content-type: application/json");
+print(json_encode($response));
+?>

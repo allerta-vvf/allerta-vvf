@@ -6,6 +6,13 @@ import './font-awesome.scss';
 import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
 import pickadate from 'pickadate'
 
+$( document ).ajaxError(function(event, xhr, settings, error) {
+    console.error("Error requesting content: "+error+" - status code "+xhr.status);
+    console.log(event);
+    console.log(xhr);
+    console.log(settings);
+});
+
 $( document ).ready(function() {
     // From https://github.com/Wruczek/Bootstrap-Cookie-Alert/blob/gh-pages/cookiealert.js
     var cookieAlert = document.querySelector(".cookiealert");
@@ -59,3 +66,20 @@ if ('serviceWorker' in navigator) {
       });
     });
 }
+
+function loadTable(table_page){
+    $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
+        $("#table_body").empty();
+        $.each(data, function(num, item) {
+          var row = document.createElement("tr");
+          $.each(item, function(num, i) {
+            var cell = document.createElement("td");
+            cell.innerHTML = i;
+            row.appendChild(cell);
+          });
+          document.getElementById("table_body").appendChild(row);
+        });
+        caches.open('static-1').then((cache) => { cache.put('/table_'+table_page+'.json', new Response(xhr.responseText)) });
+    });
+}
+window.loadTable = loadTable;
