@@ -45,7 +45,7 @@ jobs:
         npm install
         npm update -g webpack webpack-cli
         webpack --version
-        webpack -p
+        webpack --mode production
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
