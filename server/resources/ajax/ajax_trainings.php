@@ -23,8 +23,8 @@ foreach($risultato as $row){
     $others_people,
     s($row['luogo'],false,true),
     s($row['note'],false,true),
-    $database->getOption("training_edit") ? "<a href='edit_service.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
-    $database->getOption("training_remove") ? "<a href='edit_service.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
+    $database->getOption("training_edit") ? "<a href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
+    $database->getOption("training_remove") ? "<a href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
   ];
 }
 header("Content-type: application/json");

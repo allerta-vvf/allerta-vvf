@@ -58,7 +58,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
       if(empty($id)){
           $tools->redirect("accessdenied.php");
       } elseif (!$database->exists("trainings", $id)){
-          $tools->redirect("accessdenied.php");
+          //$tools->redirect("accessdenied.php");
       }
   }
   loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training",false))]);
