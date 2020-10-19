@@ -472,6 +472,8 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_time', :cron_job_time, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
 $option_check_cf_ip");
         mt_srand(10);
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        
