@@ -1,7 +1,6 @@
 const path = require('path');
 var webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-//const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -16,8 +15,25 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/resources/dist/',
   },
+  resolve: {
+    alias: {
+      // Force all modules to use the same jquery version.
+      'jquery': path.join(__dirname, 'node_modules/jquery/src/jquery')
+    }
+  },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-transform-runtime']
+          }
+        }
+      },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
@@ -31,13 +47,6 @@ module.exports = {
         loader: 'expose-loader',
         options: {
           exposes: ['$', 'jQuery'],
-        },
-      },
-      {
-        test: require.resolve('pickadate'),
-        loader: 'expose-loader',
-        options: {
-          exposes: ['pickadate'],
         },
       },
       {

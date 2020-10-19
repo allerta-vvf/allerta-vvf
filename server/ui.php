@@ -16,6 +16,16 @@ $twig = new \Twig\Environment($loader, [
     //'cache' => 'compilation'
 ]);
 $twig->addFilter($filter);
+$function_option = new \Twig\TwigFunction('option', function ($option) {
+  global $database;
+  return $database->getOption($option);
+});
+$twig->addFunction($function_option);
+$username_option = new \Twig\TwigFunction('username', function ($id) {
+  global $user;
+  return $user->nameById($id);
+});
+$twig->addFunction($username_option);
 p_stop();
 
 $template = NULL;

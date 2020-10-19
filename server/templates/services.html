@@ -61,15 +61,40 @@
     <a id='add' href="edit_service.php?add">{{ 'Add service'|t }}</a>
     </p>
     <br>
-    <div id="list"></div>
-    <script>
-$(document).ready(function() {
-  $( "#list" ).load("resources/ajax/ajax_services.php?"+Math.random());
-  setInterval(function() {
-    $( "#list" ).load("resources/ajax/ajax_services.php?"+Math.random());
-  }, 10000);
-});
-    </script>
+    <div style="overflow-x:auto;">
+      <table style="width: 90%; text-align:center;">
+        <thead>
+          <tr>
+            <th>{{ 'Date'|t }}</th>
+            <th>{{ 'Code'|t }}</th>
+            <th>{{ 'Start time'|t }}</th>
+            <th>{{ 'End time'|t }}</th>
+            <th>{{ 'Chief'|t }}</th>
+            <th>{{ 'Drivers'|t }}</th>
+            <th>{{ 'People'|t }}</th>
+            <th>{{ 'Place'|t }}</th>
+            <th>{{ 'Notes'|t }}</th>
+            <th>{{ 'Type'|t }}</th>
+            {% if option('service_edit') %}
+            <th>{{ 'Edit'|t }}</th>
+            {% endif %}
+            {% if option('service_remove') %}
+            <th>{{ 'Remove'|t }}</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody id="table_body">
+        </tbody>
+      </table>
+      <script>
+      $( document ).ready(function() {
+        window.loadTable("services");
+        setInterval(function() {
+          window.loadTable("services");
+        }, 10000);
+      });
+      </script>
+    </div>
     <br>
     <br>
 {% endblock %}

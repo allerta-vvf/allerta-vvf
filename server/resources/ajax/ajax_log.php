@@ -26,7 +26,6 @@ foreach($risultato as $row){
       $editorName,
       $row['date']." ".$row['time']
     ];
-    $changedName . "</td><td>" . $editorName ."</td><td>" . $row['date'] . " - ore " . $row['time'] . "</tr>";
   }
 }
 header("Content-type: application/json");

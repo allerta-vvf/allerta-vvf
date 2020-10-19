@@ -4,7 +4,9 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './font-awesome.scss';
 import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
-import pickadate from 'pickadate'
+import 'bootstrap-datepicker';
+import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
+import 'time-input-polyfill/auto';
 
 $( document ).ajaxError(function(event, xhr, settings, error) {
     console.error("Error requesting content: "+error+" - status code "+xhr.status);
@@ -73,9 +75,11 @@ function loadTable(table_page){
         $.each(data, function(num, item) {
           var row = document.createElement("tr");
           $.each(item, function(num, i) {
-            var cell = document.createElement("td");
-            cell.innerHTML = i;
-            row.appendChild(cell);
+            if(i !== null){
+              var cell = document.createElement("td");
+              cell.innerHTML = i;
+              row.appendChild(cell);
+            }
           });
           document.getElementById("table_body").appendChild(row);
         });

@@ -236,6 +236,8 @@ class database{
         $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
         file_put_contents($this->options_cache_file, serialize( $this->options ));
       }
+    } else {
+      $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
     }
   }
 
@@ -291,7 +293,7 @@ class database{
       //return empty($option) ? "" : $option[0]["value"];
       foreach($this->options as $option){
         if($name == $option["name"]){
-          return empty($option["value"]) ? "" : $option["value"];
+          return empty($option["value"]) ? false : $option["value"];
         }
       }
     }
@@ -342,6 +344,7 @@ class database{
     bdump($personale);
     $increment = implode(",", $increment);
     bdump($increment);
+    $data = date('Y-m-d H:i:s', strtotime($data));
     $sql = "INSERT INTO `%PREFIX%_services` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `increment`, `inserted_by`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :increment, :inserted_by);";
     $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":increment" => $increment, ":inserted_by" => $inserted_by]);
     $this->increment($increment);
@@ -363,6 +366,7 @@ class database{
     bdump($personale);
     $increment = implode(",", $increment);
     bdump($increment);
+    $data = date('Y-m-d H:i:s', strtotime($data));
     $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `increment`, `inserted_by`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :increment, :inserted_by);";
     $this->exec($sql, false, [":data" => $data, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":capo" => $capo, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":increment" => $increment, ":inserted_by" => $inserted_by]);
     $this->increment_trainings($increment);
