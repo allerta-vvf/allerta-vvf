@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './font-awesome.scss';
 import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
 import 'bootstrap-datepicker';
+import '../node_modules/bootstrap-toggle/css/bootstrap-toggle.css';
+import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
 import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 import 'time-input-polyfill/auto';
 
