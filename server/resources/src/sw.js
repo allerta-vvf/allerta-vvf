@@ -1,5 +1,3 @@
-const expectedCaches = ['static-v1'];
-
 let cacheVersion = 1
 let cacheName = "static-"+cacheVersion
 
@@ -51,23 +49,9 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('activate', event => {
-    // https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle#updates
-    // delete any caches that aren't in expectedCaches
-    // which will get rid of old versions
-    event.waitUntil(
-      caches.keys().then(keys => Promise.all(
-        keys.map(key => {
-          if (!expectedCaches.includes(key)) {
-            return caches.delete(key);
-          }
-        })
-      )).then(() => {
-        console.log('New service worker now ready to handle fetches!');
-      })
-    );
     event.waitUntil(caches.open(cacheName)
     .then((openCache) => {
         return openCache.addAll(urls);
     })
     .catch(err => console.error(err)))
-  });
+});
