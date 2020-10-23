@@ -71,21 +71,35 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+function fillTable(data){
+  $("#table_body").empty();
+  $.each(data, function(num, item) {
+    var row = document.createElement("tr");
+    $.each(item, function(num, i) {
+      if(i !== null){
+        var cell = document.createElement("td");
+        cell.innerHTML = i;
+        row.appendChild(cell);
+      }
+    });
+    document.getElementById("table_body").appendChild(row);
+  });
+}
+
 function loadTable(table_page){
     $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
-        $("#table_body").empty();
-        $.each(data, function(num, item) {
-          var row = document.createElement("tr");
-          $.each(item, function(num, i) {
-            if(i !== null){
-              var cell = document.createElement("td");
-              cell.innerHTML = i;
-              row.appendChild(cell);
-            }
+      fillTable(data);
+      caches.open('tables-1').then((cache) => { cache.put('/table_'+table_page+'.json', new Response(xhr.responseText)) });
+    }).fail(function() {
+      caches.open('tables-1').then(cache => {
+        cache.match("/table_"+table_page+".json").then(response => {
+          response.json().then(data => {
+            fillTable(data);
+            console.log("Table loaded from cache");
           });
-          document.getElementById("table_body").appendChild(row);
         });
-        caches.open('static-1').then((cache) => { cache.put('/table_'+table_page+'.json', new Response(xhr.responseText)) });
+      });
     });
 }
+window.fillTable = fillTable;
 window.loadTable = loadTable;
