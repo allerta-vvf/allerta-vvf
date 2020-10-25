@@ -63,14 +63,14 @@ jobs:
         npm init --yes
         npm install --save-dev cypress
 
-    - name: Mysql test and webserver start
+    - name: Mysql test
       run: |
         mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
-        nohup "php -S 0.0.0.0:8080" > /dev/null 2>&1 &
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
+        start: php -S 0.0.0.0:8080
         browser: chrome
         record: true
         working-directory: server
