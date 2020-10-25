@@ -86,19 +86,33 @@ function fillTable(data){
   });
 }
 
+var offline = false;
 function loadTable(table_page){
     $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
       fillTable(data);
-      caches.open('tables-1').then((cache) => { cache.put('/table_'+table_page+'.json', new Response(xhr.responseText)) });
+      var headers = new Headers();
+      headers.append('date', Date.now());
+      caches.open('tables-1').then((cache) => {
+        cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
+      });
+      if(window.offline){ // if xhr request successful, client is online
+        $("#offline_alert").hide(400);
+        window.offline = false;
+      }
     }).fail(function() {
       caches.open('tables-1').then(cache => {
         cache.match("/table_"+table_page+".json").then(response => {
           response.json().then(data => {
             fillTable(data);
             console.log("Table loaded from cache");
+            $("#offline_update").text(new Date(parseInt(response.headers.get("date"))).toLocaleString());
           });
         });
       });
+      if(!window.offline){ // if xhr request fails, client is offline
+        $("#offline_alert").show(400);
+        window.offline = true;
+      }
     });
 }
 window.fillTable = fillTable;

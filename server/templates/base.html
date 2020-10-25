@@ -348,6 +348,9 @@
         </div>
         <!-- /Menu -->
       {% endblock %}
+        <div class="alert alert-danger m-3" id="offline_alert" style="display: none" role="alert">
+          <b>{{ 'You are offline'|t }}.</b> {{ 'Last update'|t }}: <p style="display: inline" id="offline_update"></p>
+        </div>
         <!-- Content -->
         <div id="content">{% block content %}{% endblock %}</div>
         <!-- /Content -->
