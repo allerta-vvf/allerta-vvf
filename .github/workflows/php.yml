@@ -67,8 +67,6 @@ jobs:
       run: |
         mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
         whereis php
-        ls /usr/bin | grep php
-        ls /bin | grep php
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
