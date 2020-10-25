@@ -434,6 +434,8 @@ class user{
       }
       if($redirect){
         $this->tools->redirect($this->database->getOption("web_url"));
+      } else {
+        exit();
       }
    }
    $this->tools->profiler_stop();
