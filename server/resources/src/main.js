@@ -10,29 +10,6 @@ import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
 import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 import 'time-input-polyfill/auto';
 
-// Cookie functions from w3schools
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === ' ') {
-          c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-          return c.substring(name.length, c.length);
-      }
-  }
-  return "";
-}
-
 $( document ).ajaxError(function(event, xhr, settings, error) {
     console.error("Error requesting content: "+error+" - status code "+xhr.status);
     console.log(event);
@@ -61,9 +38,30 @@ $( document ).ready(function() {
         // dispatch the accept event
         window.dispatchEvent(new Event("cookieAlertAccept"))
     });
+    // Cookie functions from w3schools
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 });
-if (getCookie("authenticated")) {
-  if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then(registration => {
         console.log('SW registered: ', registration);
@@ -71,7 +69,6 @@ if (getCookie("authenticated")) {
         console.log('SW registration failed: ', registrationError);
       });
     });
-  }
 }
 
 function fillTable(data){
