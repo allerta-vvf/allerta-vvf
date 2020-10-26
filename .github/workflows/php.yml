@@ -31,12 +31,11 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug, pcov
-        #tools: php-cs-fixer, phpunit
 
-    - name: webserver
+    - name: Start webserver
       run: |
         nohup php -S 0.0.0.0:8080 &
-        sleep 5 && curl 127.0.0.1:8080 && exit
+        sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
 
     - name: Setup NodeJS
       uses: actions/setup-node@v1
@@ -73,7 +72,6 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
-        start: php -S 0.0.0.0:8080
         browser: chrome
         record: true
         working-directory: server
