@@ -69,7 +69,7 @@ textarea {
   <div class="container">
     <label><b>{{ 'Service day'|t }}</b></label>
     <div class="input-group">
-      <input placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker" value="{{ values.data }}" type="text" class="form-control">
+      <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker" value="{{ values.data }}" type="text" class="form-control">
       <div class="input-group-addon">
           <span class="glyphicon glyphicon-th"></span>
       </div>
@@ -92,7 +92,7 @@ textarea {
     <br>
     {% for user in service.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-      <input class="form-check-input capo capo-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]' value='{{ user.id }}'>
+      <input aria-label="{{ username(user.id) }}" class="form-check-input capo capo-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]' value='{{ user.id }}'>
       <label class="form-check-label" for="capo-{{ user.id }}">
         {{ username(user.id) }}
       </label>
@@ -109,7 +109,7 @@ textarea {
     {% for user in service.personale %}
     {% if user.autista == 1 %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-      <input class="form-check-input autisti autisti-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='autisti[]' value='{{ user.id }}'>
+      <input aria-label="{{ username(user.id) }}" class="form-check-input autisti autisti-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='autisti[]' value='{{ user.id }}'>
       <label class="form-check-label" for="autisti-{{ user.id }}">
         {{ username(user.id) }}
       </label>
@@ -121,7 +121,7 @@ textarea {
     <br>
     {% for user in service.personale %}
     <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-      <input class="form-check-input personale personale-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]' value='{{ user.id }}'>
+      <input aria-label="{{ username(user.id) }}" class="form-check-input personale personale-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]' value='{{ user.id }}'>
       <label class="form-check-label" for="personale-{{ user.id }}">
         {{ username(user.id) }}
       </label>
