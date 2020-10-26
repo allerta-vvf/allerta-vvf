@@ -15,8 +15,14 @@ jobs:
       matrix:
         php-versions: ['7.4']
     name: PHP ${{ matrix.php-versions }}
+    services:
+      devserver:
+        volumes:
+          - ./server:/var/www
+        image: php:7.4-apache
+        ports:
+          - 8080:80
     steps:
-
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -25,6 +31,8 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
 
+    - name: Test webserver
+      run: curl 127.0.0.1:8080 && exit
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -63,13 +71,9 @@ jobs:
         npm init --yes
         npm install --save-dev cypress
 
-    - name: Mysql test and webserver start
-      run: |
-        mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
-        nohup "php -S 0.0.0.0:8080" > /dev/null 2>&1 &
+    - name: Mysql test
+      run: mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
 
-    - name: Test webserver
-      run: curl 127.0.0.1:8080 && exit
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
