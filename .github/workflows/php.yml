@@ -24,10 +24,6 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
 
-    - name: webserver
-      run: |
-        nohup "php -S 0.0.0.0:8080" &
-        curl 127.0.0.1:8080 && exit
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -36,6 +32,11 @@ jobs:
         ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug, pcov
         #tools: php-cs-fixer, phpunit
+
+    - name: webserver
+      run: |
+        nohup php -S 0.0.0.0:8080 &
+        sleep 5 && curl 127.0.0.1:8080 && exit
 
     - name: Setup NodeJS
       uses: actions/setup-node@v1
