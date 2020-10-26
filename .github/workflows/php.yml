@@ -68,6 +68,8 @@ jobs:
         mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
         nohup "php -S 0.0.0.0:8080" > /dev/null 2>&1 &
 
+    - name: Test webserver
+      run: curl 127.0.0.1:8080 && exit
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
