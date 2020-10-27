@@ -72,5 +72,7 @@ return [
     "Thanks, %s, you have given your availability in case of alert." => "Thanks, %s, you have given your availability in case of alert.",
     "Thanks, %s, you have removed your availability in case of alert." => "Thanks, %s, you have removed your availability in case of alert.",
     "Add service" => "Add service",
-    "Add training" => "Add training"
+    "Add training" => "Add training",
+    "You are offline" => "You are offline",
+    "Last update" => "Last update"
 ];

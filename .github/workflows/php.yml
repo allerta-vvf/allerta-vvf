@@ -16,7 +16,6 @@ jobs:
         php-versions: ['7.4']
     name: PHP ${{ matrix.php-versions }}
     steps:
-
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -32,7 +31,11 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug, pcov
-        #tools: php-cs-fixer, phpunit
+
+    - name: Start webserver
+      run: |
+        nohup php -S 0.0.0.0:8080 &
+        sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
 
     - name: Setup NodeJS
       uses: actions/setup-node@v1
@@ -65,15 +68,14 @@ jobs:
         npm init --yes
         npm install --save-dev cypress
 
-    - name: DB connection test
-      run: |
-        mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
+    - name: Mysql test
+      run: mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
 
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
+        browser: chrome
         record: true
-        start: php -S 0.0.0.0:8080
         working-directory: server
         tag: php-${{ matrix.php-versions }}
       env:

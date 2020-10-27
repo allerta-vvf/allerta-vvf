@@ -1,4 +1,5 @@
 <?php
+// TODO: replace this spaghetti code with other spaghetti code
 include_once("../../core.php");
 init_class();
 $user->requirelogin(false);

@@ -455,7 +455,7 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
         if($developer){
             $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::DEVELOPER);
         }
-        $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('11', 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES ('10', 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
+        $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
         $prep = $connection->prepare("
 INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'report_email', :report_email, 1, current_timestamp(), current_timestamp(), '1');
@@ -470,6 +470,10 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_code', :cron_job_code, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_enabled', 1, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_time', :cron_job_time, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
 $option_check_cf_ip");
         mt_srand(10);
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        

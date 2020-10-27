@@ -1,10 +1,10 @@
 <?php
 require_once 'ui.php';
 if($tools->validate_form_data('$post-mod', true, "add")) {
-  if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
+  if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-luogo', '$post-note', '$post-token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump("adding training");
-      $database->add_training($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+      $database->add_training($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"][0], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("trainings.php");
     } else {
       $tools->redirect("accessdenied.php");
@@ -15,7 +15,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
       bdump("editing training");
-      $database->change_training($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+      $database->change_training($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"][0], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
       $tools->redirect("trainings.php");
     } else {
       $tools->redirect("accessdenied.php");

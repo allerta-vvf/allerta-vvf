@@ -2,147 +2,7 @@
 <html>
 <head>
 <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css" integrity="sha256-QeBQ7yamXxr4+oYQSRzluL3bLLul8ZpZO4Q/AmI+rvM=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js" integrity="sha256-nzvGziG948yQHPWFJCynD1AmNPBwYWY2nVZYaDCpq4E=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/pikaday@1.7.0/plugins/pikaday.jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js" integrity="sha256-CutOzxCRucUsn6C6TcEYsauvvYilEniTXldPa6/wu0k=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/it.js" integrity="sha256-D8y560ZGsKY1LoAajKkQCG7y0Vkye361MH4yFv2K5kk=" crossorigin="anonymous"></script>
-<style>
-/* https://stackoverflow.com/a/44280071 */
-.checkbox label:after {
-  content: '';
-  display: table;
-  clear: both;
-}
-
-.checkbox .cr {
-  position: relative;
-  border: 1px solid #a9a9a9;
-  border-radius: .25em;
-  width: 1.3em;
-  height: 1.3em;
-  float: left;
-  margin-right: .5em;
-}
-
-.checkbox .cr .cr-icon {
-  position: absolute;
-  font-size: .8em;
-  line-height: 0;
-  top: 50%;
-  left: 15%;
-}
-
-.checkbox label input[type="checkbox"] {
-  display: none;
-}
-
-.checkbox label input[type="checkbox"]+.cr>.cr-icon {
-  opacity: 0;
-}
-
-.checkbox label input[type="checkbox"]:checked+.cr>.cr-icon {
-  opacity: 1;
-}
-
-.checkbox label input[type="checkbox"]:disabled+.cr {
-  opacity: .5;
-}
-</style>
-<style>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input {display:none;}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-<script>
-$(document).ready(function(){
-function zeroes(number, length) {
-    var my_string = '' + number;
-    while (my_string.length < length) {
-        my_string = '0' + my_string;
-    }
-
-    return my_string;
-}
-
-// activate datepickers for all elements with a class of `datepicker`
-$('.datepicker').pikaday({
-     i18n: {
-       months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-       weekdays: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
-       weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
-       today: 'oggi',
-       clear: 'cancella',
-     },
-     firstDay: 1 ,
-     toString(date, format) {
-        // you should do formatting based on the passed format,
-        // but we will just return 'D/M/YYYY' for simplicity
-        var day = zeroes(date.getDate(), 2);
-        var month = zeroes(date.getMonth() + 1, 2);
-        var year = date.getFullYear();
-        var dat = year + '-' + month + '-' + day;
-        return dat;
-     }});
-
-// chain a few methods for the first datepicker, jQuery style!
-$('.datepicker').eq(0).pikaday('show');
-});
-</script>
+<script src="resources/dist/main.js"></script>
 </head>
 <style>
 form {
@@ -208,34 +68,38 @@ textarea {
 <form method="post">
   <div class="container">
     <label><b>{{ 'Training day'|t }}</b></label>
-    <input autocomplete="off" class="datepicker" name="data" placeholder="DD/MM/YYY" type="text" value="{{ values.data }}">
+    <div class="input-group">
+      <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker" value="{{ values.data }}" type="text" class="form-control">
+      <div class="input-group-addon">
+          <span class="glyphicon glyphicon-th"></span>
+      </div>
+    </div>
     <br>
     <br>
     <label><b>{{ 'Name'|t }}</b></label>
     <input id="name" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
     <br>
     <br>
-    <label><b>{{ 'Start time'|t }}</b></label>
-    <input type="time" name="start_time" required value="{{ values.inizio }}">
+    <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
+    <input id="timePicker1" type="time" name="start_time" required value="{{ values.inizio }}">
     <br>
     <br>
-    <label><b>{{ 'End time'|t }}</b></label>
-    <input type="time" name="end_time" required value="{{ values.fine }}">
+    <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
+    <input id="timePicker2" type="time" name="end_time" required value="{{ values.fine }}">
     <br>
     <br>
     <label><b>{{ 'Chief'|t }}</b></label>
     <br>
     {% for user in training.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
-      <label>
-      <input type="checkbox" name='capo' value='{{ user.id }}'>
-      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ user.name }}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+      <input aria-label="{{ username(user.id) }}" class="form-check-input capo capo-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]' value='{{ user.id }}'>
+      <label class="form-check-label" for="capo-{{ user.id }}">
+        {{ username(user.id) }}
       </label>
     </div>
     {% endfor %}
     <script>
-    $('input[name="capo"]').on('change', function() {
+    $('.capo').on('change', function() {
        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
     });
     </script>
@@ -243,11 +107,10 @@ textarea {
     <label><b>{{ 'Others people'|t }}</b></label>
     <br>
     {% for user in training.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="checkbox">
-      <label>
-      <input type="checkbox" name='personale[]' value='{{ user.id }}'>
-      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-        {{ user.name }}
+    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+      <input aria-label="{{ username(user.id) }}" class="form-check-input personale personale-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]' value='{{ user.id }}'>
+      <label class="form-check-label" for="personale-{{ user.id }}">
+        {{ username(user.id) }}
       </label>
     </div>
     {% endfor %}
@@ -260,14 +123,14 @@ textarea {
     <textarea name='note'></textarea>
     <br>
     <br>
-    <input id="modalità" type="hidden" value="{{ service.modalità }}" name="mod"></input>
+    <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
     <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
     <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
     <button type="submit">{{ 'Submit'|t }}</button>
   </div>
 </form>
 <script>
-//No js Visual Studio Code errors {% if service.modalità == "edit" %}
+{% if training.modalità == "edit" %}
 $.each('{{ values.capo|striptags|e("js") }}'.split(','), function( index, value ) {
   $('.capo-'+value).prop('checked', true);
 });
@@ -275,7 +138,7 @@ $.each('{{ values.personale|striptags|e("js") }}'.split(','), function( index, v
   $('.personale-'+value).prop('checked', true);
 });
 $('#note').val('{{ values.note|e("js") }}');
-//{% endif %}
+{% endif %}
 </script>
 {% endif %}
 {% if training.modalità == "delete" %}

@@ -5,14 +5,35 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   entry: {
     main: path.resolve(__dirname, './src/main.js'),
-    maps: path.resolve(__dirname, 'src/maps.js')
+    maps: path.resolve(__dirname, './src/maps.js'),
+    sw: path.resolve(__dirname, './src/sw.js'),
   },
   output: {
-    filename: '[name].js',
+    filename: (pathData) => {
+      return pathData.chunk.name === 'sw' ? '../../sw.js': '[name].js';
+    },
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/resources/dist/',
+  },
+  resolve: {
+    alias: {
+      // Force all modules to use the same jquery version.
+      'jquery': path.join(__dirname, 'node_modules/jquery/src/jquery')
+    }
   },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-transform-runtime']
+          }
+        }
+      },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
@@ -26,13 +47,6 @@ module.exports = {
         loader: 'expose-loader',
         options: {
           exposes: ['$', 'jQuery'],
-        },
-      },
-      {
-        test: require.resolve('pickadate'),
-        loader: 'expose-loader',
-        options: {
-          exposes: ['pickadate'],
         },
       },
       {
@@ -53,8 +67,8 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'fonts/',    // where the fonts will go
-            publicPath: 'resources/dist/fonts'       // override the default path
+            outputPath: 'fonts/',
+            publicPath: 'resources/dist/fonts'
           }
         }]
       }
@@ -65,7 +79,7 @@ module.exports = {
     new webpack.ProvidePlugin({
         $: 'jquery',
         popper: 'popper.js'
-    }),
+    })
   ],
   optimization: {
     mergeDuplicateChunks: true

@@ -17,7 +17,7 @@
  */
 module.exports = (on, config) => {
   on('before:browser:launch', (browser = {}, launchOptions) => {
-    console.log(launchOptions) // print all current args
+    //console.log(launchOptions) // print all current args
 
     if (browser.family === 'chromium' && browser.name !== 'electron') {
       launchOptions.preferences.default.intl = { accept_languages: "en" }
