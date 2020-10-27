@@ -133,7 +133,7 @@ class tools{
                         $array2[] = $temp;
                     }
                 }
-            
+
             }
         } else {
             if(!in_array($arr, $array2)){
@@ -261,7 +261,7 @@ class database{
           $this->query = $this->stmt->execute();
         }
         bdump($this->query);
-        
+
         if($fetch == true){
           if(count($others_params) > 1) {
             $toReturn[] = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -279,12 +279,12 @@ class database{
       die();
     }
   }
-  
+
   public function exists($table, $id){
       $risultato = $this->exec("SELECT :table FROM `%PREFIX%_services` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
       return !empty($risultato);
   }
-  
+
   public function getOption($name){
     if(defined($name)){
       return constant($name);
@@ -462,7 +462,7 @@ class user{
       return $return_name;
     }
   }
-  
+
   public function nameById($id){
     $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
     if(!empty($profiles)){
@@ -484,12 +484,12 @@ class user{
       return false;
     }
   }
-  
+
   public function hidden(){
     $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
     return $profiles;
   }
-  
+
   public function available($name){
     $user = $this->database->exec("SELECT available FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
     if(empty($user)){
@@ -498,7 +498,7 @@ class user{
         return $user[0]["available"];
     }
   }
-  
+
   public function info(){
     return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
   }
@@ -546,6 +546,7 @@ class user{
             $_SESSION['_user_disabled'] = $user[0]["disabled"];
             $_SESSION['_user_chief'] = $user[0]["chief"];
             $this->tools->profiler_stop();
+            setcookie("authenticated", true);
             return true;
           }
         }
@@ -571,6 +572,7 @@ class user{
       $this->auth->logOut();
       $this->auth->destroySession();
       $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+      setcookie("authenticated", false, time() - 3600);
     }
     catch (\Delight\Auth\NotLoggedInException $e) {
       die('Not logged in');
