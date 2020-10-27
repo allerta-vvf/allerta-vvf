@@ -39,7 +39,7 @@ foreach($risultato as $row){
         $response[] = [
           (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
           $secondCell,
-          $row['autista'] ? "<img alt="driver" src='./resources/images/wheel.png' width='20px'>" : "",
+          $row['autista'] ? "<img alt='driver' src='./resources/images/wheel.png' width='20px'>" : "",
           $row['telefono'] ? "<a href='tel:+".$row['telefono']."'><i class='fa fa-phone'></i></a>" : "",
           $row['telefono'] ? "<a href='https://api.whatsapp.com/send?phone=+".$row['telefono']."text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
           $row['services'],
