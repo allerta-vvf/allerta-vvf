@@ -8,7 +8,7 @@
         "delight-im/auth": "^8.2.2",
         "ulrichsg/getopt-php": "^3.4.0",
         "nikic/fast-route": "^2.0@dev",
-        "spatie/array-to-xml": "^2.14",
+        "spatie/array-to-xml": "^2.15",
         "ezyang/htmlpurifier": "^4.13",
         "netpromotion/profiler": "^1.3"
     },
