@@ -52,6 +52,10 @@ function loadtemplate($templatename, $data, $requirelogin=true){
     $data['error_image'] = "error.gif";
   }
   $template = $twig->load($templatename);
-  echo $template->render($data);
+  if(isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])){
+    echo $template->renderBlock("content", $data);
+  } else {
+    echo $template->render($data);
+  }
   p_stop();
 }

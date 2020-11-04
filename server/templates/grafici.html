@@ -7,29 +7,7 @@
     <div id="list" hidden></div>
     <b>TODO</b>
     <script>
-      $.get( "resources/ajax/ajax_log.php", function( data ) {
-         $( "#list" ).html( data );
-         console.log( "Loaded list." );
-      });
-      $(document).ready(function() {
-
-        setInterval(function() {
-          $.get( "resources/ajax/ajax_log.php", function( data ) {
-             $( "#list" ).html( data );
-          });
-        }, 10000);
-
-      });
-/*
-      check();
-      $(document).ready(function() {
-
-        setInterval(function() {
-          check();
-        }, 10000);
-
-      });
-      */
+      alert("TODO");
     </script>
     <br>
     <br>

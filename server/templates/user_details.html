@@ -7,9 +7,9 @@
 <script>
 $(document).ready(function() {
   $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
-  setInterval(function() {
+  /* setInterval(function() {
     $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
-  }, 10000);
+  }, 10000); */
 });
 </script>
 {% endblock %}

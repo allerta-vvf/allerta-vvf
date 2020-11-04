@@ -9,6 +9,15 @@ import '../node_modules/bootstrap-toggle/css/bootstrap-toggle.css';
 import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
 import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 import 'time-input-polyfill/auto';
+import 'jquery-pjax';
+
+$(document).pjax('a', '#content');
+$(document).on('pjax:start', function() {
+  if(window.loadTable_interval !== undefined){
+    clearInterval(window.loadTable_interval);
+    window.loadTable_interval = undefined;
+  }
+})
 
 // Cookie functions from w3schools
 function setCookie(cname, cvalue, exdays) {
@@ -65,7 +74,7 @@ $( document ).ready(function() {
 if (getCookie("authenticated")) {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(registration => {
+      navigator.serviceWorker.register('sw.js').then(registration => {
         console.log('SW registered: ', registration);
       }).catch(registrationError => {
         console.log('SW registration failed: ', registrationError);
@@ -90,7 +99,8 @@ function fillTable(data){
 }
 
 var offline = false;
-function loadTable(table_page){
+var loadTable_interval = undefined;
+function loadTable(table_page, set_interval=true, interval=10000){
     $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
       fillTable(data);
       var headers = new Headers();
@@ -117,6 +127,12 @@ function loadTable(table_page){
         window.offline = true;
       }
     });
+    if(set_interval){
+      window.loadTable_interval = setInterval(function() {
+        window.loadTable(table_page, false);
+      }, interval);
+    }
 }
+window.loadTable_interval = loadTable_interval;
 window.fillTable = fillTable;
 window.loadTable = loadTable;
