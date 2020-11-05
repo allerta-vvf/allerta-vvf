@@ -11,6 +11,7 @@
 //
 // -- This is a parent command --
 Cypress.Commands.add("login", (username="admin", password="correcthorsebatterystaple") => {
+    cy.server().route('GET', '/resources/ajax/ajax_*').as('ajax');
     cy.visit("/");
     cy.getCookie('acceptCookies')
         .then((c) => {

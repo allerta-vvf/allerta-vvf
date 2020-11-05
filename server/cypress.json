@@ -3,5 +3,6 @@
   "projectId": "4ty9gy",
   "env": {
     "DB_PASSWORD": "password"
-  }
+  },
+  "chromeWebSecurity": false
 }
