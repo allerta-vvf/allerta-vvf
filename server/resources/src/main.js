@@ -100,18 +100,23 @@ function fillTable(data){
 
 var offline = false;
 var loadTable_interval = undefined;
-function loadTable(table_page, set_interval=true, interval=10000){
+function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
   $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
     fillTable(data);
-     var headers = new Headers();
-     headers.append('date', Date.now());
-     caches.open('tables-1').then((cache) => {
-       cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
-     });
+    var headers = new Headers();
+    headers.append('date', Date.now());
+    caches.open('tables-1').then((cache) => {
+      cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
+    });
     if(window.offline){ // if xhr request successful, client is online
-       $("#offline_alert").hide(400);
-       window.offline = false;
-     }
+      console.log(onlineReload);
+      if(onlineReload){
+        location.reload(); //for offline page
+      } else {
+        $("#offline_alert").hide(400);
+        window.offline = false;
+      }
+    }
   }).fail(function(data, status) {
     if(status == "parsererror"){
       if($("#table_body").children().length == 0) {
@@ -135,7 +140,7 @@ function loadTable(table_page, set_interval=true, interval=10000){
   });
   if(set_interval){
     window.loadTable_interval = setInterval(function() {
-      window.loadTable(table_page, false);
+      window.loadTable(table_page, false, interval, onlineReload);
     }, interval);
   }
 }
