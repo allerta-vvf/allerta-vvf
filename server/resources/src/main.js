@@ -101,18 +101,23 @@ function fillTable(data){
 var offline = false;
 var loadTable_interval = undefined;
 function loadTable(table_page, set_interval=true, interval=10000){
-    $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
-      fillTable(data);
-      var headers = new Headers();
-      headers.append('date', Date.now());
-      caches.open('tables-1').then((cache) => {
-        cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
-      });
-      if(window.offline){ // if xhr request successful, client is online
-        $("#offline_alert").hide(400);
-        window.offline = false;
-      }
-    }).fail(function() {
+  $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
+    fillTable(data);
+     var headers = new Headers();
+     headers.append('date', Date.now());
+     caches.open('tables-1').then((cache) => {
+       cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
+     });
+    if(window.offline){ // if xhr request successful, client is online
+       $("#offline_alert").hide(400);
+       window.offline = false;
+     }
+  }).fail(function(data, status) {
+    if(status == "parsererror"){
+      if($("#table_body").children().length == 0) {
+        loadTable(table_page, set_interval, interval);
+      } // else nothing
+    } else {
       caches.open('tables-1').then(cache => {
         cache.match("/table_"+table_page+".json").then(response => {
           response.json().then(data => {
@@ -126,13 +131,15 @@ function loadTable(table_page, set_interval=true, interval=10000){
         $("#offline_alert").show(400);
         window.offline = true;
       }
-    });
-    if(set_interval){
-      window.loadTable_interval = setInterval(function() {
-        window.loadTable(table_page, false);
-      }, interval);
     }
+  });
+  if(set_interval){
+    window.loadTable_interval = setInterval(function() {
+      window.loadTable(table_page, false);
+    }, interval);
+  }
 }
+
 window.loadTable_interval = loadTable_interval;
 window.fillTable = fillTable;
 window.loadTable = loadTable;
