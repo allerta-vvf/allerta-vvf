@@ -11,7 +11,7 @@ import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css'
 import 'time-input-polyfill/auto';
 import 'jquery-pjax';
 
-$(document).pjax('a', '#content', {timeout: 100000});
+$(document).pjax('a:not(.pjax_disable)', '#content', {timeout: 100000});
 $(document).on('pjax:start', function() {
   if(window.loadTable_interval !== undefined){
     clearInterval(window.loadTable_interval);
