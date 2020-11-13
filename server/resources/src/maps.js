@@ -4,15 +4,24 @@ import '../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css'
 import '../node_modules/leaflet/dist/leaflet.css';
 import './maps.css';
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'resources/dist/marker-icon-2x.png',
-  iconUrl: 'resources/dist/marker-icon.png',
-  shadowUrl: 'resources/dist/marker-shadow.png',
+const iconRetinaUrl = 'resources/dist/marker-icon-2x.png';
+const iconUrl = 'resources/dist/marker-icon.png';
+const shadowUrl = 'resources/dist/marker-shadow.png';
+const iconDefault = new L.Icon({
+	iconRetinaUrl,
+	iconUrl,
+	shadowUrl,
+	iconSize: [25, 41],
+	iconAnchor: [12, 41],
+	popupAnchor: [1, -34],
+	tooltipAnchor: [16, -28],
+	shadowSize: [41, 41]
 });
 
 var marker;
+var feature;
 var map;
+
 function set_marker(LatLng){
 	if(marker){
 		console.log("Marker exists");
@@ -23,7 +32,7 @@ function set_marker(LatLng){
   if($("input[name='luogo']").val() !== undefined){
     $("input[name='luogo']").val(LatLng.lat + ";" + LatLng.lng);
   }
-  marker = L.marker(LatLng).addTo(map);
+  marker = L.marker(LatLng, {icon: iconDefault}).addTo(map);
 }
 
 function load_map(lat=undefined, lng=undefined, selector_id=undefined, select=true) {
@@ -95,8 +104,8 @@ function load_map(lat=undefined, lng=undefined, selector_id=undefined, select=tr
 
 // from unknown source in the Internet
 function chooseAddr(addr_lat, addr_lng, zoom=undefined, lat1=undefined, lng1=undefined, lat2=undefined, lng2=undefined, osm_type=undefined) {
-	addr_lat = lat.replace(",", ".");
-	addr_lng = lng.replace(",", ".");
+	addr_lat = addr_lat.replace(",", ".");
+	addr_lng = addr_lng.replace(",", ".");
 	if(lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osm_type !== undefined){
 		let loc1 = new L.LatLng(lat1, lng1);
 		let loc2 = new L.LatLng(lat2, lng2);

@@ -1,6 +1,7 @@
 const path = require('path');
 var webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -79,7 +80,12 @@ module.exports = {
     new webpack.ProvidePlugin({
         $: 'jquery',
         popper: 'popper.js'
-    })
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'node_modules/leaflet/dist/images', to: '.', noErrorOnMissing: true }
+      ],
+    }),
   ],
   optimization: {
     mergeDuplicateChunks: true
