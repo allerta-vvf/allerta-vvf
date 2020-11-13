@@ -68,6 +68,9 @@ jobs:
         npm init --yes
         npm install --save-dev cypress
 
+    - name: Run phpcbf
+      run: ./vendor/bin/phpcbf . --ignore="vendor,resources/dist,resource,node_modules,*.js"
+
     - name: Mysql test
       run: mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
 

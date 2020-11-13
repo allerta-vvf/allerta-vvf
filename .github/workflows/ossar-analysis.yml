@@ -4,8 +4,9 @@
 name: OSSAR
 
 on:
-  push:
-  pull_request:
+  release:
+    types:
+      - created
 
 jobs:
   OSSAR-Scan:

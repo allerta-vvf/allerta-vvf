@@ -7,6 +7,7 @@ pull_request_rules:
         method: merge
   - name: Automatic merge for Dependabot pull requests
     conditions:
+      - check-success~=PHP
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
       merge:
