@@ -2,7 +2,7 @@
 header("Content-type: application/json");
 try {
     $start_time = microtime(true);
-    require("core.php");
+    include "core.php";
     init_class(false, false);
     $exec_time = microtime(true) - $start_time;
     $server_side = ["status" => "ok", "status_msg" => null, "exec_time" => $exec_time, "user_info" => $user->info()];

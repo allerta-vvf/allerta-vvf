@@ -1,10 +1,11 @@
 <?php
-include_once 'core.php';
+require_once 'core.php';
 
 init_class(false);
 header('Content-Type: application/json');
 
-function customErrorHandler(int $errNo, string $errMsg, string $file, int $line) {
+function customErrorHandler(int $errNo, string $errMsg, string $file, int $line)
+{
     $output = [
         "errNo" => $errNo,
         "error" => $errMsg,
@@ -36,17 +37,17 @@ $start = $database->getOption("cron_job_enabled") && isset($_POST['cron']) && $_
 $start_reset = $execDateTime == $cronJobDateTime;
 
 $action = "Availability Minutes ";
-if($start){
-    if($start_reset){
+if($start) {
+    if($start_reset) {
         $action .= "reset and ";
         $sql = "SELECT * FROM `%PREFIX%_profiles` WHERE `available` = 1 ";
         $profiles = $database->exec($sql, true);
-        if(count($profiles) > 0){
+        if(count($profiles) > 0) {
             $list = [];
             foreach($profiles as $profile){
                 $list[] = [$profile["id"] => $profile["availability_minutes"]];
             }
-            $database->exec("INSERT INTO `%PREFIX%_minutes` (`id`, `month`, `year`, `list`) VALUES (NULL, :month, :year, :list)",false,[":month" => $execDateTime->month,":year" => $execDateTime->year,":list"=>json_encode($list)]);
+            $database->exec("INSERT INTO `%PREFIX%_minutes` (`id`, `month`, `year`, `list`) VALUES (NULL, :month, :year, :list)", false, [":month" => $execDateTime->month,":year" => $execDateTime->year,":list"=>json_encode($list)]);
             $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = 0");
         }
     }
@@ -54,7 +55,7 @@ if($start){
 
     $sql = "SELECT * FROM `%PREFIX%_profiles` WHERE `available` = 1 ";
     $profiles = $database->exec($sql, true);
-    if(count($profiles) > 0){
+    if(count($profiles) > 0) {
         $output = [];
         $output[] = $profiles;
         $output_status = "ok";
@@ -75,7 +76,8 @@ if($start){
     }
 }
 
-echo(json_encode([
+echo(json_encode(
+    [
     "start" => $start,
     "start_reset" => $start_reset,
     "execDateTime" => $execDateTime,
@@ -85,4 +87,5 @@ echo(json_encode([
         "status" => $output_status,
         "message" => $output
     ]
-]));
+    ]
+));

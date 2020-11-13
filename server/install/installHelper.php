@@ -2,14 +2,15 @@
 use GetOpt\GetOpt as Getopt;
 use GetOpt\Option;
 
-function client_languages() {
-    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+function client_languages()
+{
+    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     } else {
         $client_languages = "en-US;q=0.5,en;q=0.3";
     }
-    if(strpos($client_languages, ';') == false){
-        if(strpos($client_languages, '-') !== false){
+    if(strpos($client_languages, ';') == false) {
+        if(strpos($client_languages, '-') !== false) {
             return [substr($client_languages, 0, 5)];
         } else {
             return [substr($client_languages, 0, 2)];
@@ -18,10 +19,10 @@ function client_languages() {
         $client_languages = explode(",", $client_languages);
         $tmp_languages = [];
         foreach($client_languages as $key=>$language){
-            if(strpos($language, ';') == false){
+            if(strpos($language, ';') == false) {
                 $tmp_languages[$language] = 1;
             } else {
-                $tmp_languages[explode(";q=",$language)[0]] = (float) explode(";q=",$language)[1];
+                $tmp_languages[explode(";q=", $language)[0]] = (float) explode(";q=", $language)[1];
             }
         }
         arsort($tmp_languages);
@@ -34,27 +35,29 @@ $loaded_languages = ["en", "it"];
 $default_language = "en";
 $language = null;
 foreach($client_languages as $tmp_language){
-    if(in_array($tmp_language, $loaded_languages) && $language == null){
+    if(in_array($tmp_language, $loaded_languages) && $language == null) {
         $language = $tmp_language;
     }
 }
 
-if (file_exists("translations/".$language.".php")){
-    $loaded_translations = require("translations/".$language.".php");
+if (file_exists("translations/".$language.".php")) {
+    $loaded_translations = include "translations/".$language.".php";
 } else {
-    $loaded_translations = require("translations/en.php");
+    $loaded_translations = include "translations/en.php";
 }
 
-function t($string, $echo=true){
+function t($string, $echo=true)
+{
     global $loaded_translations;
     try {
-        if (!array_key_exists($string, $loaded_translations))
-          throw new Exception ('string does not exist');
+        if (!array_key_exists($string, $loaded_translations)) {
+            throw new Exception('string does not exist');
+        }
         $string = $loaded_translations[$string];
     } catch (\Exception $e) {
         //nothing
     }
-    if ($echo){
+    if ($echo) {
         echo $string;
     } else {
         return $string;
@@ -63,31 +66,29 @@ function t($string, $echo=true){
 
 function is_cli() //https://www.binarytides.com/php-check-running-cli/
 {
-	if( defined('STDIN') )
-	{
-		return true;
-	}
-	
-	if( empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) 
-	{
-		return true;
-	} 
-	
-	return false;
+    if(defined('STDIN') ) {
+        return true;
+    }
+
+    if(empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
+        return true;
+    }
+
+    return false;
 }
 
 if (file_exists('../vendor/autoload.php')) {
     try {
-        require '../vendor/autoload.php';
+        include '../vendor/autoload.php';
     } catch (Exception $e) {
-        if(is_cli()){
+        if(is_cli()) {
             echo($e);
             exit(1);
         }
         die("Please install composer and run composer install (".$e);
     }
 } else {
-    if(is_cli()){
+    if(is_cli()) {
         echo($e);
         exit(1);
     }
@@ -97,24 +98,25 @@ if (file_exists('../vendor/autoload.php')) {
 define('NAME', 'AllertaVVF');
 define('VERSION', '0.1-alpha');
 
-function checkConnection($host, $user, $password, $database, $return=false){
+function checkConnection($host, $user, $password, $database, $return=false)
+{
     try{
-        $connection = new PDO("mysql:host=$host", $user, $password,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $connection = new PDO("mysql:host=$host", $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $connectionOk = true;
     } catch (PDOException $e){
-        if($return){
+        if($return) {
             return false;
         } else {
-            if(is_cli()){
+            if(is_cli()) {
                 echo($e);
                 exit(8);
             }
             $connectionOk = false;
-        ?>
+            ?>
         <div class="wp-die-message"><h1><?php t("Error establishing a database connection"); ?></h1>
-            <p><?php printf(t("This could mean that %s and %s in file %s are wrong or that we cannot contact database %s. It could mean that your database is unreachable", false), t("DB username",false), t("DB password",false), "<code>config.php</code>", "<code>$database</code>"); ?>.</p>
+            <p><?php printf(t("This could mean that %s and %s in file %s are wrong or that we cannot contact database %s. It could mean that your database is unreachable", false), t("DB username", false), t("DB password", false), "<code>config.php</code>", "<code>$database</code>"); ?>.</p>
             <ul>
-                <li><?php printf(t("Are you sure that %s and %s correct?", false), t("DB username",false), t("DB password",false)); ?></li>
+                <li><?php printf(t("Are you sure that %s and %s correct?", false), t("DB username", false), t("DB password", false)); ?></li>
                 <li><?php t("Are you sure you have entered the correct hostname?"); ?></li>
                 <li><?php t("Are you sure the database server is up and running?"); ?></li>
             </ul>
@@ -125,27 +127,27 @@ function checkConnection($host, $user, $password, $database, $return=false){
             </details>
             <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
         </div>
-        <?php
+            <?php
             exit();
         }
     }
-    if($connectionOk){
+    if($connectionOk) {
         try{
             try{
                 $connection->exec("CREATE DATABASE IF NOT EXISTS " . trim($database));
             } catch(Exception $e) {
                 //nothing
             }
-        $connection->exec("use " . trim($database));
+            $connection->exec("use " . trim($database));
         } catch (PDOException $e){
-            if($return){
+            if($return) {
                 return false;
             } else {
-                if(is_cli()){
+                if(is_cli()) {
                     echo($e);
                     exit(7);
                 }
-            ?>
+                ?>
             <div class="wp-die-message"><h1><?php t("Cannot select database"); ?></h1>
                 <p><?php t("We were able to connect to the database server (which means your username and password are ok)"); echo(", "); t("but we could not select the database"); ?> <code><?php echo $database; ?></code>.</p>
                 <ul>
@@ -160,7 +162,7 @@ function checkConnection($host, $user, $password, $database, $return=false){
                 </details>
                 <p class="step"><a href="#" onclick="javascript:history.go(-2);return false;" class="button button-large"><?php t("Try again"); ?></a></p>
             </div>
-            <?php
+                <?php
                 exit();
             }
         }
@@ -168,23 +170,25 @@ function checkConnection($host, $user, $password, $database, $return=false){
     }
 }
 
-function replaceInFile($edits,$file){
+function replaceInFile($edits,$file)
+{
     $content = file_get_contents($file);
     foreach($edits as $edit){
-        $content = str_replace($edit[0],$edit[1],$content);
+        $content = str_replace($edit[0], $edit[1], $content);
     }
-    file_put_contents($file,$content);
+    file_put_contents($file, $content);
 }
 
-function generateConfig($host,$user,$password,$db,$prefix,$path=".."){
+function generateConfig($host,$user,$password,$db,$prefix,$path="..")
+{
     try{
         if (file_exists($path.DIRECTORY_SEPARATOR.'config.php')) {
             rename($path.DIRECTORY_SEPARATOR."config.php", $path.DIRECTORY_SEPARATOR."config.old.php");
         }
         copy($path.DIRECTORY_SEPARATOR."config-sample.php", $path.DIRECTORY_SEPARATOR."config.php");
-        replaceInFile([["@@db@@", $db],["@@user@@",$user],["@@password@@",$password],["@@host@@",$host],["@@prefix@@",$prefix]],$path.DIRECTORY_SEPARATOR."config.php");
+        replaceInFile([["@@db@@", $db],["@@user@@",$user],["@@password@@",$password],["@@host@@",$host],["@@prefix@@",$prefix]], $path.DIRECTORY_SEPARATOR."config.php");
     } catch (Exception $e) {
-        if(is_cli()){
+        if(is_cli()) {
             echo($e);
             exit(6);
         }
@@ -226,11 +230,13 @@ define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
     }
 }
 
-function initDB(){
+function initDB()
+{
     try{
-        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $prefix = DB_PREFIX;
-        $connection->exec("
+        $connection->exec(
+            "
 CREATE TABLE IF NOT EXISTS `".$prefix."_certificati` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `codice` text NOT NULL,
@@ -387,7 +393,7 @@ KEY `Id` (`id`)
 CREATE TABLE `".$prefix."_dbversion` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `version` INT NOT NULL,
-`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -407,9 +413,10 @@ PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());
-INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');");
+INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');"
+        );
     } catch (Exception $e) {
-        if(is_cli()){
+        if(is_cli()) {
             echo($e);
             exit(10);
         }
@@ -444,19 +451,21 @@ function full_path()
     return $url;
 }
 
-function initOptions($name, $visible, $developer, $password, $report_email, $owner){
+function initOptions($name, $visible, $developer, $password, $report_email, $owner)
+{
     try{
-        require_once "../config.php";
-        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        include_once "../config.php";
+        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $prefix = DB_PREFIX;
         $auth = new \Delight\Auth\Auth($connection, $_SERVER['REMOTE_ADDR'], $prefix."_");
         $userId = $auth->register($report_email, $password, $name);
         $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::SUPER_ADMIN);
-        if($developer){
+        if($developer) {
             $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::DEVELOPER);
         }
         $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
-        $prep = $connection->prepare("
+        $prep = $connection->prepare(
+            "
 INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'report_email', :report_email, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'owner', :owner, 1, current_timestamp(), current_timestamp(), '1');
@@ -475,9 +484,10 @@ INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_ti
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
 INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_location_picker', 1, 1, current_timestamp(), current_timestamp(), '1');
-$option_check_cf_ip");
+$option_check_cf_ip"
+        );
         mt_srand(10);
-        $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);        
+        $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);
         $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
         $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
         $prep->bindValue(':web_url', str_replace("install/install.php", "", full_path()), PDO::PARAM_STR);
@@ -485,7 +495,7 @@ $option_check_cf_ip");
         $prep->bindValue(':cron_job_time', "01;00:00", PDO::PARAM_STR);
         $prep->execute();
     } catch (Exception $e) {
-        if(is_cli()){
+        if(is_cli()) {
             echo($e);
             exit(11);
         }
@@ -504,115 +514,129 @@ $option_check_cf_ip");
     }
 }
 
-function validate_arg($options, $name, $default){
+function validate_arg($options, $name, $default)
+{
     return array_key_exists($name, $options) ? $options[$name] : (getenv($name)!==false ? getenv($name) : (getenv(strtoupper($name))!==false ? getenv(strtoupper($name)) : $default));
 }
 
-function change_dir($directory){
+function change_dir($directory)
+{
     try{
         chdir($directory);
     } catch(Exception $e){
-        if(is_cli()){
+        if(is_cli()) {
             exit(4);
         }
     }
 }
-function cli_helper($action, $options){
+function cli_helper($action, $options)
+{
     switch ($action) {
-        case "config":
-            $db_name = validate_arg($options, "db_name", "allerta");
-            $db_username = validate_arg($options, "db_username", "root");
-            $db_password = validate_arg($options, "db_password", "");
-            $db_host = validate_arg($options, "db_host", "127.0.0.1");
-            $db_prefix = validate_arg($options, "db_prefix", "allerta");
-            $path = isset($options->getOptions["path"]) ? "." : "..";
-            checkConnection($db_host, $db_username, $db_password, $db_name);
-            generateConfig($db_host,$db_username,$db_password,$db_name,$db_prefix,$path);
-            t("Config created successful");
-            exit(0);
-        case "populate":
-            $name = validate_arg($options, "name", "admin");
-            $visible = array_key_exists("visible", $options);
-            $password = validate_arg($options, "password", "password");
-            $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
-            $owner = validate_arg($options, "owner", "Owner");
-            initDB();
-            initOptions($name, $visible, $password, $report_email, $owner);
-            t("DB Populated successful");
-            unlink("runInstall.php");
-            exit(0);
+    case "config":
+        $db_name = validate_arg($options, "db_name", "allerta");
+        $db_username = validate_arg($options, "db_username", "root");
+        $db_password = validate_arg($options, "db_password", "");
+        $db_host = validate_arg($options, "db_host", "127.0.0.1");
+        $db_prefix = validate_arg($options, "db_prefix", "allerta");
+        $path = isset($options->getOptions["path"]) ? "." : "..";
+        checkConnection($db_host, $db_username, $db_password, $db_name);
+        generateConfig($db_host, $db_username, $db_password, $db_name, $db_prefix, $path);
+        t("Config created successful");
+        exit(0);
+    case "populate":
+        $name = validate_arg($options, "name", "admin");
+        $visible = array_key_exists("visible", $options);
+        $password = validate_arg($options, "password", "password");
+        $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
+        $owner = validate_arg($options, "owner", "Owner");
+        initDB();
+        initOptions($name, $visible, $password, $report_email, $owner);
+        t("DB Populated successful");
+        unlink("runInstall.php");
+        exit(0);
     }
 }
-function run_cli(){
+function run_cli()
+{
     $_SERVER['REMOTE_ADDR'] = "127.0.0.1";
     $getopt = new \GetOpt\GetOpt();
-    $getopt->addCommands([ 
-        \GetOpt\Command::create('config', 'conf', [
+    $getopt->addCommands(
+        [
+        \GetOpt\Command::create(
+            'config', 'conf', [
             \GetOpt\Option::create('n', 'db_name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("DB name",false))
-                ->setArgumentName(t("DB name",false)),
+                ->setDescription(t("DB name", false))
+                ->setArgumentName(t("DB name", false)),
             \GetOpt\Option::create('u', 'db_username', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("DB username",false))
-                ->setArgumentName(t("DB username",false)),
+                ->setDescription(t("DB username", false))
+                ->setArgumentName(t("DB username", false)),
             \GetOpt\Option::create('a', 'db_password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("DB password",false))
-                ->setArgumentName(t("DB password",false)),
+                ->setDescription(t("DB password", false))
+                ->setArgumentName(t("DB password", false)),
             \GetOpt\Option::create('o', 'db_host', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("DB host",false))
-                ->setArgumentName(t("DB host",false)),
+                ->setDescription(t("DB host", false))
+                ->setArgumentName(t("DB host", false)),
             \GetOpt\Option::create('r', 'db_prefix', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("DB prefix",false))
-                ->setArgumentName(t("DB prefix",false))
-        ])->setDescription(
-            t("Create the config file",false).' "config.php".' . PHP_EOL .
-            PHP_EOL .
-            sprintf(t("This file is required for running %s",false),'"populate"') . "."
-        )->setShortDescription(t("Create a new config file",false)),
+                ->setDescription(t("DB prefix", false))
+                ->setArgumentName(t("DB prefix", false))
+            ]
+        )->setDescription(
+            t("Create the config file", false).' "config.php".' . PHP_EOL .
+                PHP_EOL .
+                sprintf(t("This file is required for running %s", false), '"populate"') . "."
+        )->setShortDescription(t("Create a new config file", false)),
 
-        \GetOpt\Command::create('populate', 'Populate', [
+        \GetOpt\Command::create(
+            'populate', 'Populate', [
             \GetOpt\Option::create('m', 'name', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("Admin name",false))
-                ->setArgumentName(t("Admin name",false)),
+                ->setDescription(t("Admin name", false))
+                ->setArgumentName(t("Admin name", false)),
             \GetOpt\Option::create('b', 'visible', \GetOpt\GetOpt::NO_ARGUMENT)
-                ->setDescription(t("Is admin visible?",false))
-                ->setArgumentName(t("Is admin visible?",false)),
+                ->setDescription(t("Is admin visible?", false))
+                ->setArgumentName(t("Is admin visible?", false)),
             \GetOpt\Option::create('s', 'password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("Admin password",false))
-                ->setArgumentName(t("Admin password",false)),
+                ->setDescription(t("Admin password", false))
+                ->setArgumentName(t("Admin password", false)),
             \GetOpt\Option::create('w', 'owner', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("Owner",false))
-                ->setArgumentName(t("Owner",false)),
+                ->setDescription(t("Owner", false))
+                ->setArgumentName(t("Owner", false)),
             \GetOpt\Option::create('e', 'report_email', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-                ->setDescription(t("Report email",false))
-                ->setArgumentName(t("Report email",false))
-        ])->setDescription(
-            t("Populate Allerta database",false) . "." . PHP_EOL .
-            PHP_EOL .
-            sprintf(t("This require a working %s file",false),"config.php") . "."
-        )->setShortDescription(t("Populate DB",false))
-    ]);
+                ->setDescription(t("Report email", false))
+                ->setArgumentName(t("Report email", false))
+            ]
+        )->setDescription(
+            t("Populate Allerta database", false) . "." . PHP_EOL .
+                PHP_EOL .
+                sprintf(t("This require a working %s file", false), "config.php") . "."
+        )->setShortDescription(t("Populate DB", false))
+        ]
+    );
 
-    $getopt->addOptions([
+    $getopt->addOptions(
+        [
         Option::create('v', 'version', \GetOpt\GetOpt::NO_ARGUMENT)
-            ->setDescription(t("Show version information and quit",false)),
-        
+            ->setDescription(t("Show version information and quit", false)),
+
         Option::create('h', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
-            ->setDescription(t("Show this help and quit",false)),
+            ->setDescription(t("Show this help and quit", false)),
 
         Option::create("p", 'path', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
-            ->setDescription(t("Destination path",false))
+            ->setDescription(t("Destination path", false))
             ->setArgumentName('path')
-            ->setValidation('is_writable', function($operand, $value) {
-                if(file_exists($value)){
-                    printf(t("%s is not writable. Directory permissions: %s"),$value,@fileperms($value));
-                    exit(4);
-                } else {
-                    printf(t("%s not exists"),$value);
-                    echo(".");
-                    exit(3);
+            ->setValidation(
+                'is_writable', function ($operand, $value) {
+                    if(file_exists($value)) {
+                        printf(t("%s is not writable. Directory permissions: %s"), $value, @fileperms($value));
+                        exit(4);
+                    } else {
+                        printf(t("%s not exists"), $value);
+                        echo(".");
+                        exit(3);
+                    }
                 }
-            })
-    ]);
+            )
+        ]
+    );
 
     // process arguments and catch user errors
     try {
@@ -620,10 +644,10 @@ function run_cli(){
             $getopt->process();
         } catch (Missing $exception) {
             // catch missing exceptions if help is requested
-        if (!$getopt->getOption('help')) {
-            throw $exception;
+            if (!$getopt->getOption('help')) {
+                throw $exception;
+            }
         }
-    }
     } catch (ArgumentException $exception) {
         file_put_contents('php://stderr', $exception->getMessage() . PHP_EOL);
         echo PHP_EOL . $getopt->getHelpText();
@@ -649,9 +673,9 @@ function run_cli(){
 
     $options = $getopt->getOptions();
     switch ($command->name()) {
-        case "config":
-            cli_helper("config", $options);
-        case "populate":
-            cli_helper("populate", $options);
+    case "config":
+        cli_helper("config", $options);
+    case "populate":
+        cli_helper("populate", $options);
     }
 }

@@ -1,3 +1,3 @@
 <?php
 require_once 'ui.php';
-loadtemplate('log.html', ['title' => t('Logs',false)]);
+loadtemplate('log.html', ['title' => t('Logs', false)]);

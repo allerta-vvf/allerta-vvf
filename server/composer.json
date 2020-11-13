@@ -24,5 +24,8 @@
         "test": [
             "codecept run --steps"
         ]
+    },
+    "require-dev": {
+        "pheromone/phpcs-security-audit": "^2.0"
     }
 }

@@ -50,7 +50,11 @@ class KeyboardCommand extends UserCommand
     public function execute()
     {
         //Keyboard examples
-        /** @var Keyboard[] $keyboards */
+        /**
+*
+         *
+ * @var Keyboard[] $keyboards
+*/
         $keyboards = [];
 
         //Example 0
@@ -80,10 +84,12 @@ class KeyboardCommand extends UserCommand
         );
 
         //Example 4 (bots version 2.0)
-        $keyboards[] = new Keyboard([
+        $keyboards[] = new Keyboard(
+            [
             ['text' => 'Send my contact', 'request_contact' => true],
             ['text' => 'Send my location', 'request_location' => true],
-        ]);
+            ]
+        );
 
         //Return a random keyboard.
         //$keyboard = $keyboards[mt_rand(0, count($keyboards) - 1)]
