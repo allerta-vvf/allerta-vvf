@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="resources/dist/maps.js"></script>
 <style>
 
   #add {
@@ -87,7 +88,7 @@
         </tbody>
       </table>
       <script>
-      window.loadTable("services");
+      window.loadTable("services", true, 120000);
       </script>
     </div>
     <br>

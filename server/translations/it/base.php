@@ -74,5 +74,8 @@ return [
     "Add service" => "Aggiungi intervento",
     "Add training" => "Aggiungi esercitazione",
     "You are offline" => "Sei offline",
-    "Last update" => "Ultimo aggiornamento"
+    "Last update" => "Ultimo aggiornamento",
+    "Search" => "Cerca",
+    "Search results" => "Risultati della ricerca",
+    "No results found" => "Nessun risultato trovato"
 ];

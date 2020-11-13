@@ -11,7 +11,7 @@ import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css'
 import 'time-input-polyfill/auto';
 import 'jquery-pjax';
 
-$(document).pjax('a', '#content');
+$(document).pjax('a', '#content', {timeout: 100000});
 $(document).on('pjax:start', function() {
   if(window.loadTable_interval !== undefined){
     clearInterval(window.loadTable_interval);
@@ -71,6 +71,7 @@ $( document ).ready(function() {
         window.dispatchEvent(new Event("cookieAlertAccept"))
     });
 });
+
 if (getCookie("authenticated")) {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -83,15 +84,29 @@ if (getCookie("authenticated")) {
   }
 }
 
-function fillTable(data){
+function fillTable(data, replaceLatLngWithMap=false){
   $("#table_body").empty();
-  $.each(data, function(num, item) {
-    var row = document.createElement("tr");
-    $.each(item, function(num, i) {
+  $.each(data, function(row_num, item) {
+    let row = document.createElement("tr");
+    $.each(item, function(cell_num, i) {
       if(i !== null){
-        var cell = document.createElement("td");
-        cell.innerHTML = i;
-        row.appendChild(cell);
+        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){
+          let lat = i.split(";")[0];
+          let lng = i.split(";")[1];
+          let mapDiv = document.createElement("div");
+          mapDiv.className = "map";
+          mapDiv.id = "map-"+row_num;
+          var mapScript = document.createElement("script");
+          mapScript.appendChild(document.createTextNode("load_map("+lat+", "+lng+", \"map-"+row_num+"\", false)"));
+          mapDiv.appendChild(mapScript);
+          let cell = document.createElement("td");
+          cell.appendChild(mapDiv);
+          row.appendChild(cell);
+        } else {
+          let cell = document.createElement("td");
+          cell.innerHTML = i;
+          row.appendChild(cell);
+        }
       }
     });
     document.getElementById("table_body").appendChild(row);
@@ -101,8 +116,9 @@ function fillTable(data){
 var offline = false;
 var loadTable_interval = undefined;
 function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
+  let replaceLatLngWithMap = table_page == "services" || table_page == "trainings";
   $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
-    fillTable(data);
+    fillTable(data, replaceLatLngWithMap);
     var headers = new Headers();
     headers.append('date', Date.now());
     caches.open('tables-1').then((cache) => {
@@ -119,14 +135,14 @@ function loadTable(table_page, set_interval=true, interval=10000, onlineReload=f
     }
   }).fail(function(data, status) {
     if(status == "parsererror"){
-      if($("#table_body").children().length == 0) {
-        loadTable(table_page, set_interval, interval);
+      if($("#table_body").children().length == 0) { //this is a server-side authentication error on some cheap hosting providers
+        loadTable(table_page, set_interval, interval); //retry
       } // else nothing
     } else {
       caches.open('tables-1').then(cache => {
         cache.match("/table_"+table_page+".json").then(response => {
           response.json().then(data => {
-            fillTable(data);
+            fillTable(data, replaceLatLngWithMap);
             console.log("Table loaded from cache");
             $("#offline_update").text(new Date(parseInt(response.headers.get("date"))).toLocaleString());
           });
@@ -148,3 +164,5 @@ function loadTable(table_page, set_interval=true, interval=10000, onlineReload=f
 window.loadTable_interval = loadTable_interval;
 window.fillTable = fillTable;
 window.loadTable = loadTable;
+window.setCookie = setCookie;
+window.getCookie = getCookie;

@@ -24,7 +24,7 @@ function fetchHandler(event, content_type, not_found_message){
     );
 }
 self.addEventListener('fetch', function (event) {
-    console.log(event.request);
+    //console.log(event.request);
     var request = event.request;
 
 	// https://stackoverflow.com/a/49719964

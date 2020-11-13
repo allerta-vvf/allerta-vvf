@@ -74,5 +74,8 @@ return [
     "Add service" => "Add service",
     "Add training" => "Add training",
     "You are offline" => "You are offline",
-    "Last update" => "Last update"
+    "Last update" => "Last update",
+    "Search" => "Search",
+    "Search results" => "Search results",
+    "No results found" => "No results found"
 ];

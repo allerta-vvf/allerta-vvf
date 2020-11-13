@@ -128,8 +128,20 @@ textarea {
     </div>
     {% endfor %}
     <br>
+    {% if option('use_location_picker') %}
+    <label><b>{{ 'Service place'|t }}</b></label>
+    <div id="map"></div>
+    <div id="search">
+			<input type="text" name="addr" value="" id="addr" size="10" />
+			<button type="button" onclick="addr_search('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');" class="btn btn-primary">{{ 'Search'|t }}</button>
+			<div id="results"></div>
+    </div>
+    <input type="hidden" name="luogo" value="" />
+    <script src="resources/dist/maps.js" onload="load_map();"></script>
+    {% else %}
     <label><b>{{ 'Service place'|t }}</b></label>
     <input type="text" name="luogo" required value="{{ values.luogo }}">
+    {% endif %}
     <br>
     <br>
     <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
