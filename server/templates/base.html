@@ -313,27 +313,6 @@
             I agree
         </button>
     </div>
-      {% if user.autenticated %}
-      <script>
-      function check() {
-      	var xhr = new XMLHttpRequest();
-        xhr.open('GET', '{{ urlsoftware }}online_check.php');
-      	xhr.onload = function () {
-      		if (xhr.status === 200) {
-      			console.log('Text ' + xhr.responseText);
-      		} else {
-      			console.log('Request failed.  Returned status of ' + xhr.status);
-      		}
-      	};
-      	xhr.send();
-      }
-
-      //check();
-      /* setInterval(function() {
-      check();
-      }, 30000); */
-      </script>
-      {% endif %}
       {% block menu %}
         <!-- Menu -->
         <div class="topnav" id="myTopnav">

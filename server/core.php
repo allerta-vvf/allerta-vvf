@@ -657,6 +657,16 @@ class user
         $this->log("User removed", null, $removed_by, date("d/m/Y"), date("H:i.s"));
         $this->tools->profiler_stop();
     }
+
+    public function online_time_update($id=null){
+        $this->tools->profiler_start("Update online timestamp");
+        if(is_null($id)) $id = $this->auth->getUserId();
+        $time = time();
+        $sql = "UPDATE `%PREFIX%_profiles` SET online_time = '$time' WHERE id = '" . $id ."'";
+        $this->database->exec($sql, true);
+        bdump(["id" => $id, "time" => $time]);
+        $this->tools->profiler_stop();
+    }
 }
 
 class translations
