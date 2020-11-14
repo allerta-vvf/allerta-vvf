@@ -2,6 +2,7 @@ jQuery = $;
 window.$ = window.jQuery = $;
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './main.css';
 import './font-awesome.scss';
 import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
 import 'bootstrap-datepicker';
@@ -161,8 +162,30 @@ function loadTable(table_page, set_interval=true, interval=10000, onlineReload=f
   }
 }
 
+function chat() {
+  setCookie("chat", "true", 1);
+  location.reload();
+}
+
+window.addEventListener('securitypolicyviolation',console.error.bind(console));
+
+/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+function menu() {
+  var x = document.getElementById("myTopnav");
+  //var z = document.getElementById("logout");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+    //z.className = " logout_sx";
+  } else {
+    x.className = "topnav";
+    //z.className = " logout_dx";
+  }
+}
+
 window.loadTable_interval = loadTable_interval;
 window.fillTable = fillTable;
 window.loadTable = loadTable;
 window.setCookie = setCookie;
 window.getCookie = getCookie;
+window.chat = chat;
+window.menu = menu;

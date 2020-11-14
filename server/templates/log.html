@@ -1,49 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <br>
-    <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
-    <br>
-    <style>
-      th, td {
-          border: 1px solid grey;
-          border-collapse: collapse;
-       padding: 5px;
-      }
-      #href {
-       outline: none;
-       cursor: pointer;
-       text-align: center;
-       text-decoration: none;
-       font: bold 12px Arial, Helvetica, sans-serif;
-       color: #fff;
-       padding: 10px 20px;
-       border: solid 1px #0076a3;
-       background: #0095cd;
-      }
-      table {
-        overflow-x: scroll;
-         box-shadow: 2px 2px 25px rgba(0,0,0,0.5);
-          border-radius: 15px;
-        margin: auto;
-       }
-    </style>
-    <div id="list" style="overflow-x:auto;">
-      <table style="width: 90%; text-align:center;">
-        <thead>
-          <tr>
-            <th>{{ 'Action'|t }}</th>
-            <th>{{ 'Interested'|t }}</th>
-            <th>{{ 'Made by'|t }}</th>
-            <th>{{ 'Datetime'|t }}</th>
-          </tr>
-        </thead>
-      <tbody id="table_body">
-      </tbody>
-    </table>
-    <script>
-    window.loadTable("log");
-    </script>
-    <br>
-    <br>
-{% endblock %}
+<br>
+<img alt="VVF" src="./resources/images/owner.png" width="150"
+  style="display: block; margin-left: auto; margin-right: auto;">
+<br>
+<div id="list" style="overflow-x:auto;">
+  <table style="width: 90%; text-align:center;">
+    <thead>
+      <tr>
+        <th>{{ 'Action'|t }}</th>
+        <th>{{ 'Interested'|t }}</th>
+        <th>{{ 'Made by'|t }}</th>
+        <th>{{ 'Datetime'|t }}</th>
+      </tr>
+    </thead>
+    <tbody id="table_body">
+    </tbody>
+  </table>
+  <script>
+    loadTable("log");
+  </script>
+  <br>
+  <br>
+  {% endblock %}

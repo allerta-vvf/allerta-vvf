@@ -2,95 +2,43 @@
 
 {% block content %}
 <script src="resources/dist/maps.js"></script>
-<style>
-
-  #add {
-   outline: none;
-   cursor: pointer;
-   text-align: center;
-   text-decoration: none;
-   font: bold 12px Arial, Helvetica, sans-serif;
-   color: #fff;
-   padding: 10px 20px;
-   border: solid 1px #0076a3;
-   background: #0095cd;
-  }
-
-  #href {
-   outline: none;
-   cursor: pointer;
-   text-align: center;
-   text-decoration: none;
-   font: bold 12px Arial, Helvetica, sans-serif;
-   color: #fff;
-   padding: 10px 20px;
-   border: solid 1px #0076a3;
-   background: #0095cd;
-  }
-
-     th, td {
-      border: 1px solid grey;
-      border-collapse: collapse;
-      padding: 5px;
-     }
-
-
-     table {
-      box-shadow: 0px 3px 15px rgba(0,0,0,0.5);
-      border-radius: 5px;
-      margin: auto;
-     }
-
-  #new-search-area {
-      width: 100%;
-      clear: both;
-      padding-top: 20px;
-      padding-bottom: 20px;
-  }
-  #new-search-area input {
-      width: 600px;
-      font-size: 20px;
-      padding: 5px;
-      margin-right: 150px;
-      margin-left: 80px;
-  }
-    </style>
-    <br>
-    <img alt="VVF" src="./resources/images/owner.png" width="150" style="display: block; margin-left: auto; margin-right: auto;">
-    <br>
-    <p style="text-align: center;">
-    <a id='add' class="pjax_disable" href="edit_service.php?add">{{ 'Add service'|t }}</a>
-    </p>
-    <br>
-    <div id="list" style="overflow-x:auto;">
-      <table style="width: 90%; text-align:center;">
-        <thead>
-          <tr>
-            <th>{{ 'Date'|t }}</th>
-            <th>{{ 'Code'|t }}</th>
-            <th>{{ 'Start time'|t }}</th>
-            <th>{{ 'End time'|t }}</th>
-            <th>{{ 'Chief'|t }}</th>
-            <th>{{ 'Drivers'|t }}</th>
-            <th>{{ 'People'|t }}</th>
-            <th>{{ 'Place'|t }}</th>
-            <th>{{ 'Notes'|t }}</th>
-            <th>{{ 'Type'|t }}</th>
-            {% if option('service_edit') %}
-            <th>{{ 'Edit'|t }}</th>
-            {% endif %}
-            {% if option('service_remove') %}
-            <th>{{ 'Remove'|t }}</th>
-            {% endif %}
-          </tr>
-        </thead>
-        <tbody id="table_body">
-        </tbody>
-      </table>
-      <script>
-      window.loadTable("services", true, 120000);
-      </script>
-    </div>
-    <br>
-    <br>
+<br>
+<img alt="VVF" src="./resources/images/owner.png" width="150"
+  style="display: block; margin-left: auto; margin-right: auto;">
+<br>
+<p style="text-align: center;">
+  <a id='add' class="pjax_disable" href="edit_service.php?add">{{ 'Add service'|t }}</a>
+</p>
+<br>
+<div id="list" style="overflow-x:auto;">
+  <table style="width: 90%; text-align:center;">
+    <thead>
+      <tr>
+        <th>{{ 'Date'|t }}</th>
+        <th>{{ 'Code'|t }}</th>
+        <th>{{ 'Start time'|t }}</th>
+        <th>{{ 'End time'|t }}</th>
+        <th>{{ 'Chief'|t }}</th>
+        <th>{{ 'Drivers'|t }}</th>
+        <th>{{ 'People'|t }}</th>
+        <th>{{ 'Place'|t }}</th>
+        <th>{{ 'Notes'|t }}</th>
+        <th>{{ 'Type'|t }}</th>
+        {% if option('service_edit') %}
+        <th>{{ 'Edit'|t }}</th>
+        {% endif %}
+        {% if option('service_remove') %}
+        <th>{{ 'Remove'|t }}</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody id="table_body">
+    </tbody>
+  </table>
+  <script>
+    loadTable("services", true, 120000);
+  </script>
+</div>
+<br>
+<br>
 {% endblock %}

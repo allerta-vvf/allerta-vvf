@@ -1,152 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-<script src="resources/dist/main.js"></script>
+  <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <script src="resources/dist/main.js"></script>
 </head>
-<style>
-form {
-    border: 3px solid #f1f1f1;
-}
-
-input[type=text], input[type=password], input[type=email] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-.container {
-    padding: 16px;
-}
-
-span.psw {
-    float: right;
-    padding-top: 16px;
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-    span.psw {
-       display: block;
-       float: none;
-    }
-    .cancelbtn {
-       width: 100%;
-    }
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-}
-</style>
 <body>
-{% if modalità == "edit" or modalità == "add" %}
-<form method="post">
-  <div class="container">
-    <label><b>{{ 'E-mail'|t }}</b></label>
-    <input id="mail" type="text" name="mail" placeholder="{{ 'user@provider-email-domain.com'|t }}" required>
-    <br>
-    <br>
-    <label><b>{{ 'Name'|t }}</b></label>
-    <input id="name" type="text" name="name" placeholder="{{ 'Name Surname'|t }}" required>
-    <br>
-    <br>
-    <label><b>{{ 'Username'|t }}</b></label>
-    <input id="username" type="text" name="username" placeholder="{{ 'name.surname'|t }}" required>
-    <br>
-    <br>
-    <label><b>{{ 'Password'|t }}</b></label>
-    <input id="password" type="text" name="password" required>
-    <br>
-    <br>
-    <label><b>{{ 'Birthday'|t }}</b></label>
-    <div class="input-group">
-      <input placeholder="DD/MM/YYY" autocomplete="off" name="birthday" data-provide="datepicker" value="{{ values.data }}" type="text" class="form-control">
-      <div class="input-group-addon">
-          <span class="glyphicon glyphicon-th"></span>
-      </div>
-    </div>
-    <br>
-    <br>
-    <style>
-    .toggle.workaround {
-      border: 1px solid black;
-    }
-    </style>
-    <label><b>{{ 'Chief'|t }}</b></label><br>
-    <input type="checkbox" name="capo" data-toggle="toggle" data-style="workaround">
-    <br>
-    <br>
-    <label><b>{{ 'Driver'|t }}</b></label><br>
-    <input type="checkbox" name="autista" data-toggle="toggle" data-style="workaround">
-    <br>
-    <br>
-    <label><b>{{ 'Visible'|t }}</b></label><br>
-    <input type="checkbox" name="visible" checked data-toggle="toggle" data-style="workaround">
-    <br>
-    <br>
-    <label><b>{{ 'Enabled'|t }}</b></label><br>
-    <input type="checkbox" name="enabled" checked data-toggle="toggle" data-style="workaround">
-    <br>
-    <br>
-    <input id="modalità" type="hidden" value="{{ modalità }}" name="mod"></input>
-    <input id="token" type="hidden" value="{{ token }}" name="token"></input>
-    <button type="submit">{{ 'Submit'|t }}</button>
-  </div>
-</form>
-{% endif %}
-{% if modalità == "delete" %}
-<style>
-  #add {
-   outline: none;
-   cursor: pointer;
-   text-align: center;
-   text-decoration: none;
-   font: bold 12px Arial, Helvetica, sans-serif;
-   color: #fff;
-   padding: 10px 20px;
-   border: solid 1px #0076a3;
-   background: #0095cd;
-  }
-  </style>
-  <div style="margin: 0 auto; text-align: center">
-  <p>{{ 'Are you sure you want to delete the user?'|t }}</p>
+  {% if modalità == "edit" or modalità == "add" %}
   <form method="post">
-  <input id="modalità" type="hidden" value="delete" name="mod"></input>
-  <input id="token" type="hidden" value="{{ token }}" name="token"></input>
-  <input id="id" type="hidden" value="{{ id }}" name="id"></input>
-  <button id="add" type="submit">{{ 'Submit'|t }}</button>
+    <div class="container">
+      <label><b>{{ 'E-mail'|t }}</b></label>
+      <input id="mail" type="text" name="mail" placeholder="{{ 'user@provider-email-domain.com'|t }}" required>
+      <br>
+      <br>
+      <label><b>{{ 'Name'|t }}</b></label>
+      <input id="name" type="text" name="name" placeholder="{{ 'Name Surname'|t }}" required>
+      <br>
+      <br>
+      <label><b>{{ 'Username'|t }}</b></label>
+      <input id="username" type="text" name="username" placeholder="{{ 'name.surname'|t }}" required>
+      <br>
+      <br>
+      <label><b>{{ 'Password'|t }}</b></label>
+      <input id="password" type="text" name="password" required>
+      <br>
+      <br>
+      <label><b>{{ 'Birthday'|t }}</b></label>
+      <div class="input-group">
+        <input placeholder="DD/MM/YYY" autocomplete="off" name="birthday" data-provide="datepicker"
+          value="{{ values.data }}" type="text" class="form-control">
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-th"></span>
+        </div>
+      </div>
+      <br>
+      <br>
+      <style>
+        .toggle.workaround {
+          border: 1px solid black;
+        }
+      </style>
+      <label><b>{{ 'Chief'|t }}</b></label><br>
+      <input type="checkbox" name="capo" data-toggle="toggle" data-style="workaround">
+      <br>
+      <br>
+      <label><b>{{ 'Driver'|t }}</b></label><br>
+      <input type="checkbox" name="autista" data-toggle="toggle" data-style="workaround">
+      <br>
+      <br>
+      <label><b>{{ 'Visible'|t }}</b></label><br>
+      <input type="checkbox" name="visible" checked data-toggle="toggle" data-style="workaround">
+      <br>
+      <br>
+      <label><b>{{ 'Enabled'|t }}</b></label><br>
+      <input type="checkbox" name="enabled" checked data-toggle="toggle" data-style="workaround">
+      <br>
+      <br>
+      <input id="modalità" type="hidden" value="{{ modalità }}" name="mod"></input>
+      <input id="token" type="hidden" value="{{ token }}" name="token"></input>
+      <button type="submit">{{ 'Submit'|t }}</button>
+    </div>
   </form>
-  <script>
-  $('form').submit(function () {
-      return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
-  });
-  </script>
+  {% endif %}
+  {% if modalità == "delete" %}
+  <div style="margin: 0 auto; text-align: center">
+    <p>{{ 'Are you sure you want to delete the user?'|t }}</p>
+    <form method="post">
+      <input id="modalità" type="hidden" value="delete" name="mod"></input>
+      <input id="token" type="hidden" value="{{ token }}" name="token"></input>
+      <input id="id" type="hidden" value="{{ id }}" name="id"></input>
+      <button id="add" type="submit">{{ 'Submit'|t }}</button>
+    </form>
+    <script>
+      $('form').submit(function () {
+        return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
+      });
+    </script>
   </div>
-{% endif %}
+  {% endif %}
 </body>
 </html>

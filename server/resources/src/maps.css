@@ -23,11 +23,6 @@ div#results {
 	font-size: 75%;
 }
 
-.fa{
-    vertical-align: middle;
-	font-size: 25px;
-}
-
 .fa.fa-map-marker-alt,.fa.fa-spinner.fa-spin {
     line-height: inherit;
 }

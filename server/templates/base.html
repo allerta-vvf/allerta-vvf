@@ -1,349 +1,91 @@
 <!DOCTYPE html>
 <html lang="it">
-    <head>
-        {% block head %}
-          <title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>
-          <link href="{{ urlsoftware }}/resources/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-          <meta name="viewport" content="user-scalable=no, initial-scale=1">
-          <link rel="manifest" href="manifest.webmanifest">
-          <style>
-          body:not(table){
-            max-width: 100%;
-            overflow-x: hidden;
-          }
-          </style>
-          <script src="resources/dist/main.js"></script>
-          {% if enable_technical_support and technical_support_open %}
-          <!-- Smartsupp Live Chat script -->
-          <script type='text/javascript'>
-            var _smartsupp = _smartsupp || {};
-            _smartsupp.key = '{{ technical_support_key }}';
-            _smartsupp.ratingEnabled = true;  // default value : false
-            _smartsupp.ratingComment = true;  // default value : false
-            window.smartsupp||(function(d) {
-              var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-              s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-              c.type='text/javascript';c.charset='utf-8';c.async=true;
-              c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-            })(document);
-          </script>
-          <script>
-            // basic info
-            smartsupp('email', '');
-            smartsupp('name', '{{ user.name }}');
-            smartsupp('recording:disable', false);
-            // extra info
-            smartsupp('variables', {
-              name: { label: 'name user ', value: '{{ user.name }}' },
-              Admin: { label: 'Admin', value: '{{ user.full_viewer }}' }
-            });
-          </script>
-          {% endif %}
-          <script>
-            function setCookie(cname, cvalue, exdays) {
-              var d = new Date();
-              d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-              var expires = "expires=" + d.toGMTString();
-              document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-            }
+<head>
+  {% block head %}
+  <title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>
+  <link href="{{ urlsoftware }}/resources/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script src="resources/dist/main.js"></script>
+  {% if enable_technical_support and technical_support_open %}
+  <!-- Smartsupp Live Chat script -->
+  <script type='text/javascript'>
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = '{{ technical_support_key }}';
+    _smartsupp.ratingEnabled = true; // default value : false
+    _smartsupp.ratingComment = true; // default value : false
+    window.smartsupp || (function (d) {
+      var s, c, o = smartsupp = function () {
+        o._.push(arguments)
+      };
+      o._ = [];
+      s = d.getElementsByTagName('script')[0];
+      c = d.createElement('script');
+      c.type = 'text/javascript';
+      c.charset = 'utf-8';
+      c.async = true;
+      c.src = 'https://www.smartsuppchat.com/loader.js?';
+      s.parentNode.insertBefore(c, s);
+    })(document);
+  </script>
+  <script>
+    // basic info
+    smartsupp('email', '');
+    smartsupp('name', '{{ user.name }}');
+    smartsupp('recording:disable', false);
+    // extra info
+    smartsupp('variables', {
+      name: {
+        label: 'name user ',
+        value: '{{ user.name }}'
+      },
+      Admin: {
+        label: 'Admin',
+        value: '{{ user.full_viewer }}'
+      }
+    });
+  </script>
+  {% endif %}
+  {% endblock %}
+</head>
+<body>
+  <div class="alert text-center cookiealert" role="alert">
+    <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a
+      href="https://cookiesandyou.com/" target="_blank">Learn more</a>
 
-            function getCookie(cname) {
-              var name = cname + "=";
-              var decodedCookie = decodeURIComponent(document.cookie);
-              var ca = decodedCookie.split(';');
-              for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                  c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                  return c.substring(name.length, c.length);
-                }
-              }
-              return "";
-            }
-
-            function chat() {
-              setCookie("chat", "true", 1);
-              location.reload();
-            }
-            window.addEventListener('securitypolicyviolation',console.error.bind(console));
-          </script>
-          <script>
-            function loadScript(directory, files) {
-              var head = document.getElementsByTagName("head")[0]
-              var done = false
-              var extension = '.js'
-              for (var file of files) {
-                var path = directory + file + extension
-                var script = document.createElement("script")
-                script.src = path
-                script.type = "text/javascript"
-                script.onload = script.onreadystatechange = function() {
-                  if (!done && (!this.readyState ||
-                      this.readyState == "loaded" || this.readyState == "complete")) {
-                    done = true
-                    script.onload = script.onreadystatechange = null // cleans up a little memory:
-                    head.removeChild(script) // to avoid douple loading
-                  }
-                };
-                head.appendChild(script)
-                done = false
-              }
-            }
-
-            function loadStyle(directory, files) {
-              var head = document.getElementsByTagName("head")[0]
-              var extension = '.css'
-              for (var file of files) {
-                var path = directory + file + extension
-                var link = document.createElement("link")
-                link.href = path
-                link.type = "text/css"
-                link.rel = "stylesheet"
-                head.appendChild(link)
-              }
-            }
-          </script>
-          <style>
-            center {
-              text-align: center;
-            }
-
-            #modulogin {
-
-              margin-top: 60px;
-              padding: 30px 0 30px 0;
-              width: 90%;
-              height: auto;
-              background: #fafafa;
-              border-radius: 15px;
-              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-            }
-
-            input::placeholder {
-
-              color: lightgray;
-
-            }
-
-            #watermark {
-              position: fixed;
-              bottom: 5px;
-              right: 5px;
-              opacity: 0.5;
-              z-index: 99;
-              color: blue;
-              font-size: 25px;
-            }
-
-            #demo-modal {
-              text-align: center;
-              padding: 20px;
-            }
-
-            #demo-modal-target {
-              font-family: calibri;
-              max-width: 550px;
-              text-align: center;
-              color: #FFF;
-              padding: 70px 0px;
-            }
-
-            .demo-title {
-              font-size: 2em;
-              padding: 40px;
-            }
-
-            .btn-modal-target {
-              padding: 10px 20px;
-              color: #F0F0F0;
-              margin: 5px;
-              border-radius: 15px;
-              cursor: pointer;
-              width: 70px;
-              display: inline-block;
-            }
-
-            #btn-jquery {
-              background: #e85545;
-            }
-
-            #btn-bootstrap {
-              background: #43cb83;
-            }
-
-            #btn-responsive {
-              background: #ff9e8f;
-            }
-
-            .modal-text {
-              margin-top: 15px;
-              line-height: 25px;
-              font-size: 1.0em;
-              font-family: calibri;
-            }
-            /* Add a black background color to the top navigation */
-            .topnav {
-              background-color: red;
-              overflow: hidden;
-            }
-
-            /* Style the links inside the navigation bar */
-            .topnav a {
-              float: left;
-              display: block;
-              color: #f2f2f2;
-              text-align: center;
-              padding: 14px 16px;
-              text-decoration: none;
-              font-size: 17px;
-            }
-
-            /* Change the color of links on hover */
-            .topnav a:hover {
-              background-color: #ddd;
-              color: black;
-            }
-
-            /* Add an active class to highlight the current page */
-            .active {
-              background-color: #4CAF50;
-              color: white;
-            }
-
-            /* Hide the link that should open and close the topnav on small screens */
-            .topnav .icon {
-              display: none;
-            }
-
-            /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
-            @media screen and (max-width: 600px) {
-              .topnav a:not(:first-child) {
-                display: none;
-              }
-
-              .topnav a.icon {
-                float: right;
-                display: block;
-              }
-            }
-
-            /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
-            @media screen and (max-width: 600px) {
-              .topnav.responsive {
-                position: relative;
-              }
-
-              .topnav.responsive a.icon {
-                position: absolute;
-                right: 0;
-                top: 0;
-              }
-
-              .topnav.responsive a {
-                float: none;
-                display: block;
-                text-align: left;
-              }
-            }
-
-            .logout_dx {
-              float: right;
-            }
-
-            .logout_sx {
-              float: left;
-            }
-          </style>
-          <script>
-            /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-            function menu() {
-              var x = document.getElementById("myTopnav");
-              //var z = document.getElementById("logout");
-              if (x.className === "topnav") {
-                x.className += " responsive";
-                //z.className = " logout_sx";
-              } else {
-                x.className = "topnav";
-                //z.className = " logout_dx";
-              }
-            }
-          </script>
-          <script>
-            function Activate(id){
-              $.ajax({
-                url: "resources/ajax/ajax_change_availability.php",
-                method: "POST",
-                data: {
-                  change_id: id,
-                  dispo: 1,
-                  token_list: "{{ token_list }}"
-                },
-                success: function(data) {
-                  alert("{{ 'Thanks, %s, you have given your availability in case of alert.'|t|format(user.name) }}");
-                  location.reload();
-                }
-              });
-            }
-
-            function Deactivate(id){
-              $.ajax({
-                url: "resources/ajax/ajax_change_availability.php",
-                method: "POST",
-                data: {
-                  change_id: id,
-                  dispo: 0,
-                  token_list: "{{ token_list }}"
-                },
-                success: function(data) {
-                  alert("{{ 'Thanks, %s, you have removed your availability in case of alert.'|t|format(user.name) }}");
-                  location.reload();
-                }
-              });
-            }
-          </script>
-          {% endblock %}
-    </head>
-    <body>
-      <div class="alert text-center cookiealert" role="alert">
-        <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
-
-        <button type="button" class="btn btn-primary btn-sm acceptcookies">
-            I agree
-        </button>
+    <button type="button" class="btn btn-primary btn-sm acceptcookies">
+      I agree
+    </button>
+  </div>
+  {% block menu %}
+  <!-- Menu -->
+  <div class="topnav" id="myTopnav">
+    <a href="{{ urlsoftware }}list.php" class="active">{{ 'Availability List'|t }}</a>
+    <a href="{{ urlsoftware }}services.php">{{ 'Services'|t }}</a>
+    <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
+    <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>
+    <a {# href="{{ urlsoftware }}graphics.php" #}>{{ 'Graphics'|t }}</a>
+    {% if enable_technical_support %}<a href="javascript:void(0);"
+      onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
+    <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b
+        onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
+    <a href="javascript:void(0);" class="icon" onclick="menu()">☰</a>
+  </div>
+  <!-- /Menu -->
+  {% endblock %}
+  <div class="alert alert-danger m-3" id="offline_alert" style="display: none" role="alert">
+    <b>{{ 'You are offline'|t }}.</b> {{ 'Last update'|t }}: <p style="display: inline" id="offline_update"></p>
+  </div>
+  <!-- Content -->
+  <div id="content">{% block content %}{% endblock %}</div>
+  <!-- /Content -->
+  <!-- Footer -->
+  <footer hidden id="bottom" class="row text-left p-4">
+    <div class="col-12 col-md-4">
+      <h5>Copyright &copy; Matteo</h5>
+      <h4>Applicativo realizzato per {{ owner }}</h4>
     </div>
-      {% block menu %}
-        <!-- Menu -->
-        <div class="topnav" id="myTopnav">
-        <a href="{{ urlsoftware }}list.php" class="active">{{ 'Availability List'|t }}</a>
-        <a href="{{ urlsoftware }}services.php">{{ 'Services'|t }}</a>
-        <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
-        <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>
-        <a {# href="{{ urlsoftware }}graphics.php" #}>{{ 'Graphics'|t }}</a>
-        {% if enable_technical_support %}<a href="javascript:void(0);" onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
-        <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
-        <a href="javascript:void(0);" class="icon" onclick="menu()">☰</a>
-        </div>
-        <!-- /Menu -->
-      {% endblock %}
-        <div class="alert alert-danger m-3" id="offline_alert" style="display: none" role="alert">
-          <b>{{ 'You are offline'|t }}.</b> {{ 'Last update'|t }}: <p style="display: inline" id="offline_update"></p>
-        </div>
-        <!-- Content -->
-        <div id="content">{% block content %}{% endblock %}</div>
-        <!-- /Content -->
-        <!-- Footer -->
-        <style>
-        #bottom {background-color: grey; color: white;}
-        div.img {border: 2px solid white; float: left; margin: 10px; width: 100px; height: 100px;}
-        </style>
-        <footer hidden id="bottom" class="row text-left p-4">
-        <div class="col-12 col-md-4">
-        <h5>Copyright &copy; Matteo</h5>
-        <h4>Applicativo realizzato per {{ owner }}</h4>
-        </div>
-        </footer>
-        <!-- /Footer -->
-    </body>
+  </footer>
+  <!-- /Footer -->
+</body>
 </html>

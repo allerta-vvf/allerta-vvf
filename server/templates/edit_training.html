@@ -1,175 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-<script src="resources/dist/main.js"></script>
+  <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <script src="resources/dist/main.js"></script>
 </head>
-<style>
-form {
-    border: 3px solid #f1f1f1;
-}
-
-input[type=text], input[type=password], input[type=email] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-.container {
-    padding: 16px;
-}
-
-span.psw {
-    float: right;
-    padding-top: 16px;
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-    span.psw {
-       display: block;
-       float: none;
-    }
-    .cancelbtn {
-       width: 100%;
-    }
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-}
-</style>
 <body>
-{% if training.modalità == "edit" or training.modalità == "add" %}
-<form method="post">
-  <div class="container">
-    <label><b>{{ 'Training day'|t }}</b></label>
-    <div class="input-group">
-      <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker" value="{{ values.data }}" type="text" class="form-control">
-      <div class="input-group-addon">
+  {% if training.modalità == "edit" or training.modalità == "add" %}
+  <form method="post">
+    <div class="container">
+      <label><b>{{ 'Training day'|t }}</b></label>
+      <div class="input-group">
+        <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker"
+          value="{{ values.data }}" type="text" class="form-control">
+        <div class="input-group-addon">
           <span class="glyphicon glyphicon-th"></span>
+        </div>
       </div>
+      <br>
+      <br>
+      <label><b>{{ 'Name'|t }}</b></label>
+      <input id="name" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
+      <br>
+      <br>
+      <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
+      <input id="timePicker1" type="time" name="start_time" required value="{{ values.inizio }}">
+      <br>
+      <br>
+      <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
+      <input id="timePicker2" type="time" name="end_time" required value="{{ values.fine }}">
+      <br>
+      <br>
+      <label><b>{{ 'Chief'|t }}</b></label>
+      <br>
+      {% for user in training.personale %}
+      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+        <input aria-label="{{ username(user.id) }}" class="form-check-input capo capo-{{ user.id }}"
+          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]'
+          value='{{ user.id }}'>
+        <label class="form-check-label" for="capo-{{ user.id }}">
+          {{ username(user.id) }}
+        </label>
+      </div>
+      {% endfor %}
+      <script>
+        $('.capo').on('change', function () {
+          $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        });
+      </script>
+      <br>
+      <label><b>{{ 'Others people'|t }}</b></label>
+      <br>
+      {% for user in training.personale %}
+      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+        <input aria-label="{{ username(user.id) }}" class="form-check-input personale personale-{{ user.id }}"
+          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]'
+          value='{{ user.id }}'>
+        <label class="form-check-label" for="personale-{{ user.id }}">
+          {{ username(user.id) }}
+        </label>
+      </div>
+      {% endfor %}
+      <br>
+      <label><b>{{ 'Training place'|t }}</b></label>
+      <input type="text" name="luogo" required value="{{ values.luogo }}">
+      <br>
+      <br>
+      <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
+      <textarea name='note'></textarea>
+      <br>
+      <br>
+      <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
+      <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
+      <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
+      <button type="submit">{{ 'Submit'|t }}</button>
     </div>
-    <br>
-    <br>
-    <label><b>{{ 'Name'|t }}</b></label>
-    <input id="name" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
-    <br>
-    <br>
-    <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
-    <input id="timePicker1" type="time" name="start_time" required value="{{ values.inizio }}">
-    <br>
-    <br>
-    <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
-    <input id="timePicker2" type="time" name="end_time" required value="{{ values.fine }}">
-    <br>
-    <br>
-    <label><b>{{ 'Chief'|t }}</b></label>
-    <br>
-    {% for user in training.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-      <input aria-label="{{ username(user.id) }}" class="form-check-input capo capo-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]' value='{{ user.id }}'>
-      <label class="form-check-label" for="capo-{{ user.id }}">
-        {{ username(user.id) }}
-      </label>
-    </div>
-    {% endfor %}
-    <script>
-    $('.capo').on('change', function() {
-       $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+  </form>
+  <script>
+    {% if training.modalità == "edit" %}
+    $.each('{{ values.capo|striptags|e("js") }}'.split(','), function (index, value) {
+      $('.capo-' + value).prop('checked', true);
     });
+    $.each('{{ values.personale|striptags|e("js") }}'.split(','), function (index, value) {
+      $('.personale-' + value).prop('checked', true);
+    });
+    $('#note').val('{{ values.note|e("js") }}');
+    {% endif %}
+  </script>
+  {% endif %}
+  {% if training.modalità == "delete" %}
+  <div style="margin: 0 auto; text-align: center">
+    <p>{{ 'Are you sure you want to delete the training?'|t }}</p>
+    <form method="post">
+      <input id="modalità" type="hidden" value="delete" name="mod"></input>
+      <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
+      <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
+      <input id="increment" type="hidden" value="{{ increment }}" name="increment"></input>
+      <button id="add" type="submit">{{ 'Submit'|t }}</button>
+    </form>
+    <script>
+      $('form').submit(function () {
+        return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
+      });
     </script>
-    <br>
-    <label><b>{{ 'Others people'|t }}</b></label>
-    <br>
-    {% for user in training.personale %}
-    <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-      <input aria-label="{{ username(user.id) }}" class="form-check-input personale personale-{{ user.id }}" style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]' value='{{ user.id }}'>
-      <label class="form-check-label" for="personale-{{ user.id }}">
-        {{ username(user.id) }}
-      </label>
-    </div>
-    {% endfor %}
-    <br>
-    <label><b>{{ 'Training place'|t }}</b></label>
-    <input type="text" name="luogo" required value="{{ values.luogo }}">
-    <br>
-    <br>
-    <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
-    <textarea name='note'></textarea>
-    <br>
-    <br>
-    <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
-    <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
-    <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
-    <button type="submit">{{ 'Submit'|t }}</button>
   </div>
-</form>
-<script>
-{% if training.modalità == "edit" %}
-$.each('{{ values.capo|striptags|e("js") }}'.split(','), function( index, value ) {
-  $('.capo-'+value).prop('checked', true);
-});
-$.each('{{ values.personale|striptags|e("js") }}'.split(','), function( index, value ) {
-  $('.personale-'+value).prop('checked', true);
-});
-$('#note').val('{{ values.note|e("js") }}');
-{% endif %}
-</script>
-{% endif %}
-{% if training.modalità == "delete" %}
-<style>
-#add {
- outline: none;
- cursor: pointer;
- text-align: center;
- text-decoration: none;
- font: bold 12px Arial, Helvetica, sans-serif;
- color: #fff;
- padding: 10px 20px;
- border: solid 1px #0076a3;
- background: #0095cd;
-}
-</style>
-<div style="margin: 0 auto; text-align: center">
-<p>{{ 'Are you sure you want to delete the training?'|t }}</p>
-<form method="post">
-<input id="modalità" type="hidden" value="delete" name="mod"></input>
-<input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
-<input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
-<input id="increment" type="hidden" value="{{ increment }}" name="increment"></input>
-<button id="add" type="submit">{{ 'Submit'|t }}</button>
-</form>
-<script>
-$('form').submit(function () {
-    return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
-});
-</script>
-</div>
-{% endif %}
+  {% endif %}
 </body>
 </html>

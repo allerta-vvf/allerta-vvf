@@ -5,11 +5,8 @@
 <div id='list'>
 </div>
 <script>
-$(document).ready(function() {
-  $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
-  /* setInterval(function() {
-    $( "#list" ).load("resources/ajax/ajax_user_details.php?user={{ view_user }}&"+Math.random());
-  }, 10000); */
-});
+  $(document).ready(function () {
+    $("#list").load("resources/ajax/ajax_user_details.php?user={{ view_user }}&" + Math.random());
+  });
 </script>
 {% endblock %}

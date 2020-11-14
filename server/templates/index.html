@@ -6,26 +6,27 @@
 {% block content %}
 {% if error %}
 <div class='text-center' id="err">
-<script>
-var sound = new Howl({
-  src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
-  autoplay: true,
-  volume: 0.9,
-});
-sound.play();
-</script>
-<script>
-$("#err").delay(5000).fadeOut(300);
-</script>
-{{ error.text }}
-<img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
+  <script>
+    var sound = new Howl({
+      src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
+      autoplay: true,
+      volume: 0.9,
+    });
+    sound.play();
+  </script>
+  <script>
+    $("#err").delay(5000).fadeOut(300);
+  </script>
+  {{ error.text }}
+  <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
 </div>
 {% endif %}
 <div class="container text-center" id="modulogin">
   <form method="post">
     <img alt="VVF" src="{{ urlsoftware }}/resources/images/logo.png" class="img-resposive"><br><br><br>
     <input type="text" name="name" placeholder="{{ 'username'|t }}" required autocomplete="username" autofocus><br><br>
-    <input type="password" name="password" placeholder="{{ 'password'|t }}" required autocomplete="current-password"><br><br>
+    <input type="password" name="password" placeholder="{{ 'password'|t }}" required
+      autocomplete="current-password"><br><br>
     <div>
       <div class="form-check">
         <input type="checkbox" name="remember_me" value='1' id="remember_me checkbox1" type="checkbox">
