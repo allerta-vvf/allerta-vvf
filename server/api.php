@@ -155,12 +155,12 @@ $dispatcher = FastRoute\simpleDispatcher(
     }
 );
 
-// Fetch method and URI from somewhere
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
-$uri = str_replace("/allerta", "", $uri);
-$uri = str_replace("api.php", "", $uri);
+$uri = str_replace($_SERVER['SCRIPT_NAME'], "", $uri);
+$uri = str_replace("///", "/", $uri);
 $uri = str_replace("//", "/", $uri);
+$uri = "/" . trim($uri, "/");
 
 // Strip query string (?foo=bar) and decode URI
 if (false !== $pos = strpos($uri, '?')) {
@@ -189,9 +189,6 @@ if (isset($_GET["xml"])) {
 }
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-
-bdump($httpMethod, $uri);
-bdump($response);
 
 function responseApi($content, $status_code=200)
 {
