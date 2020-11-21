@@ -55,7 +55,7 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     } else {
         $data['error_sound'] = "error.mp3";
     }
-    if($database->getOption("use_custom_error_sound")) {
+    if($database->getOption("use_custom_error_image")) {
         $data['error_image'] = "custom-error.gif";
     } else {
         $data['error_image'] = "error.gif";
