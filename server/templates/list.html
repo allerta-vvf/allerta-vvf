@@ -11,6 +11,15 @@
 <br>
 <br>
 <script>
+  function generate_alert_string(id){
+    if(id == '{{ user.id }}'){
+      return '{{ "your availability"|t }}';
+    } else {
+      username = document.querySelector("#username-"+id).innerText;
+      return `{{ "%s\'s availability"|t|format('${username}') }}`;
+    }
+  }
+
   function activate(id) {
     $.ajax({
       url: "resources/ajax/ajax_change_availability.php",
@@ -21,8 +30,9 @@
         token_list: "{{ token_list }}"
       },
       success: function (data) {
-        alert("{{ 'Thanks, %s, you have given your availability in case of alert.'|t|format(user.name) }}");
-        location.reload();
+        alert(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
+        clearInterval(window.loadTable_interval); //stop reloading
+        loadTable("list");
       }
     });
   }
@@ -37,8 +47,9 @@
         token_list: "{{ token_list }}"
       },
       success: function (data) {
-        alert("{{ 'Thanks, %s, you have removed your availability in case of alert.'|t|format(user.name) }}");
-        location.reload();
+        alert(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
+        clearInterval(window.loadTable_interval); //stop reloading
+        loadTable("list");
       }
     });
   }
@@ -47,8 +58,8 @@
   style="display: block; margin-left: auto; margin-right: auto;">
 <br>
 <br>
-<div id="list" style="overflow-x:auto;">
-  <table style="width: 90%; text-align:center;">
+<div id="list" class="table-responsive">
+  <table class="table table-striped table-bordered">
     <thead>
       <tr>
         <th>{{ 'Name'|t }}</th>
