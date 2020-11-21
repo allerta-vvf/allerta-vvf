@@ -35,7 +35,8 @@ foreach($risultato as $row){
         $name = $user->nameById($row["id"]);
         $name_encoded = urlencode($name);
         $functionName = $row["available"] ? "deactivate" : "activate";
-        $firstCell = $row["chief"] ? "<a onclick='$functionName(".$row["id"].");'><img alt='chief' src='./resources/images/red_helmet.png' width='20px'>$name</a>" : "<a onclick='$functionName(".$row["id"].");'><img alt='normal user' src='./resources/images/black_helmet.png' width='20px'>$name</a>";
+        $helmet_colour = $row["chief"] ? "red" : "black";
+        $firstCell = "<a id='username-{$row['id']}' style='text-align: left;' onclick='$functionName(".$row["id"].");'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
         $secondCell = $row["available"] ? "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-check' style='color:green'></i></a>" : "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-times'  style='color:red'></i></a>";
         $response[] = [
           (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,

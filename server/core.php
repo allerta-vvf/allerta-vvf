@@ -617,9 +617,9 @@ class user
     public function logout()
     {
         try {
+            $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $this->auth->logOut();
             $this->auth->destroySession();
-            $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             setcookie("authenticated", false, time() - 3600);
         }
         catch (\Delight\Auth\NotLoggedInException $e) {

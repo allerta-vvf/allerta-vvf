@@ -89,6 +89,7 @@ function fillTable(data, replaceLatLngWithMap=false){
   $("#table_body").empty();
   $.each(data, function(row_num, item) {
     let row = document.createElement("tr");
+    row.id = "row-"+row_num;
     $.each(item, function(cell_num, i) {
       if(i !== null){
         if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){
