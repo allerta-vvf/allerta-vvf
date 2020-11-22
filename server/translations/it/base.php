@@ -70,7 +70,7 @@ return [
     "Activate" => "Attiva",
     "Deactivate" => "Disattiva",
     "your availability" => "la tua disponibilità",
-    "%s's availability" => "la disponibilità di %s",
+    "%s availability" => "la disponibilità di %s",
     "Thanks, %s, you have given %s in case of alert." => "Grazie, %s, hai dato %s in caso di allerta.",
     "Thanks, %s, you have removed %s in case of alert." => "Grazie, %s, hai rimosso %s in caso di allerta.",
     "Add service" => "Aggiungi intervento",

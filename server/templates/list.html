@@ -16,7 +16,7 @@
       return '{{ "your availability"|t }}';
     } else {
       username = document.querySelector("#username-"+id).innerText;
-      return `{{ "%s\'s availability"|t|format('${username}') }}`;
+      return `{{ "%s availability"|t|format('${username}') }}`;
     }
   }
 

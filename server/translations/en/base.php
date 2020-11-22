@@ -70,7 +70,7 @@ return [
     "Activate" => "Activate",
     "Deactivate" => "Deactivate",
     "your availability" => "your availability",
-    "%s's availability" => "%s's availability",
+    "%s availability" => "%s availability",
     "Thanks, %s, you have given %s in case of alert." => "Thanks, %s, you have given %s in case of alert.",
     "Thanks, %s, you have removed %s in case of alert." => "Thanks, %s, you have removed %s in case of alert.",
     "Add service" => "Add service",
