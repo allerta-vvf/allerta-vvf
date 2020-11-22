@@ -563,6 +563,7 @@ class user
                     }
                     $this->auth->loginWithUsername($name, $password, $rememberDuration);
                 }
+                //TODO: translate errors code
                 catch (\Delight\Auth\InvalidEmailException $e) {
                     $this->tools->profiler_stop();
                     return ["status" => "error", "code" => 010, "text" => "Wrong email address"];
@@ -574,6 +575,10 @@ class user
                 catch (\Delight\Auth\EmailNotVerifiedException $e) {
                     $this->tools->profiler_stop();
                     return ["status" => "error", "code" => 012, "text" => "Email not verified"];
+                }
+                catch (\Delight\Auth\UnknownUsernameException $e) {
+                    $this->tools->profiler_stop();
+                    return ["status" => "error", "code" => 013, "text" => "Wrong username"];
                 }
                 catch (\Delight\Auth\TooManyRequestsException $e) {
                     $this->tools->profiler_stop();
