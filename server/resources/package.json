@@ -25,7 +25,7 @@
     "expose-loader": "^1.0.1",
     "file-loader": "^6.1.1",
     "font-awesome": "^4.7.0",
-    "howler": "^2.2.0",
+    "howler": "^2.2.1",
     "jquery": "^3.5.1",
     "jquery-pjax": "^2.0.1",
     "leaflet": "^1.7.1",

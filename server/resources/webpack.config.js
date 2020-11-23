@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     main: path.resolve(__dirname, './src/main.js'),
     maps: path.resolve(__dirname, './src/maps.js'),
+    players: path.resolve(__dirname, './src/players.js'),
     sw: path.resolve(__dirname, './src/sw.js'),
   },
   output: {

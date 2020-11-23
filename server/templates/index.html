@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block head %}
+  {{ parent() }}
+  {% if error %}
+    <script src="{{ urlsoftware }}/resources/dist/players.js"></script>
+  {% endif %}
+{% endblock %}
+
 {% block menu %}
 {% endblock %}
 
@@ -9,13 +16,12 @@
   <script>
     var sound = new Howl({
       src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
-      autoplay: true,
-      volume: 0.9,
+      autoplay: true
     });
     sound.play();
   </script>
   <script>
-    $("#err").delay(5000).fadeOut(300);
+    $("#err").delay(20000).fadeOut(300);
   </script>
   {{ error.text }}
   <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
