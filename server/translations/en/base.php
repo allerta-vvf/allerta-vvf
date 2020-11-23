@@ -23,7 +23,7 @@ return [
     "Drivers" => "Drivers",
     "People" => "People",
     "Date" => "Date",
-    "Code" => "Code",
+    "code" => "code",
     "Start time" => "Start time",
     "End time" => "End time",
     "Edit" => "Edit",
@@ -79,5 +79,12 @@ return [
     "Last update" => "Last update",
     "Search" => "Search",
     "Search results" => "Search results",
-    "No results found" => "No results found"
+    "No results found" => "No results found",
+    "Error" => "Error",
+    "Check the entered credentials and make sure they are correct" => "Check the entered credentials and make sure they are correct",
+    "Wrong email address" => "Wrong email address",
+    "Wrong password" => "Wrong password",
+    "Email not verified" => "Email not verified",
+    "Wrong username" => "Wrong username",
+    "Too many requests" => "Too many requests"
 ];

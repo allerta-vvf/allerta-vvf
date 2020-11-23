@@ -563,7 +563,6 @@ class user
                     }
                     $this->auth->loginWithUsername($name, $password, $rememberDuration);
                 }
-                //TODO: translate errors code
                 catch (\Delight\Auth\InvalidEmailException $e) {
                     $this->tools->profiler_stop();
                     return ["status" => "error", "code" => 010, "text" => "Wrong email address"];

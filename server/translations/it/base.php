@@ -23,7 +23,7 @@ return [
     "Drivers" => "Autisti",
     "People" => "Persone",
     "Date" => "Data",
-    "Code" => "Codice",
+    "code" => "codice",
     "Start time" => "Tempo inizio",
     "End time" => "Tempo fine",
     "Edit" => "Modifica",
@@ -79,5 +79,12 @@ return [
     "Last update" => "Ultimo aggiornamento",
     "Search" => "Cerca",
     "Search results" => "Risultati della ricerca",
-    "No results found" => "Nessun risultato trovato"
+    "No results found" => "Nessun risultato trovato",
+    "Error" => "Errore",
+    "Check the entered credentials and make sure they are correct" => "Controlla le credenziali inserite e accertati che siano corrette",
+    "Wrong email address" => "Indirizzo email errato",
+    "Wrong password" => "Password errata",
+    "Email not verified" => "Indirizzo email non verificato",
+    "Wrong username" => "Username errato",
+    "Too many requests" => "Troppi tentativi effettuati"
 ];

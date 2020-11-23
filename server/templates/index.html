@@ -11,22 +11,6 @@
 {% endblock %}
 
 {% block content %}
-{% if error %}
-<div class='text-center' id="err">
-  <script>
-    var sound = new Howl({
-      src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
-      autoplay: true
-    });
-    sound.play();
-  </script>
-  <script>
-    $("#err").delay(20000).fadeOut(300);
-  </script>
-  {{ error.text }}
-  <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
-</div>
-{% endif %}
 <div class="container text-center" id="modulogin">
   <form method="post">
     <img alt="VVF" src="{{ urlsoftware }}/resources/images/logo.png" class="img-resposive"><br><br><br>
@@ -41,6 +25,20 @@
     </div>
     <input type="submit" name="login" class="btn btn-lg btn-success" value="{{ 'Login'|t }}">
   </form>
+  {% if error %}
+  <div id="err" class="alert alert-danger m-3" role="alert">
+    <h4 class="alert-heading">{{ error.text|t }}</h4>
+    <p>{{ 'Error'|t}} {{ 'code'|t}} {{ error.code }}. {{ 'Check the entered credentials and make sure they are correct'|t }}.</p>
+    <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
+  </div>
+  <script>
+    var sound = new Howl({
+      src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
+      autoplay: true
+    });
+    sound.play();
+    $("#err").delay(20000).fadeOut(300);
+  </script>
+  {% endif %}
 </div>
-<br><br>
 {% endblock %}
