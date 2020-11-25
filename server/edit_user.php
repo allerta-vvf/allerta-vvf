@@ -1,42 +1,49 @@
 <?php
 require_once 'ui.php';
-if($tools->validate_form_data('$post-mod', true, "add")) {
-    if($tools->validate_form_data(['$post-mail', '$post-name', '$post-username', '$post-password', '$post-birthday', '$post-token'])) {
+function debug(){
+    echo("<pre>"); var_dump($_POST); echo("</pre>"); exit();
+}
+if($tools->validate_form("mod", "add")) {
+    if($tools->validate_form(['mail', 'name', 'username', 'password', 'birthday', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding user");
             bdump($_POST);
-            $capo = isset($_POST["capo"]) ? 1 : 0;
-            $autista = isset($_POST["autista"]) ? 1 : 0;
+            $chief = isset($_POST["chief"]) ? 1 : 0;
+            $driver = isset($_POST["driver"]) ? 1 : 0;
             $hidden = isset($_POST["visible"]) ? 0 : 1;
             $disabled = isset($_POST["enabled"]) ? 0 : 1;
-            $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user->name());
+            $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user->name());
             $tools->redirect("list.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug();
         }
+    } else {
+        debug();
     }
-    /*} elseif($tools->validate_form_data('$post-mod', true, "edit")) {
-    if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
+/*} elseif($tools->validate_form("mod", "edit")) {
+    if($tools->validate_form(['mail', 'name', 'username', 'password', 'birthday', 'token'])) {
     if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
       bdump("editing service");
-      $database->change_service($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
+      $database->change_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
       $tools->redirect("services.php");
     } else {
       $tools->redirect("accessdenied.php");
     }
     }
     */
-} elseif($tools->validate_form_data('$post-mod', true, "delete")) {
-      bdump("removing service");
-    if($tools->validate_form_data(['$post-id', '$post-token'])) {
+} elseif($tools->validate_form("mod", "delete")) {
+    bdump("removing service");
+    if($tools->validate_form(['id', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing user");
             $user->remove_user($_POST["id"]);
             $tools->redirect("list.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug();
         }
+    } else {
+        debug();
     }
 } else {
     if(isset($_GET["add"])||isset($_GET["edit"])||isset($_GET["delete"])||isset($_GET["mod"])) {
@@ -48,7 +55,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
         bdump($database->exists("profiles", $id));
-        $values = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
+        $values = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le types della table
         bdump($values);
     } else {
         $values = [];

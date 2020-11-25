@@ -23,62 +23,18 @@ class tools
         $this->profiler_enabled = $profiler_enabled;
     }
 
-    public function validate_form_data($data, $noempty=true, $value=null)
+    public function validate_form($data, $expected_value=null, $data_source=null)
     {
-        if(!is_array($data) && isset($data) && !empty($data)) {
-            if(substr($data, 0, 6) == '$post-') {
-                $data = substr($data, 6);
-                if(isset($_POST[$data])) {
-                    $data = $_POST[$data];
-                }
+        if(is_array($data)){
+            foreach($data as $element){
+                if (!$this->validate_form($element, $data_source, $expected_value)) return false;
             }
-        }
-        if(is_array($data)) {
-            if(empty($data)) {
-                $continue = false;
-                return false;
-            } else {
-                $continue = true;
-            }
-            if($continue) {
-                foreach($data as $key=>$value){
-                    if(!is_array($value) && isset($value) && !empty($value)) {
-                        if(substr($value, 0, 6) == '$post-') {
-                            $value = substr($value, 6);
-                            if(isset($_POST[$value])) {
-                                $value = $_POST[$value];
-                            }
-                        }
-                    }
-                    if($continue) {
-                        if(!is_array($value)) {
-                              bdump($value);
-                              bdump("_");
-                            $validazione = $this->validate_form_data($value, $noempty, $value);
-                            if(!$validazione) {
-                                $continue = false;
-                                return false;
-                            }
-                        }
-                    }
-                }
-                if($continue) {
-                    return true;
-                }
-            }
-        } else if(isset($data)) {
-            if(!empty($data)) {
-                if(!is_null($value)) {
-                    return $value == $data;
-                } else {
-                    bdump($data);
-                    return true;
-                }
-            } else {
-                return false;
-            }
+            return true;
         } else {
-            return false;
+            if(is_null($data_source) || !is_array($data_source)){
+                $data_source = $_POST;
+            }
+            return !is_null($data) && isset($data_source[$data]) && !is_null($data_source[$data]) && (!is_null($expected_value) ? $data_source[$data] == $expected_value : true);
         }
     }
 
@@ -363,17 +319,17 @@ class database
         $this->exec($sql, false);
     }
 
-    public function add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by)
+    public function add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
     {
-        $autisti = implode(",", $autisti);
-        bdump($autisti);
-        $personale = implode(",", $personale);
-        bdump($personale);
+        $drivers = implode(",", $drivers);
+        bdump($drivers);
+        $crew = implode(",", $crew);
+        bdump($crew);
         $increment = implode(",", $increment);
         bdump($increment);
-        $data = date('Y-m-d H:i:s', strtotime($data));
-        $sql = "INSERT INTO `%PREFIX%_services` (`id`, `data`, `codice`, `uscita`, `rientro`, `capo`, `autisti`, `personale`, `luogo`, `note`, `tipo`, `increment`, `inserted_by`) VALUES (NULL, :data, :codice, :uscita, :rientro, :capo, :autisti, :personale, :luogo, :note, :tipo, :increment, :inserted_by);";
-        $this->exec($sql, false, [":data" => $data, ":codice" => $codice, "uscita" => $uscita, ":rientro" => $rientro, ":capo" => $capo, ":autisti" => $autisti, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":tipo" => $tipo, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        $sql = "INSERT INTO `%PREFIX%_services` (`id`, `date`, `code`, `beginning`, `end`, `chief`, `drivers`, `crew`, `place`, `notes`, `type`, `increment`, `inserted_by`) VALUES (NULL, :date, :code, :beginning, :end, :chief, :drivers, :crew, :place, :notes, :type, :increment, :inserted_by);";
+        $this->exec($sql, false, [":date" => $date, ":code" => $code, "beginning" => $beginning, ":end" => $end, ":chief" => $chief, ":drivers" => $drivers, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":type" => $type, ":increment" => $increment, ":inserted_by" => $inserted_by]);
         $this->increment($increment);
     }
 
@@ -384,21 +340,21 @@ class database
     }
 
 
-    public function change_service($id, $data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by)
+    public function change_service($id, $date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
     {
         $this->remove_service($id); // TODO: update, instead of removing and re-adding (with another id)
-        $this->add_service($data, $codice, $uscita, $rientro, $capo, $autisti, $personale, $luogo, $note, $tipo, $increment, $inserted_by);
+        $this->add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by);
     }
 
-    public function add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by)
+    public function add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
     {
-        $personale = implode(",", $personale);
-        bdump($personale);
+        $crew = implode(",", $crew);
+        bdump($crew);
         $increment = implode(",", $increment);
         bdump($increment);
-        $data = date('Y-m-d H:i:s', strtotime($data));
-        $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `data`, `name`, `inizio`, `fine`, `capo`, `personale`, `luogo`, `note`, `increment`, `inserted_by`) VALUES (NULL, :data, :name, :start_time, :end_time, :capo, :personale, :luogo, :note, :increment, :inserted_by);";
-        $this->exec($sql, false, [":data" => $data, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":capo" => $capo, ":personale" => $personale, ":luogo" => $luogo, ":note" => $note, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `date`, `name`, `beginning`, `end`, `chief`, `crew`, `place`, `notes`, `increment`, `inserted_by`) VALUES (NULL, :date, :name, :start_time, :end_time, :chief, :crew, :place, :notes, :increment, :inserted_by);";
+        $this->exec($sql, false, [":date" => $date, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":chief" => $chief, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":increment" => $increment, ":inserted_by" => $inserted_by]);
         $this->increment_trainings($increment);
     }
 
@@ -410,11 +366,11 @@ class database
     }
 
 
-    public function change_training($id, $data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by)
+    public function change_training($id, $date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
     {
         $this->remove_training($id); // TODO: update, instead of removing and re-adding (with another id)
         bdump("removed");
-        $this->add_training($data, $name, $start_time, $end_time, $capo, $personale, $luogo, $note, $increment, $inserted_by);
+        $this->add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by);
     }
 }
 
@@ -464,11 +420,11 @@ class user
         if(!$this->authenticated()) {
             if($this->database->getOption("intrusion_save")) {
                 if($this->database->getOption("intrusion_save_info")) {
-                    $params = [":page" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode($_SERVER)];
+                    $params = [":page" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode($_SERVER)];
                 } else {
-                    $params = [":page" => $this->tools->get_page_url(), ":ip" => "redacted", ":data" => date("d/m/Y"), ":ora" => date("H:i.s"), ":servervar" => json_encode(["redacted" => "true"])];
+                    $params = [":page" => $this->tools->get_page_url(), ":ip" => "redacted", ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode(["redacted" => "true"])];
                 }
-                $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `page`, `data`, `ora`, `ip`, `servervar`) VALUES (NULL, :page, :data, :ora, :ip, :servervar)";
+                $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `page`, `date`, `hour`, `ip`, `server_var`) VALUES (NULL, :page, :date, :hour, :ip, :server_var)";
                 $this->database->exec($sql, false, $params);
             }
             if($redirect) {
@@ -631,18 +587,18 @@ class user
         }
     }
 
-    public function add_user($email, $name, $username, $password, $birthday, $capo, $autista, $hidden, $disabled, $inserted_by)
+    public function add_user($email, $name, $username, $password, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
     {
         $this->tools->profiler_start("Add user");
         $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
         if($userId) {
             $hidden = $hidden ? 1 : 0;
             $disabled = $disabled ? 1 : 0;
-            $capo = $capo ? 1 : 0;
-            $autista = $autista ? 1 : 0;
-            $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `chief`, `autista`) VALUES (:hidden, :disabled, :name, :chief, :autista)";
-            $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":chief" => $capo, ":autista" => $autista]);
-            if($capo == 1) {
+            $chief = $chief ? 1 : 0;
+            $driver = $driver ? 1 : 0;
+            $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `chief`, `driver`) VALUES (:hidden, :disabled, :name, :chief, :driver)";
+            $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":chief" => $chief, ":driver" => $driver]);
+            if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
             $this->log("User created", $userId, $inserted_by, date("d/m/Y"), date("H:i.s"));

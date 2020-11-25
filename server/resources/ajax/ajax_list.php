@@ -18,8 +18,8 @@ foreach($risultato as $row){
           "available" => $row["available"],
           "chief" => $row['chief'],
           "online" => (time()-$row["online_time"])<=30 ? 1 : 0,
-          "driver" => $row['autista'],
-          "phone" => $row['telefono'],
+          "driver" => $row['driver'],
+          "phone" => $row['phone_number'],
           "services" => $row['services'],
           "availability_minutes" => $row['availability_minutes']
         ];
@@ -41,9 +41,9 @@ foreach($risultato as $row){
         $response[] = [
           (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
           $secondCell,
-          $row['autista'] ? "<img alt='driver' src='./resources/images/wheel.png' width='20px'>" : "",
-          $row['telefono'] ? "<a href='tel:+".$row['telefono']."'><i class='fa fa-phone'></i></a>" : "",
-          $row['telefono'] ? "<a href='https://api.whatsapp.com/send?phone=+".$row['telefono']."text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
+          $row['driver'] ? "<img alt='driver' src='./resources/images/wheel.png' width='20px'>" : "",
+          $row['phone_number'] ? "<a href='tel:+".$row['phone_number']."'><i class='fa fa-phone'></i></a>" : "",
+          $row['phone_number'] ? "<a href='https://api.whatsapp.com/send?phone=+".$row['phone_number']."text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
           $row['services'],
           $row['availability_minutes'],
           "<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>"

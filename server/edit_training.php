@@ -1,50 +1,59 @@
 <?php
 require_once 'ui.php';
-if($tools->validate_form_data('$post-mod', true, "add")) {
-    if($tools->validate_form_data(['$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-luogo', '$post-note', '$post-token'])) {
+function debug(){
+    echo("<pre>"); var_dump($_POST); echo("</pre>"); exit();
+}
+if($tools->validate_form("mod", "add")) {
+    if($tools->validate_form(['date', 'name', 'start_time', 'end_time', 'place', 'notes', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding training");
-            $database->add_training($_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"][0], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+            $database->add_training($_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
             $tools->redirect("trainings.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug(); //TODO: remove debug info
         }
+    } else {
+        debug();
     }
-} elseif($tools->validate_form_data('$post-mod', true, "edit")) {
-    if($tools->validate_form_data(['$post-id', '$post-data', '$post-name', '$post-start_time', '$post-end_time', '$post-capo', '$post-luogo', '$post-note', '$post-token'])) {
+} elseif($tools->validate_form("mod", "edit")) {
+    if($tools->validate_form(['id', 'date', 'name', 'start_time', 'end_time', 'chief', 'place', 'notes', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump($_POST);
             bdump("editing training");
-            $database->change_training($_POST["id"], $_POST["data"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["capo"][0], $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $tools->extract_unique([$_POST["capo"],$_POST["personale"]]), $user->name());
+            $database->change_training($_POST["id"], $_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
             $tools->redirect("trainings.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug();
         }
+    } else {
+        debug();
     }
-} elseif($tools->validate_form_data('$post-mod', true, "delete")) {
+} elseif($tools->validate_form("mod", "delete")) {
     bdump("removing training");
-    if($tools->validate_form_data(['$post-id', '$post-increment', '$post-token'])) {
+    if($tools->validate_form(['id', 'increment', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing training");
             $database->remove_training($_POST["id"], $_POST["increment"]);
             $tools->redirect("trainings.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug();
         }
+    } else {
+        debug();
     }
 } else {
     if(isset($_GET["add"])||isset($_GET["edit"])||isset($_GET["delete"])||isset($_GET["mod"])) {
         $_SESSION["token"] = bin2hex(random_bytes(64));
     }
-    $personale = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
+    $crew = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
     $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["edit"])) ? "edit" : ((isset($_GET["delete"])) ? "delete" : "add"));
     bdump($modalità, "modalità");
-    bdump($personale, "personale");
+    bdump($crew, "crew");
     $id = "";
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
         bdump($database->exists("trainings", $id));
-        $values = $database->exec("SELECT * FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le tipologie della table
+        $values = $database->exec("SELECT * FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le types della table
         bdump($values);
     } else {
         $values = [];
@@ -61,7 +70,7 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
             //$tools->redirect("accessdenied.php");
         }
     }
-    loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training", false))]);
+    loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training", false))]);
     bdump($_SESSION['token'], "token");
 }
 ?>

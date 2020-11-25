@@ -4,28 +4,28 @@ init_class();
 $user->requirelogin(false);
 $user->online_time_update();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY data DESC, inizio desc", true);
+$risultato = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY date DESC, beginning desc", true);
 
 $response = [];
 foreach($risultato as $row){
-  $chief = $user->nameById($row["capo"]);
+  $chief = $user->nameById($row["chief"]);
 
-  $others_people_array = explode(",", $row['personale']);
-  foreach($others_people_array as $key=>$name){
-    $others_people_array[$key] = $user->nameById($name);
+  $others_crew_array = explode(",", $row['crew']);
+  foreach($others_crew_array as $key=>$name){
+    $others_crew_array[$key] = $user->nameById($name);
   }
-  $others_people = implode(", ", $others_people_array);
+  $others_crew = implode(", ", $others_crew_array);
   $response[] = [
-    $row['data'],
+    $row['date'],
     $row['name'],
-    $row['inizio'],
-    $row['fine'],
+    $row['beginning'],
+    $row['end'],
     $chief,
-    $others_people,
-    s($row['luogo'],false,true),
-    s($row['note'],false,true),
-    $database->getOption("training_edit") ? "<a href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
-    $database->getOption("training_remove") ? "<a href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
+    $others_crew,
+    s($row['place'],false,true),
+    s($row['notes'],false,true),
+    $database->getOption("training_edit") ? "<a class='pjax_disable' href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
+    $database->getOption("training_remove") ? "<a class='pjax_disable' href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
   ];
 }
 header("Content-type: application/json");

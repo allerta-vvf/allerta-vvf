@@ -237,41 +237,32 @@ function initDB()
         $prefix = DB_PREFIX;
         $connection->exec(
             "
-CREATE TABLE IF NOT EXISTS `".$prefix."_certificati` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`codice` text NOT NULL,
-`name` text NOT NULL,
-`services` text NOT NULL,
-`url` text NOT NULL,
-`file` text NOT NULL,
-PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`data` date NOT NULL,
+`date` date NOT NULL,
 `name` varchar(999) NOT NULL,
-`inizio` time NOT NULL,
-`fine` time NOT NULL,
-`personale` text NOT NULL,
-`capo` text NOT NULL,
-`luogo` text NOT NULL,
-`note` text NOT NULL,
+`beginning` time NOT NULL,
+`end` time NOT NULL,
+`crew` text NOT NULL,
+`chief` text NOT NULL,
+`place` text NOT NULL,
+`notes` text NOT NULL,
 `increment` varchar(999) NOT NULL DEFAULT 'test',
 `inserted_by` varchar(200) NOT NULL DEFAULT 'test',
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`data` date NOT NULL,
-`codice` text NOT NULL,
-`uscita` time NOT NULL,
-`rientro` time NOT NULL,
-`capo` varchar(999) NOT NULL DEFAULT 'test',
-`autisti` varchar(999) NOT NULL DEFAULT 'test',
-`personale` varchar(999) NOT NULL DEFAULT 'test',
-`luogo` varchar(999) NOT NULL DEFAULT 'test',
-`note` varchar(999) NOT NULL DEFAULT 'test',
-`tipo` text NOT NULL,
+`date` date NOT NULL,
+`code` text NOT NULL,
+`beginning` time NOT NULL,
+`end` time NOT NULL,
+`chief` varchar(999) NOT NULL DEFAULT 'test',
+`drivers` varchar(999) NOT NULL DEFAULT 'test',
+`crew` varchar(999) NOT NULL DEFAULT 'test',
+`place` varchar(999) NOT NULL DEFAULT 'test',
+`notes` varchar(999) NOT NULL DEFAULT 'test',
+`type` text NOT NULL,
 `increment` varchar(999) NOT NULL,
 `inserted_by` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
@@ -279,10 +270,10 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `".$prefix."_intrusions` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `page` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
-`data` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-`ora` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+`date` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+`hour` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
 `ip` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-`servervar` varchar(9999) COLLATE utf8mb4_unicode_ci NOT NULL,
+`server_var` varchar(9999) COLLATE utf8mb4_unicode_ci NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
@@ -301,11 +292,11 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_minutes` (
 `list` mediumtext NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_tipo` (
+CREATE TABLE IF NOT EXISTS `".$prefix."_type` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `name` text NOT NULL,
 PRIMARY KEY (`id`),
-UNIQUE KEY `nametipologia` (`name`(99))
+UNIQUE KEY `type_name` (`name`(99))
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_users` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -330,13 +321,13 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 `available` tinyint(1) NOT NULL DEFAULT 0,
 `chief` tinyint(1) NOT NULL DEFAULT 0,
-`autista` tinyint(1) NOT NULL DEFAULT 0,
-`telefono` varchar(25) DEFAULT NULL,
+`driver` tinyint(1) NOT NULL DEFAULT 0,
+`phone_number` varchar(25) DEFAULT NULL,
 `services` int(11) NOT NULL DEFAULT 0,
 `trainings` int(11) NOT NULL DEFAULT 0,
 `online_time` int(11) NOT NULL DEFAULT 0,
 `availability_minutes` int(11) NOT NULL DEFAULT 0,
-`immagine` varchar(1000) DEFAULT NULL,
+`image` varchar(1000) DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -413,7 +404,7 @@ PRIMARY KEY (`id`),
 KEY `Id` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());
-INSERT INTO `".$prefix."_tipo` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');"
+INSERT INTO `".$prefix."_type` (`id`, `name`) VALUES (NULL, 'type1'), (NULL, 'type2');"
         );
     } catch (Exception $e) {
         if(is_cli()) {

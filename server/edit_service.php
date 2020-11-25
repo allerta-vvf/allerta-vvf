@@ -1,47 +1,58 @@
 <?php
 require_once 'ui.php';
-if($tools->validate_form_data('$post-mod', true, "add")) {
-    if($tools->validate_form_data(['$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
+function debug(){
+    echo("<pre>"); var_dump($_POST); echo("</pre>"); exit();
+}
+if($tools->validate_form("mod", "add")) {
+    if($tools->validate_form(['date', 'code', 'beginning', 'end', 'place', 'notes', 'type', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding service");
-            $database->add_service($_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"][0], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
+            $database->add_service($_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug(); //TODO: remove debug info
         }
+    } else {
+        debug();
     }
-} elseif($tools->validate_form_data('$post-mod', true, "edit")) {
-    if($tools->validate_form_data(['$post-id', '$post-data', '$post-codice', '$post-uscita', '$post-rientro', '$post-capo', '$post-luogo', '$post-note', '$post-tipo', '$post-token'])) {
+} elseif($tools->validate_form("mod", "edit")) {
+    if($tools->validate_form(['id', 'date', 'code', 'beginning', 'end', 'place', 'notes', 'type', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump($_POST);
             bdump("editing service");
-            $database->change_service($_POST["id"], $_POST["data"], $_POST["codice"], $_POST["uscita"], $_POST["rientro"], $_POST["capo"][0], $tools->extract_unique($_POST["autisti"]), $tools->extract_unique($_POST["personale"]), $_POST["luogo"], $_POST["note"], $_POST["tipo"], $tools->extract_unique([$_POST["capo"],$_POST["autisti"],$_POST["personale"]]), $user->name());
+            $database->change_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            debug();
         }
+    } else {
+        debug();
     }
-} elseif($tools->validate_form_data('$post-mod', true, "delete")) {
+} elseif($tools->validate_form("mod", "delete")) {
     bdump("removing service");
-    if($tools->validate_form_data(['$post-id', '$post-increment', '$post-token'])) {
+    if($tools->validate_form(['id', 'increment', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing service");
             $database->remove_service($_POST["id"], $_POST["increment"]);
             $tools->redirect("services.php");
         } else {
-            $tools->redirect("accessdenied.php");
+            echo("1");
+            debug();
         }
+    } else {
+        echo("2");
+        debug();
     }
 } else {
     if(isset($_GET["add"])||isset($_GET["edit"])||isset($_GET["delete"])||isset($_GET["mod"])) {
         $_SESSION["token"] = bin2hex(random_bytes(64));
     }
-    $personale = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
-    $tipologie = $database->exec("SELECT `name` FROM `%PREFIX%_tipo` ORDER BY name ASC", true); // Pesco le tipologie della table
+    $crew = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
+    $types = $database->exec("SELECT `name` FROM `%PREFIX%_type` ORDER BY name ASC", true); // Pesco le tipologie della table
     $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["edit"])) ? "edit" : ((isset($_GET["delete"])) ? "delete" : "add"));
     bdump($modalità, "modalità");
-    bdump($tipologie, "tipologie");
-    bdump($personale, "personale");
+    bdump($types, "types");
+    bdump($crew, "crew");
     $id = "";
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
@@ -58,12 +69,12 @@ if($tools->validate_form_data('$post-mod', true, "add")) {
     }
     if($modalità=="edit" || $modalità=="delete") {
         if(empty($id)) {
-            $tools->redirect("accessdenied.php");
+            echo("<pre>"); var_dump($_POST); echo("</pre>");
         } elseif (!$database->exists("services", $id)) {
-            $tools->redirect("accessdenied.php");
+            echo("<pre>"); var_dump($_POST); echo("</pre>");
         }
     }
-    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'personale' => $personale, 'tipologie' => $tipologie], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service", false))]);
+    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew, 'types' => $types], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service", false))]);
     bdump($_SESSION['token'], "token");
 }
 ?>

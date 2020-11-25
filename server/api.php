@@ -90,13 +90,13 @@ $dispatcher = FastRoute\simpleDispatcher(
             'POST', '/user', function ($vars) {
                 requireToken();
                 global $user, $user_info;
-                $capo = isset($_POST["capo"]) ? $_POST["capo"]==1 : false;
-                $autista = isset($_POST["autista"]) ? $_POST["autista"]==1 : false;
+                $chief = isset($_POST["chief"]) ? $_POST["chief"]==1 : false;
+                $driver = isset($_POST["driver"]) ? $_POST["driver"]==1 : false;
                 $hidden = isset($_POST["hidden"]) ? $_POST["hidden"]==1 : false;
                 $disabled = isset($_POST["disabled"]) ? $_POST["disabled"]==1 : false;
                 if(isset($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"])) {
                     try{
-                        $userId = $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $capo, $autista, $hidden, $disabled, $user_info["id"]);
+                        $userId = $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user_info["id"]);
                     } catch (\Delight\Auth\InvalidEmailException $e) {
                         return ["status" => "error", "message" => "Invalid email address"];
                     } catch (\Delight\Auth\InvalidPasswordException $e) {

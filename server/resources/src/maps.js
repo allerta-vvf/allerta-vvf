@@ -29,8 +29,8 @@ function set_marker(LatLng){
 		marker.remove();
 	}
   console.log(LatLng);
-  if($("input[name='luogo']").val() !== undefined){
-    $("input[name='luogo']").val(LatLng.lat + ";" + LatLng.lng);
+  if($("input[name='place']").val() !== undefined){
+    $("input[name='place']").val(LatLng.lat + ";" + LatLng.lng);
   }
   marker = L.marker(LatLng, {icon: iconDefault}).addTo(map);
 }

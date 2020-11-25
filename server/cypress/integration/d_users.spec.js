@@ -38,11 +38,11 @@ describe("User management", () => {
                                 .type(user.birthday)
                                 .should('have.value', user.birthday)
                             if(user.chief){
-                                cy.get("input[name='capo']")
+                                cy.get("input[name='chief']")
                                     .check({force: true})
                             }
                             if(user.driver){
-                                cy.get("input[name='autista']")
+                                cy.get("input[name='driver']")
                                     .check({force: true})
                             }
                             cy.contains("Submit").click()
@@ -61,8 +61,8 @@ describe("User management", () => {
                                 username: user.username,
                                 password: user.password,
                                 birthday: user.birthday,
-                                capo: user.chief | 0,
-                                autista: user.driver | 0,
+                                chief: user.chief | 0,
+                                driver: user.driver | 0,
                                 hidden: 0,
                                 disabled: 0
                             }})

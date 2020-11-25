@@ -10,8 +10,8 @@
     <div class="container">
       <label><b>{{ 'Training day'|t }}</b></label>
       <div class="input-group">
-        <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="data" data-provide="datepicker"
-          value="{{ values.data }}" type="text" class="form-control">
+        <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="date" data-provide="datepicker"
+          value="{{ values.date }}" type="text" class="form-control">
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-th"></span>
         </div>
@@ -23,50 +23,50 @@
       <br>
       <br>
       <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
-      <input id="timePicker1" type="time" name="start_time" required value="{{ values.inizio }}">
+      <input id="timePicker1" type="time" name="start_time" required value="{{ values.beginning }}">
       <br>
       <br>
       <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
-      <input id="timePicker2" type="time" name="end_time" required value="{{ values.fine }}">
+      <input id="timePicker2" type="time" name="end_time" required value="{{ values.end }}">
       <br>
       <br>
       <label><b>{{ 'Chief'|t }}</b></label>
       <br>
-      {% for user in training.personale %}
+      {% for user in training.crew %}
       <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input capo capo-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='capo[]'
+        <input aria-label="{{ username(user.id) }}" class="form-check-input chief chief-{{ user.id }}"
+          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
           value='{{ user.id }}'>
-        <label class="form-check-label" for="capo-{{ user.id }}">
+        <label class="form-check-label" for="chief-{{ user.id }}">
           {{ username(user.id) }}
         </label>
       </div>
       {% endfor %}
       <script>
-        $('.capo').on('change', function () {
+        $('.chief').on('change', function () {
           $('input[name="' + this.name + '"]').not(this).prop('checked', false);
         });
       </script>
       <br>
-      <label><b>{{ 'Others people'|t }}</b></label>
+      <label><b>{{ 'Crew'|t }}</b></label>
       <br>
-      {% for user in training.personale %}
+      {% for user in training.crew %}
       <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input personale personale-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='personale[]'
+        <input aria-label="{{ username(user.id) }}" class="form-check-input crew crew-{{ user.id }}"
+          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
           value='{{ user.id }}'>
-        <label class="form-check-label" for="personale-{{ user.id }}">
+        <label class="form-check-label" for="crew-{{ user.id }}">
           {{ username(user.id) }}
         </label>
       </div>
       {% endfor %}
       <br>
       <label><b>{{ 'Training place'|t }}</b></label>
-      <input type="text" name="luogo" required value="{{ values.luogo }}">
+      <input type="text" name="place" required value="{{ values.place }}">
       <br>
       <br>
       <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
-      <textarea name='note'></textarea>
+      <textarea name='notes'></textarea>
       <br>
       <br>
       <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
@@ -77,13 +77,13 @@
   </form>
   <script>
     {% if training.modalità == "edit" %}
-    $.each('{{ values.capo|striptags|e("js") }}'.split(','), function (index, value) {
-      $('.capo-' + value).prop('checked', true);
+    $.each('{{ values.chief|striptags|e("js") }}'.split(','), function (index, value) {
+      $('.chief-' + value).prop('checked', true);
     });
-    $.each('{{ values.personale|striptags|e("js") }}'.split(','), function (index, value) {
-      $('.personale-' + value).prop('checked', true);
+    $.each('{{ values.crew|striptags|e("js") }}'.split(','), function (index, value) {
+      $('.crew-' + value).prop('checked', true);
     });
-    $('#note').val('{{ values.note|e("js") }}');
+    $('#notes').val('{{ values.notes|e("js") }}');
     {% endif %}
   </script>
   {% endif %}
