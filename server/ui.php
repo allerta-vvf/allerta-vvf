@@ -62,7 +62,8 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     }
     $template = $twig->load($templatename);
     if(isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])) {
-        echo $template->renderBlock("content", $data);
+        $data["pjax_requested"] = true;
+        echo $template->renderBlock("pjax_content", $data);
     } else {
         echo $template->render($data);
     }
