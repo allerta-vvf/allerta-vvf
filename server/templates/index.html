@@ -3,7 +3,7 @@
 {% block head %}
   {{ parent() }}
   {% if error %}
-    <script src="{{ urlsoftware }}/resources/dist/players.js"></script>
+    <script src="{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}"></script>
   {% endif %}
 {% endblock %}
 

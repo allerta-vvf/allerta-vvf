@@ -4,13 +4,18 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 import './font-awesome.scss';
-import '../node_modules/bootstrap-cookie-alert/cookiealert.css';  // TODO: migrate to Bootstrap Italia
+import '../node_modules/bootstrap-cookie-alert/cookiealert.css';
 import 'bootstrap-datepicker';
 import '../node_modules/bootstrap-toggle/css/bootstrap-toggle.css';
 import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
 import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 import 'time-input-polyfill/auto';
 import 'jquery-pjax';
+
+console.log("Commit: "+process.env.GIT_VERSION);
+console.log("Date: "+process.env.GIT_AUTHOR_DATE);
+console.log("Bundle mode: "+process.env.BUNDLE_MODE);
+console.log("Bundle date: "+process.env.BUNDLE_DATE);
 
 $(document).pjax('a:not(.pjax_disable)', '#content', {timeout: 100000});
 $(document).on('pjax:start', function() {

@@ -1,7 +1,7 @@
 const path = require('path');
-var webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     filename: (pathData) => {
-      return pathData.chunk.name === 'sw' ? '../../sw.js': '[name].js';
+      return pathData.chunk.name === 'sw' ? '../../sw.js': '[name].[contenthash].js';
     },
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/resources/dist/',
@@ -25,17 +25,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-transform-runtime']
-          }
-        }
-      },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
@@ -78,17 +67,14 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({
-        $: 'jquery',
-        popper: 'popper.js'
-    }),
     new CopyPlugin({
       patterns: [
         { from: 'node_modules/leaflet/dist/images', to: '.', noErrorOnMissing: true }
       ],
     }),
+    new WebpackAssetsManifest()
   ],
   optimization: {
     mergeDuplicateChunks: true
-  },
+  }
 };

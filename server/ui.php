@@ -3,6 +3,10 @@ require_once 'core.php';
 init_class();
 
 p_start("Load Twig");
+$webpack_manifest = json_decode(
+    file_get_contents(realpath("resources/dist/manifest.json")),
+    true
+);
 try {
     $loader = new \Twig\Loader\FilesystemLoader('templates');
 } catch (Exception $e) {
@@ -27,13 +31,20 @@ $function_option = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_option);
-$username_option = new \Twig\TwigFunction(
+$function_username = new \Twig\TwigFunction(
     'username', function ($id) {
         global $user;
         return $user->nameById($id);
     }
 );
-$twig->addFunction($username_option);
+$twig->addFunction($function_username);
+$function_resource = new \Twig\TwigFunction(
+    'resource', function ($file) {
+        global $webpack_manifest;
+        return $webpack_manifest[$file];
+    }
+);
+$twig->addFunction($function_resource);
 p_stop();
 
 $template = null;
