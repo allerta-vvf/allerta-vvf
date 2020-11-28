@@ -50,10 +50,12 @@ jobs:
         ./node_modules/.bin/webpack --config webpack.debug_bundle.js
         ls dist
 
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v2
       with:
         name: webpack_report_${{ github.run_id }}
-        path: server/resources/dist/report.html
+        path: |
+          server/resources/dist/report.html
+          server/resources/dist/stat.json
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
@@ -87,9 +89,9 @@ jobs:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: cypress_screenshots_php-${{ matrix.php-versions }}
-        path: cypress/screenshots
+        name: cypress_screenshots_php-${{ matrix.php-versions }}_${{ github.run_id }}
+        path: server/cypress/screenshots
 
