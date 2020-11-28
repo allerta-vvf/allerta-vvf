@@ -49,11 +49,12 @@ jobs:
         npm update -g webpack webpack-cli
         webpack --version
         npm run debug_bundle
+        ls resources/dist
 
     - uses: actions/upload-artifact@v1
       with:
         name: webpack_report_${{ github.run_id }}
-        path: server/resources/dist/report.html
+        path: resources/dist/
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
