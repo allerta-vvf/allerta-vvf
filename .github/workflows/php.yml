@@ -57,7 +57,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: webpack_report_${{ github.run_id }}
+        name: webpack_stat_${{ github.run_id }}
         path: server/resources/dist/stat.json
 
     - name: Shutdown Ubuntu MySQL (SUDO)
