@@ -49,7 +49,7 @@ jobs:
         npm update -g webpack webpack-cli
         webpack --version
         npm run debug_bundle
-        ls resources/dist
+        ls dist
 
     - uses: actions/upload-artifact@v1
       with:
