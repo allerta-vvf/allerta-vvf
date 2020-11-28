@@ -53,9 +53,12 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: webpack_report_${{ github.run_id }}
-        path: |
-          server/resources/dist/report.html
-          server/resources/dist/stat.json
+        path: server/resources/dist/report.html
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: webpack_report_${{ github.run_id }}
+        path: server/resources/dist/stat.json
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
