@@ -46,8 +46,8 @@ jobs:
       run: |
         cd resources
         npm install
-        ./node-modules/bin/webpack --version
-        ./node-modules/bin/webpack --config webpack.debug_bundle.js
+        ./node_modules/bin/webpack --version
+        ./node_modules/bin/webpack --config webpack.debug_bundle.js
         ls dist
 
     - uses: actions/upload-artifact@v1
