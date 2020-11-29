@@ -37,7 +37,7 @@ foreach($risultato as $row){
         $functionName = $row["available"] ? "deactivate" : "activate";
         $helmet_colour = $row["chief"] ? "red" : "black";
         $firstCell = "<a id='username-{$row['id']}' style='text-align: left;' onclick='$functionName(".$row["id"].");'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
-        $secondCell = $row["available"] ? "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-check' style='color:green'></i></a>" : "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-times'  style='color:red'></i></a>";
+        $secondCell = $row["available"] ? "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-check' style='color:green'></i></a>" : "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-times' style='color:red'></i></a>";
         $response[] = [
           (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
           $secondCell,
@@ -49,10 +49,13 @@ foreach($risultato as $row){
           "<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>"
         ];
       } else {
+        $name = $user->nameById($row["id"]);
+        $helmet_colour = $row["chief"] ? "red" : "black";
+        $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
+        $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
         $response[] = [
-          "id" => $row["id"],
-          "available" => $row["available"],
-          "online" => (time()-$row["online_time"])<=30 ? 1 : 0
+          (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
+          $secondCell
         ];
       }
     }
