@@ -267,6 +267,9 @@ if(!is_cli()) {
     </p>
         <?php
         unlink("runInstall.php");
+        if(file_exists("../options.txt")){
+            unlink("../options.txt");
+        }
     }
     ?>
     </div>
