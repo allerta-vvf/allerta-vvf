@@ -454,30 +454,36 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
         if($developer) {
             $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::DEVELOPER);
         }
-        $option_check_cf_ip = empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 1, '1', current_timestamp(), current_timestamp(), '1');" : "INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'check_cf_ip', 0, '1', current_timestamp(), current_timestamp(), '1');";
-        $prep = $connection->prepare(
-            "
-INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'report_email', :report_email, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'owner', :owner, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'web_url', :web_url, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_custom_error_sound', 0, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_custom_error_image', 0, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'intrusion_save', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'intrusion_save_info', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'enable_technical_support', 0, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'technical_support_key', '', 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_code', :cron_job_code, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_enabled', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'cron_job_time', :cron_job_time, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'service_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_edit', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'training_remove', 1, 1, current_timestamp(), current_timestamp(), '1');
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, 'use_location_picker', 1, 1, current_timestamp(), current_timestamp(), '1');
-$option_check_cf_ip"
-        );
+        $options = [
+            'check_cf_ip' => ':check_cf_ip',
+            'report_email' => ':report_email',
+            'owner' => ':owner',
+            'web_url' => ':web_url',
+            'use_custom_error_sound' => 0,
+            'use_custom_error_image' => 0,
+            'intrusion_save' => 1,
+            'intrusion_save_info' => 1,
+            'enable_technical_support' => 0,
+            'technical_support_key' => 0,
+            'cron_job_code' => ':cron_job_code',
+            'cron_job_enabled' => 1,
+            'cron_job_time' => ':cron_job_time',
+            'service_edit' => 1,
+            'service_remove' => 1,
+            'training_edit' => 1,
+            'training_remove' => 1,
+            'use_location_picker' => 1
+        ];
+        $query = "";
+        foreach ($options as $key => $value) {
+            $query .= "
+INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, '".$key."', $value, 1, current_timestamp(), current_timestamp(), '1');";
+        }
+        $query = "
+INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);".$query;
+        $prep = $connection->prepare($query);
         mt_srand(10);
+        $prep->bindValue(':check_cf_ip', (empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? 0 : 1), PDO::PARAM_INT);
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);
         $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
         $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
@@ -544,6 +550,9 @@ function cli_helper($action, $options)
         initOptions($name, $visible, $password, $report_email, $owner);
         t("DB Populated successful");
         unlink("runInstall.php");
+        if(file_exists("../options.txt")){
+            unlink("../options.txt");
+        }
         exit(0);
     }
 }
