@@ -34,7 +34,7 @@ jobs:
 
     - name: Start webserver
       run: |
-        nohup php -S 0.0.0.0:8080 &
+        nohup php -S 0.0.0.0:8080 2>&1 | tee php.log &
         sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
 
     - name: Setup NodeJS
@@ -91,6 +91,11 @@ jobs:
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: php_log_${{ github.run_id }}
+        path: php.log
 
     - uses: actions/upload-artifact@v2
       if: failure()
