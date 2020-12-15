@@ -96,7 +96,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: php_log_${{ github.run_id }}
-        path: server/error-log
+        path: /var/log/php-scripts.log
 
     - uses: actions/upload-artifact@v2
       if: failure()
