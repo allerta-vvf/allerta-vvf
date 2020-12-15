@@ -34,7 +34,7 @@ jobs:
 
     - name: Start webserver
       run: |
-        nohup php -S 0.0.0.0:8080 2>&1 | tee php.log &
+        nohup php -S 0.0.0.0:8080 &
         sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
 
     - name: Setup NodeJS
@@ -96,7 +96,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: php_log_${{ github.run_id }}
-        path: php.log
+        path: server/error-log
 
     - uses: actions/upload-artifact@v2
       if: failure()
