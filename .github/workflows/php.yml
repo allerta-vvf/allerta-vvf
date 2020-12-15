@@ -29,7 +29,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: mbstring, intl
-        ini-values: post_max_size=256M, short_open_tag=On
+        ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
 
     - name: Start webserver
@@ -96,7 +96,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: php_log_${{ github.run_id }}
-        path: /var/log/php-scripts.log
+        path: /tmp/php.log
 
     - uses: actions/upload-artifact@v2
       if: failure()
