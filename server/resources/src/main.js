@@ -122,15 +122,20 @@ function fillTable(data, replaceLatLngWithMap=false){
 
 var offline = false;
 var loadTable_interval = undefined;
+var old_data = "null";
 function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
   let replaceLatLngWithMap = table_page == "services" || table_page == "trainings";
-  $.getJSON( "resources/ajax/ajax_"+table_page+".php", function( data, status, xhr ) {
-    fillTable(data, replaceLatLngWithMap);
-    var headers = new Headers();
-    headers.append('date', Date.now());
-    caches.open('tables-1').then((cache) => {
-      cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
-    });
+  $.getJSON({ url: "resources/ajax/ajax_"+table_page+".php", data: { "old_data": old_data }, success: function( data, status, xhr ) {
+    old_data = xhr.getResponseHeader('data'); //TODO: refactoring and adding comments
+    console.log(data);
+    if(data.length > 0){
+      fillTable(data, replaceLatLngWithMap);
+      var headers = new Headers();
+      headers.append('date', Date.now());
+      caches.open('tables-1').then((cache) => {
+        cache.put('/table_'+table_page+'.json', new Response(xhr.responseText, {headers: headers}))
+      });
+    }
     if(window.offline){ // if xhr request successful, client is online
       console.log(onlineReload);
       if(onlineReload){
@@ -140,7 +145,7 @@ function loadTable(table_page, set_interval=true, interval=10000, onlineReload=f
         window.offline = false;
       }
     }
-  }).fail(function(data, status) {
+  }}).fail(function(data, status) {
     if(status == "parsererror"){
       if($("#table_body").children().length == 0) { //this is a server-side authentication error on some cheap hosting providers
         loadTable(table_page, set_interval, interval); //retry

@@ -61,6 +61,13 @@ foreach($risultato as $row){
     }
   }
 }
+$json_response = json_encode($response);
+$response_data = substr(base64_encode($json_response), 0, 5);
+header("data: ".$response_data);
 header("Content-type: application/json");
-print(json_encode($response));
+if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
+  print($json_response);
+} else {
+  print("{}");
+}
 ?>
