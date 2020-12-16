@@ -5,6 +5,11 @@ describe("Installation", () => {
         cy.visit("/");
         cy.get(".button").click();
     })
+
+    beforeEach(() => {
+      cy.setCookie("forceLanguage", "en");
+    })
+
     it('Write wrong DB pwd and user', function () {
         cy.get("input[name='dbname']")
           .clear()

@@ -39,7 +39,9 @@ foreach($client_languages as $tmp_language){
         $language = $tmp_language;
     }
 }
-
+if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $loaded_languages)){
+    $language = $_COOKIE["forceLanguage"];
+}
 if (file_exists("translations/".$language.".php")) {
     $loaded_translations = include "translations/".$language.".php";
 } else {

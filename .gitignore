@@ -511,3 +511,8 @@ custom-*.*
 
 sw.js
 !/server/resources/src/sw.js
+
+/server/cypress/screenshots
+!/server/cypress/screenshots/.gitkeep
+/server/cypress/videos
+!/server/cypress/videos/.gitkeep

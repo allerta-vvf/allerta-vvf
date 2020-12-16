@@ -1,17 +1,32 @@
-// ***********************************************************
-// This example support/index.js is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
-// ***********************************************************
+//TODO: login remember me and better language support
+Cypress.Commands.add("login", (username="admin", password="correcthorsebatterystaple") => {
+    cy.setCookie("forceLanguage", "en");
+    cy.reload()
+    cy.server().route('GET', '/resources/ajax/ajax_*').as('ajax');
+    cy.visit("/");
+    cy.getCookie('acceptCookies')
+        .then((c) => {
+            if(c == undefined) cy.get(".acceptcookies").click({force: true})
+        })
+    cy.get("input[name='name']")
+        .clear()
+        .type(username)
+        .should('have.value', username)
 
-// Import commands.js using ES2015 syntax:
-import './commands'
+    cy.get("input[name='password']")
+        .clear()
+        .type(password)
+        .should('have.value', password)
+
+    cy.get("input[name='login']").click()
+})
+
+Cypress.Commands.add("getApiKey", (username="admin", password="correcthorsebatterystaple") => {
+    cy.request({ method: 'POST', url: '/api.php/login', form: true, body: { username: username, password: password }})
+        .then((response) => {
+            expect(response.status).to.eq(200)
+            expect(response.body).to.have.property('apiKey')
+            console.log(response.body)
+            return response.body.apiKey
+        })
+})

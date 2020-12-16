@@ -669,13 +669,17 @@ class translations
     public function __construct()
     {
         $this->client_languages = $this->client_languages();
-        foreach($this->client_languages as $language){
-            if(in_array($language, $this->loaded_languages) && $this->language == null) {
-                $this->language = $language;
+        if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->$loaded_languages)){
+            $this->language = $_COOKIE["forceLanguage"];
+        } else {
+            foreach($this->client_languages as $language){
+                if(in_array($language, $this->loaded_languages) && $this->language == null) {
+                    $this->language = $language;
+                }
             }
-        }
-        if($this->language == null) {
-            $this->language = "en";
+            if($this->language == null) {
+                $this->language = "en";
+            }
         }
         $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
         if(strpos($file_infos['dirname'], 'resources') !== false) {
