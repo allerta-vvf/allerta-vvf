@@ -4,7 +4,6 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 import './font-awesome.scss';
-import '../node_modules/bootstrap-cookie-alert/cookiealert.css';
 import 'bootstrap-datepicker';
 import '../node_modules/bootstrap-toggle/css/bootstrap-toggle.css';
 import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
@@ -53,29 +52,6 @@ $( document ).ajaxError(function(event, xhr, settings, error) {
     console.log(event);
     console.log(xhr);
     console.log(settings);
-});
-
-$( document ).ready(function() {
-    // From https://github.com/Wruczek/Bootstrap-Cookie-Alert/blob/gh-pages/cookiealert.js
-    var cookieAlert = document.querySelector(".cookiealert");
-    var acceptCookies = document.querySelector(".acceptcookies");
-    if (!cookieAlert) {
-       return;
-    }
-    cookieAlert.offsetHeight; // Force browser to trigger reflow (https://stackoverflow.com/a/39451131)
-    // Show the alert if we cant find the "acceptCookies" cookie
-    if (!getCookie("acceptCookies")) {
-        cookieAlert.classList.add("show");
-    }
-    // When clicking on the agree button, create a 1 year
-    // cookie to remember user's choice and close the banner
-    acceptCookies.addEventListener("click", function () {
-        setCookie("acceptCookies", true, 365);
-        cookieAlert.classList.remove("show");
-
-        // dispatch the accept event
-        window.dispatchEvent(new Event("cookieAlertAccept"))
-    });
 });
 
 if (getCookie("authenticated")) {

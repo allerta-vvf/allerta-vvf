@@ -112,6 +112,5 @@ describe("Installation", () => {
         cy.exec("touch install/runInstall.php", {failOnNonZeroExit: false});
         cy.get(".login").click();
         cy.contains("Login");
-        cy.get(".acceptcookies").should('be.visible');
     })
 });

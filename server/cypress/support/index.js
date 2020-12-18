@@ -4,10 +4,6 @@ Cypress.Commands.add("login", (username="admin", password="correcthorsebatteryst
     cy.reload()
     cy.server().route('GET', '/resources/ajax/ajax_*').as('ajax');
     cy.visit("/");
-    cy.getCookie('acceptCookies')
-        .then((c) => {
-            if(c == undefined) cy.get(".acceptcookies").click({force: true})
-        })
     cy.get("input[name='name']")
         .clear()
         .type(username)

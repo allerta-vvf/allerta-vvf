@@ -17,7 +17,6 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "babel-loader": "^8.2.1",
     "bootstrap": "^4.5.3",
-    "bootstrap-cookie-alert": "^1.2.1",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-toggle": "^2.2.2",
     "clean-webpack-plugin": "^3.0.0",
