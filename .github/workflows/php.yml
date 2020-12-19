@@ -133,7 +133,7 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: PhpCS report
-      run: ./vendor/bin/phpcs . --extensions="php,js" --ignore="resources/dist,resources/node_modules,vendor,sw.js" --report=json > /tmp/phpcs_report.json
+      run: ./vendor/bin/phpcs . --extensions="php,js" --ignore="resources/dist,resources/node_modules,vendor,sw.js" --config-set ignore_errors_on_exit 1 --config-set ignore_warnings_on_exit 1 --report=json > /tmp/phpcs_report.json
 
     - uses: actions/upload-artifact@v2
       if: ${{ always() }}
