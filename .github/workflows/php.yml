@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.4']
-    name: PHP ${{ matrix.php-versions }}
+    name: Testing ${{ matrix.php-versions }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -100,7 +100,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.4']
-    name: PHP ${{ matrix.php-versions }}
+    name: Code Quality ${{ matrix.php-versions }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -136,11 +136,13 @@ jobs:
       run: ./vendor/bin/phpcs . --extensions="php,js" --ignore="resources/dist,resources/node_modules,vendor,sw.js" --report=json > /tmp/phpcs_report.json
 
     - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
       with:
         name: phpcs_report_${{ github.run_id }}
         path: /tmp/phpcs_report.json
 
     - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
       with:
         name: webpack_report_${{ github.run_id }}
         path: server/resources/dist/report.html
