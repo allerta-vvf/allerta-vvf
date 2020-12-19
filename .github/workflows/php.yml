@@ -43,22 +43,12 @@ jobs:
         node-version: '12'
 
     - name: WebPack Setup
+      working-directory: server/resources
       run: |
-        cd resources
         npm install
         ./node_modules/.bin/webpack --version
         ./node_modules/.bin/webpack --config webpack.debug_bundle.js
         ls dist
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: webpack_report_${{ github.run_id }}
-        path: server/resources/dist/report.html
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: webpack_stat_${{ github.run_id }}
-        path: server/resources/dist/stat.json
 
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop
@@ -68,9 +58,6 @@ jobs:
         mysql root password: 'password'
         mysql user: 'user'
         mysql password: 'password'
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate
 
     - name: Install dependencies
       run: |
@@ -104,3 +91,61 @@ jobs:
         name: cypress_screenshots_php-${{ matrix.php-versions }}_${{ github.run_id }}
         path: server/cypress/screenshots
 
+  code_quality:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    defaults:
+      run:
+        working-directory: ./server
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.4']
+    name: PHP ${{ matrix.php-versions }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
+        coverage: xdebug, pcov
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: WebPack Setup
+      run: |
+        cd resources
+        npm install
+        ./node_modules/.bin/webpack --version
+        ./node_modules/.bin/webpack --config webpack.debug_bundle.js
+        ls dist
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: PhpCS report
+      run: ./vendor/bin/phpcs . --extensions="php,js" --ignore="resources/dist,resources/node_modules,vendor,sw.js" --report=json > /tmp/phpcs_report.json
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: phpcs_report_${{ github.run_id }}
+        path: /tmp/phpcs_report.json
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: webpack_report_${{ github.run_id }}
+        path: server/resources/dist/report.html
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: webpack_dist_${{ github.run_id }}
+        path: server/resources/dist
