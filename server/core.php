@@ -3,7 +3,8 @@ require_once 'vendor/autoload.php';
 use Tracy\Debugger;
 use Netpromotion\Profiler\Profiler;
 
-if(!file_exists("config.php") && !file_exists("../../config.php")) { header('Location: install/install.php');
+if(!file_exists("config.php") && !file_exists("../../config.php")) {
+    header('Location: install/install.php');
 }
 
 require_once 'config.php';
@@ -669,7 +670,7 @@ class translations
     public function __construct()
     {
         $this->client_languages = $this->client_languages();
-        if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->$loaded_languages)){
+        if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->loaded_languages)){
             $this->language = $_COOKIE["forceLanguage"];
         } else {
             foreach($this->client_languages as $language){
