@@ -188,16 +188,12 @@ function chat() {
 
 window.addEventListener('securitypolicyviolation',console.error.bind(console));
 
-/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
 function menu() {
-  var x = document.getElementById("myTopnav");
-  //var z = document.getElementById("logout");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-    //z.className = " logout_sx";
+  var topNavBar = document.getElementById("topNavBar");
+  if (topNavBar.className === "topnav") {
+    topNavBar.className += " responsive";
   } else {
-    x.className = "topnav";
-    //z.className = " logout_dx";
+    topNavBar.className = "topnav";
   }
 }
 
