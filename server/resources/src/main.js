@@ -54,16 +54,34 @@ $( document ).ajaxError(function(event, xhr, settings, error) {
     console.log(settings);
 });
 
+var installServiceWorker = true;
 if (getCookie("authenticated")) {
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').then(registration => {
-        console.log('SW registered: ', registration);
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
+    if ('connection' in navigator && navigator.connection.saveData && !getCookie("forceServiceWorkerInstall")) {
+      console.log("Skipping ServiceWorker installation because saveData is enabled");
+      installServiceWorker = false;
+    }
+    if ('storage' in navigator && 'estimate' in navigator.storage && !getCookie("forceServiceWorkerInstall")){
+      navigator.storage.estimate().then(quota => {
+        const requiredMemory = 3 * 1e+6;
+        if (quota < requiredMemory) {
+          console.log("Skipping ServiceWorker installation because memory is low. memory="+quota);
+          installServiceWorker = false;
+        }
       });
-    });
+    }
+  } else {
+    installServiceWorker = false;
   }
+}
+if(installServiceWorker){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
 }
 
 function fillTable(data, replaceLatLngWithMap=false){
@@ -100,6 +118,16 @@ var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
 function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
+  if ('getBattery' in navigator) {
+    navigator.getBattery().then((level, charging) => {
+      if (!charging && level < 0.2) {
+        return;
+      }
+    })
+  }
+  if ('deviceMemory' in navigator && navigator.deviceMemory < 0.2) {
+    return;
+  }
   let replaceLatLngWithMap = table_page == "services" || table_page == "trainings";
   $.getJSON({ url: "resources/ajax/ajax_"+table_page+".php", data: { "old_data": old_data }, success: function( data, status, xhr ) {
     old_data = xhr.getResponseHeader('data'); //TODO: refactoring and adding comments
@@ -143,6 +171,10 @@ function loadTable(table_page, set_interval=true, interval=10000, onlineReload=f
     }
   });
   if(set_interval){
+    if ('connection' in navigator && navigator.connection.saveData) {
+      interval += 5000;
+    }
+    console.log("table_load interval "+interval);
     window.loadTable_interval = setInterval(function() {
       window.loadTable(table_page, false, interval, onlineReload);
     }, interval);
