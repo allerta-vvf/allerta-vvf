@@ -14,7 +14,7 @@ import 'jquery-pjax';
 console.log("Commit: "+process.env.GIT_VERSION);
 console.log("Date: "+process.env.GIT_AUTHOR_DATE);
 console.log("Bundle mode: "+process.env.BUNDLE_MODE);
-console.log("Bundle date: "+process.env.BUNDLE_DATE);
+console.log("Bundle date: "+new Date(process.env.BUNDLE_DATE).toISOString());
 
 $(document).pjax('a:not(.pjax_disable)', '#content', {timeout: 100000});
 $(document).on('pjax:start', function() {
@@ -54,14 +54,21 @@ $( document ).ajaxError(function(event, xhr, settings, error) {
     console.log(settings);
 });
 
-var installServiceWorker = true;
 if (getCookie("authenticated")) {
+  var installServiceWorker = true;
+  if(window.skipServiceWorkerInstallation !== undefined){ //if you want to disable SW for ex via greasyfork userscript
+    installServiceWorker = false;
+  }
+  if(getCookie("disableServiceWorkerInstallation")){
+    console.log("Skipping ServiceWorker installation because cookie 'disableServiceWorkerInstallation' exists");
+    installServiceWorker = false;
+  }
   if ('serviceWorker' in navigator) {
-    if ('connection' in navigator && navigator.connection.saveData && !getCookie("forceServiceWorkerInstall")) {
+    if ('connection' in navigator && navigator.connection.saveData && !getCookie("forceServiceWorkerInstallation")) {
       console.log("Skipping ServiceWorker installation because saveData is enabled");
       installServiceWorker = false;
     }
-    if ('storage' in navigator && 'estimate' in navigator.storage && !getCookie("forceServiceWorkerInstall")){
+    if ('storage' in navigator && 'estimate' in navigator.storage && !getCookie("forceServiceWorkerInstallation")){
       navigator.storage.estimate().then(quota => {
         const requiredMemory = 3 * 1e+6;
         if (quota < requiredMemory) {

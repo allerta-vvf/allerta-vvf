@@ -747,6 +747,19 @@ function init_class($enableDebugger=true, $headers=true)
     }
     bdump(get_included_files());
     bdump($translations->loaded_translations);
+
+    if(isset($_GET["disableSW"])){
+        setcookie("disableServiceWorkerInstallation", true);
+        $tools->redirect("?");
+    } else if(isset($_GET["enableSW"])){
+        setcookie("disableServiceWorkerInstallation", false, time() - 3600);
+        setcookie("forceServiceWorkerInstallation", false, time() - 3600);
+        $tools->redirect("?");
+    } else if(isset($_GET["forceSW"])){
+        setcookie("disableServiceWorkerInstallation", false, time() - 3600);
+        setcookie("forceServiceWorkerInstallation", true);
+        $tools->redirect("?");
+    }
 }
 
 function t($string, $echo=true)

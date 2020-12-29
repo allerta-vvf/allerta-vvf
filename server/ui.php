@@ -55,6 +55,9 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     if($requirelogin) {
         $user->requirelogin();
     }
+    $data['delete_caches'] = isset($_GET["deleteCache"]) || isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
+    $data['delete_service_workers'] = isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
+    $data['delete_service_workers_and_disable'] = isset($_GET["unregisterSWandDisable"]);
     $data['owner'] = $database->getOption("owner");
     $data['urlsoftware'] = $database->getOption("web_url");
     $data['user'] = $user->info();

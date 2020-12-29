@@ -8,6 +8,44 @@
   <meta name="google" content="notranslate">
   <meta name="robots" content="none">
   <link rel="manifest" href="manifest.webmanifest">
+  {% if delete_caches %}
+  <script>
+  //from https://stackoverflow.com/a/57149239
+  if ('caches' in window) {
+    console.log("Deleting caches...");
+    caches.keys()
+    .then(function(keyList) {
+      Promise.all(keyList.map(function(key) {
+        caches.delete(key);
+        console.log("deleted cache: "+key);
+      }));
+    });
+  }
+  /*{% if not delete_service_workers %}*/
+  location.href="?";
+  /*{% endif %}*/
+  </script>
+  {% endif %}
+  {% if delete_service_workers %}
+  <script>
+  //from https://stackoverflow.com/a/47515250
+  if(window.navigator && navigator.serviceWorker) {
+    console.log("UnRegistering service workers...");
+    navigator.serviceWorker.getRegistrations()
+    .then(function(registrations) {
+      for(let registration of registrations) {
+        console.log("deleted service worker:");
+        console.log(registration);
+        registration.unregister();
+      }
+    });
+    location.href="?";
+  }
+  /*{% if delete_service_workers_and_disable %}*/
+  document.cookie = "disableServiceWorkerInstallation=1";
+  /*{% endif %}*/
+  </script>
+  {% endif %}
   <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
   {% if enable_technical_support and technical_support_open %}
   <!-- Smartsupp Live Chat script -->
