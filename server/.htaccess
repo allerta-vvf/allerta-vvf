@@ -36,4 +36,13 @@
   Deny from all
 </FilesMatch>
 
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "max-age=2592000, public"
+  </FilesMatch>
+  <FilesMatch "\\.(jpe?g|png|gif|swf|flv|pdf|svg)$">
+    Header set Cache-Control "max-age=604800, public"
+  </FilesMatch>
+</IfModule>
+
 ServerSignature Off
