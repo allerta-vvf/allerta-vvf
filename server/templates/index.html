@@ -1,12 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-  {{ parent() }}
-  {% if error %}
-    <script src="{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}"></script>
-  {% endif %}
-{% endblock %}
-
 {% block menu %}
 {% endblock %}
 
@@ -36,11 +29,21 @@
     <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
   </div>
   <script>
-    var sound = new Howl({
-      src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
-      autoplay: true
-    });
-    sound.play();
+    const noSaveData = 'connection' in navigator === false || ('connection' in navigator && !navigator.connection.saveData);
+    if (noSaveData) {
+      let playerScript = document.createElement("script");
+      playerScript.setAttribute("src", "{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}");
+      playerScript.setAttribute("async", "false");
+      playerScript.onload = () => {
+        console.log("player script loaded");
+        var sound = new Howl({
+          src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
+          autoplay: true
+        });
+        sound.play();
+      };
+      document.head.insertBefore(playerScript, document.head.firstElementChild);
+    }
     $("#err").delay(20000).fadeOut(300);
   </script>
   {% endif %}
