@@ -516,3 +516,5 @@ sw.js
 !/server/cypress/screenshots/.gitkeep
 /server/cypress/videos
 !/server/cypress/videos/.gitkeep
+
+deployment_remotes.php
