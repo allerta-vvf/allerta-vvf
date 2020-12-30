@@ -86,7 +86,7 @@
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script src="resources/dist/maps.js" onload="load_map();"></script>
+      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="load_map();"></script>
       {% else %}
       <label><b>{{ 'Service place'|t }}</b></label>
       <input type="text" name="place" required value="{{ values.place }}">
