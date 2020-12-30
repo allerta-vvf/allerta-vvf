@@ -588,7 +588,7 @@ class user
         }
     }
 
-    public function add_user($email, $name, $username, $password, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
+    public function add_user($email, $name, $username, $password, $phone_number, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
     {
         $this->tools->profiler_start("Add user");
         $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
@@ -597,8 +597,8 @@ class user
             $disabled = $disabled ? 1 : 0;
             $chief = $chief ? 1 : 0;
             $driver = $driver ? 1 : 0;
-            $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `chief`, `driver`) VALUES (:hidden, :disabled, :name, :chief, :driver)";
-            $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":chief" => $chief, ":driver" => $driver]);
+            $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `phone_number`, `chief`, `driver`) VALUES (:hidden, :disabled, :name, :phone_number, :chief, :driver)";
+            $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":phone_number" => $phone_number, ":chief" => $chief, ":driver" => $driver]);
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
@@ -607,7 +607,7 @@ class user
             return $userId;
         } else {
             $this->tools->profiler_stop();
-            return $false;
+            return false;
         }
     }
 

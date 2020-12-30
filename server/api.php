@@ -1,8 +1,9 @@
 <?php
 require 'core.php';
 use Spatie\ArrayToXml\ArrayToXml;
-
-init_class(false);
+use Brick\PhoneNumber\PhoneNumber;
+use Brick\PhoneNumber\PhoneNumberFormat;
+use Brick\PhoneNumber\PhoneNumberParseException;
 
 $user_info = [];
 
@@ -94,9 +95,19 @@ $dispatcher = FastRoute\simpleDispatcher(
                 $driver = isset($_POST["driver"]) ? $_POST["driver"]==1 : false;
                 $hidden = isset($_POST["hidden"]) ? $_POST["hidden"]==1 : false;
                 $disabled = isset($_POST["disabled"]) ? $_POST["disabled"]==1 : false;
-                if(isset($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"])) {
+                if(isset($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"])) {
+                    try {
+                        $phone_number = PhoneNumber::parse($_POST["phone_number"]);
+                        if (!$phone_number->isValidNumber()) {
+                            return ["status" => "error", "message" => "Bad phone number"];
+                        } else {
+                            $phone_number = $phone_number->format(PhoneNumberFormat::E164);
+                        }
+                    } catch (PhoneNumberParseException $e) {
+                        return ["status" => "error", "message" => "Bad phone number"];
+                    }
                     try{
-                        $userId = $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user_info["id"]);
+                        $userId = $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $phone_number, $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user_info["id"]);
                     } catch (\Delight\Auth\InvalidEmailException $e) {
                         return ["status" => "error", "message" => "Invalid email address"];
                     } catch (\Delight\Auth\InvalidPasswordException $e) {
@@ -170,34 +181,36 @@ $uri = rawurldecode($uri);
 
 // Get response format
 if (isset($_GET["xml"])) {
-    $response = "xml";
-    $responseType = "application/xml";
+    $responseFormat = "xml";
+    $responseFormatType = "application/xml";
 } else if (isset($_GET["json"])) {
-    $response = "json";
-    $responseType = "application/json";
+    $responseFormat = "json";
+    $responseFormatType = "application/json";
 } else if (false !== strpos($uri, 'xml')) {
-    $response = "xml";
-    $responseType = "application/xml";
+    $responseFormat = "xml";
+    $responseFormatType = "application/xml";
     $uri = str_replace(".xml", "", $uri);
 } else if (false !== strpos($uri, 'json')) {
-    $response = "json";
-    $responseType = "application/json";
+    $responseFormat = "json";
+    $responseFormatType = "application/json";
     $uri = str_replace(".json", "", $uri);
 } else {
-    $response = "json";
-    $responseType = "application/json";
+    $responseFormat = "json";
+    $responseFormatType = "application/json";
 }
+
+header("Content-type: ".$responseFormatType);
+init_class(false); //initialize classes (and Tracy) after Content-type header
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 function responseApi($content, $status_code=200)
 {
-    global $response, $responseType;
+    global $responseFormat, $responseFormatType;
     if($status_code !== 200) {
         http_response_code($status_code);
     }
-    header("Content-type: ".$responseType);
-    if($response == "json") {
+    if($responseFormat == "json") {
         echo(json_encode($content));
     } else {
         echo(ArrayToXml::convert($content));

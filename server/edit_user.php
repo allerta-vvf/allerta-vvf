@@ -1,10 +1,13 @@
 <?php
 require_once 'ui.php';
+use Brick\PhoneNumber\PhoneNumber;
+use Brick\PhoneNumber\PhoneNumberFormat;
+use Brick\PhoneNumber\PhoneNumberParseException;
 function debug(){
     echo("<pre>"); var_dump($_POST); echo("</pre>"); exit();
 }
 if($tools->validate_form("mod", "add")) {
-    if($tools->validate_form(['mail', 'name', 'username', 'password', 'birthday', 'token'])) {
+    if($tools->validate_form(['mail', 'name', 'username', 'password', 'phone_number', 'birthday', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding user");
             bdump($_POST);
@@ -12,7 +15,19 @@ if($tools->validate_form("mod", "add")) {
             $driver = isset($_POST["driver"]) ? 1 : 0;
             $hidden = isset($_POST["visible"]) ? 0 : 1;
             $disabled = isset($_POST["enabled"]) ? 0 : 1;
-            $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user->name());
+            try {
+                $phone_number = PhoneNumber::parse($_POST["phone_number"]);
+                if (!$phone_number->isValidNumber()) {
+                    echo("Bad phone number. <a href='javascript:window.history.back()'>Go back</a>"); //TODO: better form validation
+                    exit();
+                } else {
+                    $phone_number = $phone_number->format(PhoneNumberFormat::E164);
+                }
+            } catch (PhoneNumberParseException $e) {
+                echo("Bad phone number. <a href='javascript:window.history.back()'>Go back</a>"); //TODO: better form validation
+                exit();
+            }
+            $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $phone_number, $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user->name());
             $tools->redirect("list.php");
         } else {
             debug();

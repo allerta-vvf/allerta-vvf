@@ -42,8 +42,8 @@ foreach($risultato as $row){
           (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
           $secondCell,
           $row['driver'] ? "<img alt='driver' src='./resources/images/wheel.png' width='20px'>" : "",
-          $row['phone_number'] ? "<a href='tel:+".$row['phone_number']."'><i class='fa fa-phone'></i></a>" : "",
-          $row['phone_number'] ? "<a href='https://api.whatsapp.com/send?phone=+".$row['phone_number']."text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
+          !empty($row['phone_number']) ? "<a href='tel:".$row['phone_number']."'><i class='fa fa-phone'></i></a>" : "",
+          !empty($row['phone_number']) ? "<a href='https://api.whatsapp.com/send?phone=".$row['phone_number']."&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
           $row['services'],
           $row['availability_minutes'],
           "<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>"

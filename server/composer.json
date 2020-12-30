@@ -10,7 +10,8 @@
         "nikic/fast-route": "^2.0@dev",
         "spatie/array-to-xml": "^2.16",
         "ezyang/htmlpurifier": "^4.13",
-        "netpromotion/profiler": "^1.3"
+        "netpromotion/profiler": "^1.3",
+        "brick/phonenumber": "^0.2.2"
     },
     "license": "GPL-3.0-or-later",
     "authors": [
