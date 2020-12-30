@@ -36,6 +36,5 @@ foreach($risultato as $row){
     $database->getOption("service_remove") ? "<a class='pjax_disable' href='edit_service.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
   ];
 }
-header("Content-type: application/json");
-print(json_encode($response));
+$tools->ajax_page_response($response);
 ?>

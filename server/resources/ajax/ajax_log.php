@@ -29,6 +29,5 @@ foreach($risultato as $row){
     ];
   }
 }
-header("Content-type: application/json");
-print(json_encode($response));
+$tools->ajax_page_response($response);
 ?>

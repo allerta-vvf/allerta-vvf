@@ -46,7 +46,7 @@ foreach($risultato as $row){
           !empty($row['phone_number']) ? "<a href='https://api.whatsapp.com/send?phone=".$row['phone_number']."&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20$name_encoded'><i class='fa fa-whatsapp' style='color:green'></i></a>" : "",
           $row['services'],
           $row['availability_minutes'],
-          "<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>"
+          //"<a href='user_details.php?user=".$row['id']."'><p>".t("Altri dettagli", false)."</p></a>" TODO: fix "Other" page
         ];
       } else {
         $name = $user->nameById($row["id"]);
@@ -61,13 +61,5 @@ foreach($risultato as $row){
     }
   }
 }
-$json_response = json_encode($response);
-$response_data = substr(base64_encode($json_response), 0, 5);
-header("data: ".$response_data);
-header("Content-type: application/json");
-if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
-  print($json_response);
-} else {
-  print("{}");
-}
+$tools->ajax_page_response($response);
 ?>

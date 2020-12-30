@@ -39,7 +39,7 @@ return [
     "Availability Minutes" => "Minuti di Disponibilità",
     "This month" => "Questo mese",
     "Call" => "Chiama",
-    "Write" => "scrivi",
+    "Write" => "Scrivi",
     "Other" => "Altro",
     "Others infos" => "Altri dettagli",
     "Add user" => "Aggiungi utente",

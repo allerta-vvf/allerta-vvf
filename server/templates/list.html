@@ -70,7 +70,7 @@
         <th>{{ 'Write'|t }}</th>
         <th>{{ 'Services'|t }}</th>
         <th>{{ 'Availability Minutes'|t }}</th>
-        <th>{{ 'Other'|t }}</th>
+        <!-- <th>{{ 'Other'|t }}</th> TODO: fix "Other" page -->
         {% endif %}
       </tr>
     </thead>
@@ -84,7 +84,7 @@
 
 <br><br>
 <p style="text-align: center;">
-  <a id='add' href="edit_user.php?add">{{ 'Add user'|t }}</a>
+  <a class='pjax_disable' id='add' href="edit_user.php?add">{{ 'Add user'|t }}</a>
 </p>
 <br>
 <br>

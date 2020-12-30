@@ -124,6 +124,7 @@ class tools
     public function sanitize($string, $htmlAllowed=false, $htmlPurifierOptions=[])
     {
         $this->profiler_start("Sanitize");
+        $htmlAllowed=false; //TODO: fix HTMLPurifier_Config
         if($htmlAllowed) {
             $config = HTMLPurifier_Config::createDefault();
             foreach ($htmlPurifierOptions as $key => $value) {
@@ -155,6 +156,18 @@ class tools
                 $name = $this->profiler_last_name;
             }
             Profiler::finish($name);
+        }
+    }
+
+    public function ajax_page_response($response){
+        $json_response = json_encode($response);
+        $response_data = substr(crc32($json_response), 0, 10);
+        header("data: ".$response_data);
+        header("Content-type: application/json");
+        if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
+          print($json_response);
+        } else {
+          print("{}");
         }
     }
 }
@@ -273,6 +286,7 @@ class database
                     return empty($option["value"]) ? false : $option["value"];
                 }
             }
+            return false;
         }
     }
 
@@ -667,11 +681,13 @@ class translations
         }
     }
 
-    public function __construct()
+    public function __construct($force_language)
     {
         $this->client_languages = $this->client_languages();
         if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->loaded_languages)){
             $this->language = $_COOKIE["forceLanguage"];
+        } else if($force_language && in_array($force_language, $this->loaded_languages)){
+            $this->language = $force_language;
         } else {
             foreach($this->client_languages as $language){
                 if(in_array($language, $this->loaded_languages) && $this->language == null) {
@@ -722,7 +738,7 @@ function init_class($enableDebugger=true, $headers=true)
         $database = new database();
         $tools = new tools($database->getOption("check_cf_ip"), $enableDebugger);
         $user = new user($database, $tools);
-        $translations = new translations();
+        $translations = new translations($database->getOption("force_language"));
     }
     if($headers) {
         $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'style';";
@@ -736,14 +752,15 @@ function init_class($enableDebugger=true, $headers=true)
     }
     //var_dump($user);
     //exit();
-    if($enableDebugger) {
-        if($user->requireRole(Role::DEVELOPER)) {
-            Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-            Profiler::enable();
-            Debugger::getBar()->addPanel(new Netpromotion\Profiler\Adapter\TracyBarAdapter());
-        } else {
-            Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-        }
+    if($user->requireRole(Role::DEVELOPER)) {
+        Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
+        if($enableDebugger) Profiler::enable();
+        Debugger::getBar()->addPanel(new Netpromotion\Profiler\Adapter\TracyBarAdapter());
+    } else {
+        Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+    }
+    if(!$enableDebugger) {
+        Debugger::$showBar = false;
     }
     bdump(get_included_files());
     bdump($translations->loaded_translations);
