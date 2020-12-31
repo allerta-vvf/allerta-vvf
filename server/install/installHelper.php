@@ -2,6 +2,20 @@
 use GetOpt\GetOpt as Getopt;
 use GetOpt\Option;
 
+function finalInstallationHelperStep(){
+    $logopngPath = "../resources/images/";
+    unlink("runInstall.php");
+    if(file_exists("../options.txt")){
+        unlink("../options.txt");
+    }
+    if(file_exists($logopngPath."logo_sample.png") && !file_exists($logopngPath."logo.png")){
+        copy($logopngPath."logo_sample.png", $logopngPath."logo.png");
+    }
+    if(file_exists($logopngPath."owner_sample.png") && !file_exists($logopngPath."owner.png")){
+        copy($logopngPath."owner_sample.png", $logopngPath."owner.png");
+    }
+}
+
 function client_languages()
 {
     if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -552,10 +566,7 @@ function cli_helper($action, $options)
         initDB();
         initOptions($name, $visible, $password, $report_email, $owner);
         t("DB Populated successful");
-        unlink("runInstall.php");
-        if(file_exists("../options.txt")){
-            unlink("../options.txt");
-        }
+        finalInstallationHelperStep();
         exit(0);
     }
 }

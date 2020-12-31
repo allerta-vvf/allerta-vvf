@@ -266,10 +266,7 @@ if(!is_cli()) {
     <a href="../index.php" class="login"><?php t("Login"); ?></a>
     </p>
         <?php
-        unlink("runInstall.php");
-        if(file_exists("../options.txt")){
-            unlink("../options.txt");
-        }
+        finalInstallationHelperStep();
     }
     ?>
     </div>
