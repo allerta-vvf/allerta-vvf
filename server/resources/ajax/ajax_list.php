@@ -33,7 +33,7 @@ foreach($risultato as $row){
     } else {
       if($user->requireRole(Role::FULL_VIEWER)){
         $name = $user->nameById($row["id"]);
-        $name_encoded = urlencode($name);
+        $name_encoded = urlencode($user->name());
         $functionName = $row["available"] ? "deactivate" : "activate";
         $helmet_colour = $row["chief"] ? "red" : "black";
         $firstCell = "<a id='username-{$row['id']}' style='text-align: left;' onclick='$functionName(".$row["id"].");'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
