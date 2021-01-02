@@ -36,6 +36,11 @@
   Deny from all
 </FilesMatch>
 
+<FilesMatch "^\.ht">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|woff|woff2|ttf|eot)$">
     Header set Cache-Control "max-age=2592000, public"

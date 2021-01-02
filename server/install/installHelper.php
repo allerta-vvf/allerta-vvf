@@ -489,7 +489,8 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'training_edit' => 1,
             'training_remove' => 1,
             'use_location_picker' => 1,
-            'force_language' => 0
+            'force_language' => 0,
+            'force_remember_cookie' => 0
         ];
         $query = "";
         foreach ($options as $key => $value) {
