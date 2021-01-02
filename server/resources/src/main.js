@@ -18,6 +18,10 @@ console.log("Bundle date: "+new Date(process.env.BUNDLE_DATE).toISOString());
 
 $(document).pjax('a:not(.pjax_disable)', '#content', {timeout: 100000});
 $(document).on('pjax:start', function() {
+  if(document.getElementById("topNavBar") !== undefined){
+    document.getElementById("topNavBar").className = "topnav";
+  }
+  old_data = "null";
   if(window.loadTable_interval !== undefined){
     clearInterval(window.loadTable_interval);
     window.loadTable_interval = undefined;
@@ -98,7 +102,7 @@ function fillTable(data, replaceLatLngWithMap=false){
     row.id = "row-"+row_num;
     $.each(item, function(cell_num, i) {
       if(i !== null){
-        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){
+        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){ /* TODO: add credits */
           let lat = i.split(";")[0];
           let lng = i.split(";")[1];
           let mapDiv = document.createElement("div");
