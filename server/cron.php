@@ -33,7 +33,7 @@ $cronJobDateTime->year = date("Y");
 $cronJobDateTime->hour = explode(":", $cronJobTime)[0];
 $cronJobDateTime->minutes = explode(":", $cronJobTime)[1];
 
-$start = $database->getOption("cron_job_enabled") && isset($_POST['cron']) && $_POST['cron'] == "cron_job-".$database->getOption("cron_job_code");
+$start = $database->getOption("cron_job_enabled") && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".$database->getOption("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".$database->getOption("cron_job_code")));
 $start_reset = $execDateTime == $cronJobDateTime;
 
 $action = "Availability Minutes ";
