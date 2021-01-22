@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "twig/twig": "^3.2.1",
-        "tracy/tracy": "^2.8.0",
+        "tracy/tracy": "^2.8.2",
         "delight-im/auth": "^8.2.2",
         "ulrichsg/getopt-php": "^3.4.0",
         "nikic/fast-route": "^2.0@dev",
