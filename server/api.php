@@ -11,8 +11,12 @@ $dispatcher = FastRoute\simpleDispatcher(
     function (FastRoute\RouteCollector $r) {
         $r->addRoute(
             'GET', '/healthcheck', function ($vars) {
-                header("Access-Control-Allow-Origin: *");
                 return ["state" => "SUCCESS", "description" => ""];
+            }
+        );
+        $r->addRoute(
+            ['GET', 'POST'], '/requestDebug', function ($vars) {
+                return ["get" => $_GET, "post" => $_POST, "server" => $_SERVER];
             }
         );
         $r->addRoute(
@@ -199,8 +203,12 @@ if (isset($_GET["xml"])) {
     $responseFormatType = "application/json";
 }
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Max-Age: *");
 header("Content-type: ".$responseFormatType);
-init_class(false); //initialize classes (and Tracy) after Content-type header
+init_class(false, false); //initialize classes (and Tracy) after Content-type header
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
@@ -220,7 +228,7 @@ function responseApi($content, $status_code=200)
 function validToken()
 {
     global $database, $user_info;
-    $token = isset($_POST['apiKey']) ? $_POST['apiKey'] : (isset($_GET['apiKey']) ? $_GET['apiKey'] : (isset($_SERVER['apiKey']) ? $_SERVER['apiKey'] : false));
+    $token = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : (isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : (isset($_SERVER['HTTP_APIKEY']) ? $_SERVER['HTTP_APIKEY'] : false));
     if($token == false) {
         return false;
     }
@@ -239,6 +247,11 @@ function requireToken()
         exit();
     }
 }
+
+if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+    exit();
+}
+
 switch ($routeInfo[0]) {
 case FastRoute\Dispatcher::NOT_FOUND:
     http_response_code(404);
@@ -247,7 +260,7 @@ case FastRoute\Dispatcher::NOT_FOUND:
 case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
     $allowedMethods = $routeInfo[1];
     http_response_code(405);
-    responseApi(["status" => "error", "message" => "Method not allowed"]);
+    responseApi(["status" => "error", "message" => "Method not allowed", "usedMethod" => $_SERVER['REQUEST_METHOD']]);
     break;
 case FastRoute\Dispatcher::FOUND:
     $handler = $routeInfo[1];
