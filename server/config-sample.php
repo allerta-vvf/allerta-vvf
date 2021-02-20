@@ -14,3 +14,6 @@ define('DB_HOST', '@@host@@');
 
 /* Database hostname */
 define('DB_PREFIX', '@@prefix@@');
+
+/* Sentry options */
+define('SENTRY_CSP_REPORT_URI', '');

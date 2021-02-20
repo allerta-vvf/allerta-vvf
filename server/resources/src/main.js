@@ -60,7 +60,7 @@ $( document ).ajaxError(function(event, xhr, settings, error) {
 
 if (getCookie("authenticated")) {
   var installServiceWorker = true;
-  if(window.skipServiceWorkerInstallation !== undefined){ //if you want to disable SW for ex via greasyfork userscript
+  if(window.skipServiceWorkerInstallation !== undefined){ //if you want to disable SW for example via GreasyFork userscript
     installServiceWorker = false;
   }
   if(getCookie("disableServiceWorkerInstallation")){
@@ -102,7 +102,7 @@ function fillTable(data, replaceLatLngWithMap=false){
     row.id = "row-"+row_num;
     $.each(item, function(cell_num, i) {
       if(i !== null){
-        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){ /* TODO: add credits */
+        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){ /* credits to @visoom https://github.com/visoom */
           let lat = i.split(";")[0];
           let lng = i.split(";")[1];
           let mapDiv = document.createElement("div");

@@ -111,9 +111,6 @@ if (file_exists('../vendor/autoload.php')) {
     die("Please install composer and run composer install");
 }
 
-define('NAME', 'AllertaVVF');
-define('VERSION', '0.1-alpha');
-
 function checkConnection($host, $user, $password, $database, $return=false)
 {
     try{
@@ -232,6 +229,9 @@ define( 'DB_HOST', '<?php echo $host; ?>' );<br>
 <br>
 /* Database hostname */<br>
 define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
+<br>
+/* Sentry options */<br>
+define('SENTRY_CSP_REPORT_URI', '');<br>
 </code>
             </ul>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
@@ -671,7 +671,7 @@ function run_cli()
 
     // show version and quit
     if ($getopt->getOption('version')) {
-        echo sprintf('%s: %s' . PHP_EOL, NAME, VERSION);
+        echo sprintf('%s: %s' . PHP_EOL, "AllertaVVF", "0.0");
         exit;
     }
 

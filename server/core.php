@@ -522,6 +522,10 @@ class user
     public function login($name, $password, $remember_me, $twofa=null)
     {
         $this->tools->profiler_start("Login");
+        if(isset($_REQUEST["apiKey"]) && !empty($api_key_row = $this->database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $_REQUEST["apiKey"]]))){
+            $user_id = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]])[0]["id"];
+            $this->auth->admin()->logInAsUserById($user_id);
+        }
         if(!empty($name)) {
             if(!empty($password)) {
                 try {
@@ -741,7 +745,11 @@ function init_class($enableDebugger=true, $headers=true)
         $translations = new translations($database->getOption("force_language"));
     }
     if($headers) {
-        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'style';";
+        //TODO adding require-trusted-types-for 'script';
+        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
+        if(defined(SENTRY_CSP_REPORT_URI) && SENTRY_CSP_REPORT_URI !== false){
+            $csp .= " report-uri ".SENTRY_CSP_REPORT_URI.";";
+        }
         header("Content-Security-Policy: $csp");
         header("X-Content-Security-Policy: $csp");
         header("X-WebKit-CSP: $csp");

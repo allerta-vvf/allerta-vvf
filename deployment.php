@@ -47,8 +47,7 @@ $baseConfig = [
 		*.lock
     ',
     'before' =>  [
-        'local: cd server && composer update --no-dev -o',
-        'local: cd server/resources && npm run prod'
+        'local: cd server && composer update --no-dev -o'
     ],
     'after' => [
         'local: cd server && composer install'
@@ -67,7 +66,16 @@ try {
 
 $config = [];
 foreach ($remotes as $key => $value) {
-    $config[$key] = array_merge($value, $baseConfig);
+	$config[$key] = array_merge($value, $baseConfig);
+	if(isset($value["before"]) && $value["before"] === false){
+		$config[$key]["before"] = [];
+	} else {
+		$env = isset($config[$key]["sentry_env"]) ? $config[$key]["sentry_env"] : "prod";
+		$config[$key]["before"][] = "local: cd server/resources && npm run prod -- --env sentry_environment=".$env;
+	}
+	if(isset($value["after"]) && $value["after"] === false){
+		$config[$key]["after"] = [];
+	}
 }
 
 return $config;
