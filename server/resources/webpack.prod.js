@@ -102,6 +102,9 @@ module.exports = (env) => {
         project: config_file.sentry_project,
         urlPrefix: '~/dist',
         include: './dist',
+        setCommits: {
+          auto: true
+        }
       }),
 
       new AfterBuildPlugin(removeSourceMapUrlAfterBuild),
@@ -112,7 +115,7 @@ module.exports = (env) => {
     );
     console.log(colors.green("INFO Sentry Webpack plugins enabled"));
   }
-  
+
   prod_config.plugins.push(
     new webpack.EnvironmentPlugin({
       GIT_VERSION: git('describe --always'),
