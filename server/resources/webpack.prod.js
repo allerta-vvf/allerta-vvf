@@ -104,7 +104,8 @@ module.exports = (env) => {
         include: './dist',
         setCommits: {
           auto: true
-        }
+        },
+        release: "allerta-vvf-frontend@"+git('describe --always')
       }),
 
       new AfterBuildPlugin(removeSourceMapUrlAfterBuild),
