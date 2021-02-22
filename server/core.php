@@ -421,6 +421,25 @@ class user
         $this->database = $database;
         $this->tools = $tools;
         $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
+        if(isset($_REQUEST["apiKey"])){
+            $api_key_row = $this->database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $_REQUEST["apiKey"]]);
+            if(!empty($api_key_row)){
+                $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]]);
+                $user_id = $user[0]["id"];
+                $this->auth->admin()->logInAsUserById($user_id);
+                if(!empty($user)) {
+                    if(is_null($user[0]["name"])) {
+                        $_SESSION['_user_name'] = $this->auth->getUsername();
+                    } else {
+                        $_SESSION['_user_name'] = $user[0]["name"];
+                    }
+                    $_SESSION['_user_hidden'] = $user[0]["hidden"];
+                    $_SESSION['_user_disabled'] = $user[0]["disabled"];
+                    $_SESSION['_user_chief'] = $user[0]["chief"];
+                    setcookie("authenticated", true);
+                }
+            }
+        }
         $this->authenticated = $this->auth->isLoggedIn();
     }
 
@@ -522,10 +541,6 @@ class user
     public function login($name, $password, $remember_me, $twofa=null)
     {
         $this->tools->profiler_start("Login");
-        if(isset($_REQUEST["apiKey"]) && !empty($api_key_row = $this->database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $_REQUEST["apiKey"]]))){
-            $user_id = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]])[0]["id"];
-            $this->auth->admin()->logInAsUserById($user_id);
-        }
         if(!empty($name)) {
             if(!empty($password)) {
                 try {
