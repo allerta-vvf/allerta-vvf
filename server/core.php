@@ -110,15 +110,9 @@ class tools
         return $array2;
     }
 
-    public function createKey($hashCode=false, $lenght=128)
+    public function createKey($lenght=32)
     {
-        $this->profiler_start("Create key");
-        $code = str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30)));
-        if($hashCode) {
-            $code = $code.".".hash("sha256", $code);
-        }
-        $this->profiler_stop();
-        return $code;
+        return bin2hex(random_bytes($lenght));
     }
 
     public function sanitize($string, $htmlAllowed=false, $htmlPurifierOptions=[])

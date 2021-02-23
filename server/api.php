@@ -24,7 +24,7 @@ $dispatcher = FastRoute\simpleDispatcher(
                 global $tools, $database, $user;
                 try {
                     $user->auth->loginWithUsername($_POST['username'], $_POST['password']);
-                    $apiKey = $tools->createKey(true);
+                    $apiKey = $tools->createKey();
                     $database->exec("INSERT INTO `%PREFIX%_api_keys` (`apikey`, `user`, `permissions`) VALUES (:apiKey, :userId, 'ALL');", true, [":apiKey" => $apiKey, ":userId" => $user->auth->getUserId()]);
                     return ["status" => "ok", "apiKey" => $apiKey];
                 }
