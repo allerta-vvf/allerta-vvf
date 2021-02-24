@@ -98,7 +98,7 @@ if(installServiceWorker){
 var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
-const table_engine = "datatables";
+var table_engine = "datatables";
 if ('connection' in navigator && navigator.connection.saveData) {
   table_engine = "default";
 }
