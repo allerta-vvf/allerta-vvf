@@ -98,12 +98,17 @@ if(installServiceWorker){
 var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
-//const table_engine = "default";
 const table_engine = "datatables";
+if ('connection' in navigator && navigator.connection.saveData) {
+  table_engine = "default";
+}
 var fillTable = undefined;
 
-async function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
+async function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false, use_custom_table_engine=false){
   if (typeof fillTable === "undefined"){
+    if(use_custom_table_engine !== false){
+      table_engine = use_custom_table_engine;
+    }
     fillTable = await import(/* webpackChunkName: "[request]" */ `./table_engine_${table_engine}.js`)
     .then(({default: _}) => {
       return _;

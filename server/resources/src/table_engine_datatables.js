@@ -10,7 +10,6 @@ import 'datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css';
 import 'datatables.net-buttons';
 import 'datatables.net-buttons-bs4/js/buttons.bootstrap4.js';
 import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
-import 'datatables.net-buttons/js/buttons.colVis.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 import 'datatables.net-buttons/js/buttons.print.js';
 
@@ -59,7 +58,7 @@ export default async function fillTable(data, replaceLatLngWithMap=false){
   let table = $('#table').DataTable({
     responsive: true,
     language: loadedLanguage,
-    buttons: [ 'excel', 'pdf', 'csv', 'colvis' ]
+    buttons: [ 'excel', 'pdf', 'csv' ]
   });
   table.buttons().container()
     .appendTo( '#table_wrapper :nth-child(1):eq(0)' );
