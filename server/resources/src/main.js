@@ -95,40 +95,20 @@ if(installServiceWorker){
   });
 }
 
-function fillTable(data, replaceLatLngWithMap=false){
-  $("#table_body").empty();
-  $.each(data, function(row_num, item) {
-    let row = document.createElement("tr");
-    row.id = "row-"+row_num;
-    $.each(item, function(cell_num, i) {
-      if(i !== null){
-        if(replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)){ /* credits to @visoom https://github.com/visoom */
-          let lat = i.split(";")[0];
-          let lng = i.split(";")[1];
-          let mapDiv = document.createElement("div");
-          mapDiv.className = "map";
-          mapDiv.id = "map-"+row_num;
-          var mapScript = document.createElement("script");
-          mapScript.appendChild(document.createTextNode("load_map("+lat+", "+lng+", \"map-"+row_num+"\", false)"));
-          mapDiv.appendChild(mapScript);
-          let cell = document.createElement("td");
-          cell.appendChild(mapDiv);
-          row.appendChild(cell);
-        } else {
-          let cell = document.createElement("td");
-          cell.innerHTML = i;
-          row.appendChild(cell);
-        }
-      }
-    });
-    document.getElementById("table_body").appendChild(row);
-  });
-}
-
 var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
-function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
+//const table_engine = "default";
+const table_engine = "datatables";
+var fillTable = undefined;
+
+async function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false){
+  if (typeof fillTable === "undefined"){
+    fillTable = await import(/* webpackChunkName: "[request]" */ `./table_engine_${table_engine}.js`)
+    .then(({default: _}) => {
+      return _;
+    });
+  }
   if ('getBattery' in navigator) {
     navigator.getBattery().then((level, charging) => {
       if (!charging && level < 0.2) {
@@ -209,7 +189,6 @@ function menu() {
 }
 
 window.loadTable_interval = loadTable_interval;
-window.fillTable = fillTable;
 window.loadTable = loadTable;
 window.setCookie = setCookie;
 window.getCookie = getCookie;

@@ -194,6 +194,12 @@ table {
     overflow-x:auto;
 }
 
+#table_wrapper{
+    margin-left:auto;
+    margin-right:auto;
+    width: 95%;
+}
+
 th, td {
     text-align: center;
     vertical-align: middle !important;

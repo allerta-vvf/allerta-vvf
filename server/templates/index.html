@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{ parent() }}
+<link rel="prefetch" href="{{ urlsoftware }}/resources/dist/{{ resource('table_engine_default.js') }}">
+{% endblock %}
+
 {% block menu %}
 {% endblock %}
 

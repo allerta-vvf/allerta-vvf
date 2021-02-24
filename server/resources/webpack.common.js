@@ -15,7 +15,7 @@ module.exports = {
       return pathData.chunk.name === 'sw' ? '../../sw.js': '[name].[contenthash].js';
     },
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/resources/dist/',
+    publicPath: 'resources/dist/',
   },
   resolve: {
     alias: {
