@@ -22,6 +22,8 @@ $(document).on('pjax:start', function() {
     document.getElementById("topNavBar").className = "topnav";
   }
   old_data = "null";
+  fillTable = undefined;
+  table_engine = "datatables";
   if(window.loadTable_interval !== undefined){
     clearInterval(window.loadTable_interval);
     window.loadTable_interval = undefined;
@@ -99,13 +101,13 @@ var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
 var table_engine = "datatables";
-if ('connection' in navigator && navigator.connection.saveData) {
-  table_engine = "default";
-}
 var fillTable = undefined;
 
 async function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false, use_custom_table_engine=false){
   if (typeof fillTable === "undefined"){
+    if ('connection' in navigator && navigator.connection.saveData) {
+      table_engine = "default";
+    }
     if(use_custom_table_engine !== false){
       table_engine = use_custom_table_engine;
     }

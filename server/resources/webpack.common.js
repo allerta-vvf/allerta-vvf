@@ -66,6 +66,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [

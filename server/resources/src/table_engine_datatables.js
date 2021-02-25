@@ -4,6 +4,8 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import 'datatables.net-bs4/js/dataTables.bootstrap4.min.js';
+import 'moment';
+import 'datatables.net-plugins/sorting/date-moment.js';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js';
 import 'datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css';
@@ -55,6 +57,7 @@ export default async function fillTable(data, replaceLatLngWithMap=false){
     console.log(error);
     loadedLanguage = {};
   }
+  $.fn.dataTable.moment('dd/mm/YYYY hh:ii:ss');
   let table = $('#table').DataTable({
     responsive: true,
     language: loadedLanguage,
