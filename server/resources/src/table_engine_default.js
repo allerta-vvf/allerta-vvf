@@ -1,4 +1,4 @@
-export default function fillTable(data, replaceLatLngWithMap=false){
+export default async function fillTable({data, replaceLatLngWithMap=false, callback=false}){
   $("#table_body").empty();
   $.each(data, function(row_num, item) {
     let row = document.createElement("tr");
@@ -26,4 +26,7 @@ export default function fillTable(data, replaceLatLngWithMap=false){
     });
     document.getElementById("table_body").appendChild(row);
   });
+  if(callback !== false){
+    callback();
+  }
 }

@@ -19,7 +19,12 @@
     </tbody>
   </table>
   <script>
-    loadTable("log");
+    loadTable({table_page: "log", callback: function(table_dt) {
+      table_dt
+        .column( '3:visible' )
+        .order( 'desc' )
+        .draw();
+    }});
   </script>
   <br>
   <br>

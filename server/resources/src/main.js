@@ -103,7 +103,7 @@ var old_data = "null";
 var table_engine = "datatables";
 var fillTable = undefined;
 
-async function loadTable(table_page, set_interval=true, interval=10000, onlineReload=false, use_custom_table_engine=false){
+async function loadTable({table_page, set_interval=true, interval=10000, onlineReload=false, use_custom_table_engine=false, callback=false}){
   if (typeof fillTable === "undefined"){
     if ('connection' in navigator && navigator.connection.saveData) {
       table_engine = "default";
@@ -131,7 +131,7 @@ async function loadTable(table_page, set_interval=true, interval=10000, onlineRe
     old_data = xhr.getResponseHeader('data'); //TODO: refactoring and adding comments
     console.log(data);
     if(data.length > 0){
-      fillTable(data, replaceLatLngWithMap);
+      fillTable({data, replaceLatLngWithMap, callback});
       var headers = new Headers();
       headers.append('date', Date.now());
       caches.open('tables-1').then((cache) => {
@@ -156,7 +156,7 @@ async function loadTable(table_page, set_interval=true, interval=10000, onlineRe
       caches.open('tables-1').then(cache => {
         cache.match("/table_"+table_page+".json").then(response => {
           response.json().then(data => {
-            fillTable(data, replaceLatLngWithMap);
+            fillTable({data, replaceLatLngWithMap, callback});
             console.log("Table loaded from cache");
             $("#offline_update").text(new Date(parseInt(response.headers.get("date"))).toLocaleString());
           });
@@ -174,7 +174,7 @@ async function loadTable(table_page, set_interval=true, interval=10000, onlineRe
     }
     console.log("table_load interval "+interval);
     window.loadTable_interval = setInterval(function() {
-      window.loadTable(table_page, false, interval, onlineReload);
+      window.loadTable({table_page, set_interval: false, interval, onlineReload, use_custom_table_engine, callback: false});
     }, interval);
   }
 }
