@@ -46,7 +46,7 @@ export default async function fillTable({data, replaceLatLngWithMap=false, callb
     let language = navigator.language || navigator.userLanguage;
     language = language.toLowerCase().replace("_","-");
     language = "it_it";
-    loadedLanguage = await import(/* webpackChunkName: "DataTables_language_[request]" */ `datatables.net-plugins/i18n/${language}.json`)
+    loadedLanguage = await import(`datatables.net-plugins/i18n/${language}.json`)
     .then(({default: _}) => {
       return _;
     });
