@@ -105,11 +105,10 @@ var fillTable = undefined;
 
 async function loadTable({table_page, set_interval=true, interval=10000, onlineReload=false, use_custom_table_engine=false, callback=false}){
   if (typeof fillTable === "undefined"){
-    if ('connection' in navigator && navigator.connection.saveData) {
-      table_engine = "default";
-    }
     if(use_custom_table_engine !== false){
       table_engine = use_custom_table_engine;
+    } else if ('connection' in navigator && navigator.connection.saveData) {
+      table_engine = "default";
     }
     fillTable = await import(`./table_engine_${table_engine}.js`)
     .then(({default: _}) => {

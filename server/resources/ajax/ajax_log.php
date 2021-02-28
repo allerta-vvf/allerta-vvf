@@ -11,6 +11,8 @@ $hidden = $user->hidden();
 $response = [];
 foreach($risultato as $row){
   if(!in_array($row['changed'], $hidden) OR in_array($user->name(), $hidden)){
+    $date = DateTime::createFromFormat("j/m/Y G:i.s", $row['date']." ".$row['time']);
+    $date = $date->format('Y-m-d H:i:s');
     if(!is_null($row["changed"])){
       $changedName = $user->nameById($row["changed"]);
     } else {
@@ -25,7 +27,7 @@ foreach($risultato as $row){
       $row["action"],
       $changedName,
       $editorName,
-      $row['date']." ".$row['time']
+      $date
     ];
   }
 }

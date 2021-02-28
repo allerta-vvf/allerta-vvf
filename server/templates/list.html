@@ -32,7 +32,7 @@
       success: function (data) {
         alert(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
         clearInterval(window.loadTable_interval); //stop reloading
-        loadTable("list");
+        loadTable({table_page: "list", use_custom_table_engine: "default"});
       }
     });
   }
@@ -49,7 +49,7 @@
       success: function (data) {
         alert(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
         clearInterval(window.loadTable_interval); //stop reloading
-        loadTable("list");
+        loadTable({table_page: "list", use_custom_table_engine: "default"});
       }
     });
   }
