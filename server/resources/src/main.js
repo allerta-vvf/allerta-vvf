@@ -111,7 +111,7 @@ async function loadTable({table_page, set_interval=true, interval=10000, onlineR
     if(use_custom_table_engine !== false){
       table_engine = use_custom_table_engine;
     }
-    fillTable = await import(/* webpackChunkName: "[request]" */ `./table_engine_${table_engine}.js`)
+    fillTable = await import(`./table_engine_${table_engine}.js`)
     .then(({default: _}) => {
       return _;
     });
