@@ -97,6 +97,12 @@ if(installServiceWorker){
   });
 }
 
+$( document ).ready(function() {
+  if($("#frontend_version") !== undefined){
+    $("#frontend_version").append(process.env.GIT_VERSION+" aggiornamento "+new Date(process.env.BUNDLE_DATE).toISOString());
+  }
+});
+
 var offline = false;
 var loadTable_interval = undefined;
 var old_data = "null";
