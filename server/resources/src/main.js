@@ -99,7 +99,7 @@ if(installServiceWorker){
 
 $( document ).ready(function() {
   if($("#frontend_version") !== undefined){
-    $("#frontend_version").append(process.env.GIT_VERSION+" aggiornamento "+new Date(process.env.BUNDLE_DATE).toISOString());
+    $("#frontend_version").append(process.env.GIT_VERSION+" aggiornamento "+new Date(process.env.BUNDLE_DATE).toLocaleString());
   }
 });
 
