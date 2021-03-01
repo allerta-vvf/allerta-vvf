@@ -782,10 +782,16 @@ function init_class($enableDebugger=true, $headers=true)
     if(SENTRY_ENABLED){
         Sentry\configureScope(function (Sentry\State\Scope $scope): void {
             global $user, $translations;
-            $scope->setUser([
-                'id' => $user->auth->getUserId(),
-                'username' => $user->nameById($user->auth->getUserId())
-            ]);
+            if($user->authenticated()){
+                $id = $user->auth->getUserId();
+                $username = $user->nameById($id);
+                if($username !== false){
+                    $scope->setUser([
+                        'id' => $id,
+                        'username' => $username
+                    ]);
+                }
+            }
             $scope->setTag('page.locale', $translations->client_languages[0]);
         });
         //If Sentry is enabled -> no Tracy bluescreen -> custom tmp bluescreen function

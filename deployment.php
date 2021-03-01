@@ -46,6 +46,7 @@ $baseConfig = [
 		vendor/tracy/tracy/tools
 		vendor
 		*.lock
+		*.zip
     ',
     'before' =>  [
         'local: cd server && composer update --no-dev -o'
