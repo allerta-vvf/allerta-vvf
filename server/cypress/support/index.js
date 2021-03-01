@@ -1,3 +1,5 @@
+Cypress.config('defaultCommandTimeout', 10000);
+
 //TODO: login remember me and better language support
 Cypress.Commands.add("login", (username="admin", password="correcthorsebatterystaple") => {
     cy.setCookie("forceLanguage", "en");

@@ -9,6 +9,7 @@ describe("User management", () => {
             .then((users) => {
                 cy.getApiKey().then((apiKey) => {
                     var i = 1
+                    var phone_number = "+1-202-555-0100"; // https://fakenumber.org/
                     users.forEach(user => {
                         console.log("User '"+user.name+"' number "+i);
                         if(i == 1){
@@ -33,6 +34,10 @@ describe("User management", () => {
                                 .clear()
                                 .type(user.password)
                                 .should('have.value', user.password)
+                            cy.get("input[name='phone_number']")
+                                .clear()
+                                .type(phone_number)
+                                .should('have.value', phone_number)
                             cy.get("input[name='birthday']")
                                 .clear()
                                 .type(user.birthday)
@@ -60,6 +65,7 @@ describe("User management", () => {
                                 name: user.name,
                                 username: user.username,
                                 password: user.password,
+                                phone_number: phone_number,
                                 birthday: user.birthday,
                                 chief: user.chief | 0,
                                 driver: user.driver | 0,
