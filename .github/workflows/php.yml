@@ -123,7 +123,7 @@ jobs:
         cd resources
         npm install
         ./node_modules/.bin/webpack --version
-        ./node_modules/.bin/webpack --config webpack.debug_bundle.js
+        ./node_modules/.bin/webpack --config webpack.prod.js
         ls dist
 
     - name: Validate composer.json and composer.lock
