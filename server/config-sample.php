@@ -17,3 +17,6 @@ define('DB_PREFIX', '@@prefix@@');
 
 /* Sentry options */
 define('SENTRY_CSP_REPORT_URI', '');
+define('SENTRY_ENABLED', false);
+define('SENTRY_DSN', '');
+define('SENTRY_ENV', 'prod');

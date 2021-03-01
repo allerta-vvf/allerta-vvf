@@ -9,6 +9,14 @@ if(!file_exists("config.php") && !file_exists("../../config.php")) {
 
 require_once 'config.php';
 
+if(SENTRY_ENABLED){
+    \Sentry\init([
+        'dsn' => SENTRY_DSN,
+        'traces_sample_rate' => 0.8,
+        'environment' => SENTRY_ENV
+    ]);
+}
+
 session_start();
 date_default_timezone_set('Europe/Rome');
 
@@ -769,18 +777,40 @@ function init_class($enableDebugger=true, $headers=true)
     }
     //var_dump($user);
     //exit();
-    if($user->requireRole(Role::DEVELOPER)) {
-        Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-        if($enableDebugger) Profiler::enable();
-        Debugger::getBar()->addPanel(new Netpromotion\Profiler\Adapter\TracyBarAdapter());
+
+    //TODO: remove Tracy and replace with Monolog
+    if(SENTRY_ENABLED){
+        Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+            global $user, $translations;
+            $scope->setUser([
+                'id' => $user->auth->getUserId(),
+                'username' => $user->nameById($user->auth->getUserId())
+            ]);
+            $scope->setTag('page.locale', $translations->client_languages[0]);
+        });
+        //If Sentry is enabled -> no Tracy bluescreen -> custom tmp bluescreen function
+
+        function customErrorPage() {
+            $error = error_get_last();
+            if ($error) {
+                echo 'Errore critico. Torna alla pagina precedente.';
+            }
+        }
+        register_shutdown_function('customErrorPage');
     } else {
-        Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+        if($user->requireRole(Role::DEVELOPER)) {
+            Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
+            if($enableDebugger) Profiler::enable();
+            Debugger::getBar()->addPanel(new Netpromotion\Profiler\Adapter\TracyBarAdapter());
+        } else {
+            Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
+        }
+        if(!$enableDebugger) {
+            Debugger::$showBar = false;
+        }
+        bdump(get_included_files());
+        bdump($translations->loaded_translations);
     }
-    if(!$enableDebugger) {
-        Debugger::$showBar = false;
-    }
-    bdump(get_included_files());
-    bdump($translations->loaded_translations);
 
     if(isset($_GET["disableSW"])){
         setcookie("disableServiceWorkerInstallation", true);

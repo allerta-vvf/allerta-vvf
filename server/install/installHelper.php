@@ -232,6 +232,9 @@ define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
 <br>
 /* Sentry options */<br>
 define('SENTRY_CSP_REPORT_URI', '');<br>
+define('SENTRY_ENABLED', false);<br>
+define('SENTRY_DSN', '');<br>
+define('SENTRY_ENV', 'prod');<br>
 </code>
             </ul>
             <p><?php t("If you're not sure what these terms mean, try contacting your hosting provider. Try providing the following information:"); ?></p>
