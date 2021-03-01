@@ -1,6 +1,6 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 const AfterBuildPlugin = require('@fiverr/afterbuild-webpack-plugin');
 const child_process = require('child_process');
@@ -72,7 +72,7 @@ var prod_config = {
   optimization: {
       mergeDuplicateChunks: true,
       minimize: true,
-      minimizer: [new UglifyJsPlugin({
+      minimizer: [new TerserPlugin({
         parallel: true,
         extractComments: true,
         sourceMap: sentry_enabled ? true : false
