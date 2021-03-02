@@ -34,7 +34,7 @@ https://github.com/allerta-vvf/allerta-vvf
 https://gitlab.com/allerta-vvf/allerta-vvf  
 https://gitea.it/allerta-vvf/allerta-vvf  
 https://gitea.matteogheza.it/allerta-vvf/allerta-vvf  
-https://codeberg.org/MatteoGheza/allerta-vvf  
+https://codeberg.org/allerta-vvf/allerta-vvf  
 https://notabug.org/allerta-vvf/allerta-vvf  
 
 ## License
