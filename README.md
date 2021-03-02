@@ -27,6 +27,16 @@ This is only a **development version**.
 |Telegram bot||:clock8:||
 |Twilio||:clock8:||
 
+## Main repository
+https://github.com/allerta-vvf/allerta-vvf  
+
+## Mirrors
+https://gitlab.com/allerta-vvf/allerta-vvf  
+https://gitea.it/allerta-vvf/allerta-vvf  
+https://gitea.matteogheza.it/allerta-vvf/allerta-vvf  
+https://codeberg.org/MatteoGheza/allerta-vvf  
+https://notabug.org/allerta-vvf/allerta-vvf  
+
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf?ref=badge_large)
 
