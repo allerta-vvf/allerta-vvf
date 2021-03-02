@@ -36,6 +36,7 @@ https://gitea.it/allerta-vvf/allerta-vvf
 https://gitea.matteogheza.it/allerta-vvf/allerta-vvf  
 https://codeberg.org/allerta-vvf/allerta-vvf  
 https://notabug.org/allerta-vvf/allerta-vvf  
+https://gitee.com/matteogheza/allerta-vvf  
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fallerta-vvf%2Fallerta-vvf?ref=badge_large)
