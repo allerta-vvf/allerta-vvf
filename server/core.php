@@ -1,7 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
-use Tracy\Debugger;
-use Netpromotion\Profiler\Profiler;
+use DebugBar\StandardDebugBar;
 
 if(!file_exists("config.php") && !file_exists("../../config.php")) {
     header('Location: install/install.php');
@@ -81,6 +80,8 @@ class tools
 
     public function redirect($url)
     {
+        global $debugbar;
+        if(!is_null($debugbar)) $debugbar->stackData();
         if (!headers_sent()) {
             header('Location: '.$url);
             exit;
@@ -143,25 +144,28 @@ class tools
 
     public function profiler_start($name=null)
     {
-        if($this->profiler_enabled) {
+        global $debugbar;
+        if($this->profiler_enabled && !is_null($debugbar)) {
             if(is_null($name)) {
                 $name = $this->profiler_last_name;
             }
-            Profiler::start($name);
+            if($name !== "") $debugbar['time']->startMeasure($name);
         }
     }
 
     public function profiler_stop($name=null)
     {
-        if($this->profiler_enabled) {
-            if(is_null($name)) {
+        global $debugbar;
+        if($this->profiler_enabled && !is_null($debugbar)) {
+            if(is_null($name) || $name == "") {
                 $name = $this->profiler_last_name;
             }
-            Profiler::finish($name);
+            if($name !== "") $debugbar['time']->stopMeasure($name);
         }
     }
 
     public function ajax_page_response($response){
+        global $debugbar;
         $json_response = json_encode($response);
         $response_data = substr(crc32($json_response), 0, 10);
         header("data: ".$response_data);
@@ -171,6 +175,7 @@ class tools
         } else {
           print("{}");
         }
+        if(!is_null($debugbar)) $debugbar->sendDataInHeaders();
     }
 }
 
@@ -190,7 +195,7 @@ class database
     public function connect()
     {
         try {
-            $this->connection = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password);
+            $this->connection = new DebugBar\DataCollector\PDO\TraceablePDO(new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password));
             $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
@@ -754,7 +759,7 @@ class translations
 
 function init_class($enableDebugger=true, $headers=true)
 {
-    global $tools, $database, $user, $translations;
+    global $tools, $database, $user, $translations, $debugbar;
     if(!isset($tools) && !isset($database) && !isset($translations)) {
         $database = new database();
         $tools = new tools($database->getOption("check_cf_ip"), $enableDebugger);
@@ -778,7 +783,6 @@ function init_class($enableDebugger=true, $headers=true)
     //var_dump($user);
     //exit();
 
-    //TODO: remove Tracy and replace with Monolog
     if(SENTRY_ENABLED){
         Sentry\configureScope(function (Sentry\State\Scope $scope): void {
             global $user, $translations;
@@ -794,29 +798,25 @@ function init_class($enableDebugger=true, $headers=true)
             }
             $scope->setTag('page.locale', $translations->client_languages[0]);
         });
-        //If Sentry is enabled -> no Tracy bluescreen -> custom tmp bluescreen function
-
-        function customErrorPage() {
-            $error = error_get_last();
-            if ($error) {
-                echo 'Errore critico. Torna alla pagina precedente.';
-            }
-        }
-        register_shutdown_function('customErrorPage');
     } else {
-        if($user->requireRole(Role::DEVELOPER)) {
-            Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . '/error-log');
-            if($enableDebugger) Profiler::enable();
-            Debugger::getBar()->addPanel(new Netpromotion\Profiler\Adapter\TracyBarAdapter());
-        } else {
-            Debugger::enable(Debugger::PRODUCTION, __DIR__ . '/error-log');
-        }
-        if(!$enableDebugger) {
-            Debugger::$showBar = false;
-        }
-        bdump(get_included_files());
-        bdump($translations->loaded_translations);
+        //TODO: add Monolog here
     }
+
+    if($enableDebugger && $user->requireRole(Role::DEVELOPER)) {
+        $debugbar = new StandardDebugBar();
+        $debugbar->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($database->connection));
+        $debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($database->options));
+    } else {
+        $debugbar = null;
+    }
+
+    function customErrorPage() {
+        $error = error_get_last();
+        if ($error) {
+            echo 'Errore critico. Torna alla pagina precedente.'; //TODO: render a translated html page
+        }
+    }
+    register_shutdown_function('customErrorPage');
 
     if(isset($_GET["disableSW"])){
         setcookie("disableServiceWorkerInstallation", true);
@@ -829,6 +829,13 @@ function init_class($enableDebugger=true, $headers=true)
         setcookie("disableServiceWorkerInstallation", false, time() - 3600);
         setcookie("forceServiceWorkerInstallation", true);
         $tools->redirect("?");
+    }
+}
+
+function bdump($message){
+    global $debugbar;
+    if(!is_null($debugbar)){
+        $debugbar["messages"]->addMessage($message);
     }
 }
 

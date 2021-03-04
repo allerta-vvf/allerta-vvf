@@ -70,7 +70,7 @@ if($tools->validate_form("mod", "add")) {
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
         bdump($database->exists("profiles", $id));
-        $values = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le types della table
+        $values = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE `id` = :id", true, [":id" => $id])[0];
         bdump($values);
     } else {
         $values = [];

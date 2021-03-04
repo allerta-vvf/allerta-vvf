@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14f566049f2ca7d87fa49fafaa9f4291",
+    "content-hash": "70f094e636bc55d808d812581dddc0b3",
     "packages": [
         {
             "name": "brick/phonenumber",
@@ -761,42 +761,41 @@
             "time": "2021-02-22T10:52:38+00:00"
         },
         {
-            "name": "netpromotion/profiler",
-            "version": "v1.3.0",
+            "name": "maximebf/debugbar",
+            "version": "v1.16.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/netpromotion/profiler.git",
-                "reference": "a3c0a625c2dba9a03e1c738e51fe05d24909bb7e"
+                "url": "https://github.com/maximebf/php-debugbar.git",
+                "reference": "6d51ee9e94cff14412783785e79a4e7ef97b9d62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netpromotion/profiler/zipball/a3c0a625c2dba9a03e1c738e51fe05d24909bb7e",
-                "reference": "a3c0a625c2dba9a03e1c738e51fe05d24909bb7e",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/6d51ee9e94cff14412783785e79a4e7ef97b9d62",
+                "reference": "6d51ee9e94cff14412783785e79a4e7ef97b9d62",
                 "shasum": ""
             },
             "require": {
-                "petrknap/php-profiler": "^1.1",
-                "petrknap/php-singleton": "^1.0",
-                "php": ">=5.4"
-            },
-            "conflict": {
-                "nette/di": "<2.2 || >=3",
-                "tracy/tracy": "<2.2 || >=3"
+                "php": "^7.1|^8",
+                "psr/log": "^1.0",
+                "symfony/var-dumper": "^2.6|^3|^4|^5"
             },
             "require-dev": {
-                "laravel/lumen-framework": "^5.0",
-                "latte/latte": "^2.3",
-                "netpromotion/tracy-wrapper": "^1.0",
-                "nette/application": "^2.3",
-                "nette/bootstrap": "^2.3",
-                "nette/di": "*",
-                "phpunit/phpunit": "^4.8",
-                "tracy/tracy": "*"
+                "phpunit/phpunit": "^7.5.20 || ^9.4.2"
+            },
+            "suggest": {
+                "kriswallsmith/assetic": "The best way to manage assets",
+                "monolog/monolog": "Log using Monolog",
+                "predis/predis": "Redis storage"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.16-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "Netpromotion\\Profiler\\": "src/Profiler"
+                    "DebugBar\\": "src/DebugBar/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -805,16 +804,26 @@
             ],
             "authors": [
                 {
-                    "name": "Petr Knap",
-                    "email": "knap@netpromotion.cz"
+                    "name": "Maxime Bouroumeau-Fuseau",
+                    "email": "maxime.bouroumeau@gmail.com",
+                    "homepage": "http://maximebf.com"
+                },
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
                 }
             ],
-            "description": "Profiler with adapter for Tracy",
+            "description": "Debug bar in the browser for php application",
+            "homepage": "https://github.com/maximebf/php-debugbar",
+            "keywords": [
+                "debug",
+                "debugbar"
+            ],
             "support": {
-                "issues": "https://github.com/netpromotion/profiler/issues",
-                "source": "https://github.com/netpromotion/profiler/tree/master"
+                "issues": "https://github.com/maximebf/php-debugbar/issues",
+                "source": "https://github.com/maximebf/php-debugbar/tree/v1.16.5"
             },
-            "time": "2016-10-05T09:25:18+00:00"
+            "time": "2020-12-07T11:07:24+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -878,96 +887,6 @@
                 "source": "https://github.com/nikic/FastRoute/tree/master"
             },
             "time": "2020-09-28T10:21:28+00:00"
-        },
-        {
-            "name": "petrknap/php-profiler",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/petrknap/php-profiler.git",
-                "reference": "39fb47fb0fbdbc678128a046fd1c5e8d71064595"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/petrknap/php-profiler/zipball/39fb47fb0fbdbc678128a046fd1c5e8d71064595",
-                "reference": "39fb47fb0fbdbc678128a046fd1c5e8d71064595",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PetrKnap\\Php\\Profiler\\": "src"
-                },
-                "files": []
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Petr Knap",
-                    "email": "dev@petrknap.cz"
-                }
-            ],
-            "description": "PHP profiler",
-            "homepage": "https://petrknap.github.io/docs/php-profiler.html",
-            "support": {
-                "issues": "https://github.com/petrknap/php-profiler/issues",
-                "source": "https://github.com/petrknap/php-profiler/tree/master"
-            },
-            "time": "2017-05-29T10:14:28+00:00"
-        },
-        {
-            "name": "petrknap/php-singleton",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/petrknap/php-singleton.git",
-                "reference": "dec131d0d6c72dd76b5a5c7940f04f14f5df7a20"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/petrknap/php-singleton/zipball/dec131d0d6c72dd76b5a5c7940f04f14f5df7a20",
-                "reference": "dec131d0d6c72dd76b5a5c7940f04f14f5df7a20",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PetrKnap\\Php\\Singleton\\": "src/Singleton"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Petr Knap",
-                    "email": "dev@petrknap.cz",
-                    "homepage": "http://petrknap.cz"
-                }
-            ],
-            "description": "Singleton pattern for PHP",
-            "homepage": "https://github.com/petrknap/php-singleton",
-            "support": {
-                "issues": "https://github.com/petrknap/php-singleton/issues",
-                "source": "https://github.com/petrknap/php-singleton/tree/master"
-            },
-            "time": "2016-09-22T07:59:18+00:00"
         },
         {
             "name": "php-http/client-common",
@@ -1725,16 +1644,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "3.1.5",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "62f6897e1e577de39b366b5c84e19a453da36016"
+                "reference": "899b0de58c1e01feb54829b3094af74252aff385"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/62f6897e1e577de39b366b5c84e19a453da36016",
-                "reference": "62f6897e1e577de39b366b5c84e19a453da36016",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/899b0de58c1e01feb54829b3094af74252aff385",
+                "reference": "899b0de58c1e01feb54829b3094af74252aff385",
                 "shasum": ""
             },
             "require": {
@@ -1779,7 +1698,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1.x-dev"
+                    "dev-master": "3.2.x-dev"
                 }
             },
             "autoload": {
@@ -1813,7 +1732,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/3.1.5"
+                "source": "https://github.com/getsentry/sentry-php/tree/3.2.0"
             },
             "funding": [
                 {
@@ -1825,7 +1744,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-02-18T13:34:31+00:00"
+            "time": "2021-03-03T11:54:34+00:00"
         },
         {
             "name": "spatie/array-to-xml",
@@ -2672,78 +2591,92 @@
             "time": "2020-09-07T11:33:47+00:00"
         },
         {
-            "name": "tracy/tracy",
-            "version": "v2.8.3",
+            "name": "symfony/var-dumper",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nette/tracy.git",
-                "reference": "342674bbf72365e8456de9855a8cd839ca695933"
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "72ca213014a92223a5d18651ce79ef441c12b694"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/342674bbf72365e8456de9855a8cd839ca695933",
-                "reference": "342674bbf72365e8456de9855a8cd839ca695933",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/72ca213014a92223a5d18651ce79ef441c12b694",
+                "reference": "72ca213014a92223a5d18651ce79ef441c12b694",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
-                "ext-session": "*",
-                "php": ">=7.2 <8.1"
+                "php": ">=7.2.5",
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "^1.15"
             },
             "conflict": {
-                "nette/di": "<3.0"
+                "phpunit/phpunit": "<5.4.3",
+                "symfony/console": "<4.4"
             },
             "require-dev": {
-                "latte/latte": "^2.5",
-                "nette/di": "^3.0",
-                "nette/mail": "^3.0",
-                "nette/tester": "^2.2",
-                "nette/utils": "^3.0",
-                "phpstan/phpstan": "^0.12",
-                "psr/log": "^1.0"
+                "ext-iconv": "*",
+                "symfony/console": "^4.4|^5.0",
+                "symfony/process": "^4.4|^5.0",
+                "twig/twig": "^2.13|^3.0.4"
             },
+            "suggest": {
+                "ext-iconv": "To convert non-UTF-8 strings to UTF-8 (or symfony/polyfill-iconv in case ext-iconv cannot be used).",
+                "ext-intl": "To show region name in time zone dump",
+                "symfony/console": "To use the ServerDumpCommand and/or the bin/var-dump-server script"
+            },
+            "bin": [
+                "Resources/bin/var-dump-server"
+            ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
             "autoload": {
-                "classmap": [
-                    "src"
-                ],
                 "files": [
-                    "src/Tracy/functions.php"
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "David Grudl",
-                    "homepage": "https://davidgrudl.com"
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
                 },
                 {
-                    "name": "Nette Community",
-                    "homepage": "https://nette.org/contributors"
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "😎  Tracy: the addictive tool to ease debugging PHP code for cool developers. Friendly design, logging, profiler, advanced features like debugging AJAX calls or CLI support. You will love it.",
-            "homepage": "https://tracy.nette.org",
+            "description": "Provides mechanisms for walking through any arbitrary PHP variable",
+            "homepage": "https://symfony.com",
             "keywords": [
-                "Xdebug",
                 "debug",
-                "debugger",
-                "nette",
-                "profiler"
+                "dump"
             ],
             "support": {
-                "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.8.3"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.2.3"
             },
-            "time": "2021-01-31T23:07:09+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-01-27T10:15:41+00:00"
         },
         {
             "name": "twig/twig",

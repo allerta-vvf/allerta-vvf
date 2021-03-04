@@ -2,6 +2,16 @@
 require_once 'core.php';
 init_class();
 
+if(!is_null($debugbar)){
+    $enable_debugbar = true;
+    $debugbarRenderer = $debugbar->getJavascriptRenderer("./vendor/maximebf/debugbar/src/DebugBar/Resources");
+    $debugbarRenderer->disableVendor("jquery");
+    $debugbarRenderer->disableVendor("fontawesome");
+    $debugbarRenderer->setEnableJqueryNoConflict(false);
+} else {
+    $enable_debugbar = false;
+}
+
 p_start("Load Twig");
 $webpack_manifest = json_decode(
     file_get_contents(realpath("resources/dist/manifest.json")),
@@ -50,7 +60,7 @@ p_stop();
 $template = null;
 function loadtemplate($templatename, $data, $requirelogin=true)
 {
-    global $database, $user, $twig, $template;
+    global $database, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
     p_start("Render Twig template");
     if($requirelogin) {
         $user->requirelogin();
@@ -58,6 +68,9 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['delete_caches'] = isset($_GET["deleteCache"]) || isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
     $data['delete_service_workers'] = isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
     $data['delete_service_workers_and_disable'] = isset($_GET["unregisterSWandDisable"]);
+    $data['enable_debug_bar'] = $enable_debugbar;
+    $data['debug_bar_head'] = $enable_debugbar ? $debugbarRenderer->renderHead() : "";
+    $data['debug_bar'] = $enable_debugbar ? $debugbarRenderer->render() : "";
     $data['owner'] = $database->getOption("owner");
     $data['urlsoftware'] = $database->getOption("web_url");
     $data['user'] = $user->info();

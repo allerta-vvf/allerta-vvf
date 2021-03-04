@@ -3,6 +3,7 @@
 <head>
   <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
   <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
+  {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>
 <body>
   {% if modalità == "edit" or modalità == "add" %}
@@ -81,5 +82,6 @@
     </script>
   </div>
   {% endif %}
+  {% if enable_debug_bar %}{{ debug_bar|raw }}{% endif %}
 </body>
 </html>

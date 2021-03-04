@@ -87,6 +87,7 @@
   </script>
   {% endif %}
   {% endblock %}
+  {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>
 <body>
   {% block menu %}
@@ -116,6 +117,7 @@
 {% endblock %}
   </div>
   <!-- /Content -->
+  {% if enable_debug_bar %}{{ debug_bar|raw }}{% endif %}
   {% block footer %}
   <!-- Footer -->
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">

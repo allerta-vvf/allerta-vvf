@@ -208,7 +208,7 @@ header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Max-Age: *");
 header("Content-type: ".$responseFormatType);
-init_class(false, false); //initialize classes (and Tracy) after Content-type header
+init_class(false, false); //initialize classes after Content-type header
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 

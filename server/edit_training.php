@@ -45,7 +45,7 @@ if($tools->validate_form("mod", "add")) {
     if(isset($_GET["add"])||isset($_GET["edit"])||isset($_GET["delete"])||isset($_GET["mod"])) {
         $_SESSION["token"] = bin2hex(random_bytes(64));
     }
-    $crew = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true); // Pesco i dati della table e li ordino in base al name
+    $crew = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY name ASC;", true);
     $modalità = (isset($_GET["add"])) ? "add" : ((isset($_GET["edit"])) ? "edit" : ((isset($_GET["delete"])) ? "delete" : "add"));
     bdump($modalità, "modalità");
     bdump($crew, "crew");
@@ -53,7 +53,7 @@ if($tools->validate_form("mod", "add")) {
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
         bdump($database->exists("trainings", $id));
-        $values = $database->exec("SELECT * FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id])[0]; // Pesco le types della table
+        $values = $database->exec("SELECT * FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id])[0];
         bdump($values);
     } else {
         $values = [];

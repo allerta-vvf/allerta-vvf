@@ -43,7 +43,6 @@ $baseConfig = [
 		vendor/nikic/fast-route/test
 		vendor/twig/twig/src/Node/Expression/Test
 		vendor/twig/twig/src/Test
-		vendor/tracy/tracy/tools
 		vendor
 		*.lock
 		*.zip
