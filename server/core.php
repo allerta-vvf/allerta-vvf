@@ -431,6 +431,7 @@ class user
 {
     private $database = null;
     private $tools = null;
+    private $profile_names = null;
     public $auth = null;
     public $authenticated = false;
 
@@ -459,6 +460,8 @@ class user
             }
         }
         $this->authenticated = $this->auth->isLoggedIn();
+        $this->profile_names = $this->database->exec("SELECT `id`, `name` FROM `%PREFIX%_profiles`;", true);
+        $this->user_names = $this->database->exec("SELECT `id`, `username` FROM `%PREFIX%_users`;", true);
     }
 
     public function authenticated()
@@ -514,24 +517,17 @@ class user
 
     public function nameById($id)
     {
-        $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $id]);
-        if(!empty($profiles)) {
-            if(!is_null($profiles[0]["name"])) {
-                return(s($profiles[0]["name"], false));
+        foreach($this->profile_names as $profile) {
+            if($profile["id"] == $id) {
+                return(s($profile["name"], false));
             } else {
-                $user = $this->database->exec("SELECT `username` FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $id]);
-                if(!empty($user)) {
-                    if(!is_null($user[0]["username"])) {
-                        return(s($user[0]["username"], false));
-                    } else {
-                        return false;
+                foreach($this->user_names as $user) {
+                    if($user["id"] == $id){
+                        return(s($user["username"], false));
                     }
-                } else {
-                    return false;
                 }
+                return false;
             }
-        } else {
-            return false;
         }
     }
 
