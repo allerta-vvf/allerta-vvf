@@ -170,12 +170,12 @@ class tools
         $response_data = substr(crc32($json_response), 0, 10);
         header("data: ".$response_data);
         header("Content-type: application/json");
+        if(!is_null($debugbar)) $debugbar->sendDataInHeaders();
         if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
           print($json_response);
         } else {
           print("{}");
         }
-        if(!is_null($debugbar)) $debugbar->sendDataInHeaders();
     }
 }
 
