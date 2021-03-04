@@ -94,6 +94,17 @@ class tools
             echo '</noscript>';
         }
     }
+
+    public function rickroll(){
+        $rickrolls = [
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://www.youtube.com/watch?v=ub82Xb1C8os",
+            "https://www.youtube.com/watch?v=Wjy3o0FoLYc",
+            "https://www.youtube.com/watch?v=bxqLsrlakK8",
+            "https://www.youtube.com/watch?v=Lrj2Hq7xqQ8"
+        ];
+        $this->redirect($rickrolls[array_rand($rickrolls)]); //Dear attacker/bot, have fun!
+    }
     function extract_unique($data)
     {
         $this->profiler_start("Extract unique");
@@ -170,7 +181,7 @@ class tools
         $response_data = substr(crc32($json_response), 0, 10);
         header("data: ".$response_data);
         header("Content-type: application/json");
-        if(!is_null($debugbar)) $debugbar->sendDataInHeaders();
+        if(!is_null($debugbar)) $debugbar->sendDataInHeaders(true);
         if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
           print($json_response);
         } else {
@@ -804,6 +815,8 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($enableDebugger && $user->requireRole(Role::DEVELOPER)) {
         $debugbar = new StandardDebugBar();
+        $dir = str_replace("resources\ajax\\", "", __DIR__).'\debug_storage';
+        $debugbar->setStorage(new DebugBar\Storage\FileStorage($dir));
         $debugbar->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($database->connection));
         $debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($database->options));
     } else {

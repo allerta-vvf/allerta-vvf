@@ -12,8 +12,9 @@ $baseConfig = [
         resources/node_modules
         resources/webpack*
 		cypress
-        error-log/exception*
-        error-log/*.log
+        debug_storage/exception*
+        debug_storage/*.log
+		debug_storage/*.json
 		config.old.php
 		config.php
 		*tests*

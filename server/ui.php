@@ -6,8 +6,8 @@ if(!is_null($debugbar)){
     $enable_debugbar = true;
     $debugbarRenderer = $debugbar->getJavascriptRenderer("./vendor/maximebf/debugbar/src/DebugBar/Resources");
     $debugbarRenderer->disableVendor("jquery");
-    $debugbarRenderer->disableVendor("fontawesome");
     $debugbarRenderer->setEnableJqueryNoConflict(false);
+    $debugbarRenderer->setOpenHandlerUrl('debug_open.php');
 } else {
     $enable_debugbar = false;
 }

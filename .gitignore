@@ -496,8 +496,8 @@ composer.phar
 
 /server/resources/dist/*
 
-/server/error-log/*
-!/server/error-log/index.html
+/server/debug_storage/*
+!/server/debug_storage/index.html
 
 config.php
 config.old.php
