@@ -518,7 +518,7 @@ class user
     public function nameById($id)
     {
         foreach($this->profile_names as $profile) {
-            if($profile["id"] == $id) {
+            if($profile["id"] == $id && !is_null($profile["name"])) {
                 return(s($profile["name"], false));
             } else {
                 foreach($this->user_names as $user) {
