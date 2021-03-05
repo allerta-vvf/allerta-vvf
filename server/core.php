@@ -811,7 +811,8 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($enableDebugger && $user->requireRole(Role::DEVELOPER)) {
         $debugbar = new StandardDebugBar();
-        $dir = str_replace("resources\ajax\\", "", __DIR__).'\debug_storage';
+        bdump(__DIR__);
+        $dir = str_replace("resources\ajax\\", "", __DIR__).DIRECTORY_SEPARATOR.'debug_storage';
         $debugbar->setStorage(new DebugBar\Storage\FileStorage($dir));
         $debugbar->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($database->connection));
         $debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($database->options));
