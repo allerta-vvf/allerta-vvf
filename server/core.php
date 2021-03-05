@@ -19,6 +19,13 @@ if(SENTRY_ENABLED){
 session_start();
 date_default_timezone_set('Europe/Rome');
 
+function bdump($message){
+    global $debugbar;
+    if(!is_null($debugbar)){
+        $debugbar["messages"]->addMessage($message);
+    }
+}
+
 class tools
 {
     public $check_cf_ip;
@@ -839,13 +846,6 @@ function init_class($enableDebugger=true, $headers=true)
         setcookie("disableServiceWorkerInstallation", false, time() - 3600);
         setcookie("forceServiceWorkerInstallation", true);
         $tools->redirect("?");
-    }
-}
-
-function bdump($message){
-    global $debugbar;
-    if(!is_null($debugbar)){
-        $debugbar["messages"]->addMessage($message);
     }
 }
 
