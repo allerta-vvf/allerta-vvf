@@ -10,6 +10,26 @@ import '../node_modules/bootstrap-toggle/js/bootstrap-toggle.js';
 import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 import 'time-input-polyfill/auto';
 import 'jquery-pjax';
+import toastr from 'toastr'
+import 'toastr/build/toastr.css';
+window.toastr = toastr;
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": true,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
 
 console.log("Commit: "+process.env.GIT_VERSION);
 console.log("Date: "+process.env.GIT_AUTHOR_DATE);

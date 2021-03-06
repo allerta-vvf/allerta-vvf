@@ -30,7 +30,7 @@
         token_list: "{{ token_list }}"
       },
       success: function (data) {
-        alert(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
+        toastr.success(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
         clearInterval(window.loadTable_interval); //stop reloading
         loadTable({table_page: "list", use_custom_table_engine: "default"});
       }
@@ -47,7 +47,7 @@
         token_list: "{{ token_list }}"
       },
       success: function (data) {
-        alert(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
+        toastr.success(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
         clearInterval(window.loadTable_interval); //stop reloading
         loadTable({table_page: "list", use_custom_table_engine: "default"});
       }
