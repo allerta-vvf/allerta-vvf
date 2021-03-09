@@ -508,6 +508,7 @@ custom-*.*
 
 *.log
 *.txt
+!/server/robots.txt
 
 config.json
 

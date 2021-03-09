@@ -31,7 +31,7 @@
   Deny from all
 </FilesMatch>
 
-<FilesMatch "\.(log|txt)$">
+<FilesMatch "\.log$">
   Order Allow,Deny
   Deny from all
 </FilesMatch>

@@ -22,9 +22,15 @@ $baseConfig = [
 		*examples*
 		*examples
 		*Makefile*
+		*LICENSE*
+		*CREDITS*
+		*VERSION*
+		*CHANGELOG*
 		*.md
 		*.rst
 		*.txt
+		!resources/dist/*.LICENSE.txt
+		!robots.txt
 		*.sh
 		*editorconfig
 		*doc*
@@ -34,10 +40,6 @@ $baseConfig = [
 		*.phpstorm*
 		*.php_cs*
 		*.xml
-		*LICENSE*
-		*CREDITS*
-		*VERSION*
-		*CHANGELOG*
 		*phpcs*
 		*phpstan*
 		*phpunit*
