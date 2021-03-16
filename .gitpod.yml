@@ -30,8 +30,8 @@ tasks:
         mysql -e "CREATE USER 'allerta'@'localhost' IDENTIFIED BY 'allerta_pwd';";
         mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'allerta'@'localhost';";
         mysqladmin reload;
-        php install.php config -n "allerta" -u "allerta" -a "allerta_pwd" -o $WORKSPACE_URL -r "DEV_ENV";
-        php install.php populate -m "admin" -b -d -s "password" -w "owner" -e "mail@mailserver.local";
+        php install.php config -n "allerta" -u "allerta" -a "allerta_pwd" -o "127.0.0.1" -r "DEV_ENV";
+        php install.php populate -m "admin" -b -d -s "password" -w "owner" -e "mail@mailserver.local" -u $WORKSPACE_URL;
         cd ..;
         wget https://github.com/vrana/adminer/releases/download/v4.8.0/adminer-4.8.0.php;
         mv adminer-4.8.0.php adminer.php
