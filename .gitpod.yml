@@ -2,7 +2,7 @@ image:
   file: .gitpod.dockerfile
 ports:
   - port: 8001
-    onOpen: open-preview
+    onOpen: ignore
   - port: 3306
     onOpen: ignore
 tasks:
@@ -32,12 +32,13 @@ tasks:
         mysqladmin reload;
         php install.php config -n "allerta" -u "allerta" -a "allerta_pwd" -o "127.0.0.1" -r "DEV_ENV";
         php install.php populate -m "admin" -b -d -s "password" -w "owner" -e "mail@mailserver.local" -u $WORKSPACE_URL;
+        touch runInstall.php;
+        gp await-port 8001; gp preview "$(gp url 8001)";
         cd ..;
         wget https://github.com/vrana/adminer/releases/download/v4.8.0/adminer-4.8.0.php;
         mv adminer-4.8.0.php adminer.php
 vscode:
   extensions:
     - gruntfuggly.todo-tree@0.0.205:sbsZJOTJzKZtMVHQuS2iPw==
-    - coenraads.bracket-pair-colorizer-2@0.1.4:+JUeb/jFYZt2/0MS/gUllA==
     - shelex.vscode-cy-helper@1.1.0:U9ok2y1bSmqn17OMuRMOfw==
     - hookyqr.beautify@1.4.11:n9DJEUFbYD/YHaBXxm+pYw==
