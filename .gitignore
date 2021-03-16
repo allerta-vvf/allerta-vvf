@@ -521,6 +521,7 @@ sw.js
 !/server/cypress/videos/.gitkeep
 
 deployment_remotes.php
+adminer.php
 
 /server/resources/images/logo.png
 /server/resources/images/owner.png
