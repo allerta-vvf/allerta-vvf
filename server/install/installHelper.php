@@ -461,7 +461,7 @@ function full_path()
     return $url;
 }
 
-function initOptions($name, $visible, $developer, $password, $report_email, $owner)
+function initOptions($name, $visible, $developer, $password, $report_email, $owner, $url=null)
 {
     try{
         include_once "../config.php";
@@ -508,7 +508,10 @@ INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);".$qu
         $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);
         $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
         $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
-        $prep->bindValue(':web_url', str_replace("install/install.php", "", full_path()), PDO::PARAM_STR);
+        if(is_null($url)){
+            $url = str_replace("install/install.php", "", full_path());
+        }
+        $prep->bindValue(':web_url', $url, PDO::PARAM_STR);
         $prep->bindValue(':cron_job_code', str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30))), PDO::PARAM_STR);
         $prep->bindValue(':cron_job_time', "01;00:00", PDO::PARAM_STR);
         $prep->execute();
@@ -564,11 +567,13 @@ function cli_helper($action, $options)
     case "populate":
         $name = validate_arg($options, "name", "admin");
         $visible = array_key_exists("visible", $options);
+        $developer = array_key_exists("developer", $options);
         $password = validate_arg($options, "password", "password");
         $report_email = validate_arg($options, "report_email", "postmaster@localhost.local");
         $owner = validate_arg($options, "owner", "Owner");
+        $url = validate_arg($options, "url", "htp://localhost/");
         initDB();
-        initOptions($name, $visible, $password, $report_email, $owner);
+        initOptions($name, $visible, $developer, $password, $report_email, $owner, $url);
         t("DB Populated successful");
         finalInstallationHelperStep();
         exit(0);
@@ -612,6 +617,9 @@ function run_cli()
             \GetOpt\Option::create('b', 'visible', \GetOpt\GetOpt::NO_ARGUMENT)
                 ->setDescription(t("Is admin visible?", false))
                 ->setArgumentName(t("Is admin visible?", false)),
+            \GetOpt\Option::create('d', 'developer', \GetOpt\GetOpt::NO_ARGUMENT)
+                ->setDescription(t("Enable devmode per the user", false))
+                ->setArgumentName(t("Enable devmode per the user", false)),
             \GetOpt\Option::create('s', 'password', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription(t("Admin password", false))
                 ->setArgumentName(t("Admin password", false)),
@@ -620,7 +628,10 @@ function run_cli()
                 ->setArgumentName(t("Owner", false)),
             \GetOpt\Option::create('e', 'report_email', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription(t("Report email", false))
-                ->setArgumentName(t("Report email", false))
+                ->setArgumentName(t("Report email", false)),
+            \GetOpt\Option::create('u', 'url', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription(t("App url", false))
+                ->setArgumentName(t("App url", false)),
             ]
         )->setDescription(
             t("Populate Allerta database", false) . "." . PHP_EOL .
