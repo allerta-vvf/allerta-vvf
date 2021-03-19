@@ -3,8 +3,7 @@ describe("Login and logout", () => {
         cy.login()
         cy.contains("Logs")
         cy.contains("Logs").click()
-        cy.wait('@ajax').its('status').should('eq', 200)
-        cy.wait(500) //table rendering timeout
+        cy.wait('@ajax_log')
         cy.get("#list").contains("Login")
     })
 
@@ -15,8 +14,7 @@ describe("Login and logout", () => {
         cy.login()
         cy.contains("Logs")
         cy.contains("Logs").click()
-        cy.wait('@ajax').its('status').should('eq', 200)
-        cy.wait(500) //table rendering timeout
+        cy.wait('@ajax_log')
         cy.get("#list").contains("Logout")
     })
 });

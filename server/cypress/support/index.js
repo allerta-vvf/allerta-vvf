@@ -1,10 +1,19 @@
-Cypress.config('defaultCommandTimeout', 10000);
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // for some reasons, the test fails without this in cartain conditions...
+    return false
+})
 
 //TODO: login remember me and better language support
 Cypress.Commands.add("login", (username="admin", password="correcthorsebatterystaple") => {
     cy.setCookie("forceLanguage", "en");
-    cy.reload()
-    cy.server().route('GET', '/resources/ajax/ajax_*').as('ajax');
+    cy.setCookie('disableServiceWorkerInstallation', '1');
+
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_change_availability.php').as('ajax_change_availability');
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_list.php').as('ajax_list');
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_log.php').as('ajax_log');
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_services.php').as('ajax_services');
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_trainings.php').as('ajax_trainings');
+
     cy.visit("/");
     cy.get("input[name='name']")
         .clear()

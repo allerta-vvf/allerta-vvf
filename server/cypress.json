@@ -4,5 +4,7 @@
   "env": {
     "DB_PASSWORD": "password"
   },
-  "chromeWebSecurity": false
+  "experimentalStudio": true,
+  "chromeWebSecurity": false,
+  "defaultCommandTimeout": 10000
 }

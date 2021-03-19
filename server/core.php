@@ -42,7 +42,7 @@ class tools
     {
         if(is_array($data)){
             foreach($data as $element){
-                if (!$this->validate_form($element, $data_source, $expected_value)) return false;
+                if (!$this->validate_form($element, $expected_value, $data_source)) return false;
             }
             return true;
         } else {
@@ -524,18 +524,21 @@ class user
 
     public function nameById($id)
     {
+        $name = null;
         foreach($this->profile_names as $profile) {
             if($profile["id"] == $id && !is_null($profile["name"])) {
-                return(s($profile["name"], false));
-            } else {
-                foreach($this->user_names as $user) {
-                    if($user["id"] == $id){
-                        return(s($user["username"], false));
-                    }
-                }
-                return false;
+                $name = s($profile["name"], false);
             }
         }
+        if(is_null($name)){
+            foreach($this->user_names as $user) {
+                if($user["id"] == $id){
+                    return(s($user["username"], false));
+                }
+            }
+            if(is_null($name)) return false;
+        }
+        return $name;
     }
 
     public function hidden()

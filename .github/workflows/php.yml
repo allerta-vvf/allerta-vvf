@@ -2,6 +2,10 @@ name: PHP Code Testing
 
 on:
   push:
+    branches:
+      - master
+      - 'releases/**'
+      - 'feat_**'
   pull_request:
 
 jobs:

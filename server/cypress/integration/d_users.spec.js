@@ -51,8 +51,10 @@ describe("User management", () => {
                                     .check({force: true})
                             }
                             cy.contains("Submit").click()
+                            cy.wait('@ajax_list')
                             cy.contains(user.name)
                             cy.visit("/log.php")
+                            cy.wait('@ajax_log')
                             cy.contains("User created")
                             cy.contains(user.name)
                             cy.visit("/")
@@ -77,6 +79,7 @@ describe("User management", () => {
                                     expect(response.status).to.eq(200)
                                     expect(response.body).to.have.property('userId')
                                     cy.visit("/log.php")
+                                    cy.wait('@ajax_log')
                                     cy.contains("User created")
                                     cy.contains(user.name)
                                 })
