@@ -104,6 +104,9 @@
         {% for type in service.types %}
         <option value='{{ type.name }}'>{{ type.name }}</option>
         {% endfor %}
+        {% if service.types is empty %}
+        <option id="empty_option" value=''></option>
+        {% endif %}
         <option value='add_new'>{{ 'Add type...'|t }}</option>
       </select>
       <br>
@@ -115,6 +118,7 @@
   </form>
   <script>
     $( ".types" ).change(function() {
+        $('#empty_option').remove();
         var type = "";
         $( ".types option:selected" ).each(function() {
             type = $( this ).val();
@@ -155,7 +159,7 @@
       $( ".types option:selected" ).each(function() {
         type = $( this ).val();
       });
-      if(type == "add_new"){
+      if(type == "add_new" || type == ""){
         toastr.error("{{ 'You must select a valid service type!'|t }}");
         return false;
       }
