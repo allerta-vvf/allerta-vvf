@@ -100,10 +100,11 @@
       <br>
       <label><b>{{ 'Service type'|t }}</b></label>
       <br>
-      <select name='type' class="tipi">
+      <select name='type' class="types">
         {% for type in service.types %}
         <option value='{{ type.name }}'>{{ type.name }}</option>
         {% endfor %}
+        <option value='add_new'>{{ 'Add type...'|t }}</option>
       </select>
       <br>
       <input id="modalità" type="hidden" value="{{ service.modalità }}" name="mod"></input>
@@ -113,6 +114,29 @@
     </div>
   </form>
   <script>
+    $( ".types" ).change(function() {
+        var type = "";
+        $( ".types option:selected" ).each(function() {
+            type = $( this ).val();
+        });
+        console.log(type);
+        if(type == "add_new"){
+            new_type = prompt("{{ 'Insert type name:'|t }}");
+            if(!new_type) return;
+            $.ajax({
+                url: "resources/ajax/ajax_add_type.php",
+                method: "POST",
+                data: {
+                    type: new_type
+                },
+                success: function (data) {
+                    $('option:last-of-type').before($('<option>').val(new_type).text(new_type)); 
+                    $('option[value='+new_type+']').prop('selected', 'selected').change();
+                    toastr.success(`{{ "Type '%s' added successfully."|t|format('${new_type}') }}`);
+                }
+            });
+        }
+    });
     {% if service.modalità == "edit" %}
     $.each('{{ values.chief }}'.split(','), function (index, value) {
       $('.chief-' + value).prop('checked', true);
@@ -127,6 +151,14 @@
     $('#notes').val('{{ values.notes }}');
     {% endif %}
     $('form').submit(function () {
+      var type = "";
+      $( ".types option:selected" ).each(function() {
+        type = $( this ).val();
+      });
+      if(type == "add_new"){
+        toastr.error("{{ 'You must select a valid service type!'|t }}");
+        return false;
+      }
       var progressivo_valido = /^[0-9/]{3,6}$/
       var progressivo = $('#progressivo').val();
       if (!progressivo_valido.test(progressivo)) {

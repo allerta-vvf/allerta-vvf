@@ -85,5 +85,9 @@ return [
     "Wrong password" => "Password errata",
     "Email not verified" => "Indirizzo email non verificato",
     "Wrong username" => "Username errato",
-    "Too many requests" => "Troppi tentativi effettuati"
+    "Too many requests" => "Troppi tentativi effettuati",
+    "Add type..." => "Aggiungi tipologia...",
+    "Insert type name:" => "Inserisci nome della tipologia:",
+    "Type '%s' added successfully." => "Tipologia '%s' aggiunta con successo.",
+    "You must select a valid service type!" => "Devi selezionare una tipologia  di intervento valida!"
 ];

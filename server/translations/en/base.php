@@ -85,5 +85,9 @@ return [
     "Wrong password" => "Wrong password",
     "Email not verified" => "Email not verified",
     "Wrong username" => "Wrong username",
-    "Too many requests" => "Too many requests"
+    "Too many requests" => "Too many requests",
+    "Add type..." => "Add type...",
+    "Insert type name:" => "Insert type name:",
+    "Type '%s' added successfully." => "Type '%s' added successfully.",
+    "You must select a valid service type!" => "You must select a valid service type!"
 ];
