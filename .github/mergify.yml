@@ -1,13 +1,7 @@
 pull_request_rules:
-  - name: Automatic merge on approval
-    conditions:
-      - "approved-reviews-by>=1"
-    actions:
-      merge:
-        method: merge
   - name: Automatic merge for Dependabot pull requests
     conditions:
-      - check-success~=PHP
+      - check-success~=Testing
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
       merge:
