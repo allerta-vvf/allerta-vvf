@@ -8,6 +8,7 @@ Cypress.Commands.add("login", (username="admin", password="correcthorsebatteryst
     cy.setCookie("forceLanguage", "en");
     cy.setCookie('disableServiceWorkerInstallation', '1');
 
+    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_add_type.php').as('ajax_add_type');
     cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_change_availability.php').as('ajax_change_availability');
     cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_list.php').as('ajax_list');
     cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_log.php').as('ajax_log');

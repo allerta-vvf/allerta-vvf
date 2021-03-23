@@ -8,6 +8,7 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding training");
             $database->add_training($_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
+            $user->log("Aggiunta esercitazione", $user->auth->getUserId(), $user->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $tools->redirect("trainings.php");
         } else {
             debug(); //TODO: remove debug info
@@ -21,6 +22,7 @@ if($tools->validate_form("mod", "add")) {
             bdump($_POST);
             bdump("editing training");
             $database->change_training($_POST["id"], $_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
+            $user->log("Modificata esercitazione", $user->auth->getUserId(), $user->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $tools->redirect("trainings.php");
         } else {
             debug();
@@ -34,6 +36,7 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing training");
             $database->remove_training($_POST["id"], $_POST["increment"]);
+            $user->log("Rimossa esercitazione", $user->auth->getUserId(), $user->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $tools->redirect("trainings.php");
         } else {
             debug();

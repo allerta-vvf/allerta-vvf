@@ -28,6 +28,8 @@ if($tools->validate_form("mod", "add")) {
                 exit();
             }
             $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $phone_number, $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user->name());
+            //TODO: move and translate logs
+            //$user->log("Aggiunto utente", $user->auth->getUserId(), $user->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $tools->redirect("list.php");
         } else {
             debug();
@@ -53,6 +55,7 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing user");
             $user->remove_user($_POST["id"]);
+            $user->log("Rimosso utente", $user->auth->getUserId(), $user->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
             $tools->redirect("list.php");
         } else {
             debug();
