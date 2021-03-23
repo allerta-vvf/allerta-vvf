@@ -62,8 +62,21 @@
       </div>
       {% endfor %}
       <br>
+      {% if option('use_location_picker') %}
+      <label><b>{{ 'Training place'|t }}</b></label>
+      <div id="map"></div>
+      <div id="search">
+        <input type="text" name="addr" value="" id="addr" size="10" />
+        <button type="button" onclick="addr_search('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
+          class="btn btn-primary">{{ 'Search'|t }}</button>
+        <div id="results"></div>
+      </div>
+      <input type="hidden" name="place" value="" />
+      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="load_map();"></script>
+      {% else %}
       <label><b>{{ 'Training place'|t }}</b></label>
       <input type="text" name="place" required value="{{ values.place }}">
+      {% endif %}
       <br>
       <br>
       <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
@@ -96,7 +109,7 @@
       <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
       <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
       <input id="increment" type="hidden" value="{{ increment }}" name="increment"></input>
-      <button id="add" type="submit">{{ 'Submit'|t }}</button>
+      <button id="remove" type="submit">{{ 'Submit'|t }}</button>
     </form>
     <script>
       $('form').submit(function () {

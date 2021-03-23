@@ -14,7 +14,7 @@ describe("Service management", () => {
         cy.get('tr:has(> td:has(> a[id="username-6"])) > :nth-child(6)').should('contain', '0');
         cy.visit("/edit_service.php?add", {
             onBeforeLoad(win) {
-                cy.stub(win, 'prompt').returns('test')
+                cy.stub(win, 'prompt').returns('test');
             }
         });
         cy.get('.form-control').clear();
@@ -38,7 +38,6 @@ describe("Service management", () => {
         cy.get('#search').click();
         cy.get('.results-list > :nth-child(1) > a').click();
         cy.get('#notes').click();
-        cy.stub(window, 'prompt').returns('test')
         cy.get('.types').select('add_new');
         cy.wait('@ajax_add_type');
         cy.get('[type="submit"]').click();

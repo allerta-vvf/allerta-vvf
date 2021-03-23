@@ -24,8 +24,8 @@ foreach($risultato as $row){
     $others_crew,
     s($row['place'],false,true),
     s($row['notes'],false,true),
-    $database->getOption("training_edit") ? "<a class='pjax_disable' href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
-    $database->getOption("training_remove") ? "<a class='pjax_disable' href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
+    $database->getOption("training_edit") ? "<a class='pjax_disable' data-action='edit' href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
+    $database->getOption("training_remove") ? "<a class='pjax_disable' data-action='delete' href='edit_training.php?delete&id={$row['id']}&increment={$row['increment']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
   ];
 }
 $tools->ajax_page_response($response);
