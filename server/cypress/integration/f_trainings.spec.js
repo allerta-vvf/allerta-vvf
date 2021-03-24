@@ -34,7 +34,7 @@ describe("Training management", () => {
         cy.contains("Test Training");
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Aggiunta esercitazione");
+        cy.contains("Training added");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
     });
@@ -62,7 +62,7 @@ describe("Training management", () => {
         cy.contains("Training 1 test");
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Modificata esercitazione");
+        cy.contains("Training edited");
     });
 
     it('Delete Training', function() {
@@ -74,7 +74,7 @@ describe("Training management", () => {
         cy.wait('@ajax_trainings');
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Rimossa esercitazione");
+        cy.contains("Training removed");
     });
 
 })

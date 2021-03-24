@@ -4,6 +4,7 @@ use DebugBar\StandardDebugBar;
 
 if(!file_exists("config.php") && !file_exists("../../config.php")) {
     header('Location: install/install.php');
+    exit();
 }
 
 require_once 'config.php';
@@ -102,7 +103,8 @@ class tools
         }
     }
 
-    public function rickroll(){
+    public function rickroll()
+    {
         $rickrolls = [
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             "https://www.youtube.com/watch?v=ub82Xb1C8os",
@@ -112,6 +114,7 @@ class tools
         ];
         $this->redirect($rickrolls[array_rand($rickrolls)]); //Dear attacker/bot, have fun!
     }
+
     function extract_unique($data)
     {
         $this->profiler_start("Extract unique");
@@ -182,7 +185,8 @@ class tools
         }
     }
 
-    public function ajax_page_response($response){
+    public function ajax_page_response($response)
+    {
         global $debugbar;
         $json_response = json_encode($response);
         $response_data = substr(crc32($json_response), 0, 10);
@@ -295,8 +299,8 @@ class database
 
     public function exists($table, $id)
     {
-        $risultato = $this->exec("SELECT :table FROM `%PREFIX%_services` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
-        return !empty($risultato);
+        $result = $this->exec("SELECT :table FROM `%PREFIX%_services` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
+        return !empty($result);
     }
 
     public function get_option($name)
@@ -313,104 +317,6 @@ class database
             }
             return false;
         }
-    }
-
-    public function increment($increment)
-    {
-        bdump($increment);
-        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($increment);";
-        $this->exec($sql, false);
-    }
-
-    public function getIncrement($id)
-    {
-        bdump($id);
-        $sql = "SELECT `increment` FROM `%PREFIX%_services` WHERE `id` = :id";
-        $increment = $this->exec($sql, true, [":id" => $id])[0]['increment'];
-        bdump($increment);
-        return $increment;
-    }
-
-    public function decrease($id)
-    {
-        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrement($id)});";
-        $this->exec($sql, false);
-    }
-
-    public function increment_trainings($increment)
-    {
-        bdump($increment);
-        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($increment);";
-        $this->exec($sql, false);
-    }
-
-    public function getIncrement_trainings($id)
-    {
-        bdump($id);
-        $sql = "SELECT `increment` FROM `%PREFIX%_trainings` WHERE `id` = :id";
-        $increment = $this->exec($sql, true, [":id" => $id])[0]['increment'];
-        bdump($increment);
-        return $increment;
-    }
-
-    public function decrease_trainings($id)
-    {
-        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrement_trainings($id)});";
-        $this->exec($sql, false);
-    }
-
-    public function add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
-    {
-        $drivers = implode(",", $drivers);
-        bdump($drivers);
-        $crew = implode(",", $crew);
-        bdump($crew);
-        $increment = implode(",", $increment);
-        bdump($increment);
-        $date = date('Y-m-d H:i:s', strtotime($date));
-        $sql = "INSERT INTO `%PREFIX%_services` (`id`, `date`, `code`, `beginning`, `end`, `chief`, `drivers`, `crew`, `place`, `notes`, `type`, `increment`, `inserted_by`) VALUES (NULL, :date, :code, :beginning, :end, :chief, :drivers, :crew, :place, :notes, :type, :increment, :inserted_by);";
-        $this->exec($sql, false, [":date" => $date, ":code" => $code, "beginning" => $beginning, ":end" => $end, ":chief" => $chief, ":drivers" => $drivers, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":type" => $type, ":increment" => $increment, ":inserted_by" => $inserted_by]);
-        $this->increment($increment);
-    }
-
-    public function remove_service($id)
-    {
-        $this->decrease($id);
-        $this->exec("DELETE FROM `%PREFIX%_services` WHERE `id` = :id", true, [":id" => $id]);
-    }
-
-
-    public function change_service($id, $date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
-    {
-        $this->remove_service($id); // TODO: update, instead of removing and re-adding (with another id)
-        $this->add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by);
-    }
-
-    public function add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
-    {
-        $crew = implode(",", $crew);
-        bdump($crew);
-        $increment = implode(",", $increment);
-        bdump($increment);
-        $date = date('Y-m-d H:i:s', strtotime($date));
-        $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `date`, `name`, `beginning`, `end`, `chief`, `crew`, `place`, `notes`, `increment`, `inserted_by`) VALUES (NULL, :date, :name, :start_time, :end_time, :chief, :crew, :place, :notes, :increment, :inserted_by);";
-        $this->exec($sql, false, [":date" => $date, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":chief" => $chief, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":increment" => $increment, ":inserted_by" => $inserted_by]);
-        $this->increment_trainings($increment);
-    }
-
-    public function remove_training($id)
-    {
-        $this->decrease_trainings($id);
-        bdump($id);
-        $this->exec("DELETE FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id]);
-    }
-
-
-    public function change_training($id, $date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
-    {
-        $this->remove_training($id); // TODO: update, instead of removing and re-adding (with another id)
-        bdump("removed");
-        $this->add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by);
     }
 }
 
@@ -598,7 +504,7 @@ class user
                     return ["status" => "error", "code" => 020, "text" => "Too many requests"];
                 }
                 if($this->auth->isLoggedIn()) {
-                    $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId());
+                    $this->log("Login", $this->auth->getUserId());
                     $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
                     if(!empty($user)) {
                         if(is_null($user[0]["name"])) {
@@ -623,12 +529,18 @@ class user
             return ["status" => "error", "code" => 001];
         }
     }
-    public function log($action, $changed, $editor, $timestamp=null)
+    public function log($action, $changed=null, $editor=null, $timestamp=null)
     {
         $this->tools->profiler_start("Log");
         if(is_null($timestamp)){
             $date = new Datetime('now');
             $timestamp = $date->format('Y-m-d H:i:s');
+        }
+        if(is_null($changed)){
+            $changed = $this->auth->getUserId();
+        }
+        if(is_null($editor)){
+            $editor = $changed;
         }
         if($this->database->get_option("log_save_ip")){
             $ip = $this->tools->get_ip();
@@ -646,7 +558,7 @@ class user
     public function logout()
     {
         try {
-            $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId());
+            $this->log("Logout");
             $this->auth->logOut();
             $this->auth->destroySession();
             setcookie("authenticated", false, time() - 3600);
@@ -670,7 +582,7 @@ class user
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
-            $this->log("User created", $userId, $inserted_by);
+            $this->log("User added", $userId, $inserted_by);
             $this->tools->profiler_stop();
             return $userId;
         } else {
@@ -695,6 +607,123 @@ class user
         $this->database->exec($sql, true);
         bdump(["id" => $id, "time" => $time]);
         $this->tools->profiler_stop();
+    }
+}
+
+class crud
+{
+    public $tools = null;
+    public $database = null;
+    public $user = null;
+
+    public function __construct($tools, $database, $user)
+    {
+        $this->tools = $tools;
+        $this->database = $database;
+        $this->user = $user;
+    }
+
+    public function increment($increment)
+    {
+        bdump($increment);
+        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($increment);";
+        $this->database->exec($sql, false);
+    }
+
+    public function getIncrement($id)
+    {
+        bdump($id);
+        $sql = "SELECT `increment` FROM `%PREFIX%_services` WHERE `id` = :id";
+        $increment = $this->database->exec($sql, true, [":id" => $id])[0]['increment'];
+        bdump($increment);
+        return $increment;
+    }
+
+    public function decrease($id)
+    {
+        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrement($id)});";
+        $this->database->exec($sql, false);
+    }
+
+    public function increment_trainings($increment)
+    {
+        bdump($increment);
+        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($increment);";
+        $this->database->exec($sql, false);
+    }
+
+    public function getIncrement_trainings($id)
+    {
+        bdump($id);
+        $sql = "SELECT `increment` FROM `%PREFIX%_trainings` WHERE `id` = :id";
+        $increment = $this->database->exec($sql, true, [":id" => $id])[0]['increment'];
+        bdump($increment);
+        return $increment;
+    }
+
+    public function decrease_trainings($id)
+    {
+        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrement_trainings($id)});";
+        $this->database->exec($sql, false);
+    }
+
+    public function add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
+    {
+        $drivers = implode(",", $drivers);
+        bdump($drivers);
+        $crew = implode(",", $crew);
+        bdump($crew);
+        $increment = implode(",", $increment);
+        bdump($increment);
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        $sql = "INSERT INTO `%PREFIX%_services` (`id`, `date`, `code`, `beginning`, `end`, `chief`, `drivers`, `crew`, `place`, `notes`, `type`, `increment`, `inserted_by`) VALUES (NULL, :date, :code, :beginning, :end, :chief, :drivers, :crew, :place, :notes, :type, :increment, :inserted_by);";
+        $this->database->exec($sql, false, [":date" => $date, ":code" => $code, "beginning" => $beginning, ":end" => $end, ":chief" => $chief, ":drivers" => $drivers, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":type" => $type, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+        $this->increment($increment);
+        $this->user->log("Service added");
+    }
+
+    public function remove_service($id)
+    {
+        $this->decrease($id);
+        $this->database->exec("DELETE FROM `%PREFIX%_services` WHERE `id` = :id", true, [":id" => $id]);
+        $this->user->log("Service removed");
+    }
+
+
+    public function edit_service($id, $date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
+    {
+        $this->remove_service($id);
+        $this->add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by);
+        $this->user->log("Service edited");
+    }
+
+    public function add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
+    {
+        $crew = implode(",", $crew);
+        bdump($crew);
+        $increment = implode(",", $increment);
+        bdump($increment);
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `date`, `name`, `beginning`, `end`, `chief`, `crew`, `place`, `notes`, `increment`, `inserted_by`) VALUES (NULL, :date, :name, :start_time, :end_time, :chief, :crew, :place, :notes, :increment, :inserted_by);";
+        $this->database->exec($sql, false, [":date" => $date, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":chief" => $chief, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+        $this->increment_trainings($increment);
+        $this->user->log("Training added");
+    }
+
+    public function remove_training($id)
+    {
+        $this->decrease_trainings($id);
+        bdump($id);
+        $this->database->exec("DELETE FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id]);
+        $this->user->log("Training removed");
+    }
+
+
+    public function edit_training($id, $date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by)
+    {
+        $this->remove_training($id);
+        $this->add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by);
+        $this->user->log("Training edited");
     }
 }
 
@@ -787,11 +816,12 @@ class translations
 
 function init_class($enableDebugger=true, $headers=true)
 {
-    global $tools, $database, $user, $translations, $debugbar;
+    global $tools, $database, $user, $crud, $translations, $debugbar;
     if(!isset($tools) && !isset($database) && !isset($translations)) {
         $database = new database();
         $tools = new tools($database->get_option("check_cf_ip"), $enableDebugger);
         $user = new user($database, $tools);
+        $crud = new crud($tools, $database, $user);
         $translations = new translations($database->get_option("force_language"));
     }
     if($headers) {

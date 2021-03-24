@@ -55,7 +55,7 @@ describe("User management", () => {
                             cy.contains(user.name)
                             cy.visit("/log.php")
                             cy.wait('@ajax_log')
-                            cy.contains("User created")
+                            cy.contains("User added")
                             cy.contains(user.name)
                             cy.visit("/")
                         } else {
@@ -80,7 +80,7 @@ describe("User management", () => {
                                     expect(response.body).to.have.property('userId')
                                     cy.visit("/log.php")
                                     cy.wait('@ajax_log')
-                                    cy.contains("User created")
+                                    cy.contains("User added")
                                     cy.contains(user.name)
                                 })
                         }

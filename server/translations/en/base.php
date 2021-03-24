@@ -88,6 +88,18 @@ return [
     "Too many requests" => "Too many requests",
     "Add type..." => "Add type...",
     "Insert type name:" => "Insert type name:",
+    "Added service type" => "Added service type",
     "Type '%s' added successfully." => "Type '%s' added successfully.",
-    "You must select a valid service type!" => "You must select a valid service type!"
+    "You must select a valid service type!" => "You must select a valid service type!",
+    "Status changed to 'available'" => "Status changed to 'available'",
+    "Status changed to 'not available'" => "Status changed to 'not available'",
+    "Service added" => "Service added",
+    "Service edited" => "Service edited",
+    "Service removed" => "Service removed",
+    "Training added" => "Training added",
+    "Training edited" => "Training edited",
+    "Training removed" => "Training removed",
+    "User added" => "User added",
+    "User edited" => "User edited",
+    "User removed" => "User removed"
 ];

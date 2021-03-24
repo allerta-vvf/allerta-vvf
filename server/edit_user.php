@@ -28,8 +28,6 @@ if($tools->validate_form("mod", "add")) {
                 exit();
             }
             $user->add_user($_POST["mail"], $_POST["name"], $_POST["username"], $_POST["password"], $phone_number, $_POST["birthday"], $chief, $driver, $hidden, $disabled, $user->name());
-            //TODO: move and translate logs
-            //$user->log("Aggiunto utente", $user->auth->getUserId(), $user->auth->getUserId());
             $tools->redirect("list.php");
         } else {
             debug();
@@ -42,7 +40,7 @@ if($tools->validate_form("mod", "add")) {
     if($_POST["token"] == $_SESSION['token']){
       bdump($_POST);
       bdump("editing service");
-      $database->change_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
+      $crud->edit_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
       $tools->redirect("services.php");
     } else {
       $tools->redirect("accessdenied.php");
@@ -55,7 +53,6 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing user");
             $user->remove_user($_POST["id"]);
-            $user->log("Rimosso utente", $user->auth->getUserId(), $user->auth->getUserId());
             $tools->redirect("list.php");
         } else {
             debug();

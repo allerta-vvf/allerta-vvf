@@ -88,6 +88,18 @@ return [
     "Too many requests" => "Troppi tentativi effettuati",
     "Add type..." => "Aggiungi tipologia...",
     "Insert type name:" => "Inserisci nome della tipologia:",
+    "Added service type" => "Aggiunta tipologia intervento",
     "Type '%s' added successfully." => "Tipologia '%s' aggiunta con successo.",
-    "You must select a valid service type!" => "Devi selezionare una tipologia  di intervento valida!"
+    "You must select a valid service type!" => "Devi selezionare una tipologia  di intervento valida!",
+    "Status changed to 'available'" => "Attivazione disponibilita'",
+    "Status changed to 'not available'" => "Rimozione disponibilita'",
+    "Service added" => "Intervento aggiunto",
+    "Service edited" => "Intervento modificato",
+    "Service removed" => "Intervento rimosso",
+    "Training added" => "Esercitazione aggiunta",
+    "Training edited" => "Esercitazione modificata",
+    "Training removed" => "Esercitazione rimossa",
+    "User added" => "Utente aggiunto",
+    "User edited" => "Utente modificato",
+    "User removed" => "Utente rimosso"
 ];

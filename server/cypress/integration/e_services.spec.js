@@ -44,7 +44,7 @@ describe("Service management", () => {
         cy.contains("1234/5");
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Aggiunto intervento");
+        cy.contains("Service added");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
         cy.get('tr:has(> td:has(> a[id="username-11"])) > :nth-child(6)').should('contain', '1');
@@ -78,7 +78,7 @@ describe("Service management", () => {
         cy.contains("4321/5");
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Modificato intervento");
+        cy.contains("Service edited");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
         cy.get('tr:has(> td:has(> a[id="username-11"])) > :nth-child(6)').should('contain', '0');
@@ -98,7 +98,7 @@ describe("Service management", () => {
         cy.wait('@ajax_services');
         cy.visit("/log.php");
         cy.wait('@ajax_log');
-        cy.contains("Rimosso intervento");
+        cy.contains("Service removed");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
         cy.get('tr:has(> td:has(> a[id="username-8"])) > :nth-child(6)').should('contain', '0');

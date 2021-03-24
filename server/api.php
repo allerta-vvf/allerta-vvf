@@ -152,8 +152,9 @@ $dispatcher = FastRoute\simpleDispatcher(
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
-                $user->log("Cambiamento disponibilita' a ".$vars["available"], $user_info["id"], $user_info["id"]);
+                $log_message = $vars["available"] ? "Status changed to 'available'" : "Status changed to 'not available'";
                 $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $user_info["id"], ":available" => $vars["available"]]);
+                $user->log($log_message);
             }
         );
         $r->addRoute(
@@ -164,8 +165,9 @@ $dispatcher = FastRoute\simpleDispatcher(
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
-                $user->log("Cambiamento disponibilita' a ".$vars["available"], $vars["id"], $user_info["id"]);
+                $log_message = $vars["available"] ? "Status changed to 'available'" : "Status changed to 'not available'";
                 $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $vars["id"], ":available" => $vars["available"]]);
+                $user->log($log_message, $vars["id"], $user_info["id"]);
             }
         );
     }

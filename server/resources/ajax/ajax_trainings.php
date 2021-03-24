@@ -4,10 +4,10 @@ init_class();
 $user->requirelogin(false);
 $user->online_time_update();
 
-$risultato = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY date DESC, beginning desc", true);
+$result = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY date DESC, beginning desc", true);
 
 $response = [];
-foreach($risultato as $row){
+foreach($result as $row){
   $chief = $user->nameById($row["chief"]);
 
   $others_crew_array = explode(",", $row['crew']);

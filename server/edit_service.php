@@ -7,8 +7,7 @@ if($tools->validate_form("mod", "add")) {
     if($tools->validate_form(['date', 'code', 'beginning', 'end', 'place', 'notes', 'type', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding service");
-            $database->add_service($_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
-            $user->log("Aggiunto intervento", $user->auth->getUserId(), $user->auth->getUserId());
+            $crud->add_service($_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
             debug(); //TODO: remove debug info
@@ -21,8 +20,7 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump($_POST);
             bdump("editing service");
-            $database->change_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
-            $user->log("Modificato intervento", $user->auth->getUserId(), $user->auth->getUserId());
+            $crud->edit_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
             debug();
@@ -35,8 +33,7 @@ if($tools->validate_form("mod", "add")) {
     if($tools->validate_form(['id', 'increment', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing service");
-            $database->remove_service($_POST["id"], $_POST["increment"]);
-            $user->log("Rimosso intervento", $user->auth->getUserId(), $user->auth->getUserId());
+            $crud->remove_service($_POST["id"], $_POST["increment"]);
             $tools->redirect("services.php");
         } else {
             echo("1");

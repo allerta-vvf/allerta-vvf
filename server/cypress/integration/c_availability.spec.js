@@ -10,7 +10,7 @@ describe("Availability", () => {
         cy.get(".fa-check").should('be.visible')
         cy.visit("/log.php")
         cy.wait("@ajax_log")
-        cy.contains("Attivazione disponibilita'")
+        cy.contains("Status changed to 'available'")
         cy.visit("/")
     })
 
@@ -22,7 +22,7 @@ describe("Availability", () => {
         cy.get(".fa-times").should('be.visible')
         cy.visit("/log.php")
         cy.wait("@ajax_log")
-        cy.contains("Rimozione disponibilita'")
+        cy.contains("Status changed to 'not available'")
         cy.visit("/")
     })
 });
