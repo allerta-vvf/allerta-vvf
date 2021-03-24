@@ -302,8 +302,8 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `editor` varchar(100),
 `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `ip` varchar(100),
-`source_type` varchar(100),
-`user_agent` varchar(100),
+`source_type` varchar(4),
+`user_agent` varchar(500),
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_minutes` (
