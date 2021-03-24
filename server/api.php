@@ -1,4 +1,5 @@
 <?php
+define('REQUEST_USING_API', true);
 require 'core.php';
 use Spatie\ArrayToXml\ArrayToXml;
 use Brick\PhoneNumber\PhoneNumber;
@@ -151,7 +152,7 @@ $dispatcher = FastRoute\simpleDispatcher(
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
-                $user->log("Cambiamento disponibilita' (API) a ".$vars["available"], $user_info["id"], $user_info["id"], date("d/m/Y"), date("H:i.s"));
+                $user->log("Cambiamento disponibilita' a ".$vars["available"], $user_info["id"], $user_info["id"]);
                 $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $user_info["id"], ":available" => $vars["available"]]);
             }
         );
@@ -163,7 +164,7 @@ $dispatcher = FastRoute\simpleDispatcher(
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
-                $user->log("Cambiamento disponibilita' (API) a ".$vars["available"], $vars["id"], $user_info["id"], date("d/m/Y"), date("H:i.s"));
+                $user->log("Cambiamento disponibilita' a ".$vars["available"], $vars["id"], $user_info["id"]);
                 $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $vars["id"], ":available" => $vars["available"]]);
             }
         );

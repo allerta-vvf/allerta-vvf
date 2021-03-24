@@ -38,3 +38,11 @@ Cypress.Commands.add("getApiKey", (username="admin", password="correcthorsebatte
             return response.body.apiKey
         })
 })
+
+beforeEach(() => {
+    cy.intercept('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=brescia', { fixture: 'nominatim_brescia.json' });
+    cy.intercept('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=milano', { fixture: 'nominatim_milano.json' });
+    cy.intercept('https://a.tile.openstreetmap.org/*/*/*.png', { fixture: 'map_frame_A.png' });
+    cy.intercept('https://b.tile.openstreetmap.org/*/*/*.png', { fixture: 'map_frame_B.png' });
+    cy.intercept('https://c.tile.openstreetmap.org/*/*/*.png', { fixture: 'map_frame_C.png' });
+});

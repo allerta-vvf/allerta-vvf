@@ -1,8 +1,6 @@
 describe("Service management", () => {
     beforeEach(() => {
         cy.login();
-        cy.intercept('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=brescia', { fixture: 'nominatim_brescia.json' });
-        cy.intercept('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=milano', { fixture: 'nominatim_milano.json' });
     })
 
     it('Add Service with new type', function () {

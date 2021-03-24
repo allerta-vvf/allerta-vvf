@@ -300,8 +300,10 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `action` varchar(100) NOT NULL,
 `changed` varchar(100),
 `editor` varchar(100),
-`date` varchar(100) NOT NULL,
-`time` varchar(100) NOT NULL,
+`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`ip` varchar(100),
+`source_type` varchar(100),
+`user_agent` varchar(100),
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_minutes` (
@@ -481,6 +483,7 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'use_custom_error_image' => 0,
             'intrusion_save' => 1,
             'intrusion_save_info' => 1,
+            'log_save_ip' => 1,
             'enable_technical_support' => 0,
             'technical_support_key' => 0,
             'cron_job_code' => ':cron_job_code',

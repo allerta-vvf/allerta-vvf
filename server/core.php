@@ -299,7 +299,7 @@ class database
         return !empty($risultato);
     }
 
-    public function getOption($name)
+    public function get_option($name)
     {
         if(defined($name)) {
             return constant($name);
@@ -480,8 +480,8 @@ class user
     {
         $this->tools->profiler_start("Require login");
         if(!$this->authenticated()) {
-            if($this->database->getOption("intrusion_save")) {
-                if($this->database->getOption("intrusion_save_info")) {
+            if($this->database->get_option("intrusion_save")) {
+                if($this->database->get_option("intrusion_save_info")) {
                     $params = [":page" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode($_SERVER)];
                 } else {
                     $params = [":page" => $this->tools->get_page_url(), ":ip" => "redacted", ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode(["redacted" => "true"])];
@@ -490,7 +490,7 @@ class user
                 $this->database->exec($sql, false, $params);
             }
             if($redirect) {
-                $this->tools->redirect($this->database->getOption("web_url"));
+                $this->tools->redirect($this->database->get_option("web_url"));
             } else {
                 exit();
             }
@@ -598,7 +598,7 @@ class user
                     return ["status" => "error", "code" => 020, "text" => "Too many requests"];
                 }
                 if($this->auth->isLoggedIn()) {
-                    $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+                    $this->log("Login", $this->auth->getUserId(), $this->auth->getUserId());
                     $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
                     if(!empty($user)) {
                         if(is_null($user[0]["name"])) {
@@ -623,11 +623,22 @@ class user
             return ["status" => "error", "code" => 001];
         }
     }
-    public function log($action, $changed, $editor, $date, $time)
+    public function log($action, $changed, $editor, $timestamp=null)
     {
         $this->tools->profiler_start("Log");
-        $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":date" => $date, ":time" => $time];
-        $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `date`, `time`) VALUES (NULL, :action, :changed, :editor, :date, :time)";
+        if(is_null($timestamp)){
+            $date = new Datetime('now');
+            $timestamp = $date->format('Y-m-d H:i:s');
+        }
+        if($this->database->get_option("log_save_ip")){
+            $ip = $this->tools->get_ip();
+        } else {
+            $ip = null;
+        }
+        $source_type = defined("REQUEST_USING_API") ? "api" : "web";
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
+        $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
+        $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
         $this->database->exec($sql, false, $params);
         $this->tools->profiler_stop();
     }
@@ -635,7 +646,7 @@ class user
     public function logout()
     {
         try {
-            $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId(), date("d/m/Y"), date("H:i.s"));
+            $this->log("Logout", $this->auth->getUserId(), $this->auth->getUserId());
             $this->auth->logOut();
             $this->auth->destroySession();
             setcookie("authenticated", false, time() - 3600);
@@ -659,7 +670,7 @@ class user
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
-            $this->log("User created", $userId, $inserted_by, date("d/m/Y"), date("H:i.s"));
+            $this->log("User created", $userId, $inserted_by);
             $this->tools->profiler_stop();
             return $userId;
         } else {
@@ -672,7 +683,7 @@ class user
     {
         $this->tools->profiler_start("Remove user");
         $this->database->exec("DELETE FROM `%PREFIX%_users` WHERE `id` = :id", true, [":id" => $id], "DELETE FROM `%PREFIX%_profiles` WHERE `id` = :id");
-        $this->log("User removed", null, $removed_by, date("d/m/Y"), date("H:i.s"));
+        $this->log("User removed", null, $removed_by);
         $this->tools->profiler_stop();
     }
 
@@ -779,13 +790,13 @@ function init_class($enableDebugger=true, $headers=true)
     global $tools, $database, $user, $translations, $debugbar;
     if(!isset($tools) && !isset($database) && !isset($translations)) {
         $database = new database();
-        $tools = new tools($database->getOption("check_cf_ip"), $enableDebugger);
+        $tools = new tools($database->get_option("check_cf_ip"), $enableDebugger);
         $user = new user($database, $tools);
-        $translations = new translations($database->getOption("force_language"));
+        $translations = new translations($database->get_option("force_language"));
     }
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
-        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
+        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
         if(defined(SENTRY_CSP_REPORT_URI) && SENTRY_CSP_REPORT_URI !== false){
             $csp .= " report-uri ".SENTRY_CSP_REPORT_URI.";";
         }
