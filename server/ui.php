@@ -37,7 +37,7 @@ $twig->addFilter($filter);
 $function_option = new \Twig\TwigFunction(
     'option', function ($option) {
         global $database;
-        return $database->getOption($option);
+        return $database->get_option($option);
     }
 );
 $twig->addFunction($function_option);
@@ -71,18 +71,18 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['enable_debug_bar'] = $enable_debugbar;
     $data['debug_bar_head'] = $enable_debugbar ? $debugbarRenderer->renderHead() : "";
     $data['debug_bar'] = $enable_debugbar ? $debugbarRenderer->render() : "";
-    $data['owner'] = $database->getOption("owner");
-    $data['urlsoftware'] = $database->getOption("web_url");
+    $data['owner'] = $database->get_option("owner");
+    $data['urlsoftware'] = $database->get_option("web_url");
     $data['user'] = $user->info();
-    $data['enable_technical_support'] = $database->getOption("enable_technical_support");
-    $data['technical_support_key'] = $database->getOption("technical_support_key");
+    $data['enable_technical_support'] = $database->get_option("enable_technical_support");
+    $data['technical_support_key'] = $database->get_option("technical_support_key");
     $data['technical_support_open'] = isset($_COOKIE["chat"]);
-    if($database->getOption("use_custom_error_sound")) {
+    if($database->get_option("use_custom_error_sound")) {
         $data['error_sound'] = "custom-error.mp3";
     } else {
         $data['error_sound'] = "error.mp3";
     }
-    if($database->getOption("use_custom_error_image")) {
+    if($database->get_option("use_custom_error_image")) {
         $data['error_image'] = "custom-error.gif";
     } else {
         $data['error_image'] = "error.gif";
