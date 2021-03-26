@@ -10,6 +10,7 @@ module.exports = {
     maps: path.resolve(__dirname, './src/maps.js'),
     players: path.resolve(__dirname, './src/players.js'),
     sw: path.resolve(__dirname, './src/sw.js'),
+    games: path.resolve(__dirname, './src/games.js'),
   },
   output: {
     filename: (pathData) => {

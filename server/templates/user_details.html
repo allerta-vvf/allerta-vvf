@@ -2,11 +2,8 @@
 
 {% block content %}
 <br>
-<div id='list'>
+<div id='details'>
+  TEST - TODO<br>
+  {{ user.id }}
 </div>
-<script>
-  $(document).ready(function () {
-    $("#list").load("resources/ajax/ajax_user_details.php?user={{ view_user }}&" + Math.random());
-  });
-</script>
 {% endblock %}
