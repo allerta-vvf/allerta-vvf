@@ -423,8 +423,8 @@ CREATE TABLE `".$prefix."_schedules` (
 `user` INT NOT NULL,
 `profile_name` VARCHAR(500) NOT NULL DEFAULT 'default',
 `schedules` VARCHAR(1000) NULL DEFAULT NULL,
-`last_exec` VARCHAR(5) NULL DEFAULT NULL,
-`last_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`last_exec` VARCHAR(7) NULL DEFAULT NULL,
+`last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`),
 ) ENGINE = InnoDB;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());"

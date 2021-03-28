@@ -207,6 +207,7 @@ function extractSelections(){
     $("#scheduler_body td.highlighted").each((key, value) => {
         let day = value.classList[1].replace("day-","");
         let hour = value.classList[2].replace("hour-","").replace("-",":");
+        if(hour.length < 5) hour = "0" + hour;
         console.log(day,hour,value);
         hours_list.push([day,hour]);
     });
