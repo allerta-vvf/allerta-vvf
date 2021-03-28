@@ -3,6 +3,32 @@ body:not(table) {
     overflow-x: hidden;
 }
 
+@keyframes gradual_blur {
+    0%   {-webkit-filter: blur(0px);}
+    50%  {-webkit-filter: blur(2px);}
+    100% {-webkit-filter: blur(5px);}
+}
+
+.loading_blur {
+    animation: gradual_blur 1s;
+    animation-fill-mode: forwards;
+    cursor: wait;
+}
+
+.loading_no_blur {
+    animation: gradual_blur 1s;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+}
+
+.loading_overlay {
+    position: absolute;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 center {
     text-align: center;
 }

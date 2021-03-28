@@ -2,11 +2,47 @@
 
 {% block content %}
 <br>
+<div>
+  <div id="schedulesModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="overflow-x: auto;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'Edit availability schedules'|t }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|t }}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow-x: auto;">
+        </div>
+        <div class="modal-footer">
+          <button id="submit_schedules_change" type="button" class="btn btn-primary">{{ 'Save changes'|t }}</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Close'|t }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $('#schedulesModal').on('show.bs.modal', function (event) {
+      //$( ".modal-body" ).loading("show");
+      $(".modal-body").load("modal_availability_schedule.php", {
+        orientation: window.innerHeight > window.innerWidth ? "portrait" : "landscape"
+      }, function() {
+        init_modal();
+        //$( ".modal-body" ).loading("hide");
+        return true;
+      });
+    });
+  </script>
+</div>
 <div class="text-center">
   <p>{{ 'Are you available in case of alert?'|t }}</p>
-  <button class="btn btn-lg btn-success " onclick="activate('{{ user.id }}')">{{ 'Activate'|t }}</button>
+  <button class="btn btn-lg btn-success" onclick="activate('{{ user.id }}')">{{ 'Activate'|t }}</button>
   <button class="btn btn-lg btn-danger" style="background-color: red"
     onclick="deactivate('{{ user.id }}')">{{ 'Deactivate'|t }}</button>
+  <br>
+  <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#schedulesModal">
+    {{ 'Edit availability schedules'|t }}
+  </button>
 </div>
 <br>
 <br>

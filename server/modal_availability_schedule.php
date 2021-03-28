@@ -1,0 +1,230 @@
+<?php
+require("core.php");
+init_class(false);
+$user->requirelogin(false);
+
+// landscape means horizontal
+// portrait  means vertical
+$orienation = isset($_POST["orientation"]) ? $_POST["orientation"] : "landscape";
+echo("<!-- orientation: ".$orienation." !-->");
+$hours = [
+    "0:00", "0:30",
+    "1:00", "1:30",
+    "2:00", "2:30",
+    "3:00", "3:30",
+    "4:00", "4:30",
+    "5:00", "5:30",
+    "6:00", "6:30",
+    "7:00", "7:30",
+    "8:00", "8:30",
+    "9:00", "9:30",
+    "10:00", "10:30",
+    "11:00", "11:30",
+    "12:00", "12:30",
+    "13:00", "13:30",
+    "14:00", "14:30",
+    "15:00", "15:30",
+    "16:00", "16:30",
+    "17:00", "17:30",
+    "18:00", "18:30",
+    "19:00", "19:30",
+    "20:00", "20:30",
+    "21:00", "21:30",
+    "22:00", "22:30",
+    "23:00", "23:30",
+];
+$days = [
+    t("Mon",false),
+    t("Tue",false),
+    t("Wed",false),
+    t("Thu",false),
+    t("Fri",false),
+    t("Sat",false),
+    t("Sun",false)
+];
+
+$user_id = $user->auth->getUserId();
+$result = $database->exec("SELECT * FROM `%PREFIX%_schedules` WHERE `user`={$user_id};", true);
+if(!empty($result)){
+    $old_schedules_db = json_decode($result[0]["schedules"]);
+    foreach ($old_schedules_db as $schedule) {
+        $old_schedules[$schedule[0]][$schedule[1]] = true;
+    }
+} else {
+    $old_schedules = [];
+}
+?>
+<style>
+.hour-cell {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ccc;
+    border: 1px solid #fff;
+}
+
+.hour-cell.highlighted {
+    background-color: #999;
+}
+<?php
+if($orienation == "landscape"):
+?>
+#scheduler_body td {
+    min-width: 40px;
+}
+<?php
+endif;
+?>
+</style>
+<table cellpadding="0" cellspacing="0" id="scheduler_table">
+    <thead>
+        <tr>
+            <td style="background-color: white;"></td>
+            <?php
+            if($orienation == "portrait") {
+                for($i=0;$i<7;$i++){
+                    echo "<td id='$i' class='day'>{$days[$i]}</td>";
+                }
+            } else if($orienation == "landscape") {
+                foreach($hours as $hour) {
+                    $hour_replaced = str_replace(":", "-", $hour);
+                    echo "<td id='{$hour_replaced}' class='hour'>$hour</td>";
+                }
+            }
+            ?>
+
+        </tr>
+    </thead>
+    <tbody id="scheduler_body">
+        <?php
+        if($orienation == "portrait") {
+            foreach($hours as $hour) {
+                echo "<tr>";
+                $hour_replaced = str_replace(":", "-", $hour);
+                echo "<td id='{$hour_replaced}' class='hour'>$hour</td>";
+                for($i=0;$i<7;$i++){
+                    $is_schedule_highlighted = (isset($old_schedules[$i][$hour])) ? "highlighted ": "";
+                    echo "<td class='hour-cell day-$i hour-{$hour_replaced} {$is_schedule_highlighted}'></td>";
+                }
+                echo "</tr>";
+            }
+        } else if($orienation == "landscape") {
+            for($i=0;$i<7;$i++){
+                echo "<tr>";
+                echo "<td id='$i' class='day'>{$days[$i]}</td>";
+                foreach($hours as $hour) {
+                    $is_schedule_highlighted = (isset($old_schedules[$i][$hour])) ? "highlighted ": "";
+                    $hour_replaced = str_replace(":", "-", $hour);
+                    echo "<td class='hour-cell day-$i hour-{$hour_replaced} {$is_schedule_highlighted}'></td>";
+                }
+                echo "<td style='background-color: white;'></td></tr>";
+            }
+        }
+        ?>
+
+    </tbody>
+</table>
+<script>
+function init_modal() {
+    <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
+
+    var isMouseDown = false;
+    $(document)
+        .mouseup(function () {
+            isMouseDown = false;
+        });
+
+    $(".hour-cell")
+        .mousedown(function () {
+            isMouseDown = true;
+            $(this).toggleClass("highlighted");
+            return false; // prevent text selection
+        })
+        .mouseover(function () {
+            if (isMouseDown) {
+                $(this).toggleClass("highlighted");
+            }
+        });
+
+    function selectDay(id){
+        console.log("day selection " + id);
+        if ($(event.target).hasClass("highlighted_all")) {
+            $("#scheduler_body .day-" + id).toggleClass("highlighted");
+            $(event.target).toggleClass("highlighted_all");
+        } else {
+            $("#scheduler_body .day-" + id).addClass("highlighted");
+            $(event.target).addClass("highlighted_all");
+        }
+    }
+
+    function selectHour(id){
+        console.log("hour selection " + id);
+        if ($(event.target).hasClass("highlighted_all")) {
+            $("#scheduler_body .hour-" + id).toggleClass("highlighted");
+            $(event.target).toggleClass("highlighted_all");
+        } else {
+            $("#scheduler_body .hour-" + id).addClass("highlighted");
+            $(event.target).addClass("highlighted_all");
+        }
+    }
+
+    $(".day")
+        .mousedown(function () {
+            isMouseDown = true;
+            let id = event.target.id;
+            selectDay(id);
+            return false; // prevent text selection
+        })
+        .mouseover(function () {
+            if (isMouseDown) {
+                let id = event.target.id;
+                selectDay(id);
+            }
+        });
+
+    $(".hour")
+        .mousedown(function () {
+            isMouseDown = true;
+            let id = event.target.id.replace(":", "-");
+            selectHour(id);
+            return false; // prevent text selection
+        })
+        .mouseover(function () {
+            if (isMouseDown) {
+                let id = event.target.id.replace(":", "-");
+                selectHour(id);
+            }
+        });
+
+    $("#submit_schedules_change")
+        .unbind()
+        .click(submit_changes);
+}
+
+function extractSelections(){
+    hours_list = [];
+    $("#scheduler_body td.highlighted").each((key, value) => {
+        let day = value.classList[1].replace("day-","");
+        let hour = value.classList[2].replace("hour-","").replace("-",":");
+        console.log(day,hour,value);
+        hours_list.push([day,hour]);
+    });
+    return hours_list;
+}
+
+function submit_changes(){
+    let hours = extractSelections();
+    $.ajax({
+        url: "resources/ajax/ajax_availability_schedule.php",
+        method: "POST",
+        data: {
+            hours: hours
+        },
+        success: function (data) {
+            console.log(data);
+            toastr.success('<?php t('Schedules updated successfully'); ?>');
+        }
+    });
+}
+</script>
