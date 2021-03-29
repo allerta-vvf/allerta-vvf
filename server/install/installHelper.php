@@ -340,6 +340,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
 `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 `available` tinyint(1) NOT NULL DEFAULT 0,
+`availability_last_change` varchar(1000) DEFAULT NULL,
 `chief` tinyint(1) NOT NULL DEFAULT 0,
 `driver` tinyint(1) NOT NULL DEFAULT 0,
 `phone_number` varchar(25) DEFAULT NULL,

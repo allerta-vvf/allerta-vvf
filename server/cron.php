@@ -79,7 +79,9 @@ if($start) {
 
     $result = $database->exec("SELECT * FROM `%PREFIX%_schedules`;", true);
     $schedules_check = [];
+    $schedules_users = [];
     $schedules_check["schedules"] = [];
+    $schedules_check["users"] = [];
     if(!empty($result)){
         foreach ($result as $key => $value) {
             $result[$key]["schedules"] = json_decode($result[$key]["schedules"]);
@@ -110,20 +112,29 @@ if($start) {
                     $schedule["day"] == $now["day"] &&
                     $schedule["hour"] == $now["hour"] &&
                     $schedule["minutes"] <= $now["minutes"] &&
-                    $now["minutes"] - $schedule["minutes"] <= 30 &&
-                    $schedule["minutes"] !== $last_exec["minutes"]
+                    $now["minutes"] - $schedule["minutes"] <= 30
                 ){
-                    $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
-                    $database->exec("UPDATE `%PREFIX%_schedules` SET `last_exec` = :last_exec WHERE `id` = :id;", false, [":id" => $id, ":last_exec" => $last_exec_new]);
-                    $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = '1' WHERE `id` = :user_id;", false, [":user_id" => $user_id]);
-                    $schedules_check["schedules"][] = [
-                        "schedule" => $schedule,
-                        "now" => $now,
-                        "exec" => $last_exec,
-                        "last_exec_new" => $last_exec_new,
-                    ];
+                    if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
+                    if($schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true){
+                        $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
+                        $database->exec("UPDATE `%PREFIX%_schedules` SET `last_exec` = :last_exec WHERE `id` = :id;", false, [":id" => $id, ":last_exec" => $last_exec_new]);
+                        $database->exec("UPDATE `%PREFIX%_profiles` SET available = '1', availability_last_change = 'cron' WHERE `id` = :user_id;", false, [":user_id" => $user_id]);
+                        $schedules_check["schedules"][] = [
+                            "schedule" => $schedule,
+                            "now" => $now,
+                            "exec" => $last_exec,
+                            "last_exec_new" => $last_exec_new,
+                        ];
+                    }
                 }
 
+            }
+        }
+        $schedules_check["users"] = $schedules_users;
+        $profiles = $database->exec("SELECT id FROM `%PREFIX%_profiles`", true);
+        foreach ($profiles as $profile) {
+            if(!in_array($profile["id"],$schedules_users)){
+                $database->exec("UPDATE `%PREFIX%_profiles` SET available = '0' WHERE availability_last_change = 'cron' AND id = :id;", false, [":id" => $profile["id"]]);
             }
         }
     }
