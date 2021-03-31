@@ -48,7 +48,9 @@ $result = $database->exec("SELECT * FROM `%PREFIX%_schedules` WHERE `user`={$use
 if(!empty($result)){
     $old_schedules_db = json_decode($result[0]["schedules"]);
     foreach ($old_schedules_db as $schedule) {
-        $old_schedules[$schedule[0]][$schedule[1]] = true;
+        $hour = $schedule[1];
+        $hour = $hour[0] == "0" ? substr($hour,1) : $hour;
+        $old_schedules[$schedule[0]][$hour] = true;
     }
 } else {
     $old_schedules = [];
