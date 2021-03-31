@@ -47,6 +47,7 @@
   </script>
   {% endif %}
   <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
+  <script>$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
   {% if enable_technical_support and technical_support_open %}
   <!-- Smartsupp Live Chat script -->
   <script type='text/javascript'>

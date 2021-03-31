@@ -31,6 +31,26 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
+$.fn.loading = function(action="start", options) {
+  var opts = $.extend( {}, $.fn.loading.defaults, options );
+
+  if(action == "show") {
+      this.addClass("loading_blur");
+      $( "body" ).append( "<div id='loading_div' class='loading_overlay'><p class=''><b>"+opts.message+"</b></p></div>" );
+  } else if(action == "hide") {
+      this.removeClass("loading_blur");
+      this.addClass("loading_no_blur");
+      setTimeout(() => {
+        this.removeClass("loading_no_blur");
+      }, 1000);
+      $( "#loading_div" ).remove();
+  }
+};
+
+$.fn.loading.defaults = {
+  message: "Loading..."
+};
+
 console.log("Commit: "+process.env.GIT_VERSION);
 console.log("Date: "+process.env.GIT_AUTHOR_DATE);
 console.log("Bundle mode: "+process.env.BUNDLE_MODE);

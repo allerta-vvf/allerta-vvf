@@ -101,5 +101,17 @@ return [
     "Training removed" => "Esercitazione rimossa",
     "User added" => "Utente aggiunto",
     "User edited" => "Utente modificato",
-    "User removed" => "Utente rimosso"
+    "User removed" => "Utente rimosso",
+    "Loading..." => "Caricamento...",
+    "Schedules updated successfully" => "Orari aggiornati con successo",
+    "Edit availability schedules" => "Modifica orari disponibilità",
+    "Save changes" => "Salva le modifiche",
+    "Close" => "Chiudi",
+    "Mon" => "Lun",
+    "Tue" => "Mar",
+    "Wed" => "Mer",
+    "Thu" => "Gio",
+    "Fri" => "Ven",
+    "Sat" => "Sab",
+    "Sun" => "Dom"
 ];

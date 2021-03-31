@@ -101,5 +101,17 @@ return [
     "Training removed" => "Training removed",
     "User added" => "User added",
     "User edited" => "User edited",
-    "User removed" => "User removed"
+    "User removed" => "User removed",
+    "Loading..." => "Loading...",
+    "Schedules updated successfully" => "Schedules updated successfully",
+    "Edit availability schedules" => "Edit availability schedules",
+    "Save changes" => "Save changes",
+    "Close" => "Close",
+    "Mon" => "Mon",
+    "Tue" => "Tue",
+    "Wed" => "Wed",
+    "Thu" => "Thu",
+    "Fri" => "Fri",
+    "Sat" => "Sat",
+    "Sun" => "Sun"
 ];
