@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users` (
 `registered` int(10) unsigned NOT NULL,
 `last_login` int(10) unsigned DEFAULT NULL,
 `force_logout` mediumint(7) unsigned NOT NULL DEFAULT '0',
-PRIMARY KEY (`id`),,
+PRIMARY KEY (`id`),
 UNIQUE KEY `email` (`email`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `online_time` int(11) NOT NULL DEFAULT 0,
 `availability_minutes` int(11) NOT NULL DEFAULT 0,
 `image` varchar(1000) DEFAULT NULL,
-PRIMARY KEY (`id`),
+PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_users_confirmations` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -398,26 +398,26 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_options` (
 `created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `last_edit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `user_id` INT NOT NULL,
-PRIMARY KEY (`id`),
+PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `".$prefix."_dbversion` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `version` INT NOT NULL,
 `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-PRIMARY KEY (`id`),
+PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `".$prefix."_api_keys` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `apikey` VARCHAR(128) NOT NULL,
 `user` INT NOT NULL,
 `permissions` VARCHAR(128) NOT NULL DEFAULT 'ALL',
-PRIMARY KEY (`id`),
+PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `".$prefix."_bot_telegram` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `chat_id` VARCHAR(128) NOT NULL,
 `user` INT NOT NULL,
-PRIMARY KEY (`id`),
+PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `".$prefix."_schedules` (
 `id` INT NOT NULL AUTO_INCREMENT,
@@ -426,8 +426,8 @@ CREATE TABLE `".$prefix."_schedules` (
 `schedules` VARCHAR(1000) NULL DEFAULT NULL,
 `last_exec` VARCHAR(7) NULL DEFAULT NULL,
 `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-PRIMARY KEY (`id`),
-) ENGINE = InnoDB;
+PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());"
         );
     } catch (Exception $e) {
