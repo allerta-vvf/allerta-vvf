@@ -65,6 +65,19 @@ module.exports = {
             publicPath: 'resources/dist/fonts'
           }
         }]
+      },
+      {
+        test: /\.(gz|wasm|js_resource|data)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: './'
+            }
+          }
+        ],
+        type: 'asset/resource'
       }
     ],
   },

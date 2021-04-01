@@ -813,7 +813,7 @@ class translations
         }
     }
 }
-
+$webpack_manifest_path = realpath("resources/dist/manifest.json");
 function init_class($enableDebugger=true, $headers=true)
 {
     global $tools, $database, $user, $crud, $translations, $debugbar;
@@ -872,9 +872,11 @@ function init_class($enableDebugger=true, $headers=true)
     }
 
     function customErrorPage() {
+        global $webpack_manifest_path;
         $error = error_get_last();
         if ($error) {
-            echo 'Errore critico. Torna alla pagina precedente.'; //TODO: render a translated html page
+            require("error_page.php");
+            show_error_page(500);
         }
     }
     register_shutdown_function('customErrorPage');

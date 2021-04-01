@@ -24,6 +24,10 @@
   RewriteEngine on
   RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK) [NC]
   RewriteRule ^(.*)$ - [F,L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule .* error_page.php?error=404 [L]
 </IfModule>
 
 <FilesMatch "(config|config.old|config-sample|core|ui)\.php">
@@ -59,7 +63,8 @@
 	AddType application/vnd.ms-fontobject eot
 	AddType application/x-font-ttf ttc ttf
 	AddType image/svg+xml svg svgz
-	AddEncoding gzip svgz
+	AddType application/wasm wasm.gz wasm
+	AddEncoding gzip gz
 
 	# AUDIO
 	AddType audio/mp4 m4a f4a f4b
@@ -88,7 +93,6 @@
 	AddType image/x-icon ico
 
 </IfModule>
-
 
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|woff|woff2|ttf|eot)$">
