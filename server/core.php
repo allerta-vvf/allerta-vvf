@@ -353,7 +353,8 @@ class user
         $this->database = $database;
         $this->tools = $tools;
         $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
-        if(isset($_REQUEST["apiKey"])){
+        \header_remove('X-Frame-Options');
+        if(isset($_REQUEST["apiKey"]) && !is_null($_REQUEST["apiKey"])){
             $api_key_row = $this->database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $_REQUEST["apiKey"]]);
             if(!empty($api_key_row)){
                 $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]]);
@@ -834,7 +835,6 @@ function init_class($enableDebugger=true, $headers=true)
         header("X-Content-Security-Policy: $csp");
         header("X-WebKit-CSP: $csp");
         header("X-XSS-Protection: 1; mode=block");
-        header("X-Frame-Options: DENY");
         header("X-Content-Type-Options: nosniff");
         header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
     }

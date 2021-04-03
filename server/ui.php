@@ -77,6 +77,8 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['enable_technical_support'] = $database->get_option("enable_technical_support");
     $data['technical_support_key'] = $database->get_option("technical_support_key");
     $data['technical_support_open'] = isset($_COOKIE["chat"]);
+    $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
+    $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
     if($database->get_option("use_custom_error_sound")) {
         $data['error_sound'] = "custom-error.mp3";
     } else {
@@ -87,6 +89,7 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     } else {
         $data['error_image'] = "error.gif";
     }
+    \header_remove('X-Frame-Options');
     $template = $twig->load($templatename);
     if(isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])) {
         $data["pjax_requested"] = true;

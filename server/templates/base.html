@@ -91,6 +91,7 @@
   {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>
 <body>
+{% if show_menu %}
   {% block menu %}
   <!-- Menu -->
   <div class="topnav" id="topNavBar">
@@ -107,6 +108,7 @@
   </div>
   <!-- /Menu -->
   {% endblock %}
+{% endif %}
   <div class="alert alert-danger m-3" id="offline_alert" style="display: none" role="alert">
     <b>{{ 'You are offline'|t }}.</b> {{ 'Last update'|t }}: <p style="display: inline" id="offline_update"></p>
   </div>
@@ -119,6 +121,7 @@
   </div>
   <!-- /Content -->
   {% if enable_debug_bar %}{{ debug_bar|raw }}{% endif %}
+{% if show_footer %}
   {% block footer %}
   <!-- Footer -->
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
@@ -127,5 +130,6 @@
   </div>
   <!-- /Footer -->
   {% endblock %}
+{% endif %}
 </body>
 </html>
