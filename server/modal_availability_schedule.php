@@ -52,8 +52,10 @@ if(!empty($result)){
         $hour = $hour[0] == "0" ? substr($hour,1) : $hour;
         $old_schedules[$schedule[0]][$hour] = true;
     }
+    $old_holidays = json_decode($result[0]["holidays"]);
 } else {
     $old_schedules = [];
+    $old_holidays = [];
 }
 ?>
 <style>
@@ -127,6 +129,33 @@ endif;
 
     </tbody>
 </table>
+<br>
+<?php
+//TODO: translate strings
+echo(<<<EOL
+<div class="form-group">
+    <label>Vuoi escudere giorni festivi dalla programmazione degli orari?</label>
+    <a onclick="$('.holiday_check').prop('checked', true);" class="text-primary">Seleziona tutti</a> / <a onclick="$('.holiday_check').prop('checked', false);" class="text-primary">Rimuovi selezioni</a>
+EOL);
+
+$i = 0;
+foreach ($user->holidays as $holiday) {
+    $i++;
+    $holiday_name = $holiday->getName();
+    $holiday_shortname = $holiday->shortName;
+    $is_holiday_selected = in_array($holiday_shortname, $old_holidays) ? "checked" : "";
+echo(<<<EOT
+    <div class="form-check">
+        <input class="form-check-input holiday_check" name="holiday_check" type="checkbox" value="{$holiday_shortname}" id="holidayCheckbox{$i}" {$is_holiday_selected}>
+        <label class="form-check-label" for="holidayCheckbox{$i}">
+        {$holiday_name} ({$holiday})
+        </label>
+    </div>
+EOT);
+}
+
+echo("</div>");
+?>
 <script>
 function init_modal() {
     <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
@@ -218,11 +247,13 @@ function extractSelections(){
 
 function submit_changes(){
     let hours = extractSelections();
+    let holidays = $.map($('input[name="holiday_check"]:checked'), function(c){return c.value; });
     $.ajax({
         url: "resources/ajax/ajax_availability_schedule.php",
         method: "POST",
         data: {
-            hours: hours
+            hours: hours,
+            holidays: holidays
         },
         success: function (data) {
             console.log(data);

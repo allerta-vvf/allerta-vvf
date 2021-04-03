@@ -424,6 +424,7 @@ CREATE TABLE `".$prefix."_schedules` (
 `user` INT NOT NULL,
 `profile_name` VARCHAR(500) NOT NULL DEFAULT 'default',
 `schedules` VARCHAR(10000) NULL DEFAULT NULL,
+`holidays` VARCHAR(10000) NULL DEFAULT NULL,
 `last_exec` VARCHAR(7) NULL DEFAULT NULL,
 `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
@@ -499,7 +500,9 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'training_remove' => 1,
             'use_location_picker' => 1,
             'force_language' => 0,
-            'force_remember_cookie' => 0
+            'force_remember_cookie' => 0,
+            'holidays_provider' => 'USA',
+            'holidays_language' => 'en_US'
         ];
         $query = "";
         foreach ($options as $key => $value) {
