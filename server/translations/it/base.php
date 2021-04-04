@@ -113,5 +113,8 @@ return [
     "Thu" => "Gio",
     "Fri" => "Ven",
     "Sat" => "Sab",
-    "Sun" => "Dom"
+    "Sun" => "Dom",
+    "Do you want to exclude holidays from schedules?" => "Vuoi escudere giorni festivi dalla programmazione degli orari?",
+    "Select all" => "Seleziona tutti",
+    "Remove selections" => "Rimuovi selezioni"
 ];

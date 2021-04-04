@@ -116,6 +116,7 @@ if($start) {
                 ){
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
                     if($schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true){
+                        //TODO: check if it's holiday
                         $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
                         $database->exec("UPDATE `%PREFIX%_schedules` SET `last_exec` = :last_exec WHERE `id` = :id;", false, [":id" => $id, ":last_exec" => $last_exec_new]);
                         $database->exec("UPDATE `%PREFIX%_profiles` SET available = '1', availability_last_change = 'cron' WHERE `id` = :user_id;", false, [":user_id" => $user_id]);

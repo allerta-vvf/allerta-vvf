@@ -131,11 +131,13 @@ endif;
 </table>
 <br>
 <?php
-//TODO: translate strings
+$holidays_selection_question = t("Do you want to exclude holidays from schedules?",false);
+$holidays_select_all = t("Select all", false);
+$holidays_select_none = t("Remove selections", false);
 echo(<<<EOL
 <div class="form-group">
-    <label>Vuoi escudere giorni festivi dalla programmazione degli orari?</label>
-    <a onclick="$('.holiday_check').prop('checked', true);" class="text-primary">Seleziona tutti</a> / <a onclick="$('.holiday_check').prop('checked', false);" class="text-primary">Rimuovi selezioni</a>
+    <label>{$holidays_selection_question}</label>
+    <a onclick="$('.holiday_check').prop('checked', true);" class="text-primary">{$holidays_select_all}</a> / <a onclick="$('.holiday_check').prop('checked', false);" class="text-primary">{$holidays_select_none}</a>
 EOL);
 
 $i = 0;
