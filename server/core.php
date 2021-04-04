@@ -469,7 +469,7 @@ class user
         return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
     }
 
-    public function login($name, $password, $remember_me, $twofa=null)
+    public function login($name, $password, $remember_me)
     {
         $this->tools->profiler_start("Login");
         if(!empty($name)) {
@@ -571,6 +571,8 @@ class user
 
     public function add_user($email, $name, $username, $password, $phone_number, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
     {
+        //TODO: save birthday in db
+        bdump($birthday);
         $this->tools->profiler_start("Add user");
         $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
         if($userId) {
@@ -753,7 +755,7 @@ class translations
         } else {
             $client_languages = explode(",", $client_languages);
             $tmp_languages = [];
-            foreach($client_languages as $key=>$language){
+            foreach($client_languages as $language){
                 if(strpos($language, ';') == false) {
                     $tmp_languages[$language] = 1;
                 } else {
@@ -875,6 +877,7 @@ function init_class($enableDebugger=true, $headers=true)
         global $webpack_manifest_path;
         $error = error_get_last();
         if ($error) {
+            bdump($webpack_manifest_path);
             require("error_page.php");
             show_error_page(500);
         }
