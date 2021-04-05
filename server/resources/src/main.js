@@ -62,12 +62,12 @@ $(document).on("pjax:start", function () {
   if (document.getElementById("topNavBar") !== undefined) {
     document.getElementById("topNavBar").className = "topnav";
   }
-  old_data = "null";
+  oldData = "null";
   fillTable = undefined;
-  table_engine = "datatables";
-  if (window.loadTable_interval !== undefined) {
-    clearInterval(window.loadTable_interval);
-    window.loadTable_interval = undefined;
+  tableEngine = "datatables";
+  if (window.loadTableInterval !== undefined) {
+    clearInterval(window.loadTableInterval);
+    window.loadTableInterval = undefined;
   }
 });
 
@@ -145,19 +145,19 @@ $(document).ready(function () {
 });
 
 const offline = false;
-const loadTable_interval = undefined;
-var old_data = "null";
-var table_engine = "datatables";
+const loadTableInterval = undefined;
+var oldData = "null";
+var tableEngine = "datatables";
 var fillTable = undefined;
 
-async function loadTable ({ table_page, set_interval = true, interval = 10000, onlineReload = false, use_custom_table_engine = false, callback = false }) {
+async function loadTable ({ tablePage, set_interval = true, interval = 10000, onlineReload = false, use_custom_tableEngine = false, callback = false }) {
   if (typeof fillTable === "undefined") {
-    if (use_custom_table_engine !== false) {
-      table_engine = use_custom_table_engine;
+    if (use_custom_tableEngine !== false) {
+      tableEngine = use_custom_tableEngine;
     } else if ("connection" in navigator && navigator.connection.saveData) {
-      table_engine = "default";
+      tableEngine = "default";
     }
-    fillTable = await import(`./table_engine_${table_engine}.js`)
+    fillTable = await import(`./tableEngine_${tableEngine}.js`)
       .then(({ default: _ }) => {
         return _;
       });
@@ -172,19 +172,19 @@ async function loadTable ({ table_page, set_interval = true, interval = 10000, o
   if ("deviceMemory" in navigator && navigator.deviceMemory < 0.2) {
     return;
   }
-  const replaceLatLngWithMap = table_page === "services" || table_page === "trainings";
+  const replaceLatLngWithMap = tablePage === "services" || tablePage === "trainings";
   $.getJSON({
-    url: "resources/ajax/ajax_" + table_page + ".php",
-    data: { old_data: old_data },
+    url: "resources/ajax/ajax_" + tablePage + ".php",
+    data: { oldData: oldData },
     success: function (data, status, xhr) {
-      old_data = xhr.getResponseHeader("data"); // TODO: refactoring and adding comments
+      oldData = xhr.getResponseHeader("data"); // TODO: refactoring and adding comments
       console.log(data);
       if (data.length > 0) {
         fillTable({ data, replaceLatLngWithMap, callback });
         const headers = new Headers();
         headers.append("date", Date.now());
         caches.open("tables-1").then((cache) => {
-          cache.put("/table_" + table_page + ".json", new Response(xhr.responseText, { headers: headers }));
+          cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
         });
       }
       if (window.offline) { // if xhr request successful, client is online
@@ -200,11 +200,11 @@ async function loadTable ({ table_page, set_interval = true, interval = 10000, o
   }).fail(function (data, status) {
     if (status === "parsererror") {
       if ($("#table_body").children().length === 0) { // this is a server-side authentication error on some cheap hosting providers
-        loadTable(table_page, set_interval, interval); // retry
+        loadTable(tablePage, set_interval, interval); // retry
       } // else nothing
     } else {
       caches.open("tables-1").then(cache => {
-        cache.match("/table_" + table_page + ".json").then(response => {
+        cache.match("/table_" + tablePage + ".json").then(response => {
           response.json().then(data => {
             fillTable({ data, replaceLatLngWithMap, callback });
             console.log("Table loaded from cache");
@@ -223,8 +223,8 @@ async function loadTable ({ table_page, set_interval = true, interval = 10000, o
       interval += 5000;
     }
     console.log("table_load interval " + interval);
-    window.loadTable_interval = setInterval(function () {
-      window.loadTable({ table_page, set_interval: false, interval, onlineReload, use_custom_table_engine, callback: false });
+    window.loadTableInterval = setInterval(function () {
+      window.loadTable({ tablePage, set_interval: false, interval, onlineReload, use_custom_tableEngine, callback: false });
     }, interval);
   }
 }
@@ -245,7 +245,7 @@ function menu () {
   }
 }
 
-window.loadTable_interval = loadTable_interval;
+window.loadTableInterval = loadTableInterval;
 window.loadTable = loadTable;
 window.setCookie = setCookie;
 window.getCookie = getCookie;

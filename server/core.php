@@ -193,7 +193,7 @@ class tools
         header("data: ".$response_data);
         header("Content-type: application/json");
         if(!is_null($debugbar)) $debugbar->sendDataInHeaders(true);
-        if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
+        if(isset($_GET["oldData"]) && $_GET["oldData"] !== $response_data){
           print($json_response);
         } else {
           print("{}");

@@ -1,11 +1,11 @@
 import {default as createUnityInstance} from './ld46.loader.js';
 
 import build_size_data from './ld46.data.gz';
-import build_size_framework from './ld46.framework.js.gz';
+import buildSizeFramework from './ld46.framework.js.gz';
 import build_size_wasm from './ld46.wasm.gz';
 
 console.log("data "+build_size_data);
-console.log("framework "+build_size_framework);
+console.log("framework "+buildSizeFramework);
 console.log("wasm "+build_size_wasm);
 
 export default class {

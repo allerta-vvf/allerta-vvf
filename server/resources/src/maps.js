@@ -103,15 +103,15 @@ function load_map (lat = undefined, lng = undefined, selector_id = undefined, se
 }
 
 // from unknown source in the Internet
-function chooseAddr (addr_lat, addr_lng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osm_type = undefined) {
-  addr_lat = addr_lat.replace(",", ".");
-  addr_lng = addr_lng.replace(",", ".");
+function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osm_type = undefined) {
+  addrLat = addrLat.replace(",", ".");
+  addrLng = addrLng.replace(",", ".");
   if (lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osm_type !== undefined) {
     const loc1 = new L.LatLng(lat1, lng1);
     const loc2 = new L.LatLng(lat2, lng2);
     const bounds = new L.LatLngBounds(loc1, loc2);
     console.log(lat1, lng1, lat2, lng2, osm_type);
-    set_marker(new L.LatLng(addr_lat, addr_lng));
+    set_marker(new L.LatLng(addrLat, addrLng));
     if (feature) {
       map.removeLayer(feature);
     }
@@ -124,8 +124,8 @@ function chooseAddr (addr_lat, addr_lng, zoom = undefined, lat1 = undefined, lng
       feature = L.polyline([loc1, loc4, loc2, loc3, loc1], { color: "red" }).addTo(map);
       map.fitBounds(bounds);
     }
-  } else if (addr_lat !== undefined && addr_lng !== undefined) {
-    const loc = new L.LatLng(addr_lat, addr_lng);
+  } else if (addrLat !== undefined && addrLng !== undefined) {
+    const loc = new L.LatLng(addrLat, addrLng);
     console.log(loc);
     set_marker(loc);
     if (zoom !== undefined) {

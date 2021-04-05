@@ -44,11 +44,11 @@ const removeSourceMapUrlAfterBuild = () => {
   });
 }
 
-var config_file = require("./config.json");
-const sentry_enabled = config_file.sentry_enabled &&
-                       config_file.sentry_auth_token &&
-                       config_file.sentry_organization &&
-                       config_file.sentry_project;
+var configFile = require("./config.json");
+const sentry_enabled = configFile.sentry_enabled &&
+                       configFile.sentry_auth_token &&
+                       configFile.sentry_organization &&
+                       configFile.sentry_project;
 
 var prod_config = {
   mode: "production",
@@ -84,10 +84,10 @@ module.exports = (env) => {
   //run webpack build with "--env sentry_environment=custom-sentry-env" to replace Sentry environment
   if(env.sentry_environment){
     console.log(colors.green("INFO using custom sentry_environment "+env.sentry_environment));
-    config_file.sentry_environment = env.sentry_environment;
+    configFile.sentry_environment = env.sentry_environment;
   }
-  if(!config_file.sentry_environment){
-    config_file.sentry_environment = "prod";
+  if(!configFile.sentry_environment){
+    configFile.sentry_environment = "prod";
   }
 
   if(sentry_enabled){
@@ -97,9 +97,9 @@ module.exports = (env) => {
       }),
 
       new SentryWebpackPlugin({
-        authToken: config_file.sentry_auth_token,
-        org: config_file.sentry_organization,
-        project: config_file.sentry_project,
+        authToken: configFile.sentry_auth_token,
+        org: configFile.sentry_organization,
+        project: configFile.sentry_project,
         urlPrefix: "~/dist",
         include: "./dist",
         setCommits: {
@@ -123,7 +123,7 @@ module.exports = (env) => {
       GIT_AUTHOR_DATE: git("log -1 --format=%aI"),
       BUNDLE_DATE: Date.now(),
       BUNDLE_MODE: "production",
-      config: config_file
+      config: configFile
     })
   );
   return merge(common, prod_config);
