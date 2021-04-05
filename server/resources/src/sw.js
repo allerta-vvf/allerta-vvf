@@ -57,13 +57,13 @@ self.addEventListener("fetch", function (event) {
 
   if (request.headers.get("Accept").includes("text/html")) {
     fetchHandler(event, null, "offline.php");
-  } else if (request.destination == "script") {
+  } else if (request.destination === "script") {
     fetchHandler(event, "application/javascript", "console.error('Script " + event.request.url + " not found');");
-  } else if (request.destination == "image") {
+  } else if (request.destination === "image") {
     fetchHandler(event, null, "resources/images/logo.png");
-  } else if (request.destination == "font") {
+  } else if (request.destination === "font") {
     fetchHandler(event, null, null);
-  } else if (request.destination == "manifest" || request.url.includes("manifest")) {
+  } else if (request.destination === "manifest" || request.url.includes("manifest")) {
     fetchHandler(event, null, "manifest.webmanifest");
   } else {
     event.respondWith(fetch(request));

@@ -36,11 +36,11 @@ function set_marker (LatLng) {
 }
 
 function load_map (lat = undefined, lng = undefined, selector_id = undefined, select = true) {
-  if (lat == undefined && lng == undefined) {
+  if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
   }
-  if (selector_id == undefined) {
+  if (selector_id === undefined) {
     selector_id = "map";
   }
   const zoom = select ? 10 : 17;
@@ -83,7 +83,7 @@ function load_map (lat = undefined, lng = undefined, selector_id = undefined, se
 
     	if (getCookie("experimental_read_clipboard")) {
 	    	window.addEventListener("focus", function (event) {
-	    		if ($("#addr").val() == "") {
+	    		if ($("#addr").val() === "") {
 	    			console.log("Loading location from clipboard");
     			    navigator.clipboard.readText().then(text => {
 	    				$("#addr").val(text);
@@ -115,7 +115,7 @@ function chooseAddr (addr_lat, addr_lng, zoom = undefined, lat1 = undefined, lng
     if (feature) {
       map.removeLayer(feature);
     }
-    if (osm_type == "node") {
+    if (osm_type === "node") {
       map.fitBounds(bounds);
       map.setZoom(18);
     } else {
@@ -147,7 +147,7 @@ function addr_search (string_results_found = undefined, string_results_not_found
   }
   let inp = document.getElementById("addr").value;
   // if translation strings are not defined, skip the nominatim step and don't log errors (no console.error)
-  const checkClipboard = string_results_found == undefined && string_results_not_found == undefined;
+  const checkClipboard = string_results_found === undefined && string_results_not_found === undefined;
   $("#results").empty();
 
   if (inp.match("\@(-?[\d\.]*)")) { // Google Maps

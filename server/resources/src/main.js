@@ -1,3 +1,5 @@
+jQuery = $;
+window.$ = window.jQuery = $;
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./main.css";
@@ -10,8 +12,7 @@ import "time-input-polyfill/auto";
 import "jquery-pjax";
 import toastr from "toastr";
 import "toastr/build/toastr.css";
-jQuery = $;
-window.$ = window.jQuery = $;
+
 window.toastr = toastr;
 toastr.options = {
   closeButton: false,
@@ -164,14 +165,14 @@ async function loadTable ({ table_page, set_interval = true, interval = 10000, o
   if ("getBattery" in navigator) {
     navigator.getBattery().then((level, charging) => {
       if (!charging && level < 0.2) {
-
+        return;
       }
     });
   }
   if ("deviceMemory" in navigator && navigator.deviceMemory < 0.2) {
     return;
   }
-  const replaceLatLngWithMap = table_page == "services" || table_page == "trainings";
+  const replaceLatLngWithMap = table_page === "services" || table_page === "trainings";
   $.getJSON({
     url: "resources/ajax/ajax_" + table_page + ".php",
     data: { old_data: old_data },
@@ -197,7 +198,7 @@ async function loadTable ({ table_page, set_interval = true, interval = 10000, o
       }
     }
   }).fail(function (data, status) {
-    if (status == "parsererror") {
+    if (status === "parsererror") {
       if ($("#table_body").children().length === 0) { // this is a server-side authentication error on some cheap hosting providers
         loadTable(table_page, set_interval, interval); // retry
       } // else nothing
