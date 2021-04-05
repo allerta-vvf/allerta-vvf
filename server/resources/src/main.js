@@ -150,14 +150,14 @@ var oldData = "null";
 var tableEngine = "datatables";
 var fillTable = undefined;
 
-async function loadTable ({ tablePage, setInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
+async function loadTable ({ tablePage, setTableRefreshInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
   if (typeof fillTable === "undefined") {
     if (useCustomTableEngine !== false) {
       tableEngine = useCustomTableEngine;
     } else if ("connection" in navigator && navigator.connection.saveData) {
       tableEngine = "default";
     }
-    fillTable = await import(`./tableEngine_${tableEngine}.js`)
+    fillTable = await import(`./table_engine_${tableEngine}.js`)
       .then(({ default: _ }) => {
         return _;
       });
@@ -200,7 +200,7 @@ async function loadTable ({ tablePage, setInterval = true, interval = 10000, onl
   }).fail(function (data, status) {
     if (status === "parsererror") {
       if ($("#table_body").children().length === 0) { // this is a server-side authentication error on some cheap hosting providers
-        loadTable(tablePage, setInterval, interval); // retry
+        loadTable(tablePage, setTableRefreshInterval, interval); // retry
       } // else nothing
     } else {
       caches.open("tables-1").then((cache) => {
@@ -218,13 +218,13 @@ async function loadTable ({ tablePage, setInterval = true, interval = 10000, onl
       }
     }
   });
-  if (setInterval) {
+  if (setTableRefreshInterval) {
     if ("connection" in navigator && navigator.connection.saveData) {
       interval += 5000;
     }
     console.log("table_load interval " + interval);
     window.loadTableInterval = setInterval(function () {
-      window.loadTable({ tablePage, setInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
+      window.loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
     }, interval);
   }
 }
