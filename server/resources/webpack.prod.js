@@ -42,7 +42,7 @@ const removeSourceMapUrlAfterBuild = () => {
       fs.unlinkSync(key);
     });
   });
-}
+};
 
 var configFile = require("./config.json");
 const sentryEnabled = configFile.sentryEnabled &&

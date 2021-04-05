@@ -85,12 +85,12 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
 	    	window.addEventListener("focus", function (event) {
 	    		if ($("#addr").val() === "") {
 	    			console.log("Loading location from clipboard");
-    			    navigator.clipboard.readText().then(text => {
+    			    navigator.clipboard.readText().then((text) => {
 	    				$("#addr").val(text);
 	    				if (!addrSearch()) {
 	    					$("#addr").val("");
 	    				}
- 	    		    }).catch(err => {
+ 	    		    }).catch((err) => {
     				    console.error("Failed to read clipboard contents: ", err);
           });
 	    		}

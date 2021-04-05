@@ -203,9 +203,9 @@ async function loadTable ({ tablePage, setInterval = true, interval = 10000, onl
         loadTable(tablePage, setInterval, interval); // retry
       } // else nothing
     } else {
-      caches.open("tables-1").then(cache => {
-        cache.match("/table_" + tablePage + ".json").then(response => {
-          response.json().then(data => {
+      caches.open("tables-1").then((cache) => {
+        cache.match("/table_" + tablePage + ".json").then((response) => {
+          response.json().then((data) => {
             fillTable({ data, replaceLatLngWithMap, callback });
             console.log("Table loaded from cache");
             $("#offline_update").text(new Date(parseInt(response.headers.get("date"), 10)).toLocaleString());
