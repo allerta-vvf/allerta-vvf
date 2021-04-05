@@ -1,17 +1,17 @@
 const cacheVersion = process.env.BUNDLE_DATE;
-const cacheName = "static-"+cacheVersion;
-const expectedCaches = [cacheName, 'tables-1'];
+const cacheName = "static-" + cacheVersion;
+const expectedCaches = [cacheName, "tables-1"];
 
-const urls = ['offline.php', 'manifest.webmanifest', 'resources/images/favicon.ico', 'resources/dist/marker-icon.png', 'resources/dist/layers.png', 'resources/dist/layers-2x.png', 'resources/images/android-chrome-192x192.png', 'resources/images/android-chrome-384x384.png', 'resources/images/black_helmet.png', 'resources/images/red_helmet.png', 'resources/images/wheel.png', 'resources/images/logo.png', 'resources/images/owner.png', 'resources/dist/fonts/fontawesome-webfont.woff2'];
+const urls = ["offline.php", "manifest.webmanifest", "resources/images/favicon.ico", "resources/dist/marker-icon.png", "resources/dist/layers.png", "resources/dist/layers-2x.png", "resources/images/android-chrome-192x192.png", "resources/images/android-chrome-384x384.png", "resources/images/black_helmet.png", "resources/images/red_helmet.png", "resources/images/wheel.png", "resources/images/logo.png", "resources/images/owner.png", "resources/dist/fonts/fontawesome-webfont.woff2"];
 
-function fetchHandler(event, content_type, not_found_message){
+function fetchHandler (event, content_type, not_found_message) {
   // TODO: refactoring
   console.log(event);
 
   // FROM https://googlechrome.github.io/samples/service-worker/custom-offline-page/
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
-  if (event.request.mode === 'navigate') {
+  if (event.request.mode === "navigate") {
     event.respondWith((async () => {
       try {
         // First, try to use the navigation preload response if it's supported.
@@ -28,10 +28,10 @@ function fetchHandler(event, content_type, not_found_message){
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log('Fetch failed; returning offline page instead.', error);
+        console.log("Fetch failed; returning offline page instead.", error);
 
         const cache = await caches.open(cacheName);
-        if(event.request.headers.get('Accept').includes('text/html')){
+        if (event.request.headers.get("Accept").includes("text/html")) {
           cacheFileName = "offline.php";
         } else {
           cacheFileName = event.request.url;
@@ -49,16 +49,16 @@ function fetchHandler(event, content_type, not_found_message){
   // were no service worker involvement.
 }
 
-self.addEventListener('fetch', function (event) {
-  var request = event.request;
+self.addEventListener("fetch", function (event) {
+  const request = event.request;
 
   // https://stackoverflow.com/a/49719964
-  if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') return;
+  if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
 
-  if (request.headers.get('Accept').includes('text/html')) {
+  if (request.headers.get("Accept").includes("text/html")) {
     fetchHandler(event, null, "offline.php");
   } else if (request.destination == "script") {
-    fetchHandler(event, "application/javascript", "console.error('Script "+event.request.url+" not found');");
+    fetchHandler(event, "application/javascript", "console.error('Script " + event.request.url + " not found');");
   } else if (request.destination == "image") {
     fetchHandler(event, null, "resources/images/logo.png");
   } else if (request.destination == "font") {
@@ -70,36 +70,36 @@ self.addEventListener('fetch', function (event) {
   }
 });
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(cacheName).then((cache) => {
       cache.addAll(urls);
-      fetch('resources/dist/manifest.json')
+      fetch("resources/dist/manifest.json")
         .then((response) => response.json())
         .then((manifest) => {
-          let scripts_required = ["main.js", "maps.js"];
+          const scripts_required = ["main.js", "maps.js"];
           scripts_required.map((script_name) => {
             console.log(manifest);
             console.log(script_name);
-            cache.add("resources/dist/"+manifest[script_name]);
+            cache.add("resources/dist/" + manifest[script_name]);
           });
         });
     })
   );
-})
+});
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
       keys.map((key) => {
         if (!expectedCaches.includes(key)) {
-          console.log("Deleting cache "+key);
+          console.log("Deleting cache " + key);
           return caches.delete(key);
         }
       })
     )).then(() => {
-      console.log('Service worker now ready to handle fetches!');
+      console.log("Service worker now ready to handle fetches!");
     })
   );
 });
