@@ -127,4 +127,4 @@ module.exports = (env) => {
     })
   );
   return merge(common, prodConfig);
-}
+};

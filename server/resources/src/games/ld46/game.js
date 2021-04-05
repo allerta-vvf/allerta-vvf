@@ -1,10 +1,10 @@
-import {default as createUnityInstance} from './ld46.loader.js';
+import {default as createUnityInstance} from "./ld46.loader.js";
 
-import build_size_data from './ld46.data.gz';
-import buildSizeFramework from './ld46.framework.js.gz';
-import buildSizeWasm from './ld46.wasm.gz';
+import buildSizeData from "./ld46.data.gz";
+import buildSizeFramework from "./ld46.framework.js.gz";
+import buildSizeWasm from "./ld46.wasm.gz";
 
-console.log("data "+build_size_data);
+console.log("data "+buildSizeData);
 console.log("framework "+buildSizeFramework);
 console.log("wasm "+buildSizeWasm);
 

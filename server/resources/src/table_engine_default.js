@@ -3,7 +3,7 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
   $.each(data, function (rowNum, item) {
     const row = document.createElement("tr");
     row.id = "row-" + rowNum;
-    $.each(item, function (cell_num, i) {
+    $.each(item, function (cellNum, i) {
       if (i !== null) {
         if (replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)) { /* credits to @visoom https://github.com/visoom */
           const lat = i.split(";")[0];

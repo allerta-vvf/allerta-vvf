@@ -19,8 +19,8 @@
     </tbody>
   </table>
   <script>
-    loadTable({tablePage: "log", setInterval: false, callback: function(setableDt) {
-      setableDt
+    loadTable({tablePage: "log", setInterval: false, callback: function(tableDt) {
+      tableDt
         .column( '3:visible' )
         .order( 'desc' )
         .draw();

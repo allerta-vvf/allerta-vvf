@@ -13,6 +13,7 @@ function fetchHandler (event, contentType, notFoundMessage) {
   // for an HTML page.
   if (event.request.mode === "navigate") {
     event.respondWith((async () => {
+      console.log("respond with");
       try {
         // First, try to use the navigation preload response if it's supported.
         const preloadResponse = await event.preloadResponse;
@@ -78,8 +79,8 @@ self.addEventListener("install", (event) => {
       fetch("resources/dist/manifest.json")
         .then((response) => response.json())
         .then((manifest) => {
-          const scripts_required = ["main.js", "maps.js"];
-          scripts_required.map((scriptName) => {
+          const scriptsRequired = ["main.js", "maps.js"];
+          scriptsRequired.map((scriptName) => {
             console.log(manifest);
             console.log(scriptName);
             cache.add("resources/dist/" + manifest[scriptName]);

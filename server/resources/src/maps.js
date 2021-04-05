@@ -137,7 +137,7 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
 }
 
 // started from https://derickrethans.nl/leaflet-and-nominatim.html
-function addrSearch (string_results_found = undefined, stringResultsNotFound = undefined) {
+function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
       $("<p>", { html: stringResultsNotFound }).appendTo("#results");
@@ -147,7 +147,7 @@ function addrSearch (string_results_found = undefined, stringResultsNotFound = u
   }
   let inp = document.getElementById("addr").value;
   // if translation strings are not defined, skip the nominatim step and don't log errors (no console.error)
-  const checkClipboard = string_results_found === undefined && stringResultsNotFound === undefined;
+  const checkClipboard = stringResultsFound=== undefined && stringResultsNotFound === undefined;
   $("#results").empty();
 
   if (inp.match("\@(-?[\d\.]*)")) { // Google Maps
@@ -190,8 +190,8 @@ function addrSearch (string_results_found = undefined, stringResultsNotFound = u
         items.push("<li><a href='' onclick='chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
       });
 
-      if (items.length != 0) {
-        $("<p>", { html: string_results_found + ":" }).appendTo("#results");
+      if (items.length !== 0) {
+        $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
         $("<ul/>", {
           class: "results-list",
           html: items.join("")

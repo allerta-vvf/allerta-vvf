@@ -18,7 +18,7 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
   $.each(data, function (rowNum, item) {
     const row = document.createElement("tr");
     row.id = "row-" + rowNum;
-    $.each(item, function (cell_num, i) {
+    $.each(item, function (cellNum, i) {
       if (i !== null) {
         if (replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)) { /* credits to @visoom https://github.com/visoom */
           const lat = i.split(";")[0];
@@ -56,19 +56,19 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
     loadedLanguage = {};
   }
   if (!$.fn.DataTable.isDataTable("#table")) {
-    var setableDt = $("#table").DataTable({
+    var tableDt = $("#table").DataTable({
       responsive: true,
       language: loadedLanguage,
       buttons: ["excel", "pdf", "csv"]
     });
-    setableDt.buttons().container()
+    tableDt.buttons().container()
       .appendTo("#table_wrapper :nth-child(1):eq(0)");
 
     if (callback !== false) {
-      callback(setableDt);
+      callback(tableDt);
     }
   } else {
-    setableDt.rows().invalidate();
+    tableDt.rows().invalidate();
   }
-  window.setableDt = setableDt;
+  window.tableDt = tableDt;
 }
