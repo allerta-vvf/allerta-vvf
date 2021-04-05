@@ -22,7 +22,7 @@ let marker;
 let feature;
 let map;
 
-function set_marker (LatLng) {
+function setMarker (LatLng) {
   if (marker) {
     console.log("Marker exists");
     // console.log(marker);
@@ -35,17 +35,17 @@ function set_marker (LatLng) {
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
 }
 
-function load_map (lat = undefined, lng = undefined, selector_id = undefined, select = true) {
+function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
   if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
   }
-  if (selector_id === undefined) {
-    selector_id = "map";
+  if (selectorId === undefined) {
+    selectorId = "map";
   }
   const zoom = select ? 10 : 17;
   const latLng = new L.LatLng(lat, lng);
-  map = new L.Map(selector_id, { zoomControl: true });
+  map = new L.Map(selectorId, { zoomControl: true });
 
   const osmUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const osmAttribution = "Map data &copy; 2012 <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors";
@@ -55,12 +55,12 @@ function load_map (lat = undefined, lng = undefined, selector_id = undefined, se
 
   if (select) {
     	map.on("click", function (e) {
-    	  set_marker(e.latlng);
+    	  setMarker(e.latlng);
     	});
 
     	L.Control.CustomLocate = L.Control.Locate.extend({
 	    	_drawMarker: function () {
-	    		set_marker(this._event.latlng);
+	    		setMarker(this._event.latlng);
     		},
     		_onDrag: function () {},
     		_onZoom: function () {},
@@ -87,7 +87,7 @@ function load_map (lat = undefined, lng = undefined, selector_id = undefined, se
 	    			console.log("Loading location from clipboard");
     			    navigator.clipboard.readText().then(text => {
 	    				$("#addr").val(text);
-	    				if (!addr_search()) {
+	    				if (!addrSearch()) {
 	    					$("#addr").val("");
 	    				}
  	    		    }).catch(err => {
@@ -97,25 +97,25 @@ function load_map (lat = undefined, lng = undefined, selector_id = undefined, se
 	    	});
     	}
   } else {
-    set_marker(latLng);
+    setMarker(latLng);
   }
   map.invalidateSize();
 }
 
 // from unknown source in the Internet
-function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osm_type = undefined) {
+function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osmType = undefined) {
   addrLat = addrLat.replace(",", ".");
   addrLng = addrLng.replace(",", ".");
-  if (lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osm_type !== undefined) {
+  if (lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osmType !== undefined) {
     const loc1 = new L.LatLng(lat1, lng1);
     const loc2 = new L.LatLng(lat2, lng2);
     const bounds = new L.LatLngBounds(loc1, loc2);
-    console.log(lat1, lng1, lat2, lng2, osm_type);
-    set_marker(new L.LatLng(addrLat, addrLng));
+    console.log(lat1, lng1, lat2, lng2, osmType);
+    setMarker(new L.LatLng(addrLat, addrLng));
     if (feature) {
       map.removeLayer(feature);
     }
-    if (osm_type === "node") {
+    if (osmType === "node") {
       map.fitBounds(bounds);
       map.setZoom(18);
     } else {
@@ -127,7 +127,7 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
   } else if (addrLat !== undefined && addrLng !== undefined) {
     const loc = new L.LatLng(addrLat, addrLng);
     console.log(loc);
-    set_marker(loc);
+    setMarker(loc);
     if (zoom !== undefined) {
       map.setView(loc, zoom);
     } else {
@@ -137,17 +137,17 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
 }
 
 // started from https://derickrethans.nl/leaflet-and-nominatim.html
-function addr_search (string_results_found = undefined, string_results_not_found = undefined) {
+function addrSearch (string_results_found = undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
-      $("<p>", { html: string_results_not_found }).appendTo("#results");
+      $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       console.error(error);
     }
     return false;
   }
   let inp = document.getElementById("addr").value;
   // if translation strings are not defined, skip the nominatim step and don't log errors (no console.error)
-  const checkClipboard = string_results_found === undefined && string_results_not_found === undefined;
+  const checkClipboard = string_results_found === undefined && stringResultsNotFound === undefined;
   $("#results").empty();
 
   if (inp.match("\@(-?[\d\.]*)")) { // Google Maps
@@ -197,7 +197,7 @@ function addr_search (string_results_found = undefined, string_results_not_found
           html: items.join("")
         }).appendTo("#results");
       } else {
-        $("<p>", { html: string_results_not_found }).appendTo("#results");
+        $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       }
     });
   } else {
@@ -205,6 +205,6 @@ function addr_search (string_results_found = undefined, string_results_not_found
   }
 }
 
-window.load_map = load_map;
-window.addr_search = addr_search;
+window.loadMap = loadMap;
+window.addrSearch = addrSearch;
 window.chooseAddr = chooseAddr;

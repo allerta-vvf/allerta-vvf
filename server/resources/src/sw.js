@@ -4,7 +4,7 @@ const expectedCaches = [cacheName, "tables-1"];
 
 const urls = ["offline.php", "manifest.webmanifest", "resources/images/favicon.ico", "resources/dist/marker-icon.png", "resources/dist/layers.png", "resources/dist/layers-2x.png", "resources/images/android-chrome-192x192.png", "resources/images/android-chrome-384x384.png", "resources/images/black_helmet.png", "resources/images/red_helmet.png", "resources/images/wheel.png", "resources/images/logo.png", "resources/images/owner.png", "resources/dist/fonts/fontawesome-webfont.woff2"];
 
-function fetchHandler (event, content_type, not_found_message) {
+function fetchHandler (event, contentType, notFoundMessage) {
   // TODO: refactoring
   console.log(event);
 
@@ -79,10 +79,10 @@ self.addEventListener("install", (event) => {
         .then((response) => response.json())
         .then((manifest) => {
           const scripts_required = ["main.js", "maps.js"];
-          scripts_required.map((script_name) => {
+          scripts_required.map((scriptName) => {
             console.log(manifest);
-            console.log(script_name);
-            cache.add("resources/dist/" + manifest[script_name]);
+            console.log(scriptName);
+            cache.add("resources/dist/" + manifest[scriptName]);
           });
         });
     })

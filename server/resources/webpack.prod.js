@@ -3,14 +3,14 @@ const common = require("./webpack.common.js");
 const TerserPlugin = require("terser-webpack-plugin");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 const AfterBuildPlugin = require("@fiverr/afterbuild-webpack-plugin");
-const child_process = require("child_process");
+const childProcess = require("childProcess");
 const InjectPlugin = require("webpack-inject-plugin").default;
 const colors = require("colors/safe");
 const fs = require("fs");
 const glob = require("glob");
 
 function git(command) {
-  return child_process.execSync(`git ${command}`, { encoding: "utf8" }).trim();
+  return childProcess.execSync(`git ${command}`, { encoding: "utf8" }).trim();
 }
 var webpack = require("webpack");
 
@@ -45,12 +45,12 @@ const removeSourceMapUrlAfterBuild = () => {
 }
 
 var configFile = require("./config.json");
-const sentry_enabled = configFile.sentry_enabled &&
-                       configFile.sentry_auth_token &&
-                       configFile.sentry_organization &&
-                       configFile.sentry_project;
+const sentryEnabled = configFile.sentryEnabled &&
+                       configFile.sentryAuthToken &&
+                       configFile.sentryOrganization &&
+                       configFile.sentryProject;
 
-var prod_config = {
+var prodConfig = {
   mode: "production",
   devtool: false,
   module: {
@@ -75,31 +75,31 @@ var prod_config = {
       minimizer: [new TerserPlugin({
         parallel: true,
         extractComments: true,
-        sourceMap: sentry_enabled ? true : false
+        sourceMap: sentryEnabled ? true : false
       })]
   }
 };
 
 module.exports = (env) => {
-  //run webpack build with "--env sentry_environment=custom-sentry-env" to replace Sentry environment
-  if(env.sentry_environment){
-    console.log(colors.green("INFO using custom sentry_environment "+env.sentry_environment));
-    configFile.sentry_environment = env.sentry_environment;
+  //run webpack build with "--env sentryEnvironment=custom-sentry-env" to replace Sentry environment
+  if(env.sentryEnvironment){
+    console.log(colors.green("INFO using custom sentryEnvironment "+env.sentryEnvironment));
+    configFile.sentryEnvironment = env.sentryEnvironment;
   }
-  if(!configFile.sentry_environment){
-    configFile.sentry_environment = "prod";
+  if(!configFile.sentryEnvironment){
+    configFile.sentryEnvironment = "prod";
   }
 
-  if(sentry_enabled){
-    prod_config.plugins.push(
+  if(sentryEnabled){
+    prodConfig.plugins.push(
       new webpack.SourceMapDevToolPlugin({
         filename: "[file].map"
       }),
 
       new SentryWebpackPlugin({
-        authToken: configFile.sentry_auth_token,
-        org: configFile.sentry_organization,
-        project: configFile.sentry_project,
+        authToken: configFile.sentryAuthToken,
+        org: configFile.sentryOrganization,
+        project: configFile.sentryProject,
         urlPrefix: "~/dist",
         include: "./dist",
         setCommits: {
@@ -117,7 +117,7 @@ module.exports = (env) => {
     console.log(colors.green("INFO Sentry Webpack plugins enabled"));
   }
 
-  prod_config.plugins.push(
+  prodConfig.plugins.push(
     new webpack.EnvironmentPlugin({
       GIT_VERSION: git("describe --always"),
       GIT_AUTHOR_DATE: git("log -1 --format=%aI"),
@@ -126,5 +126,5 @@ module.exports = (env) => {
       config: configFile
     })
   );
-  return merge(common, prod_config);
+  return merge(common, prodConfig);
 }

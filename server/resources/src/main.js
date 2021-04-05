@@ -150,10 +150,10 @@ var oldData = "null";
 var tableEngine = "datatables";
 var fillTable = undefined;
 
-async function loadTable ({ tablePage, set_interval = true, interval = 10000, onlineReload = false, use_custom_tableEngine = false, callback = false }) {
+async function loadTable ({ tablePage, setInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
   if (typeof fillTable === "undefined") {
-    if (use_custom_tableEngine !== false) {
-      tableEngine = use_custom_tableEngine;
+    if (useCustomTableEngine !== false) {
+      tableEngine = useCustomTableEngine;
     } else if ("connection" in navigator && navigator.connection.saveData) {
       tableEngine = "default";
     }
@@ -200,7 +200,7 @@ async function loadTable ({ tablePage, set_interval = true, interval = 10000, on
   }).fail(function (data, status) {
     if (status === "parsererror") {
       if ($("#table_body").children().length === 0) { // this is a server-side authentication error on some cheap hosting providers
-        loadTable(tablePage, set_interval, interval); // retry
+        loadTable(tablePage, setInterval, interval); // retry
       } // else nothing
     } else {
       caches.open("tables-1").then(cache => {
@@ -218,13 +218,13 @@ async function loadTable ({ tablePage, set_interval = true, interval = 10000, on
       }
     }
   });
-  if (set_interval) {
+  if (setInterval) {
     if ("connection" in navigator && navigator.connection.saveData) {
       interval += 5000;
     }
     console.log("table_load interval " + interval);
     window.loadTableInterval = setInterval(function () {
-      window.loadTable({ tablePage, set_interval: false, interval, onlineReload, use_custom_tableEngine, callback: false });
+      window.loadTable({ tablePage, setInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
     }, interval);
   }
 }

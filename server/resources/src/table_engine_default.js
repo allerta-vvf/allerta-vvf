@@ -1,8 +1,8 @@
 export default async function fillTable ({ data, replaceLatLngWithMap = false, callback = false }) {
   $("#table_body").empty();
-  $.each(data, function (row_num, item) {
+  $.each(data, function (rowNum, item) {
     const row = document.createElement("tr");
-    row.id = "row-" + row_num;
+    row.id = "row-" + rowNum;
     $.each(item, function (cell_num, i) {
       if (i !== null) {
         if (replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)) { /* credits to @visoom https://github.com/visoom */
@@ -10,9 +10,9 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
           const lng = i.split(";")[1];
           const mapDiv = document.createElement("div");
           mapDiv.className = "map";
-          mapDiv.id = "map-" + row_num;
+          mapDiv.id = "map-" + rowNum;
           const mapScript = document.createElement("script");
-          mapScript.appendChild(document.createTextNode("load_map(" + lat + ", " + lng + ", \"map-" + row_num + "\", false)"));
+          mapScript.appendChild(document.createTextNode("loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
           mapDiv.appendChild(mapScript);
           const cell = document.createElement("td");
           cell.appendChild(mapDiv);

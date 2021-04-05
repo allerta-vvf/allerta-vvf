@@ -2,17 +2,17 @@ import {default as createUnityInstance} from './ld46.loader.js';
 
 import build_size_data from './ld46.data.gz';
 import buildSizeFramework from './ld46.framework.js.gz';
-import build_size_wasm from './ld46.wasm.gz';
+import buildSizeWasm from './ld46.wasm.gz';
 
 console.log("data "+build_size_data);
 console.log("framework "+buildSizeFramework);
-console.log("wasm "+build_size_wasm);
+console.log("wasm "+buildSizeWasm);
 
 export default class {
     constructor(){
         this.title = "What the firetruck";
         this.author = "dvdfu";
-        this.author_url = "https://github.com/dvdfu";
+        this.authorUrl = "https://github.com/dvdfu";
     }
 
     initialize(container){

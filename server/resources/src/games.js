@@ -8,7 +8,7 @@ async function play (game) {
         const game = new Game();
         $("body").append("<div class=\"modal\" id=\"modal_game\" tabindex=\"-1\" role=\"dialog\" data-backdrop=\"static\" style=\"display: none; min-width: 100%; margin: 0px;\"><div class=\"modal-dialog\" role=\"document\" style=\"min-width: 100%; margin: 0;\"><div class=\"modal-content\" style=\"min-height: 100vh;\" id=\"modal_game_content\"></div></div></div>");
         $("#modal_game_content").append(`<div class="modal-header"><h5 class="modal-title" style="color: black">${game.title}</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body" id="modal_game_body"></div>`);
-        $("#modal_game_body").append(`<div id="game_content" style="text-align: center"></div><p style="text-align: right; color: black;">Game by <a style="color: blue" target="_blank" href="${game.author_url}">${game.author}</a></p>`);
+        $("#modal_game_body").append(`<div id="game_content" style="text-align: center"></div><p style="text-align: right; color: black;">Game by <a style="color: blue" target="_blank" href="${game.authorUrl}">${game.author}</a></p>`);
         $("#modal_game").modal("show");
         game.initialize($("#game_content"));
       });

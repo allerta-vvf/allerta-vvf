@@ -15,9 +15,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default async function fillTable ({ data, replaceLatLngWithMap = false, callback = false }) {
   $("#table_body").empty();
-  $.each(data, function (row_num, item) {
+  $.each(data, function (rowNum, item) {
     const row = document.createElement("tr");
-    row.id = "row-" + row_num;
+    row.id = "row-" + rowNum;
     $.each(item, function (cell_num, i) {
       if (i !== null) {
         if (replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)) { /* credits to @visoom https://github.com/visoom */
@@ -25,9 +25,9 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
           const lng = i.split(";")[1];
           const mapDiv = document.createElement("div");
           mapDiv.className = "map";
-          mapDiv.id = "map-" + row_num;
+          mapDiv.id = "map-" + rowNum;
           const mapScript = document.createElement("script");
-          mapScript.appendChild(document.createTextNode("load_map(" + lat + ", " + lng + ", \"map-" + row_num + "\", false)"));
+          mapScript.appendChild(document.createTextNode("loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
           mapDiv.appendChild(mapScript);
           const cell = document.createElement("td");
           cell.appendChild(mapDiv);
@@ -56,19 +56,19 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
     loadedLanguage = {};
   }
   if (!$.fn.DataTable.isDataTable("#table")) {
-    var table_dt = $("#table").DataTable({
+    var setableDt = $("#table").DataTable({
       responsive: true,
       language: loadedLanguage,
       buttons: ["excel", "pdf", "csv"]
     });
-    table_dt.buttons().container()
+    setableDt.buttons().container()
       .appendTo("#table_wrapper :nth-child(1):eq(0)");
 
     if (callback !== false) {
-      callback(table_dt);
+      callback(setableDt);
     }
   } else {
-    table_dt.rows().invalidate();
+    setableDt.rows().invalidate();
   }
-  window.table_dt = table_dt;
+  window.setableDt = setableDt;
 }
