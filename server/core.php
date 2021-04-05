@@ -246,10 +246,10 @@ class database
         }
         if($this->load_from_file) {
             if(file_exists($this->options_cache_file)/* && time()-@filemtime($this->options_cache_file) < 604800*/) {
-                $this->options = unserialize(file_get_contents($this->options_cache_file), ['allowed_classes' => false]);
+                $this->options = json_decode(file_get_contents($this->options_cache_file), true);
             } else {
                 $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
-                file_put_contents($this->options_cache_file, serialize($this->options));
+                file_put_contents($this->options_cache_file, json_encode($this->options));
             }
         } else {
             $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
