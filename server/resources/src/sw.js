@@ -70,16 +70,16 @@ self.addEventListener('fetch', function (event) {
   }
 });
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(cacheName).then(cache => {
+    caches.open(cacheName).then((cache) => {
       cache.addAll(urls);
       fetch('resources/dist/manifest.json')
-        .then(response => response.json())
-        .then(manifest => {
+        .then((response) => response.json())
+        .then((manifest) => {
           let scripts_required = ["main.js", "maps.js"];
-          scripts_required.map(script_name => {
+          scripts_required.map((script_name) => {
             console.log(manifest);
             console.log(script_name);
             cache.add("resources/dist/"+manifest[script_name]);
@@ -89,10 +89,10 @@ self.addEventListener('install', event => {
   );
 })
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.map(key => {
+    caches.keys().then((keys) => Promise.all(
+      keys.map((key) => {
         if (!expectedCaches.includes(key)) {
           console.log("Deleting cache "+key);
           return caches.delete(key);

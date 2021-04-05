@@ -1,6 +1,7 @@
 var GAME_LOADING_ERROR_MSG = 'Game loading failed, please retry later.';
 
 async function play(game){
+  console.log("Opening game "+game+"...");
   try {
     await import(`./games/${game}/game.js`)
     .then(({default: Game}) => {

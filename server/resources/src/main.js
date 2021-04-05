@@ -34,10 +34,10 @@ toastr.options = {
 $.fn.loading = function(action="start", options) {
   var opts = $.extend( {}, $.fn.loading.defaults, options );
 
-  if(action == "show") {
+  if(action === "show") {
       this.addClass("loading_blur");
       $( "body" ).append( "<div id='loading_div' class='loading_overlay'><p class=''><b>"+opts.message+"</b></p></div>" );
-  } else if(action == "hide") {
+  } else if(action === "hide") {
       this.removeClass("loading_blur");
       this.addClass("loading_no_blur");
       setTimeout(() => {
@@ -115,7 +115,7 @@ if (getCookie("authenticated")) {
       installServiceWorker = false;
     }
     if ('storage' in navigator && 'estimate' in navigator.storage && !getCookie("forceServiceWorkerInstallation")){
-      navigator.storage.estimate().then(quota => {
+      navigator.storage.estimate().then((quota) => {
         const requiredMemory = 3 * 1e+6;
         if (quota < requiredMemory) {
           console.log("Skipping ServiceWorker installation because memory is low. memory="+quota);
@@ -129,9 +129,9 @@ if (getCookie("authenticated")) {
 }
 if(installServiceWorker){
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(registration => {
+    navigator.serviceWorker.register('sw.js').then((registration) => {
       console.log('SW registered: ', registration);
-    }).catch(registrationError => {
+    }).catch((registrationError) => {
       console.log('SW registration failed: ', registrationError);
     });
   });
@@ -194,7 +194,7 @@ async function loadTable({table_page, set_interval=true, interval=10000, onlineR
     }
   }}).fail(function(data, status) {
     if(status == "parsererror"){
-      if($("#table_body").children().length == 0) { //this is a server-side authentication error on some cheap hosting providers
+      if($("#table_body").children().length === 0) { //this is a server-side authentication error on some cheap hosting providers
         loadTable(table_page, set_interval, interval); //retry
       } // else nothing
     } else {
