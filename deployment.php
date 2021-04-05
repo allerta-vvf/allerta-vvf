@@ -75,7 +75,7 @@ foreach ($remotes as $key => $value) {
 		$config[$key]["before"] = [];
 	} else {
 		$env = isset($config[$key]["sentry_env"]) ? $config[$key]["sentry_env"] : "prod";
-		$config[$key]["before"][] = "local: cd server/resources && npm i && npm run prod -- --env sentry_environment=".$env;
+		$config[$key]["before"][] = "local: cd server/resources && npm i && npm run prod -- --env sentryEnvironment=".$env;
 	}
 	if(isset($value["after"]) && $value["after"] === false){
 		$config[$key]["after"] = [];

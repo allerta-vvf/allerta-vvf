@@ -57,13 +57,6 @@ class StartCommand extends SystemCommand
 
         $chat_id = $message->getChat()->getId();
 
-        $keyboard = new Keyboard(
-            ['7', '8', '9'],
-            ['4', '5', '6'],
-            ['1', '2', '3'],
-            [' ', '0', ' ']
-        );
-
         $text    = 'Hi there!' . PHP_EOL . 'Type /help to see all commands!';
 
         $data = [

@@ -67,8 +67,8 @@
       },
       success: function (data) {
         toastr.success(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        clearInterval(window.loadTable_interval); //stop reloading
-        loadTable({table_page: "list", use_custom_table_engine: "default"});
+        clearInterval(window.loadTableInterval); //stop reloading
+        loadTable({tablePage: "list", useCustomTableEngine: "default"});
       }
     });
   }
@@ -84,8 +84,8 @@
       },
       success: function (data) {
         toastr.success(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        clearInterval(window.loadTable_interval); //stop reloading
-        loadTable({table_page: "list", use_custom_table_engine: "default"});
+        clearInterval(window.loadTableInterval); //stop reloading
+        loadTable({tablePage: "list", useCustomTableEngine: "default"});
       }
     });
   }
@@ -114,7 +114,7 @@
     </tbody>
   </table>
   <script>
-    loadTable({table_page: "list", use_custom_table_engine: "default"});
+    loadTable({tablePage: "list", useCustomTableEngine: "default"});
   </script>
 </div>
 

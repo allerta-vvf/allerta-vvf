@@ -32,7 +32,7 @@ function client_languages()
     } else {
         $client_languages = explode(",", $client_languages);
         $tmp_languages = [];
-        foreach($client_languages as $key=>$language){
+        foreach($client_languages as $language){
             if(strpos($language, ';') == false) {
                 $tmp_languages[$language] = 1;
             } else {
@@ -659,7 +659,7 @@ function run_cli()
             ->setDescription(t("Destination path", false))
             ->setArgumentName('path')
             ->setValidation(
-                'is_writable', function ($operand, $value) {
+                'is_writable', function ($value) {
                     if(file_exists($value)) {
                         printf(t("%s is not writable. Directory permissions: %s"), $value, @fileperms($value));
                         exit(4);

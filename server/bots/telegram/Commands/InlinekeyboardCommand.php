@@ -51,7 +51,7 @@ class InlinekeyboardCommand extends UserCommand
     {
         $chat_id = $this->getMessage()->getChat()->getId();
 
-        $switch_element = mt_rand(0, 9) < 5 ? 'true' : 'false';
+        $switch_element = random_int(0, 9) < 5 ? 'true' : 'false';
 
         $inline_keyboard = new InlineKeyboard(
             [

@@ -217,7 +217,7 @@ $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 function responseApi($content, $status_code=200)
 {
-    global $responseFormat, $responseFormatType;
+    global $responseFormat;
     if($status_code !== 200) {
         http_response_code($status_code);
     }

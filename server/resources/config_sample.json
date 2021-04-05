@@ -1,8 +1,8 @@
 {
-    "sentry_enabled": false,
-    "sentry_dsn": "",
-    "sentry_environment": "prod",
-    "sentry_auth_token": "",
-    "sentry_organization": "",
-    "sentry_project": ""
+    "sentryEnabled": false,
+    "sentryDsn": "",
+    "sentryEnvironment": "prod",
+    "sentryAuthToken": "",
+    "sentryOrganization": "",
+    "sentryProject": ""
 }
