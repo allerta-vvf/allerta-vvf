@@ -92,7 +92,7 @@ class KeyboardCommand extends UserCommand
         );
 
         //Return a random keyboard.
-        //$keyboard = $keyboards[mt_rand(0, count($keyboards) - 1)]
+        //$keyboard = $keyboards[random_int(0, count($keyboards) - 1)]
         $keyboard = $keyboards[4]
             ->setResizeKeyboard(true)
             ->setOneTimeKeyboard(true)
