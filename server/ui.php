@@ -74,9 +74,6 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['owner'] = $database->get_option("owner");
     $data['urlsoftware'] = $database->get_option("web_url");
     $data['user'] = $user->info();
-    $data['enable_technical_support'] = $database->get_option("enable_technical_support");
-    $data['technical_support_key'] = $database->get_option("technical_support_key");
-    $data['technical_support_open'] = isset($_COOKIE["chat"]);
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
     if($database->get_option("use_custom_error_sound")) {
