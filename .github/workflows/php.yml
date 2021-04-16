@@ -12,7 +12,8 @@ on:
 
 jobs:
   tests:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+#TODO: this is only tmp
+    if: "contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     defaults:
       run:
         working-directory: ./server
