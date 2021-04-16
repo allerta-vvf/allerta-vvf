@@ -160,7 +160,7 @@ jobs:
         path: server/resources/dist
 
   staging_deployment:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-deploy]')"
+    if: github.event.ref == 'refs/heads/staging'
 #    needs: tests
     runs-on: ubuntu-latest
     environment: staging
@@ -191,7 +191,7 @@ jobs:
       run: echo I am deploying!
 
   production_deployment:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-deploy]')"
+    if: github.event.ref == 'refs/heads/production'
  #   needs: tests
     runs-on: ubuntu-latest
     environment: production
