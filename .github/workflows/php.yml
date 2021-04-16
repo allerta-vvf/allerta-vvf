@@ -6,11 +6,14 @@ on:
       - master
       - 'releases/**'
       - 'feat_**'
+      - staging
+      - production
   pull_request:
 
 jobs:
   tests:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+#TODO: this is only tmp
+    if: "contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     defaults:
       run:
         working-directory: ./server
@@ -155,3 +158,65 @@ jobs:
       with:
         name: webpack_dist_${{ github.run_id }}
         path: server/resources/dist
+
+  staging_deployment:
+    if: github.event.ref == 'refs/heads/staging'
+#    needs: tests
+    runs-on: ubuntu-latest
+    environment: staging
+    name: Deploy to staging
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
+        coverage: xdebug, pcov
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: Setup deployer
+      run: |
+        wget -O /usr/local/deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
+        php /usr/local/deployment.phar
+
+    - name: Deploy
+      run: echo I am deploying!
+
+  production_deployment:
+    if: github.event.ref == 'refs/heads/production'
+ #   needs: tests
+    runs-on: ubuntu-latest
+    environment: production
+    name: Deploy to production
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
+        coverage: xdebug, pcov
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: Setup deployer
+      run: |
+        wget -O /usr/local/deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
+        php /usr/local/deployment.phar
+
+    - name: Deploy
+      run: echo I am deploying!
