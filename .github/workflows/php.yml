@@ -160,7 +160,7 @@ jobs:
 
   staging_deployment:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-deploy]')"
-    needs: tests
+#    needs: tests
     runs-on: ubuntu-latest
     environment: staging
     name: Deploy to staging
@@ -191,7 +191,7 @@ jobs:
 
   production_deployment:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-deploy]')"
-    needs: tests
+ #   needs: tests
     runs-on: ubuntu-latest
     environment: production
     name: Deploy to production
