@@ -164,8 +164,6 @@ jobs:
 #    needs: tests
     runs-on: ubuntu-latest
     environment: staging
-    env: # Or as an environment variable
-      deploy_url: ${{ secrets.DEPLOY_URL_TMP }}
     name: Deploy to staging
     steps:
     - name: Checkout
@@ -184,22 +182,13 @@ jobs:
       with:
         node-version: '12'
 
-    - name: Setup deployer
+    - name: Deploy
       run: |
         ls
         sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
-        echo "<?php $remotes = [ 'staging' => [ 'remote' => '${{ secrets.DEPLOY_URL_TMP }}', 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
+        echo "<?php $remotes = [ 'staging' => [ 'remote' => '${{ secrets.DEPLOY_URL }}', 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
         cat deployment_remotes.php
-        echo ${{ secrets.DEPLOY_URL_TMP }} | base64 -d > test
-        cat test
- #       php deployment.phar deployment.php --section staging
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        name: Test deplyment file
-        path: deployment_remotes.php
-    - name: Deploy
-      run: echo I am deploying!
+        php deployment.phar deployment.php --section staging
 
   production_deployment:
     if: github.event.ref == 'refs/heads/production'
