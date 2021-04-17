@@ -164,6 +164,8 @@ jobs:
 #    needs: tests
     runs-on: ubuntu-latest
     environment: staging
+    env: # Or as an environment variable
+      deploy_url: ${{ secrets.DEPLOY_URL_TMP }}
     name: Deploy to staging
     steps:
     - name: Checkout
@@ -184,9 +186,10 @@ jobs:
 
     - name: Setup deployer
       run: |
-        wget -O /usr/local/deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
-        php /usr/local/deployment.phar
-
+        sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
+        php deployment.phar
+        echo "<?php $remotes = [ 'staging' => [ 'remote' => $DEPLOY_URL, 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
+        cat deployment_remotes.php
     - name: Deploy
       run: echo I am deploying!
 
