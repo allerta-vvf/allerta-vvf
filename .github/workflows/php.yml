@@ -186,10 +186,16 @@ jobs:
 
     - name: Setup deployer
       run: |
+        ls
         sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
         echo "<?php $remotes = [ 'staging' => [ 'remote' => $DEPLOY_URL, 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
         cat deployment_remotes.php
-        php deployment.phar deployment.php --section staging
+ #       php deployment.phar deployment.php --section staging
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: Test deplyment file
+        path: deployment_remotes.php
     - name: Deploy
       run: echo I am deploying!
 
