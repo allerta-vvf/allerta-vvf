@@ -189,6 +189,7 @@ jobs:
         echo "<?php $remotes = [ 'staging' => [ 'remote' => '${{ secrets.DEPLOY_URL }}', 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
         cat deployment_remotes.php
         php deployment.phar deployment.php --section staging
+        php -r 'require("deployment_remotes.php");'
 
   production_deployment:
     if: github.event.ref == 'refs/heads/production'
