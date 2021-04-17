@@ -188,8 +188,10 @@ jobs:
       run: |
         ls
         sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
-        echo "<?php $remotes = [ 'staging' => [ 'remote' => $DEPLOY_URL, 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
+        echo "<?php $remotes = [ 'staging' => [ 'remote' => '${{ secrets.DEPLOY_URL_TMP }}', 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
         cat deployment_remotes.php
+        echo ${{ secrets.DEPLOY_URL_TMP }} | base64 -d > test
+        cat test
  #       php deployment.phar deployment.php --section staging
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.3
