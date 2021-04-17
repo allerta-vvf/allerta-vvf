@@ -187,9 +187,9 @@ jobs:
     - name: Setup deployer
       run: |
         sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
-        php deployment.phar
         echo "<?php $remotes = [ 'staging' => [ 'remote' => $DEPLOY_URL, 'sentry_env' => 'staging' ] ]; ?>" > deployment_remotes.php
         cat deployment_remotes.php
+        php deployment.phar deployment.php --section staging
     - name: Deploy
       run: echo I am deploying!
 
