@@ -192,6 +192,12 @@ jobs:
         php deployment.phar deployment.php --section staging
         php -r 'require("deployment_remotes.php");'
 
+    - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: php_log_${{ github.run_id }}
+        path: /tmp/php.log
+
   production_deployment:
     if: github.event.ref == 'refs/heads/production'
  #   needs: tests
