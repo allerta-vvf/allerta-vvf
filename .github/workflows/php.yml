@@ -227,10 +227,24 @@ jobs:
       with:
         node-version: '12'
 
-    - name: Setup deployer
-      run: |
-        wget -O /usr/local/deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
-        php /usr/local/deployment.phar
-
     - name: Deploy
-      run: echo I am deploying!
+      run: |
+        ls
+        sudo wget -O deployment.phar https://github.com/dg/ftp-deployment/releases/download/v3.4.0/deployment.phar
+        echo '<?php $remotes = [ "production" => [ "remote" => "${{ secrets.DEPLOY_URL }}", "sentry_env" => "prod" ] ]; ?>' > deployment_remotes.php
+        cat deployment_remotes.php
+        ls
+        php deployment.phar deployment.php --section production
+        php -r 'require("deployment_remotes.php");'
+
+    - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: deploy_php_log_${{ github.run_id }}
+        path: /tmp/php.log
+
+    - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: deploy_log_${{ github.run_id }}
+        path: deployment.log
