@@ -11,6 +11,8 @@ $baseConfig = [
 		resources/src
         resources/node_modules
         resources/webpack*
+		resources/images/logo.png
+		resources/images/owner.png
 		cypress
         debug_storage/exception*
         debug_storage/*.log
