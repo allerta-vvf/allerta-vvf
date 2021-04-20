@@ -12,8 +12,7 @@ on:
 
 jobs:
   tests:
-#TODO: this is only tmp
-    if: "contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     defaults:
       run:
         working-directory: ./server
@@ -161,7 +160,7 @@ jobs:
 
   staging_deployment:
     if: github.event.ref == 'refs/heads/staging'
-#    needs: tests
+    needs: tests
     runs-on: ubuntu-latest
     environment: staging
     name: Deploy to staging
@@ -206,7 +205,7 @@ jobs:
 
   production_deployment:
     if: github.event.ref == 'refs/heads/production'
- #   needs: tests
+    needs: tests
     runs-on: ubuntu-latest
     environment: production
     name: Deploy to production
