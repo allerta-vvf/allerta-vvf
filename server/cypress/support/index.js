@@ -1,5 +1,5 @@
 Cypress.on('uncaught:exception', (err, runnable) => {
-    // for some reasons, the test fails without this in cartain conditions...
+    // for some reasons, the test fails without this in certain conditions...
     return false
 })
 
