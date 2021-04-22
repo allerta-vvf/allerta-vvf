@@ -35,7 +35,7 @@ function setMarker (LatLng) {
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
 }
 
-function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
+export function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
   if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
@@ -69,33 +69,35 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
 
     const lc = new L.Control.CustomLocate({
     	icon: "fa fa-map-marker",
-    	cacheLocation: false // disabled for privacy reasons
+    	cacheLocation: false, // disabled for privacy reasons
+      initialZoomLevel: 16
     }).addTo(map);
 
 	  if ($("#addr").val() !== undefined) {
 	    document.getElementById("addr").addEventListener("keydown", function (event) {
     	  if (event.key === "Enter") {
     		  event.preventDefault();
-          document.querySelector("#search > button").click();
+          $("#search > button").trigger("click");
         }
       });
     }
-
-    if (getCookie("experimental_read_clipboard")) {
-	    window.addEventListener("focus", function (event) {
-	    	if ($("#addr").val() === "") {
-	    		console.log("Loading location from clipboard");
-    			navigator.clipboard.readText().then((text) => {
-	    			$("#addr").val(text);
-	    			if (!addrSearch()) {
-	    				$("#addr").val("");
-	    			}
- 	    		}).catch((err) => {
-    				console.error("Failed to read clipboard contents: ", err);
+	  window.addEventListener("focus", function (event) {
+	    if ($("#addr").val() === "") {
+	    	console.log("Loading location from clipboard");
+        try {
+          navigator.clipboard.readText().then((text) => {
+            $("#addr").val(text);
+            if (!addrSearch()) {
+              $("#addr").val("");
+            }
+          }).catch((err) => {
+            console.error("Failed to read clipboard contents: ", err);
           });
-	    	}
-	    });
-    }
+        } catch(error) {
+          console.error(error);
+        }
+	    }
+	  });
   } else {
     setMarker(latLng);
   }
@@ -103,7 +105,7 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
 }
 
 // from unknown source in the Internet
-function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osmType = undefined) {
+export function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osmType = undefined) {
   addrLat = addrLat.replace(",", ".");
   addrLng = addrLng.replace(",", ".");
   if (lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osmType !== undefined) {
@@ -117,7 +119,7 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
     }
     if (osmType === "node") {
       map.fitBounds(bounds);
-      map.setZoom(18);
+      map.setZoom(16);
     } else {
       const loc3 = new L.LatLng(lat1, lng2);
       const loc4 = new L.LatLng(lat2, lng1);
@@ -137,7 +139,7 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
 }
 
 // started from https://derickrethans.nl/leaflet-and-nominatim.html
-function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
+export function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
       $("<p>", { html: stringResultsNotFound }).appendTo("#results");
@@ -187,7 +189,7 @@ function addrSearch (stringResultsFound= undefined, stringResultsNotFound = unde
       const items = [];
 
       $.each(data, function (key, val) {
-        items.push("<li><a href='' onclick='chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
+        items.push("<li><a href='' onclick='allertaJS.chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
       });
 
       if (items.length !== 0) {
@@ -205,6 +207,3 @@ function addrSearch (stringResultsFound= undefined, stringResultsNotFound = unde
   }
 }
 
-window.loadMap = loadMap;
-window.addrSearch = addrSearch;
-window.chooseAddr = chooseAddr;

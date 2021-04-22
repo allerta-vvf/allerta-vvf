@@ -21,5 +21,12 @@ async function play (game) {
   }
 }
 
-window.play = play;
-window.GAME_LOADING_ERROR_MSG = GAME_LOADING_ERROR_MSG;
+$(function() {
+  $(".playGame").each((num, elem) => {
+    console.log(num, elem);
+    let game = elem.getAttribute("data-game");
+    if(game !== null){
+      $(elem).on("click", function(){ play(game); });
+    }
+  });
+});
