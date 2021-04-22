@@ -8,12 +8,12 @@ Cypress.Commands.add("login", (username="admin", password="correcthorsebatteryst
     cy.setCookie("forceLanguage", "en");
     cy.setCookie('disableServiceWorkerInstallation', '1');
 
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_add_type.php').as('ajax_add_type');
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_change_availability.php').as('ajax_change_availability');
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_list.php').as('ajax_list');
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_log.php').as('ajax_log');
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_services.php').as('ajax_services');
-    cy.intercept(Cypress.config('baseUrl')+'resources/ajax/ajax_trainings.php').as('ajax_trainings');
+    cy.intercept('/resources/ajax/ajax_add_type.php').as('ajax_add_type');
+    cy.intercept('/resources/ajax/ajax_change_availability.php').as('ajax_change_availability');
+    cy.intercept('/resources/ajax/ajax_list.php').as('ajax_list');
+    cy.intercept('/resources/ajax/ajax_log.php').as('ajax_log');
+    cy.intercept('/resources/ajax/ajax_services.php').as('ajax_services');
+    cy.intercept('/resources/ajax/ajax_trainings.php').as('ajax_trainings');
 
     cy.visit("/");
     cy.get("input[name='name']")
