@@ -63,7 +63,7 @@
     <a {# href="{{ urlsoftware }}graphics.php" #}>{{ 'Graphics'|t }}</a>
     <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b
         onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
-    <a href="" class="icon" id="menuButton">☰</a>
+    <a class="pjax_disable icon" id="menuButton">☰</a>
   </div>
   <!-- /Menu -->
   {% endblock %}
