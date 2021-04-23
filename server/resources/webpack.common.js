@@ -19,7 +19,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     publicPath: "resources/dist/",
     chunkFilename: "[name].bundle.js?h=[chunkhash]",
-    library: "allertaJS"
+    library: ["allertaJS", "[name]"]
   },
   resolve: {
     alias: {

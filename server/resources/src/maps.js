@@ -189,7 +189,7 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
       const items = [];
 
       $.each(data, function (key, val) {
-        items.push("<li><a href='' onclick='allertaJS.chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
+        items.push("<li><a href='' onclick='allertaJS.maps.chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
       });
 
       if (items.length !== 0) {

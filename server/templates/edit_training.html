@@ -67,12 +67,12 @@
       <div id="map"></div>
       <div id="search">
         <input type="text" name="addr" value="" id="addr" size="10" />
-        <button type="button" onclick="allertaJS.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
+        <button type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
           class="btn btn-primary">{{ 'Search'|t }}</button>
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.loadMap();"></script>
+      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
       {% else %}
       <label><b>{{ 'Training place'|t }}</b></label>
       <input type="text" name="place" required value="{{ values.place }}">

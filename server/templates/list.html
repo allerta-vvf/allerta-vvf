@@ -67,7 +67,7 @@
       },
       success: function (data) {
         toastr.success(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        allertaJS.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+        allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
       }
     });
   }
@@ -83,7 +83,7 @@
       },
       success: function (data) {
         toastr.success(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        allertaJS.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+        allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
       }
     });
   }
@@ -112,7 +112,7 @@
     </tbody>
   </table>
   <script>
-    allertaJS.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
   </script>
 </div>
 
