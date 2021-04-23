@@ -18,7 +18,8 @@ module.exports = {
     },
     path: path.resolve(__dirname, "dist"),
     publicPath: "resources/dist/",
-    chunkFilename: "[name].bundle.js?h=[chunkhash]"
+    chunkFilename: "[name].bundle.js?h=[chunkhash]",
+    library: ["allertaJS", "[name]"]
   },
   resolve: {
     alias: {
@@ -29,19 +30,19 @@ module.exports = {
   module: {
     rules: [
       {
+        test: require.resolve("jquery"),
+        loader: "expose-loader",
+        options: {
+          exposes: ["$", "jQuery"],
+        },
+      },
+      {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },
       {
         test: /\.s(a|c)ss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
-      },
-      {
-        test: require.resolve("jquery"),
-        loader: "expose-loader",
-        options: {
-          exposes: ["$", "jQuery"],
-        },
       },
       {
         test: /\.(gif|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,

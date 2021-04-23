@@ -12,7 +12,7 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
           mapDiv.className = "map";
           mapDiv.id = "map-" + rowNum;
           const mapScript = document.createElement("script");
-          mapScript.appendChild(document.createTextNode("loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
+          mapScript.appendChild(document.createTextNode("allertaJS.maps.loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
           mapDiv.appendChild(mapScript);
           const cell = document.createElement("td");
           cell.appendChild(mapDiv);

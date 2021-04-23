@@ -201,7 +201,7 @@ function init_modal() {
 
     $("#submit_schedules_change")
         .unbind()
-        .click(submit_changes);
+        .on("click", submit_changes);
 }
 
 function extractSelections(){

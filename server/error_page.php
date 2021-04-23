@@ -62,8 +62,8 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
 <div class="games_list" style="margin-left: 20px; text-align: left;">
   While you are waiting, you can play some games:
     <ul>
-      <li hidden><a href="javascript:play('pong')">Pong</a></li>
-      <li><a href="javascript:play('ld46')">What the firetruck</a></li>
+      <li hidden><a data-game="pong" class="playGame">Pong</a></li>
+      <li><a data-game="ld46" class="playGame">What the firetruck</a></li>
     </ul>
 </div>
 <div class="credits" style="position:absolute;opacity: 0.5;bottom: 5px;right: 5px;">
@@ -71,7 +71,6 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
 </div>
 <script src="<?php echo($main_script_url); ?>"></script>
 <script src="<?php echo($game_script_url); ?>"></script>
-<script>GAME_LOADING_ERROR_MSG="Game loading failed, please retry later.";</script>
 <?php
 }
 

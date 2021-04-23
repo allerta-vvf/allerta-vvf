@@ -1,5 +1,3 @@
-jQuery = $;
-window.$ = window.jQuery = $;
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./main.css";
@@ -10,7 +8,7 @@ import "../node_modules/bootstrap-toggle/js/bootstrap-toggle.js";
 import "../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css";
 import "time-input-polyfill/auto";
 import "jquery-pjax";
-import toastr from "toastr";
+import toastr from "expose-loader?exposes=toastr!toastr";
 import "toastr/build/toastr.css";
 
 window.toastr = toastr;
@@ -65,9 +63,9 @@ $(document).on("pjax:start", function () {
   oldData = "null";
   fillTable = undefined;
   tableEngine = "datatables";
-  if (window.loadTableInterval !== undefined) {
-    clearInterval(window.loadTableInterval);
-    window.loadTableInterval = undefined;
+  if (loadTableInterval !== undefined) {
+    clearInterval(loadTableInterval);
+    loadTableInterval = undefined;
   }
 });
 
@@ -138,26 +136,44 @@ if (installServiceWorker) {
   });
 }
 
-$(document).ready(function () {
+$(function () {
   if ($("#frontend_version") !== undefined) {
     $("#frontend_version").append(process.env.GIT_VERSION + " aggiornamento " + new Date(process.env.BUNDLE_DATE).toLocaleString());
   }
 });
 
-const offline = false;
-const loadTableInterval = undefined;
+var offline = false;
+var loadTableInterval = undefined;
 var oldData = "null";
 var tableEngine = "datatables";
 var fillTable = undefined;
+var fillTableLoaded = undefined;
 
-async function loadTable ({ tablePage, setTableRefreshInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
+window.addEventListener("securitypolicyviolation", console.error.bind(console));
+
+$(function() {
+  $("#menuButton").on("click", function() {
+    const topNavBar = document.getElementById("topNavBar");
+    if (topNavBar.className === "topnav") {
+      topNavBar.className += " responsive";
+    } else {
+      topNavBar.className = "topnav";
+    }
+  });
+});
+
+export async function loadTable ({ tablePage, setTableRefreshInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
+  if(loadTableInterval !== undefined) {
+    clearInterval(loadTableInterval);
+    loadTableInterval = undefined;
+  }
   if (typeof fillTable === "undefined") {
     if (useCustomTableEngine !== false) {
       tableEngine = useCustomTableEngine;
     } else if ("connection" in navigator && navigator.connection.saveData) {
       tableEngine = "default";
     }
-    fillTable = await import(`./table_engine_${tableEngine}.js`)
+    fillTableLoaded = await import(`./table_engine_${tableEngine}.js`)
       .then(({ default: _ }) => {
         return _;
       });
@@ -180,20 +196,20 @@ async function loadTable ({ tablePage, setTableRefreshInterval = true, interval 
       oldData = xhr.getResponseHeader("data"); // TODO: refactoring and adding comments
       console.log(data);
       if (data.length > 0) {
-        fillTable({ data, replaceLatLngWithMap, callback });
+        fillTableLoaded({ data, replaceLatLngWithMap, callback });
         const headers = new Headers();
         headers.append("date", Date.now());
         caches.open("tables-1").then((cache) => {
           cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
         });
       }
-      if (window.offline) { // if xhr request successful, client is online
+      if (offline) { // if xhr request successful, client is online
         console.log(onlineReload);
         if (onlineReload) {
           location.reload(); // for offline page
         } else {
           $("#offline_alert").hide(400);
-          window.offline = false;
+          offline = false;
         }
       }
     }
@@ -206,15 +222,15 @@ async function loadTable ({ tablePage, setTableRefreshInterval = true, interval 
       caches.open("tables-1").then((cache) => {
         cache.match("/table_" + tablePage + ".json").then((response) => {
           response.json().then((data) => {
-            fillTable({ data, replaceLatLngWithMap, callback });
+            fillTableLoaded({ data, replaceLatLngWithMap, callback });
             console.log("Table loaded from cache");
             $("#offline_update").text(new Date(parseInt(response.headers.get("date"), 10)).toLocaleString());
           });
         });
       });
-      if (!window.offline) { // if xhr request fails, client is offline
+      if (!offline) { // if xhr request fails, client is offline
         $("#offline_alert").show(400);
-        window.offline = true;
+        offline = true;
       }
     }
   });
@@ -223,31 +239,8 @@ async function loadTable ({ tablePage, setTableRefreshInterval = true, interval 
       interval += 5000;
     }
     console.log("table_load interval " + interval);
-    window.loadTableInterval = setInterval(function () {
-      window.loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
+    loadTableInterval = setInterval(function () {
+      loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
     }, interval);
   }
 }
-
-function chat () {
-  setCookie("chat", "true", 1);
-  location.reload();
-}
-
-window.addEventListener("securitypolicyviolation", console.error.bind(console));
-
-function menu () {
-  const topNavBar = document.getElementById("topNavBar");
-  if (topNavBar.className === "topnav") {
-    topNavBar.className += " responsive";
-  } else {
-    topNavBar.className = "topnav";
-  }
-}
-
-window.loadTableInterval = loadTableInterval;
-window.loadTable = loadTable;
-window.setCookie = setCookie;
-window.getCookie = getCookie;
-window.chat = chat;
-window.menu = menu;
