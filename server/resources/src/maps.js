@@ -36,12 +36,19 @@ function setMarker (LatLng) {
 }
 
 export function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
+  console.log("Loading map...", [lat, lng, selectorId, select]);
+  console.trace();
   if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
   }
   if (selectorId === undefined) {
     selectorId = "map";
+  }
+  let container = L.DomUtil.get(selectorId);
+  if(container._leaflet_id){
+    console.log("Skipping map loading because already loaded...");
+    return true;
   }
   const zoom = select ? 10 : 17;
   const latLng = new L.LatLng(lat, lng);

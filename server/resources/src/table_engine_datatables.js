@@ -27,6 +27,7 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
           mapDiv.className = "map";
           mapDiv.id = "map-" + rowNum;
           const mapScript = document.createElement("script");
+          console.log("Load map", [lat, lng, mapDiv.id]);
           mapScript.appendChild(document.createTextNode("allertaJS.maps.loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
           mapDiv.appendChild(mapScript);
           const cell = document.createElement("td");
@@ -58,6 +59,13 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
   if (!$.fn.DataTable.isDataTable("#table")) {
     var tableDt = $("#table").DataTable({
       responsive: true,
+      responsive: {
+        details: {
+            display: $.fn.dataTable.Responsive.display.childRowImmediate,
+            type: 'none',
+            target: ''
+        }
+      },
       language: loadedLanguage,
       buttons: ["excel", "pdf", "csv"]
     });
