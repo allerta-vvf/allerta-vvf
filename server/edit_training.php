@@ -7,7 +7,8 @@ if($tools->validate_form("mod", "add")) {
     if($tools->validate_form(['date', 'name', 'start_time', 'end_time', 'place', 'notes', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding training");
-            $crud->add_training($_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
+            $place = $tools->checkPlaceParam($_POST["place"]);
+            $crud->add_training($_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $place, $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
             $tools->redirect("trainings.php");
         } else {
             debug(); //TODO: remove debug info
@@ -20,7 +21,8 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump($_POST);
             bdump("editing training");
-            $crud->edit_training($_POST["id"], $_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
+            $place = $tools->checkPlaceParam($_POST["place"]);
+            $crud->edit_training($_POST["id"], $_POST["date"], $_POST["name"], $_POST["start_time"], $_POST["end_time"], $_POST["chief"][0], $tools->extract_unique($_POST["crew"]), $place, $_POST["notes"], $tools->extract_unique([$_POST["chief"],$_POST["crew"]]), $user->name());
             $tools->redirect("trainings.php");
         } else {
             debug();
