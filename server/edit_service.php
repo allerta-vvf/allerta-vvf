@@ -7,7 +7,8 @@ if($tools->validate_form("mod", "add")) {
     if($tools->validate_form(['date', 'code', 'beginning', 'end', 'place', 'notes', 'type', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("adding service");
-            $crud->add_service($_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
+            $place = $tools->checkPlaceParam($_POST["place"]);
+            $crud->add_service($_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $place, $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
             debug(); //TODO: remove debug info
@@ -20,7 +21,8 @@ if($tools->validate_form("mod", "add")) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump($_POST);
             bdump("editing service");
-            $crud->edit_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $_POST["place"], $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
+            $place = $tools->checkPlaceParam($_POST["place"]);
+            $crud->edit_service($_POST["id"], $_POST["date"], $_POST["code"], $_POST["beginning"], $_POST["end"], $_POST["chief"][0], $tools->extract_unique($_POST["drivers"]), $tools->extract_unique($_POST["crew"]), $place, $_POST["notes"], $_POST["type"], $tools->extract_unique([$_POST["chief"],$_POST["drivers"],$_POST["crew"]]), $user->name());
             $tools->redirect("services.php");
         } else {
             debug();
@@ -30,10 +32,10 @@ if($tools->validate_form("mod", "add")) {
     }
 } elseif($tools->validate_form("mod", "delete")) {
     bdump("removing service");
-    if($tools->validate_form(['id', 'increment', 'token'])) {
+    if($tools->validate_form(['id', 'token'])) {
         if($_POST["token"] == $_SESSION['token']) {
             bdump("removing service");
-            $crud->remove_service($_POST["id"], $_POST["increment"]);
+            $crud->remove_service($_POST["id"]);
             $tools->redirect("services.php");
         } else {
             echo("1");
@@ -62,11 +64,6 @@ if($tools->validate_form("mod", "add")) {
     } else {
         $values = [];
     }
-    if(isset($_GET["increment"])) {
-        $increment = $_GET["increment"];
-    } else {
-        $increment = "";
-    }
     if($modalità=="edit" || $modalità=="delete") {
         if(empty($id)) {
             echo("<pre>"); var_dump($_POST); echo("</pre>");
@@ -74,7 +71,7 @@ if($tools->validate_form("mod", "add")) {
             echo("<pre>"); var_dump($_POST); echo("</pre>");
         }
     }
-    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew, 'types' => $types], 'values' => $values, 'increment' => $increment, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service", false))]);
+    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew, 'types' => $types], 'values' => $values, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service", false))]);
     bdump($_SESSION['token'], "token");
 }
 ?>

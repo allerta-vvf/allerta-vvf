@@ -35,7 +35,11 @@ function setMarker (LatLng) {
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
 }
 
-export function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
+var mapsList = [];
+
+export function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true, removeMap = false) {
+  console.log("Loading map...", [lat, lng, selectorId, select]);
+  console.trace();
   if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
@@ -43,12 +47,27 @@ export function loadMap (lat = undefined, lng = undefined, selectorId = undefine
   if (selectorId === undefined) {
     selectorId = "map";
   }
+  let container = L.DomUtil.get(selectorId);
+  if(container._leaflet_id){
+    console.log(mapsList);
+    if(removeMap){
+      mapsList[0].off();
+      mapsList[0].remove();
+      mapsList.splice(0, 1);
+    } else {
+      console.log("Skipping map loading because already loaded...");
+      return true;
+    }
+  }
   const zoom = select ? 10 : 17;
   const latLng = new L.LatLng(lat, lng);
+  L.Map.addInitHook(function () {
+    mapsList.push(this); // Use whatever global scope variable you like.
+  });
   map = new L.Map(selectorId, { zoomControl: true });
 
   const osmUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  const osmAttribution = "Map data &copy; 2012 <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors";
+  const osmAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const osm = new L.TileLayer(osmUrl, { maxZoom: 20, attribution: osmAttribution });
 
   map.setView(latLng, zoom).addLayer(osm);
@@ -142,6 +161,7 @@ export function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined
 export function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
+      $("#results").empty();
       $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       console.error(error);
     }
@@ -193,12 +213,14 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
       });
 
       if (items.length !== 0) {
+        $("#results").empty();
         $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
         $("<ul/>", {
           class: "results-list",
           html: items.join("")
         }).appendTo("#results");
       } else {
+        $("#results").empty();
         $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       }
     });
@@ -206,4 +228,3 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
     return false;
   }
 }
-

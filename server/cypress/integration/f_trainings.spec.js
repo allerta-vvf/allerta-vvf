@@ -42,7 +42,6 @@ describe("Training management", () => {
     it('Edit Training', function() {
         cy.visit("/trainings.php");
         cy.wait('@ajax_trainings');
-        cy.get('#row-0 > .dtr-control').click();
         cy.get('.dtr-details a[data-action="edit"]').click();
         cy.get('#name').clear();
         cy.get('#name').type('Training 1 test');
@@ -68,7 +67,6 @@ describe("Training management", () => {
     it('Delete Training', function() {
         cy.visit("/trainings.php");
         cy.wait('@ajax_trainings');
-        cy.get('#row-0 > .dtr-control').click();
         cy.get('.dtr-details a[data-action="delete"]').click();
         cy.get('#remove').click();
         cy.wait('@ajax_trainings');
