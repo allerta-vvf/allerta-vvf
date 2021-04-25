@@ -34,7 +34,8 @@
       <label><b>{{ 'Chief'|t }}</b></label>
       <br>
       {% for user in training.crew %}
-      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+      {% if not user.hidden %}
+      <div class="form-check">
         <input aria-label="{{ username(user.id) }}" class="form-check-input chief chief-{{ user.id }}"
           style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
           value='{{ user.id }}'>
@@ -42,6 +43,7 @@
           {{ username(user.id) }}
         </label>
       </div>
+      {% endif %}
       {% endfor %}
       <script>
         $('.chief').on('change', function () {
@@ -52,7 +54,8 @@
       <label><b>{{ 'Crew'|t }}</b></label>
       <br>
       {% for user in training.crew %}
-      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
+      {% if not user.hidden %}
+      <div class="form-check">
         <input aria-label="{{ username(user.id) }}" class="form-check-input crew crew-{{ user.id }}"
           style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
           value='{{ user.id }}'>
@@ -60,6 +63,7 @@
           {{ username(user.id) }}
         </label>
       </div>
+      {% endif %}
       {% endfor %}
       <br>
       {% if option('use_location_picker') %}
@@ -108,7 +112,6 @@
       <input id="modalità" type="hidden" value="delete" name="mod"></input>
       <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
       <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
-      <input id="increment" type="hidden" value="{{ increment }}" name="increment"></input>
       <button id="remove" type="submit">{{ 'Submit'|t }}</button>
     </form>
     <script>
