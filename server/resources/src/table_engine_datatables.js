@@ -21,15 +21,71 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
     $.each(item, function (cellNum, i) {
       if (i !== null) {
         if (replaceLatLngWithMap && i.match(/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/gm)) { /* credits to @visoom https://github.com/visoom */
-          const lat = i.split(";")[0];
-          const lng = i.split(";")[1];
+          let lat = i.split(";")[0];
+          let lng = i.split(";")[1];
+          let mapImageID = undefined;
+          if(lng.includes("#")){
+            lng = lng.split("#")[0];
+            mapImageID = i.split("#")[1];
+          }
           const mapDiv = document.createElement("div");
-          mapDiv.className = "map";
           mapDiv.id = "map-" + rowNum;
-          const mapScript = document.createElement("script");
-          console.log("Load map", [lat, lng, mapDiv.id]);
-          mapScript.appendChild(document.createTextNode("allertaJS.maps.loadMap(" + lat + ", " + lng + ", \"map-" + rowNum + "\", false)"));
-          mapDiv.appendChild(mapScript);
+          const mapModal = document.createElement("div");
+          mapModal.id = "map-modal-" + rowNum;
+          mapModal.classList.add("modal");
+          mapModal.classList.add("map-modal");
+          mapModal.setAttribute("role", "dialog");
+          mapModal.setAttribute("tabindex", "-1");
+          mapModal.innerHTML = `<div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Map</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="map-modal-${rowNum}-body">
+                <div id="map-container-${rowNum}" class="map"></div><br>
+                <p>Lat: <b id="map-${rowNum}-lat">${lat}</b></p>
+                <p>Lng: <b id="map-${rowNum}-lng">${lng}</b></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>`;
+          document.body.appendChild(mapModal);
+
+          if(mapImageID !== undefined){
+            const mapPreview = document.createElement("figure");
+
+            const mapPreviewImage = document.createElement("img");
+            console.log("Adding map image", [lat, lng, mapImageID, mapDiv.id]);
+            mapPreviewImage.src = "resources/images/map_cache/" + mapImageID + ".png";
+            mapPreview.appendChild(mapPreviewImage);
+
+            const mapPreviewCaption = document.createElement("figcaption");
+
+            const mapPreviewModalOpener = document.createElement("a");
+            mapPreviewCaption.style.cursor = "pointer";
+            mapPreviewModalOpener.id = "map-opener-" + rowNum;
+            mapPreviewModalOpener.classList.add("map-opener");
+            mapPreviewModalOpener.classList.add("pjax_disable");
+            mapPreviewModalOpener.innerText = "Premi qui per aprire la mappa interattiva";
+            mapPreviewCaption.appendChild(mapPreviewModalOpener);
+
+            mapPreview.appendChild(mapPreviewCaption);
+
+            mapDiv.appendChild(mapPreview);
+          } else {
+            const mapModalOpener = document.createElement("a");
+            mapModalOpener.id = "map-opener-" + rowNum;
+            mapModalOpener.href = "#";
+            mapModalOpener.classList.add("map-opener");
+            mapModalOpener.classList.add("pjax_disable");
+            mapModalOpener.innerText = "Premi qui per aprire la mappa interattiva";
+            mapDiv.appendChild(mapModalOpener);
+          }
           const cell = document.createElement("td");
           cell.appendChild(mapDiv);
           row.appendChild(cell);
@@ -80,3 +136,26 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
   }
   window.tableDt = tableDt;
 }
+
+$(function() {
+  document.querySelector("tbody").addEventListener('click', function(e) {
+    if(e.target.classList.contains("map-opener")) {
+      console.log(e);
+      let id = e.target.id.replace("map-opener-", "");
+      console.log(id);
+      $("#map-modal-"+id).modal('show');
+    }
+  });
+  $('body').on('shown.bs.modal', function (e) {
+    console.log(e);
+    if(e.target.classList.contains("map-modal")) {
+      let id = e.target.id.replace("map-modal-", "");
+      console.log(id);
+      let lat = $("#map-"+id+"-lat").text();
+      let lng = $("#map-"+id+"-lng").text();
+      console.log(lat);
+      console.log(lng);
+      allertaJS.maps.loadMap(lat, lng, "map-container-"+id, false, true);
+    }
+  });
+});

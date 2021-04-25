@@ -1,6 +1,8 @@
 <?php
 require_once 'vendor/autoload.php';
 use DebugBar\StandardDebugBar;
+use MinistryOfWeb\OsmTiles\Converter;
+use MinistryOfWeb\OsmTiles\LatLng;
 
 if(!file_exists("config.php") && !file_exists("../../config.php")) {
     header('Location: install/install.php');
@@ -198,6 +200,47 @@ class tools
         } else {
           print("{}");
         }
+    }
+
+    public function convertMapAddress($lat, $lng, $zoom){
+        $converter = new Converter();
+        $point     = new LatLng($lat, $lng);
+
+        $tile = $converter->toTile($point, $zoom);
+
+        $tile_servers = ["a", "b", "c"];
+        $tileServer = $tile_servers[array_rand($tile_servers)];
+
+        return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
+    }
+
+    public function cachePreviewMap($filename, $lat, $lng, $zoom=16){
+        $url = $this->convertMapAddress($lat, $lng, $zoom);
+        $options = ['http' => [
+            'user_agent' => 'AllertaVVF dev version (cached map previews generator)'
+        ]];
+        $context = stream_context_create($options);
+        $data = file_get_contents($url, false, $context);
+
+        try {
+            if (!file_exists('resources/images/map_cache')) {
+                mkdir('resources/images/map_cache', 0755, true);
+            }
+            return file_put_contents("resources/images/map_cache/".$filename.".png", $data);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function checkPlaceParam($place){
+        if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
+            $lat = explode(";", $place)[0];
+            $lng = explode(";", $place)[1];
+            $mapImageID = \Delight\Auth\Auth::createUuid();
+            $this->cachePreviewMap($mapImageID, $lat, $lng);
+            $place = $place . "#" . $mapImageID;
+        }
+        return $place;
     }
 }
 
