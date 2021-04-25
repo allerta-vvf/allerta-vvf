@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d71119a494bb5ab89a682d0b2aba49eb",
+    "content-hash": "990b7f16635b967bd1cafc536774530d",
     "packages": [
         {
             "name": "brick/phonenumber",
@@ -824,6 +824,59 @@
                 "source": "https://github.com/maximebf/php-debugbar/tree/v1.16.5"
             },
             "time": "2020-12-07T11:07:24+00:00"
+        },
+        {
+            "name": "ministryofweb/php-osm-tiles",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ministryofweb/php-osm-tiles.git",
+                "reference": "e0fc28ffbe5afc75f2ae40a834a1792cf3d725bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ministryofweb/php-osm-tiles/zipball/e0fc28ffbe5afc75f2ae40a834a1792cf3d725bf",
+                "reference": "e0fc28ffbe5afc75f2ae40a834a1792cf3d725bf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.13",
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "jakub-onderka/php-console-highlighter": "^0.4",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "phpmd/phpmd": "^2.9",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MinistryOfWeb\\OsmTiles\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A library to convert map tile numbers to coordinates and vice versa.",
+            "keywords": [
+                "OpenStreetMap",
+                "coordinate",
+                "geographic",
+                "location",
+                "maptile",
+                "osm",
+                "tile"
+            ],
+            "support": {
+                "issues": "https://github.com/ministryofweb/php-osm-tiles/issues",
+                "source": "https://github.com/ministryofweb/php-osm-tiles/tree/2.0.0"
+            },
+            "time": "2021-03-09T07:50:25+00:00"
         },
         {
             "name": "nikic/fast-route",
