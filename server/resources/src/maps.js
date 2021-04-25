@@ -161,6 +161,7 @@ export function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined
 export function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
+      $("#results").empty();
       $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       console.error(error);
     }
@@ -212,12 +213,14 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
       });
 
       if (items.length !== 0) {
+        $("#results").empty();
         $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
         $("<ul/>", {
           class: "results-list",
           html: items.join("")
         }).appendTo("#results");
       } else {
+        $("#results").empty();
         $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       }
     });

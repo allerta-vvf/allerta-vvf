@@ -58,7 +58,6 @@ describe("Service management", () => {
     it('Edit service', function() {
         cy.visit("/services.php");
         cy.wait('@ajax_services');
-        cy.get('#row-0 > .dtr-control').click();
         cy.get('.dtr-details a[data-action="edit"]').click();
         cy.get('#progressivo').clear();
         cy.get('#progressivo').type('4321/5');
@@ -92,7 +91,6 @@ describe("Service management", () => {
     it('Delete Service', function() {
         cy.visit("/services.php");
         cy.wait('@ajax_services');
-        cy.get('#row-0 > .dtr-control').click();
         cy.get('.dtr-details a[data-action="delete"]').click();
         cy.get('#remove').click();
         cy.wait('@ajax_services');
