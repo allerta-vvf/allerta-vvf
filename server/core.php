@@ -226,7 +226,20 @@ class tools
             if (!file_exists('resources/images/map_cache')) {
                 mkdir('resources/images/map_cache', 0755, true);
             }
-            return file_put_contents("resources/images/map_cache/".$filename.".png", $data);
+            $filePath = "resources/images/map_cache/".$filename.".png";
+            file_put_contents($filePath, $data);
+            if(extension_loaded('gd')){
+                $img = imagecreatefrompng($filePath);
+                $marker = imagecreatefromgif("resources/images/marker.gif");
+
+                $textcolor = imagecolorallocate($img, 0, 0, 0);
+                imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
+
+                imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
+
+                imagepng($img, $filePath);
+                imagedestroy($img);
+            }
         } catch (\Throwable $th) {
             return false;
         }
