@@ -9,6 +9,7 @@ on:
       - staging
       - production
   pull_request:
+  workflow_dispatch:
 
 jobs:
   tests:
