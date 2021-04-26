@@ -67,7 +67,7 @@ if($tools->validate_form("mod", "add")) {
             //$tools->redirect("accessdenied.php");
         }
     }
-    loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew], 'values' => $values, 'title' => ucfirst($modalità) . ' '.ucfirst(t("training", false))]);
+    loadtemplate('edit_training.html', ['training' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew], 'values' => $values, 'title' => t(ucfirst($modalità) . " training", false)]);
     bdump($_SESSION['token'], "token");
 }
 ?>
