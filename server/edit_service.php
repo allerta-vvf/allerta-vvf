@@ -71,7 +71,7 @@ if($tools->validate_form("mod", "add")) {
             echo("<pre>"); var_dump($_POST); echo("</pre>");
         }
     }
-    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew, 'types' => $types], 'values' => $values, 'title' => ucfirst($modalità) . ' '.ucfirst(t("service", false))]);
+    loadtemplate('edit_service.html', ['service' => ['id' => $id, 'token' => $_SESSION['token'], 'modalità' => $modalità, 'crew' => $crew, 'types' => $types], 'values' => $values, 'title' => t(ucfirst($modalità) . " service", false)]);
     bdump($_SESSION['token'], "token");
 }
 ?>

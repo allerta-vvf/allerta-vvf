@@ -82,7 +82,7 @@ if($tools->validate_form("mod", "add")) {
             $tools->redirect("accessdenied.php");
         }
     }
-        loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'title' => ucfirst($modalità) . ' '.ucfirst(t("user", false))]);
+        loadtemplate('edit_user.html', ['id' => $id, 'token' => $_SESSION["token"], 'modalità' => $modalità, 'values' => $values, 'title' => t(ucfirst($modalità) . " user", false)]);
         bdump($_SESSION['token'], "token");
 }
 ?>

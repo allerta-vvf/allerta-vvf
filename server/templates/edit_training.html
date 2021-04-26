@@ -1,96 +1,98 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-  <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
-  {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
   {% if training.modalità == "edit" or training.modalità == "add" %}
   <form method="post">
     <div class="container">
-      <label><b>{{ 'Training day'|t }}</b></label>
-      <div class="input-group">
-        <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="date" data-provide="datepicker"
+      <div class="form-group">
+        <label for="date-picker">{{ 'Training day'|t }}</label>
+        <input id="date-picker" aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="date" data-provide="datepicker"
           value="{{ values.date }}" type="text" class="form-control">
-        <div class="input-group-addon">
-          <span class="glyphicon glyphicon-th"></span>
+      </div>
+      <div class="form-group">
+        <label for="name">{{ 'Name'|t }}</label>
+        <input id="name" class="form-control" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
+      </div>
+      <div class="form-group">
+        <label for="timePicker1">{{ 'Start time'|t }}</label>
+        <input id="timePicker1" class="form-control" type="time" name="start_time" required value="{{ values.beginning }}">
+      </div>
+      <div class="form-group">
+        <label for="timePicker2">{{ 'End time'|t }}</label>
+        <input id="timePicker2" class="form-control" type="time" name="end_time" required value="{{ values.end }}">
+      </div>
+      <div class="form-group">
+        <label>{{ 'Chief'|t }}</label>
+        <br>
+        {% for user in training.crew %}
+        {% if not user.hidden %}
+        <div class="form-check">
+          <input aria-label="{{ username(user.id) }}" id="chief-{{ user.id }}" class="form-check-input chief chief-{{ user.id }}"
+            style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
+            value='{{ user.id }}'>
+          <label class="form-check-label" for="chief-{{ user.id }}">
+            {{ username(user.id) }}
+          </label>
         </div>
+        {% endif %}
+        {% endfor %}
       </div>
-      <br>
-      <br>
-      <label><b>{{ 'Name'|t }}</b></label>
-      <input id="name" type="text" name="name" placeholder="1° training" required value="{{ values.name }}">
-      <br>
-      <br>
-      <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
-      <input id="timePicker1" type="time" name="start_time" required value="{{ values.beginning }}">
-      <br>
-      <br>
-      <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
-      <input id="timePicker2" type="time" name="end_time" required value="{{ values.end }}">
-      <br>
-      <br>
-      <label><b>{{ 'Chief'|t }}</b></label>
-      <br>
-      {% for user in training.crew %}
-      {% if not user.hidden %}
-      <div class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input chief chief-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
-          value='{{ user.id }}'>
-        <label class="form-check-label" for="chief-{{ user.id }}">
-          {{ username(user.id) }}
-        </label>
-      </div>
-      {% endif %}
-      {% endfor %}
       <script>
         $('.chief').on('change', function () {
           $('input[name="' + this.name + '"]').not(this).prop('checked', false);
         });
       </script>
-      <br>
-      <label><b>{{ 'Crew'|t }}</b></label>
-      <br>
-      {% for user in training.crew %}
-      {% if not user.hidden %}
-      <div class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input crew crew-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
-          value='{{ user.id }}'>
-        <label class="form-check-label" for="crew-{{ user.id }}">
-          {{ username(user.id) }}
-        </label>
+      <div class="form-group">
+        <label>{{ 'Crew'|t }}</label>
+        <br>
+        {% for user in training.crew %}
+        {% if not user.hidden %}
+        <div class="form-check">
+          <input aria-label="{{ username(user.id) }}" id="crew-{{ user.id }}" class="form-check-input crew crew-{{ user.id }}"
+            style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
+            value='{{ user.id }}'>
+          <label class="form-check-label" for="crew-{{ user.id }}">
+            {{ username(user.id) }}
+          </label>
+        </div>
+        {% endif %}
+        {% endfor %}
       </div>
-      {% endif %}
-      {% endfor %}
-      <br>
       {% if option('use_location_picker') %}
-      <label><b>{{ 'Training place'|t }}</b></label>
+      <label>{{ 'Training place'|t }}</label>
       <div id="map"></div>
       <div id="search">
-        <input type="text" name="addr" value="" id="addr" size="50" />
-        <button type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
-          class="btn btn-primary">{{ 'Search'|t }}</button>
+        <div class="form-inline">
+          <div class="form-group mx-sm-3 mb-2">
+            <input type="text" class="form-control" name="addr" value="" id="addr" size="50" />
+          </div>
+          <div class="form-group mx-sm-3 mb-2">
+            <button type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
+              class="btn btn-primary mb-2">{{ 'Search'|t }}</button>
+          </div>
+        </div>
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
       <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
       {% else %}
-      <label><b>{{ 'Training place'|t }}</b></label>
-      <input type="text" name="place" required value="{{ values.place }}">
+      <div class="form-check">
+        <label for="place">{{ 'Training place'|t }}</label>
+        <input id="place" type="text" class="form-control" name="place" required value="{{ values.place }}">
+      </div>
       {% endif %}
-      <br>
-      <br>
-      <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
-      <textarea name='notes'></textarea>
-      <br>
+      <div class="form-check">
+        <label for="notes">{{ 'Others notes (ex. others infos)'|t }}</label><br>
+        <textarea class="form-control" id="notes" name='notes'></textarea>
+      </div>
       <br>
       <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
       <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
       <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
-      <button type="submit">{{ 'Submit'|t }}</button>
+      <button type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
     </div>
   </form>
   <script>
@@ -121,6 +123,8 @@
     </script>
   </div>
   {% endif %}
-  {% if enable_debug_bar %}{{ debug_bar|raw }}{% endif %}
-</body>
-</html>
+
+{% block footer %}
+{% endblock %}
+
+{% endblock %}
