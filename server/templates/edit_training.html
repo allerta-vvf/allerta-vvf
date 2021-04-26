@@ -70,7 +70,7 @@
             <input type="text" class="form-control" name="addr" value="" id="addr" size="50" />
           </div>
           <div class="form-group mx-sm-3 mb-2">
-            <button type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
+            <button id="search_button" type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
               class="btn btn-primary mb-2">{{ 'Search'|t }}</button>
           </div>
         </div>
@@ -92,7 +92,7 @@
       <input id="modalità" type="hidden" value="{{ training.modalità }}" name="mod"></input>
       <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
       <input id="token" type="hidden" value="{{ training.token }}" name="token"></input>
-      <button type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
+      <button id="submit_button" type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
     </div>
   </form>
   <script>
