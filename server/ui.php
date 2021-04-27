@@ -86,6 +86,25 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     } else {
         $data['error_image'] = "error.gif";
     }
+    //TODO: replace this
+    if($messages = $database->get_option("messages")){
+        try {
+            $messages = json_decode($messages, true);
+            if(isset($messages[$templatename])){
+                $data["message"] = $messages[$templatename];
+            } else if(isset($messages["loggedIn"]) && $user->auth->isLoggedIn()) {
+                $data["message"] = $messages["loggedIn"];
+            } else if(isset($messages["global"])) {
+                $data["message"] = $messages["global"];
+            } else {
+                $data["message"] = false;
+            }
+        } catch (\Throwable $th) {
+            $data["message"] = false;
+        }
+    } else {
+        $data["message"] = false;
+    }
     \header_remove('X-Frame-Options');
     $template = $twig->load($templatename);
     if(isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])) {
