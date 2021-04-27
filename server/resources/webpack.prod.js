@@ -75,7 +75,12 @@ var prodConfig = {
       minimizer: [new TerserPlugin({
         parallel: true,
         extractComments: true,
-        sourceMap: sentryEnabled ? true : false
+        sourceMap: sentryEnabled ? true : false,
+        terserOptions: {
+          compress: {
+            drop_console: true
+          }
+        }
       })]
   }
 };

@@ -48,45 +48,6 @@
   {% endif %}
   <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
   <script>$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
-  {% if enable_technical_support and technical_support_open %}
-  <!-- Smartsupp Live Chat script -->
-  <script type='text/javascript'>
-    var _smartsupp = _smartsupp || {};
-    _smartsupp.key = '{{ technical_support_key }}';
-    _smartsupp.ratingEnabled = true; // default value : false
-    _smartsupp.ratingComment = true; // default value : false
-    window.smartsupp || (function (d) {
-      var s, c, o = smartsupp = function () {
-        o._.push(arguments)
-      };
-      o._ = [];
-      s = d.getElementsByTagName('script')[0];
-      c = d.createElement('script');
-      c.type = 'text/javascript';
-      c.charset = 'utf-8';
-      c.async = true;
-      c.src = 'https://www.smartsuppchat.com/loader.js?';
-      s.parentNode.insertBefore(c, s);
-    })(document);
-  </script>
-  <script>
-    // basic info
-    smartsupp('email', '');
-    smartsupp('name', '{{ user.name }}');
-    smartsupp('recording:disable', false);
-    // extra info
-    smartsupp('variables', {
-      name: {
-        label: 'name user ',
-        value: '{{ user.name }}'
-      },
-      Admin: {
-        label: 'Admin',
-        value: '{{ user.full_viewer }}'
-      }
-    });
-  </script>
-  {% endif %}
   {% endblock %}
   {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>
@@ -100,11 +61,9 @@
     <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
     <a href="{{ urlsoftware }}log.php">{{ 'Logs'|t }}</a>
     <a {# href="{{ urlsoftware }}graphics.php" #}>{{ 'Graphics'|t }}</a>
-    {% if enable_technical_support %}<a href="javascript:void(0);"
-      onclick="chat()">{{ 'Technical Support' }}</a>{% endif %}
     <a style="float: right;" id="logout">{{ 'Hi, %s.'|t|format(user.name) }} <b
         onclick="location.href='{{ urlsoftware }}logout.php';">{{ 'Logout'|t }}</b></a>
-    <a href="javascript:void(0);" class="icon" onclick="menu()">☰</a>
+    <a class="pjax_disable icon" id="menuButton">☰</a>
   </div>
   <!-- /Menu -->
   {% endblock %}
@@ -115,6 +74,11 @@
   <!-- Content -->
   <div id="content">
 {% block pjax_content %}
+{% if message %}
+<div class="alert alert-info m-3" role="alert">
+  {{ message|raw }}
+</div>
+{% endif %}
 {% if pjax_requested %}<title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>{% endif %}
 {% block content %}{% endblock %}
 {% endblock %}

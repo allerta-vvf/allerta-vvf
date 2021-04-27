@@ -74,9 +74,6 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['owner'] = $database->get_option("owner");
     $data['urlsoftware'] = $database->get_option("web_url");
     $data['user'] = $user->info();
-    $data['enable_technical_support'] = $database->get_option("enable_technical_support");
-    $data['technical_support_key'] = $database->get_option("technical_support_key");
-    $data['technical_support_open'] = isset($_COOKIE["chat"]);
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
     if($database->get_option("use_custom_error_sound")) {
@@ -88,6 +85,25 @@ function loadtemplate($templatename, $data, $requirelogin=true)
         $data['error_image'] = "custom-error.gif";
     } else {
         $data['error_image'] = "error.gif";
+    }
+    //TODO: replace this
+    if($messages = $database->get_option("messages")){
+        try {
+            $messages = json_decode($messages, true);
+            if(isset($messages[$templatename])){
+                $data["message"] = $messages[$templatename];
+            } else if(isset($messages["loggedIn"]) && $user->auth->isLoggedIn()) {
+                $data["message"] = $messages["loggedIn"];
+            } else if(isset($messages["global"])) {
+                $data["message"] = $messages["global"];
+            } else {
+                $data["message"] = false;
+            }
+        } catch (\Throwable $th) {
+            $data["message"] = false;
+        }
+    } else {
+        $data["message"] = false;
     }
     \header_remove('X-Frame-Options');
     $template = $twig->load($templatename);

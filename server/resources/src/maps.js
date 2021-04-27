@@ -35,7 +35,11 @@ function setMarker (LatLng) {
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
 }
 
-function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true) {
+var mapsList = [];
+
+export function loadMap (lat = undefined, lng = undefined, selectorId = undefined, select = true, removeMap = false) {
+  console.log("Loading map...", [lat, lng, selectorId, select]);
+  console.trace();
   if (lat === undefined && lng === undefined) {
     lat = 45.5285; // TODO: replace hard-coded into cookie reading
     lng = 10.2956;
@@ -43,12 +47,27 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
   if (selectorId === undefined) {
     selectorId = "map";
   }
+  let container = L.DomUtil.get(selectorId);
+  if(container._leaflet_id){
+    console.log(mapsList);
+    if(removeMap){
+      mapsList[0].off();
+      mapsList[0].remove();
+      mapsList.splice(0, 1);
+    } else {
+      console.log("Skipping map loading because already loaded...");
+      return true;
+    }
+  }
   const zoom = select ? 10 : 17;
   const latLng = new L.LatLng(lat, lng);
+  L.Map.addInitHook(function () {
+    mapsList.push(this); // Use whatever global scope variable you like.
+  });
   map = new L.Map(selectorId, { zoomControl: true });
 
   const osmUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  const osmAttribution = "Map data &copy; 2012 <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors";
+  const osmAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const osm = new L.TileLayer(osmUrl, { maxZoom: 20, attribution: osmAttribution });
 
   map.setView(latLng, zoom).addLayer(osm);
@@ -69,33 +88,35 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
 
     const lc = new L.Control.CustomLocate({
     	icon: "fa fa-map-marker",
-    	cacheLocation: false // disabled for privacy reasons
+    	cacheLocation: false, // disabled for privacy reasons
+      initialZoomLevel: 16
     }).addTo(map);
 
 	  if ($("#addr").val() !== undefined) {
 	    document.getElementById("addr").addEventListener("keydown", function (event) {
     	  if (event.key === "Enter") {
     		  event.preventDefault();
-          document.querySelector("#search > button").click();
+          $("#search > button").trigger("click");
         }
       });
     }
-
-    if (getCookie("experimental_read_clipboard")) {
-	    window.addEventListener("focus", function (event) {
-	    	if ($("#addr").val() === "") {
-	    		console.log("Loading location from clipboard");
-    			navigator.clipboard.readText().then((text) => {
-	    			$("#addr").val(text);
-	    			if (!addrSearch()) {
-	    				$("#addr").val("");
-	    			}
- 	    		}).catch((err) => {
-    				console.error("Failed to read clipboard contents: ", err);
+	  window.addEventListener("focus", function (event) {
+	    if ($("#addr").val() === "") {
+	    	console.log("Loading location from clipboard");
+        try {
+          navigator.clipboard.readText().then((text) => {
+            $("#addr").val(text);
+            if (!addrSearch()) {
+              $("#addr").val("");
+            }
+          }).catch((err) => {
+            console.error("Failed to read clipboard contents: ", err);
           });
-	    	}
-	    });
-    }
+        } catch(error) {
+          console.error(error);
+        }
+	    }
+	  });
   } else {
     setMarker(latLng);
   }
@@ -103,7 +124,7 @@ function loadMap (lat = undefined, lng = undefined, selectorId = undefined, sele
 }
 
 // from unknown source in the Internet
-function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osmType = undefined) {
+export function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 = undefined, lat2 = undefined, lng2 = undefined, osmType = undefined) {
   addrLat = addrLat.replace(",", ".");
   addrLng = addrLng.replace(",", ".");
   if (lat1 !== undefined && lng1 !== undefined && lat2 !== undefined && lng2 !== undefined && osmType !== undefined) {
@@ -117,7 +138,7 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
     }
     if (osmType === "node") {
       map.fitBounds(bounds);
-      map.setZoom(18);
+      map.setZoom(16);
     } else {
       const loc3 = new L.LatLng(lat1, lng2);
       const loc4 = new L.LatLng(lat2, lng1);
@@ -137,9 +158,10 @@ function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined, lng1 
 }
 
 // started from https://derickrethans.nl/leaflet-and-nominatim.html
-function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
+export function addrSearch (stringResultsFound= undefined, stringResultsNotFound = undefined) {
   function searchError (error, checkClipboard) {
     if (!checkClipboard) {
+      $("#results").empty();
       $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       console.error(error);
     }
@@ -187,16 +209,18 @@ function addrSearch (stringResultsFound= undefined, stringResultsNotFound = unde
       const items = [];
 
       $.each(data, function (key, val) {
-        items.push("<li><a href='' onclick='chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
+        items.push("<li><a href='' onclick='allertaJS.maps.chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
       });
 
       if (items.length !== 0) {
+        $("#results").empty();
         $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
         $("<ul/>", {
           class: "results-list",
           html: items.join("")
         }).appendTo("#results");
       } else {
+        $("#results").empty();
         $("<p>", { html: stringResultsNotFound }).appendTo("#results");
       }
     });
@@ -204,7 +228,3 @@ function addrSearch (stringResultsFound= undefined, stringResultsNotFound = unde
     return false;
   }
 }
-
-window.loadMap = loadMap;
-window.addrSearch = addrSearch;
-window.chooseAddr = chooseAddr;

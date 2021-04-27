@@ -9,8 +9,8 @@ describe("Training management", () => {
                 cy.stub(win, 'prompt').returns('test')
             }
         });
-        cy.get('.form-control').clear();
-        cy.get('.form-control').type('07/12/2020');
+        cy.get('#date-picker').clear();
+        cy.get('#date-picker').type('07/12/2020');
         cy.window().then(win => win.$('.datepicker').remove());
         cy.get('#name').clear();
         cy.get('#name').type('Test Training');
@@ -25,7 +25,7 @@ describe("Training management", () => {
         cy.get('.crew-6').check();
         cy.get('#addr').clear();
         cy.get('#addr').type('brescia');
-        cy.get('.btn').click();
+        cy.get('#search_button').click();
         cy.get('#search').click();
         cy.get('.results-list > :nth-child(1) > a').click();
         cy.get('[type="submit"]').click();
@@ -42,8 +42,7 @@ describe("Training management", () => {
     it('Edit Training', function() {
         cy.visit("/trainings.php");
         cy.wait('@ajax_trainings');
-        cy.get('#row-0 > .dtr-control').click();
-        cy.get('.dtr-details a[data-action="edit"]').click();
+        cy.get('.dtr-details a[data-action="edit"]').first().click();
         cy.get('#name').clear();
         cy.get('#name').type('Training 1 test');
         cy.get('.chief-5').uncheck();
@@ -54,7 +53,7 @@ describe("Training management", () => {
         cy.get('.crew-8').check();
         cy.get('#addr').clear();
         cy.get('#addr').type('milano');
-        cy.get('.btn').click();
+        cy.get('#search_button').click();
         cy.get('.results-list > :nth-child(1) > a').click();
         cy.get('[type="submit"]').click();
         cy.wait('@ajax_trainings');
@@ -68,8 +67,7 @@ describe("Training management", () => {
     it('Delete Training', function() {
         cy.visit("/trainings.php");
         cy.wait('@ajax_trainings');
-        cy.get('#row-0 > .dtr-control').click();
-        cy.get('.dtr-details a[data-action="delete"]').click();
+        cy.get('.dtr-details a[data-action="delete"]').first().click();
         cy.get('#remove').click();
         cy.wait('@ajax_trainings');
         cy.visit("/log.php");

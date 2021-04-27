@@ -4,14 +4,15 @@
     "type": "project",
     "require": {
         "twig/twig": "^3.2.1",
-        "delight-im/auth": "^8.2.2",
+        "delight-im/auth": "^8.3.0",
         "ulrichsg/getopt-php": "^3.4.0",
         "nikic/fast-route": "^2.0@dev",
         "spatie/array-to-xml": "^2.16",
         "ezyang/htmlpurifier": "^4.13",
         "brick/phonenumber": "^0.2.2",
         "sentry/sdk": "^3.1",
-        "maximebf/debugbar": "^1.16"
+        "maximebf/debugbar": "^1.16",
+        "ministryofweb/php-osm-tiles": "^2.0"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

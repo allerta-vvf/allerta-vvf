@@ -266,8 +266,8 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
 `chief` text NOT NULL,
 `place` text NOT NULL,
 `notes` text NOT NULL,
-`increment` varchar(999) NOT NULL DEFAULT 'test',
-`inserted_by` varchar(200) NOT NULL DEFAULT 'test',
+`increment` varchar(999) NOT NULL,
+`inserted_by` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
@@ -276,11 +276,11 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
 `code` text NOT NULL,
 `beginning` time NOT NULL,
 `end` time NOT NULL,
-`chief` varchar(999) NOT NULL DEFAULT 'test',
-`drivers` varchar(999) NOT NULL DEFAULT 'test',
-`crew` varchar(999) NOT NULL DEFAULT 'test',
-`place` varchar(999) NOT NULL DEFAULT 'test',
-`notes` varchar(999) NOT NULL DEFAULT 'test',
+`chief` varchar(999) NOT NULL,
+`drivers` varchar(999) NOT NULL,
+`crew` varchar(999) NOT NULL,
+`place` varchar(999) NOT NULL,
+`notes` varchar(999) NOT NULL,
 `type` text NOT NULL,
 `increment` varchar(999) NOT NULL,
 `inserted_by` varchar(200) NOT NULL,
@@ -486,10 +486,8 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'use_custom_error_sound' => 0,
             'use_custom_error_image' => 0,
             'intrusion_save' => 1,
-            'intrusion_save_info' => 1,
+            'intrusion_save_info' => 0,
             'log_save_ip' => 1,
-            'enable_technical_support' => 0,
-            'technical_support_key' => 0,
             'cron_job_code' => ':cron_job_code',
             'cron_job_enabled' => 1,
             'cron_job_time' => ':cron_job_time',
@@ -499,7 +497,8 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'training_remove' => 1,
             'use_location_picker' => 1,
             'force_language' => 0,
-            'force_remember_cookie' => 0
+            'force_remember_cookie' => 0,
+            'messages' => "{}"
         ];
         $query = "";
         foreach ($options as $key => $value) {
