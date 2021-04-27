@@ -74,6 +74,11 @@
   <!-- Content -->
   <div id="content">
 {% block pjax_content %}
+{% if message %}
+<div class="alert alert-info m-3" role="alert">
+  {{ message|raw }}
+</div>
+{% endif %}
 {% if pjax_requested %}<title>{{ title }} - ALLERTA sistema gestionale {{ owner }}</title>{% endif %}
 {% block content %}{% endblock %}
 {% endblock %}
