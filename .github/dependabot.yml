@@ -9,7 +9,7 @@ updates:
   allow:
   - dependency-type: direct
   - dependency-type: indirect
-- package-ecosystem: javascript
+- package-ecosystem: npm
   directory: "/server/resources"
   schedule:
     interval: daily
