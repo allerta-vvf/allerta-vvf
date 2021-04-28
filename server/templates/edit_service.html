@@ -1,126 +1,135 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link href="favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-  <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
-  {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
   {% if service.modalità == "edit" or service.modalità == "add" %}
   <form method="post">
     <div class="container">
-      <label><b>{{ 'Service day'|t }}</b></label>
-      <div class="input-group">
-        <input aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="date" data-provide="datepicker"
+      <div class="form-group">
+        <label for="date-picker">{{ 'Service day'|t }}</label>
+        <input id="date-picker" aria-label="Date picker" placeholder="DD/MM/YYY" autocomplete="off" name="date" data-provide="datepicker"
           value="{{ values.date }}" type="text" class="form-control">
-        <div class="input-group-addon">
-          <span class="glyphicon glyphicon-th"></span>
+      </div>
+      <div class="form-group">
+        <label for="progressivo">{{ 'code'|t|capitalize }}</label>
+        <input id="progressivo" class="form-control" type="text" name="code" placeholder="1234/5" required value="{{ values.code }}">
+      </div>
+      <div class="form-group">
+        <label for="timePicker1">{{ 'Start time'|t }}</label>
+        <input id="timePicker1" class="form-control" type="time" name="beginning" required value="{{ values.beginning }}">
+      </div>
+      <div class="form-group">
+        <label for="timePicker2">{{ 'End time'|t }}</label>
+        <input id="timePicker2" class="form-control" type="time" name="end" required value="{{ values.end }}">
+      </div>
+      <div class="form-group">
+        <label>{{ 'Chief'|t }}</label>
+        <br>
+        {% for user in service.crew %}
+        {% if user.chief == 1 and not user.hidden %}
+        <div class="form-check">
+          <input aria-label="{{ username(user.id) }}" id="chief-{{ user.id }}" class="form-check-input chief chief-{{ user.id }}"
+            style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
+            value='{{ user.id }}'>
+          <label class="form-check-label" for="chief-{{ user.id }}">
+            {{ username(user.id) }}
+          </label>
         </div>
+        {% endif %}
+        {% endfor %}
       </div>
-      <br>
-      <br>
-      <label><b>{{ 'code'|t }}</b></label>
-      <input id="progressivo" type="text" name="code" placeholder="1234/5" required value="{{ values.code }}">
-      <br>
-      <br>
-      <label for="timePicker1"><b>{{ 'Start time'|t }}</b></label>
-      <input id="timePicker1" type="time" name="beginning" required value="{{ values.beginning }}">
-      <br>
-      <br>
-      <label for="timePicker2"><b>{{ 'End time'|t }}</b></label>
-      <input id="timePicker2" type="time" name="end" required value="{{ values.end }}">
-      <br>
-      <br>
-      <label><b>{{ 'Chief'|t }}</b></label>
-      <br>
-      {% for user in service.crew %}
-      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input chief chief-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='chief[]'
-          value='{{ user.id }}'>
-        <label class="form-check-label" for="chief-{{ user.id }}">
-          {{ username(user.id) }}
-        </label>
-      </div>
-      {% endfor %}
       <script>
         $('.chief').on('change', function () {
           $('input[name="' + this.name + '"]').not(this).prop('checked', false);
         });
       </script>
-      <br>
-      <label><b>{{ 'Drivers'|t }}</b></label>
-      <br>
-      {% for user in service.crew %}
-      {% if user.driver == 1 %}
-      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input drivers drivers-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='drivers[]'
-          value='{{ user.id }}'>
-        <label class="form-check-label" for="drivers-{{ user.id }}">
-          {{ username(user.id) }}
-        </label>
+      <div class="form-group">
+        <label>{{ 'Drivers'|t }}</label>
+        <br>
+        {% for user in service.crew %}
+        {% if user.driver == 1 and not user.hidden %}
+        <div class="form-check">
+          <input aria-label="{{ username(user.id) }}"id="drivers-{{ user.id }}" class="form-check-input drivers drivers-{{ user.id }}"
+            style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='drivers[]'
+            value='{{ user.id }}'>
+          <label class="form-check-label" for="drivers-{{ user.id }}">
+            {{ username(user.id) }}
+          </label>
+        </div>
+        {% endif %}
+        {% endfor %}
       </div>
-      {% endif %}
-      {% endfor %}
-      <br>
-      <label><b>{{ 'Crew'|t }}</b></label>
-      <br>
-      {% for user in service.crew %}
-      <div {{ user.name == "test" ? "style='display: none'" : "" }} class="form-check">
-        <input aria-label="{{ username(user.id) }}" class="form-check-input crew crew-{{ user.id }}"
-          style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
-          value='{{ user.id }}'>
-        <label class="form-check-label" for="crew-{{ user.id }}">
-          {{ username(user.id) }}
-        </label>
+      <div class="form-group">
+        <label>{{ 'Crew'|t }}</label>
+        <br>
+        {% for user in service.crew %}
+        {% if not user.hidden %}
+        <div class="form-check">
+          <input aria-label="{{ username(user.id) }}" id="crew-{{ user.id }}" class="form-check-input crew crew-{{ user.id }}"
+            style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='crew[]'
+            value='{{ user.id }}'>
+          <label class="form-check-label" for="crew-{{ user.id }}">
+            {{ username(user.id) }}
+          </label>
+       </div>
+       {% endif %}
+       {% endfor %}
       </div>
-      {% endfor %}
-      <br>
       {% if option('use_location_picker') %}
-      <label><b>{{ 'Service place'|t }}</b></label>
+      <label>{{ 'Service place'|t }}</label>
       <div id="map"></div>
       <div id="search">
-        <input type="text" name="addr" value="" id="addr" size="10" />
-        <button type="button" onclick="addr_search('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
-          class="btn btn-primary">{{ 'Search'|t }}</button>
+        <div class="form-inline">
+          <div class="form-group mx-sm-3 mb-2">
+            <input type="text" class="form-control" name="addr" value="" id="addr" size="50" />
+          </div>
+          <div class="form-group mx-sm-3 mb-2">
+            <button id="search_button" type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
+              class="btn btn-primary mb-2">{{ 'Search'|t }}</button>
+          </div>
+        </div>
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="load_map();"></script>
+      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
       {% else %}
-      <label><b>{{ 'Service place'|t }}</b></label>
-      <input type="text" name="place" required value="{{ values.place }}">
+      <div class="form-check">
+        <label>{{ 'Service place'|t }}</label>
+        <input type="text" name="place" class="form-control" required value="{{ values.place }}">
+      </div>
       {% endif %}
+      <div class="form-check">
+        <label for="notes">{{ 'Others notes (ex. others infos)'|t }}</label><br>
+        <textarea class="form-control" id="notes" name='notes'></textarea>
+      </div>
       <br>
-      <br>
-      <label><b>{{ 'Others notes (ex. others infos)'|t }}</b></label><br>
-      <textarea name='notes' id='notes'></textarea>
-      <br>
-      <br>
-      <label><b>{{ 'Service type'|t }}</b></label>
-      <br>
-      <select name='type' class="types">
-        {% for type in service.types %}
-        <option value='{{ type.name }}'>{{ type.name }}</option>
-        {% endfor %}
-        {% if service.types is empty %}
-        <option id="empty_option" value=''></option>
-        {% endif %}
-        <option value='add_new'>{{ 'Add type...'|t }}</option>
-      </select>
+      <div class="form-check">
+        <label>{{ 'Service type'|t }}</label>
+        <br>
+        <select id="types" class="form-control" name='type' class="types">
+          {% for type in service.types %}
+          <option value='{{ type.name }}'>{{ type.name }}</option>
+          {% endfor %}
+          {% if service.types is empty %}
+          <option id="empty_option" value=''></option>
+          {% endif %}
+          <option value='add_new'>{{ 'Add type...'|t }}</option>
+        </select>
+      </div>
       <br>
       <input id="modalità" type="hidden" value="{{ service.modalità }}" name="mod"></input>
       <input id="token" type="hidden" value="{{ service.token }}" name="token"></input>
       <input id="id" type="hidden" value="{{ service.id }}" name="id"></input>
-      <button type="submit">{{ 'Submit'|t }}</button>
+      <button id="submit_button" type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
     </div>
   </form>
   <script>
-    $( ".types" ).change(function() {
+    $( "#types" ).change(function() {
         $('#empty_option').remove();
         var type = "";
-        $( ".types option:selected" ).each(function() {
+        $( "#types option:selected" ).each(function() {
             type = $( this ).val();
         });
         console.log(type);
@@ -134,7 +143,7 @@
                     type: new_type
                 },
                 success: function (data) {
-                    $('option:last-of-type').before($('<option>').val(new_type).text(new_type)); 
+                    $('option:last-of-type').before($('<option>').val(new_type).text(new_type));
                     $('option[value='+new_type+']').prop('selected', 'selected').change();
                     toastr.success(`{{ "Type '%s' added successfully."|t|format('${new_type}') }}`);
                 }
@@ -151,12 +160,12 @@
     $.each('{{ values.crew }}'.split(','), function (index, value) {
       $('.crew-' + value).prop('checked', true);
     });
-    $(".tipi").val('{{ values.type }}');
+    $("#types").val('{{ values.type }}');
     $('#notes').val('{{ values.notes }}');
     {% endif %}
     $('form').submit(function () {
       var type = "";
-      $( ".types option:selected" ).each(function() {
+      $( "#types option:selected" ).each(function() {
         type = $( this ).val();
       });
       if(type == "add_new" || type == ""){
@@ -181,7 +190,6 @@
       <input id="modalità" type="hidden" value="delete" name="mod"></input>
       <input id="token" type="hidden" value="{{ service.token }}" name="token"></input>
       <input id="id" type="hidden" value="{{ service.id }}" name="id"></input>
-      <input id="increment" type="hidden" value="{{ increment }}" name="increment"></input>
       <button id="remove" type="submit">{{ 'Submit'|t }}</button>
     </form>
     <script>
@@ -191,6 +199,8 @@
     </script>
   </div>
   {% endif %}
-  {% if enable_debug_bar %}{{ debug_bar|raw }}{% endif %}
-</body>
-</html>
+
+{% block footer %}
+{% endblock %}
+
+{% endblock %}

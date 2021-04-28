@@ -12,7 +12,7 @@ function customErrorHandler(int $errNo, string $errMsg, string $file, int $line)
         "file" => $file,
         "line" => $line
     ];
-    $output_status = "error";
+    var_dump($output);
 }
 error_reporting(-1);
 set_error_handler('customErrorHandler');

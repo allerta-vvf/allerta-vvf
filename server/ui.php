@@ -22,18 +22,20 @@ try {
 } catch (Exception $e) {
     $loader = new \Twig\Loader\FilesystemLoader('../templates');
 }
-$filter = new \Twig\TwigFilter(
-    't', function ($string) {
-        global $translations;
-        return $translations->translate($string);
-    }
-);
 $twig = new \Twig\Environment(
     $loader, [
     //'cache' => 'compilation'
     ]
 );
-$twig->addFilter($filter);
+
+$filter_translate = new \Twig\TwigFilter(
+    't', function ($string) {
+        global $translations;
+        return $translations->translate($string);
+    }
+);
+$twig->addFilter($filter_translate);
+
 $function_option = new \Twig\TwigFunction(
     'option', function ($option) {
         global $database;
@@ -41,6 +43,7 @@ $function_option = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_option);
+
 $function_username = new \Twig\TwigFunction(
     'username', function ($id) {
         global $user;
@@ -48,6 +51,7 @@ $function_username = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_username);
+
 $function_resource = new \Twig\TwigFunction(
     'resource', function ($file) {
         global $webpack_manifest;
@@ -55,6 +59,20 @@ $function_resource = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_resource);
+
+$filter_minimize = new \Twig\TwigFilter(
+    'minimize', function ($content) {
+        if(isset($_REQUEST["skip_minify"])){
+            return $content;
+        } else {
+            return Minifier\TinyMinify::html($content, [
+                'collapse_whitespace' => true,
+                'disable_comments' => true,
+            ]);
+        }
+    }, ['is_safe' => ['html']]
+);
+$twig->addFilter($filter_minimize);
 p_stop();
 
 $template = null;
@@ -74,9 +92,6 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['owner'] = $database->get_option("owner");
     $data['urlsoftware'] = $database->get_option("web_url");
     $data['user'] = $user->info();
-    $data['enable_technical_support'] = $database->get_option("enable_technical_support");
-    $data['technical_support_key'] = $database->get_option("technical_support_key");
-    $data['technical_support_open'] = isset($_COOKIE["chat"]);
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
     if($database->get_option("use_custom_error_sound")) {
@@ -88,6 +103,25 @@ function loadtemplate($templatename, $data, $requirelogin=true)
         $data['error_image'] = "custom-error.gif";
     } else {
         $data['error_image'] = "error.gif";
+    }
+    //TODO: replace this
+    if($messages = $database->get_option("messages")){
+        try {
+            $messages = json_decode($messages, true);
+            if(isset($messages[$templatename])){
+                $data["message"] = $messages[$templatename];
+            } else if(isset($messages["loggedIn"]) && $user->auth->isLoggedIn()) {
+                $data["message"] = $messages["loggedIn"];
+            } else if(isset($messages["global"])) {
+                $data["message"] = $messages["global"];
+            } else {
+                $data["message"] = false;
+            }
+        } catch (\Throwable $th) {
+            $data["message"] = false;
+        }
+    } else {
+        $data["message"] = false;
     }
     \header_remove('X-Frame-Options');
     $template = $twig->load($templatename);

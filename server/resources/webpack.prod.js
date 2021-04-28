@@ -1,18 +1,18 @@
-const { merge } = require('webpack-merge');
-const common = require('./webpack.common.js');
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
 const TerserPlugin = require("terser-webpack-plugin");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
-const AfterBuildPlugin = require('@fiverr/afterbuild-webpack-plugin');
-const child_process = require('child_process');
-const InjectPlugin = require('webpack-inject-plugin').default;
-const colors = require('colors/safe');
-const fs = require('fs');
-const glob = require('glob');
+const AfterBuildPlugin = require("@fiverr/afterbuild-webpack-plugin");
+const childProcess = require("child_process");
+const InjectPlugin = require("webpack-inject-plugin").default;
+const colors = require("colors/safe");
+const fs = require("fs");
+const glob = require("glob");
 
 function git(command) {
-  return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
+  return childProcess.execSync(`git ${command}`, { encoding: "utf8" }).trim();
 }
-var webpack = require('webpack');
+var webpack = require("webpack");
 
 if (!fs.existsSync("config.json")) {
   fs.copyFileSync("config_sample.json", "config.json");
@@ -27,7 +27,7 @@ const removeSourceMapUrlAfterBuild = () => {
     //console.log(files);
     files.forEach((key) => {
       countMatchAssets += 1;
-      let asset = fs.readFileSync(key, 'utf8');
+      let asset = fs.readFileSync(key, "utf8");
       let source = asset.split("//# sourceMappingURL=")[0].replace(/\n$/, "");
       fs.writeFileSync(key, source);
     });
@@ -42,16 +42,16 @@ const removeSourceMapUrlAfterBuild = () => {
       fs.unlinkSync(key);
     });
   });
-}
+};
 
-var config_file = require('./config.json');
-const sentry_enabled = config_file.sentry_enabled &&
-                       config_file.sentry_auth_token &&
-                       config_file.sentry_organization &&
-                       config_file.sentry_project;
+var configFile = require("./config.json");
+const sentryEnabled = configFile.sentryEnabled &&
+                       configFile.sentryAuthToken &&
+                       configFile.sentryOrganization &&
+                       configFile.sentryProject;
 
-var prod_config = {
-  mode: 'production',
+var prodConfig = {
+  mode: "production",
   devtool: false,
   module: {
       rules: [
@@ -59,10 +59,10 @@ var prod_config = {
             test: /\.m?js$/,
             exclude: /(node_modules|bower_components)/,
             use: {
-              loader: 'babel-loader',
+              loader: "babel-loader",
               options: {
-                  presets: ['@babel/preset-env'],
-                  plugins: ['@babel/plugin-transform-runtime']
+                  presets: ["@babel/preset-env"],
+                  plugins: ["@babel/plugin-transform-runtime"]
               }
             }
           }
@@ -75,56 +75,61 @@ var prod_config = {
       minimizer: [new TerserPlugin({
         parallel: true,
         extractComments: true,
-        sourceMap: sentry_enabled ? true : false
+        sourceMap: sentryEnabled ? true : false,
+        terserOptions: {
+          compress: {
+            drop_console: true
+          }
+        }
       })]
   }
 };
 
 module.exports = (env) => {
-  //run webpack build with '--env sentry_environment=custom-sentry-env' to replace Sentry environment
-  if(env.sentry_environment){
-    console.log(colors.green("INFO using custom sentry_environment "+env.sentry_environment));
-    config_file.sentry_environment = env.sentry_environment;
+  //run webpack build with "--env sentryEnvironment=custom-sentry-env" to replace Sentry environment
+  if(env.sentryEnvironment){
+    console.log(colors.green("INFO using custom sentryEnvironment "+env.sentryEnvironment));
+    configFile.sentryEnvironment = env.sentryEnvironment;
   }
-  if(!config_file.sentry_environment){
-    config_file.sentry_environment = "prod";
+  if(!configFile.sentryEnvironment){
+    configFile.sentryEnvironment = "prod";
   }
 
-  if(sentry_enabled){
-    prod_config.plugins.push(
+  if(sentryEnabled){
+    prodConfig.plugins.push(
       new webpack.SourceMapDevToolPlugin({
-        filename: '[file].map'
+        filename: "[file].map"
       }),
 
       new SentryWebpackPlugin({
-        authToken: config_file.sentry_auth_token,
-        org: config_file.sentry_organization,
-        project: config_file.sentry_project,
-        urlPrefix: '~/dist',
-        include: './dist',
+        authToken: configFile.sentryAuthToken,
+        org: configFile.sentryOrganization,
+        project: configFile.sentryProject,
+        urlPrefix: "~/dist",
+        include: "./dist",
         setCommits: {
           auto: true
         },
-        release: "allerta-vvf-frontend@"+git('describe --always')
+        release: "allerta-vvf-frontend@"+git("describe --always")
       }),
 
       new AfterBuildPlugin(removeSourceMapUrlAfterBuild),
 
       new InjectPlugin(function() {
         return "import './src/sentry.js';";
-      },{ entryName: 'main' })
+      },{ entryName: "main" })
     );
     console.log(colors.green("INFO Sentry Webpack plugins enabled"));
   }
 
-  prod_config.plugins.push(
+  prodConfig.plugins.push(
     new webpack.EnvironmentPlugin({
-      GIT_VERSION: git('describe --always'),
-      GIT_AUTHOR_DATE: git('log -1 --format=%aI'),
+      GIT_VERSION: git("describe --always"),
+      GIT_AUTHOR_DATE: git("log -1 --format=%aI"),
       BUNDLE_DATE: Date.now(),
-      BUNDLE_MODE: 'production',
-      config: config_file
+      BUNDLE_MODE: "production",
+      config: configFile
     })
   );
-  return merge(common, prod_config);
-}
+  return merge(common, prodConfig);
+};

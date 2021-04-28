@@ -1,6 +1,8 @@
 <?php
 require_once 'vendor/autoload.php';
 use DebugBar\StandardDebugBar;
+use MinistryOfWeb\OsmTiles\Converter;
+use MinistryOfWeb\OsmTiles\LatLng;
 
 if(!file_exists("config.php") && !file_exists("../../config.php")) {
     header('Location: install/install.php');
@@ -193,11 +195,65 @@ class tools
         header("data: ".$response_data);
         header("Content-type: application/json");
         if(!is_null($debugbar)) $debugbar->sendDataInHeaders(true);
-        if(isset($_GET["old_data"]) && $_GET["old_data"] !== $response_data){
+        if(isset($_GET["oldData"]) && $_GET["oldData"] !== $response_data){
           print($json_response);
         } else {
           print("{}");
         }
+    }
+
+    public function convertMapAddress($lat, $lng, $zoom){
+        $converter = new Converter();
+        $point     = new LatLng($lat, $lng);
+
+        $tile = $converter->toTile($point, $zoom);
+
+        $tile_servers = ["a", "b", "c"];
+        $tileServer = $tile_servers[array_rand($tile_servers)];
+
+        return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
+    }
+
+    public function cachePreviewMap($filename, $lat, $lng, $zoom=16){
+        $url = $this->convertMapAddress($lat, $lng, $zoom);
+        $options = ['http' => [
+            'user_agent' => 'AllertaVVF dev version (cached map previews generator)'
+        ]];
+        $context = stream_context_create($options);
+        $data = file_get_contents($url, false, $context);
+
+        try {
+            if (!file_exists('resources/images/map_cache')) {
+                mkdir('resources/images/map_cache', 0755, true);
+            }
+            $filePath = "resources/images/map_cache/".$filename.".png";
+            file_put_contents($filePath, $data);
+            if(extension_loaded('gd')){
+                $img = imagecreatefrompng($filePath);
+                $marker = imagecreatefromgif("resources/images/marker.gif");
+
+                $textcolor = imagecolorallocate($img, 0, 0, 0);
+                imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
+
+                imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
+
+                imagepng($img, $filePath);
+                imagedestroy($img);
+            }
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function checkPlaceParam($place){
+        if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
+            $lat = explode(";", $place)[0];
+            $lng = explode(";", $place)[1];
+            $mapImageID = \Delight\Auth\Auth::createUuid();
+            $this->cachePreviewMap($mapImageID, $lat, $lng);
+            $place = $place . "#" . $mapImageID;
+        }
+        return $place;
     }
 }
 
@@ -246,10 +302,10 @@ class database
         }
         if($this->load_from_file) {
             if(file_exists($this->options_cache_file)/* && time()-@filemtime($this->options_cache_file) < 604800*/) {
-                $this->options = unserialize(file_get_contents($this->options_cache_file), ['allowed_classes' => false]);
+                $this->options = json_decode(file_get_contents($this->options_cache_file), true);
             } else {
                 $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
-                file_put_contents($this->options_cache_file, serialize($this->options));
+                file_put_contents($this->options_cache_file, json_encode($this->options));
             }
         } else {
             $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
@@ -450,10 +506,16 @@ class user
         return $name;
     }
 
-    public function hidden()
+    public function hidden($user = null)
     {
-        $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
-        return $profiles;
+        if(is_null($user)){
+            $user = $this->auth->getUserId();
+        }
+        $result = $this->database->exec("SELECT `hidden` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user]);
+        if(isset($result[0]) && isset($result[0]["hidden"])){
+            return boolval($result[0]["hidden"]);
+        }
+        return false;
     }
 
     public function available($name)
@@ -471,7 +533,7 @@ class user
         return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
     }
 
-    public function login($name, $password, $remember_me, $twofa=null)
+    public function login($name, $password, $remember_me)
     {
         $this->tools->profiler_start("Login");
         if(!empty($name)) {
@@ -545,16 +607,18 @@ class user
         if(is_null($editor)){
             $editor = $changed;
         }
-        if($this->database->get_option("log_save_ip")){
-            $ip = $this->tools->get_ip();
-        } else {
-            $ip = null;
+        if(!$this->hidden($editor)){
+            if($this->database->get_option("log_save_ip")){
+                $ip = $this->tools->get_ip();
+            } else {
+                $ip = null;
+            }
+            $source_type = defined("REQUEST_USING_API") ? "api" : "web";
+            $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
+            $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
+            $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
+            $this->database->exec($sql, false, $params);
         }
-        $source_type = defined("REQUEST_USING_API") ? "api" : "web";
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
-        $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
-        $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
-        $this->database->exec($sql, false, $params);
         $this->tools->profiler_stop();
     }
 
@@ -573,6 +637,8 @@ class user
 
     public function add_user($email, $name, $username, $password, $phone_number, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
     {
+        //TODO: save birthday in db
+        bdump($birthday);
         $this->tools->profiler_start("Add user");
         $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
         if($userId) {
@@ -755,7 +821,7 @@ class translations
         } else {
             $client_languages = explode(",", $client_languages);
             $tmp_languages = [];
-            foreach($client_languages as $key=>$language){
+            foreach($client_languages as $language){
                 if(strpos($language, ';') == false) {
                     $tmp_languages[$language] = 1;
                 } else {
@@ -877,6 +943,7 @@ function init_class($enableDebugger=true, $headers=true)
         global $webpack_manifest_path;
         $error = error_get_last();
         if ($error) {
+            bdump($webpack_manifest_path);
             require("error_page.php");
             show_error_page(500);
         }
