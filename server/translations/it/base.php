@@ -12,7 +12,6 @@ return [
     "Services" => "Interventi",
     "Trainings" => "Esercitazioni",
     "Logs" => "Logs",
-    "Graphics" => "Grafici",
     "Technical Support" => "Supporto Tecnico",
     "Hi, %s." => "Ciao, %s.",
     "Logout" => "Logout",

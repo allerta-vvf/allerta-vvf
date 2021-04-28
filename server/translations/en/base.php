@@ -12,7 +12,6 @@ return [
     "Services" => "Services",
     "Trainings" => "Trainings",
     "Logs" => "Logs",
-    "Graphics" => "Graphics",
     "Technical Support" => "Technical Support",
     "Hi, %s." => "Hi, %s.",
     "Logout" => "Logout",
