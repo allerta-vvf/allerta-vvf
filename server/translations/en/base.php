@@ -121,5 +121,8 @@ return [
     "Thu" => "Thu",
     "Fri" => "Fri",
     "Sat" => "Sat",
-    "Sun" => "Sun"
+    "Sun" => "Sun",
+    "Do you want to exclude holidays from schedules?" => "Do you want to exclude holidays from schedules?",
+    "Select all" => "Select all",
+    "Remove selections" => "Remove selections"
 ];

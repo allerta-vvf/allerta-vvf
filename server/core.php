@@ -403,6 +403,7 @@ class user
     private $profile_names = null;
     public $auth = null;
     public $authenticated = false;
+    public $holidays = null;
 
     public function __construct($database, $tools)
     {
@@ -432,6 +433,7 @@ class user
         $this->authenticated = $this->auth->isLoggedIn();
         $this->profile_names = $this->database->exec("SELECT `id`, `name` FROM `%PREFIX%_profiles`;", true);
         $this->user_names = $this->database->exec("SELECT `id`, `username` FROM `%PREFIX%_users`;", true);
+        $this->holidays = Yasumi\Yasumi::create($this->database->get_option("holidays_provider") ?: "USA", date("Y"), $this->database->get_option("holidays_language") ?: "en_US");
     }
 
     public function authenticated()

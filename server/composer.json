@@ -18,6 +18,7 @@
         "brick/phonenumber": "^0.2.2",
         "sentry/sdk": "^3.1",
         "maximebf/debugbar": "^1.16",
+        "azuyalabs/yasumi": "^2.3",
         "ministryofweb/php-osm-tiles": "^2.0",
         "jenstornell/tiny-html-minifier": "dev-master"
     },
