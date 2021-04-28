@@ -9,40 +9,9 @@ updates:
   allow:
   - dependency-type: direct
   - dependency-type: indirect
-  ignore:
-  - dependency-name: squizlabs/php_codesniffer
-    versions:
-    - 3.6.0
-  - dependency-name: giggsey/libphonenumber-for-php
-    versions:
-    - 8.12.17
-    - 8.12.18
-    - 8.12.21
-  - dependency-name: sentry/sentry
-    versions:
-    - 3.2.0
-    - 3.2.1
-  - dependency-name: symfony/options-resolver
-    versions:
-    - 5.2.4
-  - dependency-name: symfony/var-dumper
-    versions:
-    - 5.2.4
-  - dependency-name: symfony/http-client
-    versions:
-    - 5.2.4
-  - dependency-name: symfony/polyfill-mbstring
-    versions:
-    - 1.22.0
-    - 1.22.1
-  - dependency-name: symfony/polyfill-ctype
-    versions:
-    - 1.22.0
-    - 1.22.1
-  - dependency-name: twig/twig
-    versions:
-    - 3.3.0
-  - dependency-name: tracy/tracy
-    versions:
-    - 2.8.2
-    - 2.8.3
+- package-ecosystem: javascript
+  directory: "/server/resources"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  versioning-strategy: increase
