@@ -29,7 +29,7 @@
     "css-loader": "^4.3.0",
     "datatables.net-bs4": "^1.10.23",
     "datatables.net-buttons-bs4": "^1.6.5",
-    "datatables.net-plugins": "^1.10.22",
+    "datatables.net-plugins": "^1.10.24",
     "datatables.net-responsive-bs4": "^2.2.7",
     "expose-loader": "^1.0.3",
     "file-loader": "^6.2.0",
