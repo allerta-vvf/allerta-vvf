@@ -22,18 +22,20 @@ try {
 } catch (Exception $e) {
     $loader = new \Twig\Loader\FilesystemLoader('../templates');
 }
-$filter = new \Twig\TwigFilter(
-    't', function ($string) {
-        global $translations;
-        return $translations->translate($string);
-    }
-);
 $twig = new \Twig\Environment(
     $loader, [
     //'cache' => 'compilation'
     ]
 );
-$twig->addFilter($filter);
+
+$filter_translate = new \Twig\TwigFilter(
+    't', function ($string) {
+        global $translations;
+        return $translations->translate($string);
+    }
+);
+$twig->addFilter($filter_translate);
+
 $function_option = new \Twig\TwigFunction(
     'option', function ($option) {
         global $database;
@@ -41,6 +43,7 @@ $function_option = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_option);
+
 $function_username = new \Twig\TwigFunction(
     'username', function ($id) {
         global $user;
@@ -48,6 +51,7 @@ $function_username = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_username);
+
 $function_resource = new \Twig\TwigFunction(
     'resource', function ($file) {
         global $webpack_manifest;
@@ -55,6 +59,20 @@ $function_resource = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_resource);
+
+$filter_minimize = new \Twig\TwigFilter(
+    'minimize', function ($content) {
+        if(isset($_REQUEST["skip_minify"])){
+            return $content;
+        } else {
+            return Minifier\TinyMinify::html($content, [
+                'collapse_whitespace' => true,
+                'disable_comments' => true,
+            ]);
+        }
+    }, ['is_safe' => ['html']]
+);
+$twig->addFilter($filter_minimize);
 p_stop();
 
 $template = null;
