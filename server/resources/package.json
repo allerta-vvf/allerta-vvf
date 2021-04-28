@@ -40,14 +40,14 @@
     "jquery-pjax": "^2.0.1",
     "jszip": "^3.6.0",
     "leaflet": "^1.7.1",
-    "leaflet.locatecontrol": "^0.72.2",
+    "leaflet.locatecontrol": "^0.73.0",
     "pdfmake": "^0.1.71",
     "popper.js": "^1.16.1",
     "sass": "^1.32.12",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
-    "time-input-polyfill": "^1.0.9",
+    "time-input-polyfill": "^1.0.10",
     "toastr": "^2.1.4",
     "webpack": "^5.36.1",
     "webpack-assets-manifest": "^3.1.1",
@@ -55,7 +55,7 @@
     "webpack-merge": "^5.7.3"
   },
   "devDependencies": {
-    "speed-measure-webpack-plugin": "^1.4.2",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.5.0"
   }
