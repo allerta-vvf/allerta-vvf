@@ -36,7 +36,12 @@ $cronJobDateTime = [
 ];
 
 $start = $database->get_option("cron_job_enabled") && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".$database->get_option("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".$database->get_option("cron_job_code")));
-$start_reset = $execDateTime == $cronJobDateTime;
+$start_reset = ( $execDateTime["day"] == $cronJobDateTime["day"] &&
+    $execDateTime["day"] == $cronJobDateTime["day"] &&
+    $execDateTime["month"] == $cronJobDateTime["month"] &&
+    $execDateTime["year"] == $cronJobDateTime["year"] &&
+    $execDateTime["hour"] == $cronJobDateTime["hour"] &&
+    $execDateTime["minutes"] - $cronJobDateTime["minutes"] < 5 );
 
 $action = "Availability Minutes ";
 if($start) {
@@ -96,6 +101,11 @@ if($start) {
             ];
             $id = $row["id"];
             $user_id = $row["user"];
+            $selected_holidays = json_decode($row["holidays"]);
+            $selected_holidays_dates = [];
+            foreach ($selected_holidays as $holiday){
+                $selected_holidays_dates[] = $user->holidays->getHoliday($holiday)->format('Y-m-d');
+            }
             foreach ($row["schedules"] as $key => $value) {
                 $schedule = [
                     "day" => (int) $value[0]+1,
@@ -115,8 +125,7 @@ if($start) {
                     $now["minutes"] - $schedule["minutes"] <= 30
                 ){
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
-                    if($schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true){
-                        //TODO: check if it's holiday
+                    if($schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true && !in_array(date('Y-m-d'), $selected_holidays_dates)){
                         $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
                         $database->exec("UPDATE `%PREFIX%_schedules` SET `last_exec` = :last_exec WHERE `id` = :id;", false, [":id" => $id, ":last_exec" => $last_exec_new]);
                         $database->exec("UPDATE `%PREFIX%_profiles` SET available = '1', availability_last_change = 'cron' WHERE `id` = :user_id;", false, [":user_id" => $user_id]);
