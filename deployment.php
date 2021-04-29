@@ -48,7 +48,6 @@ $baseConfig = [
 		vendor/nikic/fast-route/test
 		vendor/twig/twig/src/Node/Expression/Test
 		vendor/twig/twig/src/Test
-		vendor
 		*.lock
 		*.zip
     ',
@@ -81,6 +80,10 @@ foreach ($remotes as $key => $value) {
 	}
 	if(isset($value["after"]) && $value["after"] === false){
 		$config[$key]["after"] = [];
+	}
+	if(isset($config[$key]["skip_composer_upload"]) && $config[$key]["skip_composer_upload"]){
+		$config[$key]["ignore"]  .= "
+		vendor";
 	}
 }
 
