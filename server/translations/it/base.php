@@ -12,7 +12,6 @@ return [
     "Services" => "Interventi",
     "Trainings" => "Esercitazioni",
     "Logs" => "Logs",
-    "Graphics" => "Grafici",
     "Technical Support" => "Supporto Tecnico",
     "Hi, %s." => "Ciao, %s.",
     "Logout" => "Logout",
@@ -121,5 +120,8 @@ return [
     "Thu" => "Gio",
     "Fri" => "Ven",
     "Sat" => "Sab",
-    "Sun" => "Dom"
+    "Sun" => "Dom",
+    "Do you want to exclude holidays from schedules?" => "Vuoi escudere giorni festivi dalla programmazione degli orari?",
+    "Select all" => "Seleziona tutti",
+    "Remove selections" => "Rimuovi selezioni"
 ];
