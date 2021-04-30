@@ -3,19 +3,7 @@ require_once 'core.php';
 
 init_class(false);
 header('Content-Type: application/json');
-
-function customErrorHandler(int $errNo, string $errMsg, string $file, int $line)
-{
-    $output = [
-        "errNo" => $errNo,
-        "error" => $errMsg,
-        "file" => $file,
-        "line" => $line
-    ];
-    var_dump($output);
-}
 error_reporting(-1);
-set_error_handler('customErrorHandler');
 
 list($cronJobDay, $cronJobTime) = explode(";", $database->get_option("cron_job_time"));
 
@@ -73,7 +61,7 @@ if($start) {
             $increment[$id] = $value;
             $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = :value WHERE id = :id", true, [":value" => $value, ":id" => $id]);
             $tmp = $id . " - " . $value . " ";
-            $tmp .= count($database->stmt->rowCount()) == 1 ? "success" : "fail";
+            $tmp .= $database->stmt->rowCount() == 1 ? "success" : "fail";
             $queries[] = $tmp;
         }
         $output[] = $queries;
