@@ -53,6 +53,9 @@ if(!empty($result)){
         $old_schedules[$schedule[0]][$hour] = true;
     }
     $old_holidays = json_decode($result[0]["holidays"]);
+    if(is_null($old_holidays)){
+        $old_holidays = [];
+    }
 } else {
     $old_schedules = [];
     $old_holidays = [];
