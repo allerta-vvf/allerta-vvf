@@ -123,7 +123,8 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
         }
       },
       language: loadedLanguage,
-      buttons: ["excel", "pdf", "csv"]
+      buttons: ["excel", "pdf", "csv"],
+      info: false //TODO: fix info string
     });
     tableDt.buttons().container()
       .appendTo("#table_wrapper :nth-child(1):eq(0)");

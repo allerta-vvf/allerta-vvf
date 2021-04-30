@@ -51,6 +51,7 @@ $baseConfig = [
 		*.lock
 		*.zip
     ',
+	'allowDelete' => false,
     'before' =>  [
         'local: cd server && composer update --no-dev -o'
     ],
