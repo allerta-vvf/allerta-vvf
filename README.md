@@ -8,26 +8,6 @@ Allerta VVF is an unofficial **open source firefighters' management software** f
 
 This is only a **development version**.
 
-||it works :heavy_check_mark:|it's in beta :clock8:|it doesn't work :x:|
-|:-:|:-:|:-:|:-:|
-|Availability|:heavy_check_mark:|||
-|"Services"|:heavy_check_mark:|||
-|"Trainings"|:heavy_check_mark:|||
-|Token check|:heavy_check_mark:|||
-|Installation|:heavy_check_mark:|||
-|CLI Installation|:heavy_check_mark:|||
-|Docker Installation|:heavy_check_mark:|||
-|Translation|:heavy_check_mark:|||
-|User managament||:clock8:||
-|Options|:heavy_check_mark:|||
-|Logs|:heavy_check_mark:|||
-|Graphs|||:x:|
-|User profile editor|||:x:|
-|Images||:clock8:||
-|Api||:clock8:||
-|Telegram bot||:clock8:||
-|Twilio||:clock8:||
-
 ## Main repository
 https://github.com/allerta-vvf/allerta-vvf  
 

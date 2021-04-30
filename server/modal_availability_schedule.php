@@ -52,8 +52,13 @@ if(!empty($result)){
         $hour = $hour[0] == "0" ? substr($hour,1) : $hour;
         $old_schedules[$schedule[0]][$hour] = true;
     }
+    $old_holidays = json_decode($result[0]["holidays"]);
+    if(is_null($old_holidays)){
+        $old_holidays = [];
+    }
 } else {
     $old_schedules = [];
+    $old_holidays = [];
 }
 ?>
 <style>
@@ -127,6 +132,35 @@ endif;
 
     </tbody>
 </table>
+<br>
+<?php
+$holidays_selection_question = t("Do you want to exclude holidays from schedules?",false);
+$holidays_select_all = t("Select all", false);
+$holidays_select_none = t("Remove selections", false);
+echo(<<<EOL
+<div class="form-group">
+    <label>{$holidays_selection_question}</label>
+    <a onclick="$('.holiday_check').prop('checked', true);" class="text-primary">{$holidays_select_all}</a> / <a onclick="$('.holiday_check').prop('checked', false);" class="text-primary">{$holidays_select_none}</a>
+EOL);
+
+$i = 0;
+foreach ($user->holidays as $holiday) {
+    $i++;
+    $holiday_name = $holiday->getName();
+    $holiday_shortname = $holiday->shortName;
+    $is_holiday_selected = in_array($holiday_shortname, $old_holidays) ? "checked" : "";
+echo(<<<EOT
+    <div class="form-check">
+        <input class="form-check-input holiday_check" name="holiday_check" type="checkbox" value="{$holiday_shortname}" id="holidayCheckbox{$i}" {$is_holiday_selected}>
+        <label class="form-check-label" for="holidayCheckbox{$i}">
+        {$holiday_name} ({$holiday})
+        </label>
+    </div>
+EOT);
+}
+
+echo("</div>");
+?>
 <script>
 function init_modal() {
     <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
@@ -218,11 +252,13 @@ function extractSelections(){
 
 function submit_changes(){
     let hours = extractSelections();
+    let holidays = $.map($('input[name="holiday_check"]:checked'), function(c){return c.value; });
     $.ajax({
         url: "resources/ajax/ajax_availability_schedule.php",
         method: "POST",
         data: {
-            hours: hours
+            hours: hours,
+            holidays: holidays
         },
         success: function (data) {
             console.log(data);

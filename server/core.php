@@ -403,6 +403,7 @@ class user
     private $profile_names = null;
     public $auth = null;
     public $authenticated = false;
+    public $holidays = null;
 
     public function __construct($database, $tools)
     {
@@ -432,6 +433,7 @@ class user
         $this->authenticated = $this->auth->isLoggedIn();
         $this->profile_names = $this->database->exec("SELECT `id`, `name` FROM `%PREFIX%_profiles`;", true);
         $this->user_names = $this->database->exec("SELECT `id`, `username` FROM `%PREFIX%_users`;", true);
+        $this->holidays = Yasumi\Yasumi::create($this->database->get_option("holidays_provider") ?: "USA", date("Y"), $this->database->get_option("holidays_language") ?: "en_US");
     }
 
     public function authenticated()
@@ -504,10 +506,16 @@ class user
         return $name;
     }
 
-    public function hidden()
+    public function hidden($user = null)
     {
-        $profiles = $this->database->exec("SELECT `name` FROM `%PREFIX%_profiles` WHERE hidden = 1;", true);
-        return $profiles;
+        if(is_null($user)){
+            $user = $this->auth->getUserId();
+        }
+        $result = $this->database->exec("SELECT `hidden` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user]);
+        if(isset($result[0]) && isset($result[0]["hidden"])){
+            return boolval($result[0]["hidden"]);
+        }
+        return false;
     }
 
     public function available($name)
@@ -599,16 +607,18 @@ class user
         if(is_null($editor)){
             $editor = $changed;
         }
-        if($this->database->get_option("log_save_ip")){
-            $ip = $this->tools->get_ip();
-        } else {
-            $ip = null;
+        if(!$this->hidden($editor)){
+            if($this->database->get_option("log_save_ip")){
+                $ip = $this->tools->get_ip();
+            } else {
+                $ip = null;
+            }
+            $source_type = defined("REQUEST_USING_API") ? "api" : "web";
+            $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
+            $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
+            $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
+            $this->database->exec($sql, false, $params);
         }
-        $source_type = defined("REQUEST_USING_API") ? "api" : "web";
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
-        $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
-        $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
-        $this->database->exec($sql, false, $params);
         $this->tools->profiler_stop();
     }
 

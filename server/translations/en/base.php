@@ -12,7 +12,6 @@ return [
     "Services" => "Services",
     "Trainings" => "Trainings",
     "Logs" => "Logs",
-    "Graphics" => "Graphics",
     "Technical Support" => "Technical Support",
     "Hi, %s." => "Hi, %s.",
     "Logout" => "Logout",
@@ -121,5 +120,8 @@ return [
     "Thu" => "Thu",
     "Fri" => "Fri",
     "Sat" => "Sat",
-    "Sun" => "Sun"
+    "Sun" => "Sun",
+    "Do you want to exclude holidays from schedules?" => "Do you want to exclude holidays from schedules?",
+    "Select all" => "Select all",
+    "Remove selections" => "Remove selections"
 ];

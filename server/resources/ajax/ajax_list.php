@@ -6,11 +6,9 @@ $user->online_time_update();
 
 $result = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
 
-$hidden = $user->hidden();
-
 $response = [];
 foreach($result as $row){
-  if(!in_array($row['name'], $hidden) && ($row['hidden'] == 0 && $row['disabled'] == 0)){
+  if(!$user->hidden($row["id"])){
     if($user->requireRole(Role::FULL_VIEWER)){
       $name = $user->nameById($row["id"]);
       $name_encoded = urlencode($user->name());
