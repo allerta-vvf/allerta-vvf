@@ -95,17 +95,18 @@
       <input type="hidden" name="place" value="" />
       <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
       {% else %}
-      <div class="form-check">
+      <div class="form-group">
         <label>{{ 'Service place'|t }}</label>
         <input type="text" name="place" class="form-control" required value="{{ values.place }}">
       </div>
+      <br>
       {% endif %}
-      <div class="form-check">
+      <div class="form-group">
         <label for="notes">{{ 'Others notes (ex. others infos)'|t }}</label><br>
         <textarea class="form-control" id="notes" name='notes'></textarea>
       </div>
       <br>
-      <div class="form-check">
+      <div class="form-group">
         <label>{{ 'Service type'|t }}</label>
         <br>
         <select id="types" class="form-control" name='type' class="types">
