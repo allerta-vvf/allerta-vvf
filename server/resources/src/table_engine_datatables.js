@@ -39,7 +39,6 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
           mapModal.innerHTML = `<div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Map</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -48,9 +47,6 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
                 <div id="map-container-${rowNum}" class="map"></div><br>
                 <p>Lat: <b id="map-${rowNum}-lat">${lat}</b></p>
                 <p>Lng: <b id="map-${rowNum}-lng">${lng}</b></p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>`;

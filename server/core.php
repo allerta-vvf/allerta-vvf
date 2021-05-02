@@ -31,13 +31,13 @@ function bdump($message){
 
 class tools
 {
-    public $check_cf_ip;
+    public $database;
     public $profiler_enabled;
     public $profiler_last_name = "";
 
-    public function __construct($check_cf_ip, $profiler_enabled)
+    public function __construct($database, $profiler_enabled)
     {
-        $this->check_cf_ip = $check_cf_ip;
+        $this->database = $database;
         $this->profiler_enabled = $profiler_enabled;
     }
 
@@ -65,7 +65,7 @@ class tools
         }else{
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        if($this->check_cf_ip) {
+        if($this->database->get_option("check_cf_ip")) {
             if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
                 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
             }
@@ -202,20 +202,32 @@ class tools
         }
     }
 
-    public function convertMapAddress($lat, $lng, $zoom){
-        $converter = new Converter();
-        $point     = new LatLng($lat, $lng);
+    public function convertMapAddressToUrl($lat, $lng, $zoom){
+        switch ($this->database->get_option("map_preview_generator")) {
+            case 'osm':
+                $converter = new Converter();
+                $point     = new LatLng($lat, $lng);
+                $tile = $converter->toTile($point, $zoom);
+                $tile_servers = ["a", "b", "c"];
+                $tileServer = $tile_servers[array_rand($tile_servers)];
+                return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
 
-        $tile = $converter->toTile($point, $zoom);
-
-        $tile_servers = ["a", "b", "c"];
-        $tileServer = $tile_servers[array_rand($tile_servers)];
-
-        return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
+            case 'custom':
+            default:
+                if($this->database->get_option("map_preview_generator_add_marker") && $this->database->get_option("map_preview_generator_url_marker") && $this->database->get_option("map_preview_generator_url_marker") !== ""){
+                    $url = $this->database->get_option("map_preview_generator_url_marker");
+                } else {
+                    $url = $this->database->get_option("map_preview_generator_url");
+                }
+                $url = str_replace("{{LAT}}", $lat, $url);
+                $url = str_replace("{{LNG}}", $lng, $url);
+                $url = str_replace("{{ZOOM}}", $zoom, $url);
+                return $url;
+        }
     }
 
     public function cachePreviewMap($filename, $lat, $lng, $zoom=16){
-        $url = $this->convertMapAddress($lat, $lng, $zoom);
+        $url = $this->convertMapAddressToUrl($lat, $lng, $zoom);
         $options = ['http' => [
             'user_agent' => 'AllertaVVF dev version (cached map previews generator)'
         ]];
@@ -230,13 +242,14 @@ class tools
             file_put_contents($filePath, $data);
             if(extension_loaded('gd')){
                 $img = imagecreatefrompng($filePath);
-                $marker = imagecreatefromgif("resources/images/marker.gif");
-
-                $textcolor = imagecolorallocate($img, 0, 0, 0);
-                imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
-
-                imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
-
+                if($this->database->get_option("map_preview_generator_add_marker") && (!$this->database->get_option("map_preview_generator_url_marker") || $this->database->get_option("map_preview_generator_url_marker") == "")){
+                    $marker = imagecreatefromgif("resources/images/marker.gif");
+                    imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
+                }
+                if($this->database->get_option("map_preview_generator") == "osm"){
+                    $textcolor = imagecolorallocate($img, 0, 0, 0);
+                    imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
+                }
                 imagepng($img, $filePath);
                 imagedestroy($img);
             }
@@ -246,12 +259,14 @@ class tools
     }
 
     public function checkPlaceParam($place){
-        if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
-            $lat = explode(";", $place)[0];
-            $lng = explode(";", $place)[1];
-            $mapImageID = \Delight\Auth\Auth::createUuid();
-            $this->cachePreviewMap($mapImageID, $lat, $lng);
-            $place = $place . "#" . $mapImageID;
+        if($this->database->get_option("generate_map_preview")){
+            if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
+                $lat = explode(";", $place)[0];
+                $lng = explode(";", $place)[1];
+                $mapImageID = \Delight\Auth\Auth::createUuid();
+                $this->cachePreviewMap($mapImageID, $lat, $lng);
+                $place = $place . "#" . $mapImageID;
+            }
         }
         return $place;
     }
@@ -888,7 +903,7 @@ function init_class($enableDebugger=true, $headers=true)
     global $tools, $database, $user, $crud, $translations, $debugbar;
     if(!isset($tools) && !isset($database) && !isset($translations)) {
         $database = new database();
-        $tools = new tools($database->get_option("check_cf_ip"), $enableDebugger);
+        $tools = new tools($database, $enableDebugger);
         $user = new user($database, $tools);
         $crud = new crud($tools, $database, $user);
         $translations = new translations($database->get_option("force_language"));
