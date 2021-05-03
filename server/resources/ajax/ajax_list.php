@@ -4,10 +4,10 @@ init_class();
 $user->requirelogin(false);
 $user->online_time_update();
 
-$result = $database->exec("SELECT * FROM `%PREFIX%_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC;", true);
+$result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
 
 $response = [];
-foreach($result as $row){
+foreach(!is_null($result) ? $result : [] as $row){
   if(!$user->hidden($row["id"])){
     if($user->requireRole(Role::FULL_VIEWER)){
       $name = $user->nameById($row["id"]);

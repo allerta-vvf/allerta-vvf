@@ -44,7 +44,7 @@ $days = [
 ];
 
 $user_id = $user->auth->getUserId();
-$result = $database->exec("SELECT * FROM `%PREFIX%_schedules` WHERE `user`={$user_id};", true);
+$result = $db->select("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `user`={$user_id}");
 if(!empty($result)){
     $old_schedules_db = json_decode($result[0]["schedules"]);
     foreach ($old_schedules_db as $schedule) {

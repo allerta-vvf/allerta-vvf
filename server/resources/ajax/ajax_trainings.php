@@ -4,10 +4,10 @@ init_class();
 $user->requirelogin(false);
 $user->online_time_update();
 
-$result = $database->exec("SELECT * FROM `%PREFIX%_trainings` ORDER BY date DESC, beginning desc", true);
+$result = $db->select("SELECT * FROM `".DB_PREFIX."_trainings` ORDER BY date DESC, beginning desc");
 
 $response = [];
-foreach($result as $row){
+foreach(!is_null($result) ? $result : [] as $row){
   $chief = $user->nameById($row["chief"]);
 
   $others_crew_array = explode(",", $row['crew']);
@@ -24,8 +24,8 @@ foreach($result as $row){
     $others_crew,
     s($row['place'],false,true),
     s($row['notes'],false,true),
-    $database->get_option("training_edit") ? "<a class='pjax_disable' data-action='edit' href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
-    $database->get_option("training_remove") ? "<a class='pjax_disable' data-action='delete' href='edit_training.php?delete&id={$row['id']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
+    get_option("training_edit") ? "<a class='pjax_disable' data-action='edit' href='edit_training.php?edit&id={$row['id']}'><i style='font-size: 40px' class='fa fa-edit'></i></a>" : null,
+    get_option("training_remove") ? "<a class='pjax_disable' data-action='delete' href='edit_training.php?delete&id={$row['id']}'><i style='font-size: 40px' class='fa fa-trash'></i></a>" : null
   ];
 }
 $tools->ajax_page_response($response);

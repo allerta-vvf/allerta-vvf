@@ -4,7 +4,7 @@ init_class();
 $user->requirelogin(false);
 $user->online_time_update();
 
-$result = $database->exec("SELECT * FROM `%PREFIX%_log` ORDER BY `timestamp` DESC", true);
+$result = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
 
 //https://stackoverflow.com/a/2524761
 function isValidTimeStamp($timestamp)
@@ -15,7 +15,7 @@ function isValidTimeStamp($timestamp)
 }
 
 $response = [];
-foreach($result as $row){
+foreach(!is_null($result) ? $result : [] as $row){
   if(isValidTimeStamp($row["timestamp"])){
     $date = new DateTime();
     $date->setTimestamp($row["timestamp"]);

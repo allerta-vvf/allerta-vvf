@@ -15,12 +15,20 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
                 break;
         }
     }
-    $webpack_manifest = json_decode(
-        file_get_contents(isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/manifest.json")),
-        true
-    );
-    $main_script_url = "resources/dist/".$webpack_manifest["main.js"];
-    $game_script_url = "resources/dist/".$webpack_manifest["games.js"];
+    $main_script_url = null;
+    $game_script_url = null;
+    try{
+        $webpack_manifest_path = isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/manifest.json");
+        if(!empty($webpack_manifest_path)){
+            $webpack_manifest = json_decode(
+                file_get_contents($webpack_manifest_path),
+                true
+            );
+            $main_script_url = "resources/dist/".$webpack_manifest["main.js"];
+            $game_script_url = "resources/dist/".$webpack_manifest["games.js"];
+        }
+    } catch(\Exception $e) {
+    }
 
     $error_templates = [
         <<<EOT
@@ -59,6 +67,9 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
     echo($error_templates[$key]);
 ?>
 <br><br>
+<?php
+if(!is_null($game_script_url)){
+?>
 <div class="games_list" style="margin-left: 20px; text-align: left;">
   While you are waiting, you can play some games:
     <ul>
@@ -72,6 +83,7 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
 <script src="<?php echo($main_script_url); ?>"></script>
 <script src="<?php echo($game_script_url); ?>"></script>
 <?php
+}
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
