@@ -7,8 +7,11 @@ $id = $user->auth->getUserId();
 $time = time();
 
 if(!is_null($id)) {
-    $sql = "UPDATE `%PREFIX%_profiles` SET online_time = '$time' WHERE id = '" . $id ."'";
-    $database->exec($sql, true);
+    $db->update(
+        DB_PREFIX."_profiles",
+        ["online_time" => $time],
+        ["id" => $id]
+    );
     echo(json_encode(["id" => $id, "time" => $time, "sql" => $sql]));
 }
 ?>

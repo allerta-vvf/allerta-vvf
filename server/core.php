@@ -31,13 +31,13 @@ function bdump($message){
 
 class tools
 {
-    public $check_cf_ip;
+    public $db;
     public $profiler_enabled;
     public $profiler_last_name = "";
 
-    public function __construct($check_cf_ip, $profiler_enabled)
+    public function __construct($db, $profiler_enabled)
     {
-        $this->check_cf_ip = $check_cf_ip;
+        $this->db = $db;
         $this->profiler_enabled = $profiler_enabled;
     }
 
@@ -65,7 +65,7 @@ class tools
         }else{
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        if($this->check_cf_ip) {
+        if(get_option("check_cf_ip")) {
             if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
                 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
             }
@@ -202,20 +202,32 @@ class tools
         }
     }
 
-    public function convertMapAddress($lat, $lng, $zoom){
-        $converter = new Converter();
-        $point     = new LatLng($lat, $lng);
+    public function convertMapAddressToUrl($lat, $lng, $zoom){
+        switch (get_option("map_preview_generator")) {
+            case 'osm':
+                $converter = new Converter();
+                $point     = new LatLng($lat, $lng);
+                $tile = $converter->toTile($point, $zoom);
+                $tile_servers = ["a", "b", "c"];
+                $tileServer = $tile_servers[array_rand($tile_servers)];
+                return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
 
-        $tile = $converter->toTile($point, $zoom);
-
-        $tile_servers = ["a", "b", "c"];
-        $tileServer = $tile_servers[array_rand($tile_servers)];
-
-        return sprintf("https://{$tileServer}.tile.openstreetmap.org/{$zoom}/%d/%d.png", $tile->getX(), $tile->getY());
+            case 'custom':
+            default:
+                if(get_option("map_preview_generator_add_marker") && get_option("map_preview_generator_url_marker") && get_option("map_preview_generator_url_marker") !== ""){
+                    $url = get_option("map_preview_generator_url_marker");
+                } else {
+                    $url = get_option("map_preview_generator_url");
+                }
+                $url = str_replace("{{LAT}}", $lat, $url);
+                $url = str_replace("{{LNG}}", $lng, $url);
+                $url = str_replace("{{ZOOM}}", $zoom, $url);
+                return $url;
+        }
     }
 
     public function cachePreviewMap($filename, $lat, $lng, $zoom=16){
-        $url = $this->convertMapAddress($lat, $lng, $zoom);
+        $url = $this->convertMapAddressToUrl($lat, $lng, $zoom);
         $options = ['http' => [
             'user_agent' => 'AllertaVVF dev version (cached map previews generator)'
         ]];
@@ -229,14 +241,15 @@ class tools
             $filePath = "resources/images/map_cache/".$filename.".png";
             file_put_contents($filePath, $data);
             if(extension_loaded('gd')){
-                $img = imagecreatefrompng($filePath);
-                $marker = imagecreatefromgif("resources/images/marker.gif");
-
-                $textcolor = imagecolorallocate($img, 0, 0, 0);
-                imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
-
-                imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
-
+                $img = imagecreatefromstring(file_get_contents($filePath));
+                if(get_option("map_preview_generator_add_marker") && (!get_option("map_preview_generator_url_marker") || get_option("map_preview_generator_url_marker") == "")){
+                    $marker = imagecreatefromgif("resources/images/marker.gif");
+                    imagecopy($img, $marker, 120, 87, 0, 0, 25, 41);
+                }
+                if(get_option("map_preview_generator") == "osm"){
+                    $textcolor = imagecolorallocate($img, 0, 0, 0);
+                    imagestring($img, 5, 0, 236, ' OpenStreetMap contributors', $textcolor);
+                }
                 imagepng($img, $filePath);
                 imagedestroy($img);
             }
@@ -246,54 +259,28 @@ class tools
     }
 
     public function checkPlaceParam($place){
-        if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
-            $lat = explode(";", $place)[0];
-            $lng = explode(";", $place)[1];
-            $mapImageID = \Delight\Auth\Auth::createUuid();
-            $this->cachePreviewMap($mapImageID, $lat, $lng);
-            $place = $place . "#" . $mapImageID;
+        if(get_option("generate_map_preview")){
+            if(preg_match('/[+-]?\d+([.]\d+)?[;][+-]?\d+([.]\d+)?/', $place)){
+                $lat = explode(";", $place)[0];
+                $lng = explode(";", $place)[1];
+                $mapImageID = \Delight\Auth\Auth::createUuid();
+                $this->cachePreviewMap($mapImageID, $lat, $lng);
+                $place = $place . "#" . $mapImageID;
+            }
         }
         return $place;
     }
 }
 
-class database
+class options
 {
-    protected $db_host = DB_HOST;
-    protected $db_dbname = DB_NAME;
-    protected $db_username = DB_USER;
-    protected $db_password = DB_PASSWORD;
-    public $connection = null;
-    public $query = null;
-    public $stmt = null;
+    protected $db;
     public $load_from_file = true;
     public $options = [];
     public $options_cache_file = null;
 
-    public function connect()
-    {
-        try {
-            $this->connection = new DebugBar\DataCollector\PDO\TraceablePDO(new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_dbname, $this->db_username, $this->db_password));
-            $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-        catch(PDOException $e)
-        {
-            exit($e->getMessage());
-        }
-    }
-
-    public function isOptionsEmpty()
-    {
-        return empty($this->exec("SELECT * FROM `%PREFIX%_options`;", true));
-    }
-
-    public function __construct()
-    {
-        $this->connect();
-        if($this->isOptionsEmpty()) {
-            header('Location: install/install.php');
-        }
+    public function __construct($db){
+        $this->db = $db;
         $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
         if(strpos($file_infos['dirname'], 'resources') !== false) {
             $this->options_cache_file = "../../options.txt";
@@ -304,68 +291,20 @@ class database
             if(file_exists($this->options_cache_file)/* && time()-@filemtime($this->options_cache_file) < 604800*/) {
                 $this->options = json_decode(file_get_contents($this->options_cache_file), true);
             } else {
-                $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
+                $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
                 file_put_contents($this->options_cache_file, json_encode($this->options));
             }
         } else {
-            $this->options = $this->exec("SELECT * FROM `%PREFIX%_options` WHERE `enabled` = 1", true);
+            $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
         }
+        if(empty($this->options)) header('Location: install/install.php');
     }
 
-    public function close()
-    {
-        $this->connection = null;
-    }
-
-    public function exec($sql1, $fetch=false, $param=null, ...$others_params)
-    {
-        try{
-            //$this->connection->beginTransaction();
-            array_unshift($others_params, $sql1);
-            bdump($others_params);
-            $toReturn = [];
-            foreach($others_params as $sql){
-                $sql = str_replace("%PREFIX%", DB_PREFIX, $sql);
-                bdump($sql);
-                $this->stmt = $this->connection->prepare($sql);
-                if(!is_null($param)) {
-                    $this->query = $this->stmt->execute($param);
-                } else {
-                    $this->query = $this->stmt->execute();
-                }
-                bdump($this->query);
-
-                if($fetch == true) {
-                    if(count($others_params) > 1) {
-                        $toReturn[] = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
-                    } else {
-                        $toReturn = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
-                    }
-                }
-            }
-            //$this->connection->commit();
-            //$this->stmt->closeCursor();
-            return $toReturn;
-        } catch (PDOException $e) {
-            print "Error!: " . $e->getMessage() . "<br/>";
-            //$this->connection->rollBack();
-            die();
-        }
-    }
-
-    public function exists($table, $id)
-    {
-        $result = $this->exec("SELECT :table FROM `%PREFIX%_services` WHERE id = :id;", true, [":table" => $table, ":id" => $id]);
-        return !empty($result);
-    }
-
-    public function get_option($name)
+    public function get($name)
     {
         if(defined($name)) {
             return constant($name);
         } else {
-            //$option = $this->exec("SELECT `value` FROM `%PREFIX%_options` WHERE `name` = :name AND `enabled` = 1;", true, [":name" => $name]);
-            //return empty($option) ? "" : $option[0]["value"];
             foreach($this->options as $option){
                 if($name == $option["name"]) {
                     return empty($option["value"]) ? false : $option["value"];
@@ -398,23 +337,25 @@ final class Role
 
 class user
 {
-    private $database = null;
+    private $db = null;
     private $tools = null;
     private $profile_names = null;
     public $auth = null;
     public $authenticated = false;
     public $holidays = null;
 
-    public function __construct($database, $tools)
+    public function __construct($db, $tools)
     {
-        $this->database = $database;
+        $this->db = $db;
         $this->tools = $tools;
-        $this->auth = new \Delight\Auth\Auth($database->connection, $tools->get_ip(), DB_PREFIX."_", false);
+        $this->auth = new \Delight\Auth\Auth($this->db, $tools->get_ip(), DB_PREFIX."_", false);
         \header_remove('X-Frame-Options');
         if(isset($_REQUEST["apiKey"]) && !is_null($_REQUEST["apiKey"])){
-            $api_key_row = $this->database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $_REQUEST["apiKey"]]);
+            //var_dump("SELECT * FROM \`".DB_PREFIX."_api_keys\` WHERE apikey = :apikey");
+            //exit();
+            $api_key_row = $this->db->select("SELECT * FROM `".DB_PREFIX."_api_keys` WHERE apikey = :apikey", [":apikey" => $_REQUEST["apiKey"]]);
             if(!empty($api_key_row)){
-                $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]]);
+                $user = $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", [":id" => $api_key_row[0]["user"]]);
                 $user_id = $user[0]["id"];
                 $this->auth->admin()->logInAsUserById($user_id);
                 if(!empty($user)) {
@@ -431,9 +372,9 @@ class user
             }
         }
         $this->authenticated = $this->auth->isLoggedIn();
-        $this->profile_names = $this->database->exec("SELECT `id`, `name` FROM `%PREFIX%_profiles`;", true);
-        $this->user_names = $this->database->exec("SELECT `id`, `username` FROM `%PREFIX%_users`;", true);
-        $this->holidays = Yasumi\Yasumi::create($this->database->get_option("holidays_provider") ?: "USA", date("Y"), $this->database->get_option("holidays_language") ?: "en_US");
+        $this->profile_names = $this->db->select("SELECT `id`, `name` FROM `".DB_PREFIX."_profiles`");
+        $this->user_names = $this->db->select("SELECT `id`, `username` FROM `".DB_PREFIX."_users`");
+        $this->holidays = Yasumi\Yasumi::create(get_option("holidays_provider") ?: "USA", date("Y"), get_option("holidays_language") ?: "en_US");
     }
 
     public function authenticated()
@@ -445,17 +386,19 @@ class user
     {
         $this->tools->profiler_start("Require login");
         if(!$this->authenticated()) {
-            if($this->database->get_option("intrusion_save")) {
-                if($this->database->get_option("intrusion_save_info")) {
-                    $params = [":page" => $this->tools->get_page_url(), ":ip" => $this->tools->get_ip(), ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode($_SERVER)];
+            if(get_option("intrusion_save")) {
+                if(get_option("intrusion_save_info")) {
+                    $params = ["page" => $this->tools->get_page_url(), "ip" => $this->tools->get_ip(), "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode($_SERVER)];
                 } else {
-                    $params = [":page" => $this->tools->get_page_url(), ":ip" => "redacted", ":date" => date("d/m/Y"), ":hour" => date("H:i.s"), ":server_var" => json_encode(["redacted" => "true"])];
+                    $params = ["page" => $this->tools->get_page_url(), "ip" => "redacted", "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode(["redacted" => "true"])];
                 }
-                $sql = "INSERT INTO `%PREFIX%_intrusions` (`id`, `page`, `date`, `hour`, `ip`, `server_var`) VALUES (NULL, :page, :date, :hour, :ip, :server_var)";
-                $this->database->exec($sql, false, $params);
+                $this->db->insert(
+                    "intrusions",
+                    $params
+                );
             }
             if($redirect) {
-                $this->tools->redirect($this->database->get_option("web_url"));
+                $this->tools->redirect(get_option("web_url"));
             } else {
                 exit();
             }
@@ -511,16 +454,16 @@ class user
         if(is_null($user)){
             $user = $this->auth->getUserId();
         }
-        $result = $this->database->exec("SELECT `hidden` FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user]);
+        $result = $this->db->select("SELECT `hidden` FROM `".DB_PREFIX."_profiles` WHERE id = :id", [":id" => $user]);
         if(isset($result[0]) && isset($result[0]["hidden"])){
             return boolval($result[0]["hidden"]);
         }
         return false;
     }
 
-    public function available($name)
+    public function available($id)
     {
-        $user = $this->database->exec("SELECT available FROM `%PREFIX%_users` WHERE name = :name;", true, [":name" => $name]);
+        $user = $this->db->select("SELECT available FROM `".DB_PREFIX."_users` WHERE id = :id", [":id" => $id]);
         if(empty($user)) {
             return false;
         } else {
@@ -570,7 +513,7 @@ class user
                 }
                 if($this->auth->isLoggedIn()) {
                     $this->log("Login", $this->auth->getUserId());
-                    $user = $this->database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $this->auth->getUserId()]);
+                    $user = $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", [":id" => $this->auth->getUserId()]);
                     if(!empty($user)) {
                         if(is_null($user[0]["name"])) {
                                 $_SESSION['_user_name'] = $this->auth->getUsername();
@@ -608,16 +551,17 @@ class user
             $editor = $changed;
         }
         if(!$this->hidden($editor)){
-            if($this->database->get_option("log_save_ip")){
+            if(get_option("log_save_ip")){
                 $ip = $this->tools->get_ip();
             } else {
                 $ip = null;
             }
             $source_type = defined("REQUEST_USING_API") ? "api" : "web";
             $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
-            $params = [":action" => $action, ":changed" => $changed, ":editor" => $editor, ":timestamp" => $timestamp, ":ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent];
-            $sql = "INSERT INTO `%PREFIX%_log` (`id`, `action`, `changed`, `editor`, `timestamp`, `ip`, `source_type`, `user_agent`) VALUES (NULL, :action, :changed, :editor, :timestamp, :ip, :source_type, :user_agent)";
-            $this->database->exec($sql, false, $params);
+            $this->db->insert(
+                DB_PREFIX."_log",
+                ["action" => $action, "changed" => $changed, "editor" => $editor, "timestamp" => $timestamp, "ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent]
+            );
         }
         $this->tools->profiler_stop();
     }
@@ -646,8 +590,10 @@ class user
             $disabled = $disabled ? 1 : 0;
             $chief = $chief ? 1 : 0;
             $driver = $driver ? 1 : 0;
-            $sql = "INSERT INTO `%PREFIX%_profiles` (`hidden`, `disabled`, `name`, `phone_number`, `chief`, `driver`) VALUES (:hidden, :disabled, :name, :phone_number, :chief, :driver)";
-            $this->database->exec($sql, false, [":hidden" => $hidden, ":disabled" => $disabled, ":name" => $name, ":phone_number" => $phone_number, ":chief" => $chief, ":driver" => $driver]);
+            $this->db->insert(
+                DB_PREFIX."_profiles",
+                ["hidden" => $hidden, "disabled" => $disabled, "name" => $name, "phone_number" => $phone_number, "chief" => $chief, "driver" => $driver]
+            );
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
@@ -663,7 +609,14 @@ class user
     public function remove_user($id, $removed_by)
     {
         $this->tools->profiler_start("Remove user");
-        $this->database->exec("DELETE FROM `%PREFIX%_users` WHERE `id` = :id", true, [":id" => $id], "DELETE FROM `%PREFIX%_profiles` WHERE `id` = :id");
+        $this->db->delete(
+            DB_PREFIX."_users",
+            ["id" => $id]
+        );
+        $this->db->delete(
+            DB_PREFIX."_profiles",
+            ["id" => $id]
+        );
         $this->log("User removed", null, $removed_by);
         $this->tools->profiler_stop();
     }
@@ -672,8 +625,11 @@ class user
         $this->tools->profiler_start("Update online timestamp");
         if(is_null($id)) $id = $this->auth->getUserId();
         $time = time();
-        $sql = "UPDATE `%PREFIX%_profiles` SET online_time = '$time' WHERE id = '" . $id ."'";
-        $this->database->exec($sql, true);
+        $this->db->update(
+            DB_PREFIX."_profiles",
+            ["online_time" => $time],
+            ["id" => $id]
+        );
         bdump(["id" => $id, "time" => $time]);
         $this->tools->profiler_stop();
     }
@@ -682,58 +638,68 @@ class user
 class crud
 {
     public $tools = null;
-    public $database = null;
+    public $db = null;
     public $user = null;
 
-    public function __construct($tools, $database, $user)
+    public function __construct($tools, $db, $user)
     {
         $this->tools = $tools;
-        $this->database = $database;
+        $this->db = $db;
         $this->user = $user;
     }
 
-    public function increment($increment)
+    public function increment_services($increment)
     {
         bdump($increment);
-        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services + 1 WHERE id IN ($increment);";
-        $this->database->exec($sql, false);
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `services`= services + 1 WHERE id IN ($increment)"
+        );
     }
 
-    public function getIncrement($id)
+    public function getIncrement_services($id)
     {
         bdump($id);
-        $sql = "SELECT `increment` FROM `%PREFIX%_services` WHERE `id` = :id";
-        $increment = $this->database->exec($sql, true, [":id" => $id])[0]['increment'];
+        $increment = $this->db->selectValue(
+            "SELECT `increment` FROM `".DB_PREFIX."_services` WHERE `id` = :id LIMIT 0, 1",
+            ["id" => $id]
+        );
         bdump($increment);
         return $increment;
     }
 
-    public function decrease($id)
+    public function decrease_services($id)
     {
-        $sql = "UPDATE `%PREFIX%_profiles` SET `services`= services - 1 WHERE id IN ({$this->getIncrement($id)});";
-        $this->database->exec($sql, false);
+        $increment = $this->getIncrement_services($id);
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `services`= services - 1 WHERE id IN ($increment)"
+        );
     }
 
     public function increment_trainings($increment)
     {
         bdump($increment);
-        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings + 1 WHERE id IN ($increment);";
-        $this->database->exec($sql, false);
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `trainings`= trainings + 1 WHERE id IN ($increment)"
+        );
     }
 
     public function getIncrement_trainings($id)
     {
         bdump($id);
-        $sql = "SELECT `increment` FROM `%PREFIX%_trainings` WHERE `id` = :id";
-        $increment = $this->database->exec($sql, true, [":id" => $id])[0]['increment'];
+        $increment = $this->db->selectValue(
+            "SELECT `increment` FROM `".DB_PREFIX."_trainings` WHERE `id` = :id LIMIT 0, 1",
+            ["id" => $id]
+        );
         bdump($increment);
         return $increment;
     }
 
     public function decrease_trainings($id)
     {
-        $sql = "UPDATE `%PREFIX%_profiles` SET `trainings`= trainings - 1 WHERE id IN ({$this->getIncrement_trainings($id)});";
-        $this->database->exec($sql, false);
+        $increment = $this->getIncrement_trainings($id);
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `trainings`= trainings - 1 WHERE id IN ($increment)"
+        );
     }
 
     public function add_service($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
@@ -745,16 +711,21 @@ class crud
         $increment = implode(",", $increment);
         bdump($increment);
         $date = date('Y-m-d H:i:s', strtotime($date));
-        $sql = "INSERT INTO `%PREFIX%_services` (`id`, `date`, `code`, `beginning`, `end`, `chief`, `drivers`, `crew`, `place`, `notes`, `type`, `increment`, `inserted_by`) VALUES (NULL, :date, :code, :beginning, :end, :chief, :drivers, :crew, :place, :notes, :type, :increment, :inserted_by);";
-        $this->database->exec($sql, false, [":date" => $date, ":code" => $code, "beginning" => $beginning, ":end" => $end, ":chief" => $chief, ":drivers" => $drivers, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":type" => $type, ":increment" => $increment, ":inserted_by" => $inserted_by]);
-        $this->increment($increment);
+        $this->db->insert(
+            DB_PREFIX."_services",
+            ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
+        );
+        $this->increment_services($increment);
         $this->user->log("Service added");
     }
 
     public function remove_service($id)
     {
-        $this->decrease($id);
-        $this->database->exec("DELETE FROM `%PREFIX%_services` WHERE `id` = :id", true, [":id" => $id]);
+        $this->decrease_services($id);
+        $this->db->delete(
+            DB_PREFIX."_services",
+            ["id" => $id]
+        );
         $this->user->log("Service removed");
     }
 
@@ -773,8 +744,10 @@ class crud
         $increment = implode(",", $increment);
         bdump($increment);
         $date = date('Y-m-d H:i:s', strtotime($date));
-        $sql = "INSERT INTO `%PREFIX%_trainings` (`id`, `date`, `name`, `beginning`, `end`, `chief`, `crew`, `place`, `notes`, `increment`, `inserted_by`) VALUES (NULL, :date, :name, :start_time, :end_time, :chief, :crew, :place, :notes, :increment, :inserted_by);";
-        $this->database->exec($sql, false, [":date" => $date, ":name" => $name, "start_time" => $start_time, ":end_time" => $end_time, ":chief" => $chief, ":crew" => $crew, ":place" => $place, ":notes" => $notes, ":increment" => $increment, ":inserted_by" => $inserted_by]);
+        $this->db->insert(
+            DB_PREFIX."_trainings",
+            ["date" => $date, "name" => $name, "beginning" => $start_time, "end" => $end_time, "chief" => $chief, "crew" => $crew, "place" => $place, "notes" => $notes, "increment" => $increment, "inserted_by" => $inserted_by]
+        );
         $this->increment_trainings($increment);
         $this->user->log("Training added");
     }
@@ -783,7 +756,10 @@ class crud
     {
         $this->decrease_trainings($id);
         bdump($id);
-        $this->database->exec("DELETE FROM `%PREFIX%_trainings` WHERE `id` = :id", true, [":id" => $id]);
+        $this->db->delete(
+            DB_PREFIX."_trainings",
+            ["id" => $id]
+        );
         $this->user->log("Training removed");
     }
 
@@ -793,6 +769,12 @@ class crud
         $this->remove_training($id);
         $this->add_training($date, $name, $start_time, $end_time, $chief, $crew, $place, $notes, $increment, $inserted_by);
         $this->user->log("Training edited");
+    }
+
+    public function exists($table, $id)
+    {
+        $result = $this->db->select("SELECT id FROM `".DB_PREFIX."_{$table}` WHERE id = :id", [":id" => $id]);
+        return !empty($result);
     }
 }
 
@@ -882,17 +864,31 @@ class translations
         }
     }
 }
+
+function init_db(){
+    global $db;
+
+    $dataSource = new \Delight\Db\PdoDataSource('mysql');
+    $dataSource->setHostname(DB_HOST);
+    $dataSource->setPort(3306);
+    $dataSource->setDatabaseName(DB_NAME);
+    $dataSource->setCharset('utf8mb4');
+    $dataSource->setUsername(DB_USER);
+    $dataSource->setPassword(DB_PASSWORD);
+    $db = \Delight\Db\PdoDatabase::fromDataSource($dataSource);
+}
+
 $webpack_manifest_path = realpath("resources/dist/manifest.json");
 function init_class($enableDebugger=true, $headers=true)
 {
-    global $tools, $database, $user, $crud, $translations, $debugbar;
-    if(!isset($tools) && !isset($database) && !isset($translations)) {
-        $database = new database();
-        $tools = new tools($database->get_option("check_cf_ip"), $enableDebugger);
-        $user = new user($database, $tools);
-        $crud = new crud($tools, $database, $user);
-        $translations = new translations($database->get_option("force_language"));
-    }
+    global $tools, $options, $db, $user, $crud, $translations, $debugbar;
+    init_db();
+    $options = new options($db);
+    $tools = new tools($db, $enableDebugger);
+    $user = new user($db, $tools);
+    $crud = new crud($tools, $db, $user);
+    $translations = new translations(get_option("force_language"));
+
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
         $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
@@ -933,8 +929,9 @@ function init_class($enableDebugger=true, $headers=true)
         bdump(__DIR__);
         $dir = str_replace("resources\ajax\\", "", __DIR__).DIRECTORY_SEPARATOR.'debug_storage';
         $debugbar->setStorage(new DebugBar\Storage\FileStorage($dir));
-        $debugbar->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($database->connection));
-        $debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($database->options));
+        //TODO: debug PDO
+        //$debugbar->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($database->connection));
+        $debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($options->options));
     } else {
         $debugbar = null;
     }
@@ -982,6 +979,11 @@ function s($string, $echo=true, $htmlAllowed=false, $htmlPurifierOptions=[])
     } else {
         return $tools->sanitize($string, $htmlAllowed, $htmlPurifierOptions);
     }
+}
+
+function get_option($option){
+    global $options;
+    return $options->get($option);
 }
 
 function p_start($name=null)
