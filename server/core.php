@@ -270,6 +270,25 @@ class tools
         }
         return $place;
     }
+
+    public function savePlaceReverse($place){
+        if(strpos($place, ";") === false) return 0;
+        $lat = explode(";", $place)[0];
+        $lng = explode("#", explode(";", $place)[1])[0];
+
+        $url = sprintf("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=%s&lon=%s", $lat, $lng);
+        $options = ['http' => [
+            'user_agent' => 'AllertaVVF dev version (place info downloader)'
+        ]];
+        $context = stream_context_create($options);
+        $data = file_get_contents($url, false, $context);
+
+        $this->db->insert(
+            DB_PREFIX."_places_info",
+            ["reverse_json" => $data]
+        );
+        return $this->db->getLastInsertId();
+    }
 }
 
 class options
@@ -713,7 +732,7 @@ class crud
         $date = date('Y-m-d H:i:s', strtotime($date));
         $this->db->insert(
             DB_PREFIX."_services",
-            ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
+            ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->tools->savePlaceReverse($place), "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
         );
         $this->increment_services($increment);
         $this->user->log("Service added");
@@ -746,7 +765,7 @@ class crud
         $date = date('Y-m-d H:i:s', strtotime($date));
         $this->db->insert(
             DB_PREFIX."_trainings",
-            ["date" => $date, "name" => $name, "beginning" => $start_time, "end" => $end_time, "chief" => $chief, "crew" => $crew, "place" => $place, "notes" => $notes, "increment" => $increment, "inserted_by" => $inserted_by]
+            ["date" => $date, "name" => $name, "beginning" => $start_time, "end" => $end_time, "chief" => $chief, "crew" => $crew, "place" => $place, "place_reverse" => $this->tools->savePlaceReverse($place), "notes" => $notes, "increment" => $increment, "inserted_by" => $inserted_by]
         );
         $this->increment_trainings($increment);
         $this->user->log("Training added");

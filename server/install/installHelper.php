@@ -270,6 +270,7 @@ CREATE TABLE IF NOT EXISTS `{$prefix}_trainings` (
 `crew` text NOT NULL,
 `chief` text NOT NULL,
 `place` text NOT NULL,
+`place_reverse` int(11) NOT NULL,
 `notes` text NOT NULL,
 `increment` varchar(999) NOT NULL,
 `inserted_by` varchar(200) NOT NULL,
@@ -287,6 +288,7 @@ CREATE TABLE IF NOT EXISTS `{$prefix}_services` (
 `drivers` varchar(999) NOT NULL,
 `crew` varchar(999) NOT NULL,
 `place` varchar(999) NOT NULL,
+`place_reverse` int(11) NOT NULL,
 `notes` varchar(999) NOT NULL,
 `type` text NOT NULL,
 `increment` varchar(999) NOT NULL,
@@ -464,6 +466,13 @@ CREATE TABLE `{$prefix}_schedules` (
 `holidays` VARCHAR(10000) NULL DEFAULT NULL,
 `last_exec` VARCHAR(7) NULL DEFAULT NULL,
 `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_places_info` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`reverse_json` VARCHAR(20000) NULL DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
 EOL);
