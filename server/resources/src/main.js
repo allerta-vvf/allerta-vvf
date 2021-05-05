@@ -170,8 +170,10 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
   if (typeof fillTable === "undefined") {
     if (useCustomTableEngine !== false) {
       tableEngine = useCustomTableEngine;
-    } else if ("connection" in navigator && navigator.connection.saveData) {
-      tableEngine = "default";
+    /*} else if ("connection" in navigator && navigator.connection.saveData) {
+      tableEngine = "default";*/
+    } else {
+      tableEngine = "datatables";
     }
     fillTableLoaded = await import(`./table_engine_${tableEngine}.js`)
       .then(({ default: _ }) => {

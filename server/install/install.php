@@ -27,14 +27,24 @@ if (file_exists("../config.php")) {
         if(checkConnection($dbhostValue, $unameValue, $pwdValue, $dbnameValue, true)) {
             $configOk = true;
             try{
-                $connection = new PDO("mysql:host=$dbhostValue;dbname=$dbnameValue", $unameValue, $pwdValue, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-                $stmt = $connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_dbversion`;"));
-                $query = $stmt->execute();
-                $populated = !empty($stmt->fetchAll(PDO::FETCH_ASSOC));
-                $stmt2 = $connection->prepare(str_replace("%PREFIX%", DB_PREFIX, "SELECT * FROM `%PREFIX%_users`;"));
-                $query2 = $stmt2->execute();
-                $userPopulated = !empty($stmt2->fetchAll(PDO::FETCH_ASSOC));
-            } catch (PDOException $e){
+                $db = \Delight\Db\PdoDatabase::fromDsn(
+                    new \Delight\Db\PdoDsn(
+                        "mysql:host=$dbhostValue;dbname=$dbnameValue",
+                        $unameValue,
+                        $pwdValue
+                    )
+                );
+                try{
+                    $populated = !is_null($db->select("SELECT * FROM `".DB_PREFIX."_dbversion`"));
+                } catch (Delight\Db\Throwable\TableNotFoundError $e){
+                    $populated = false;
+                }
+                try{
+                    $userPopulated = !is_null($db->select("SELECT * FROM `".DB_PREFIX."_users`"));
+                } catch (Delight\Db\Throwable\TableNotFoundError $e){
+                    $userPopulated = false;
+                }
+            } catch (Exception $e){
                 $populated = false;
                 $userPopulated = false;
             }

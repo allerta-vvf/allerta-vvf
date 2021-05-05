@@ -22,7 +22,7 @@ let marker;
 let feature;
 let map;
 
-function setMarker (LatLng) {
+export function setMarker (LatLng, move=false) {
   if (marker) {
     console.log("Marker exists");
     // console.log(marker);
@@ -33,6 +33,9 @@ function setMarker (LatLng) {
     $("input[name='place']").val(LatLng.lat + ";" + LatLng.lng);
   }
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
+  if(move){
+    map.setView(LatLng, 17);
+  }
 }
 
 var mapsList = [];
@@ -144,6 +147,7 @@ export function chooseAddr (addrLat, addrLng, zoom = undefined, lat1 = undefined
       const loc4 = new L.LatLng(lat2, lng1);
       feature = L.polyline([loc1, loc4, loc2, loc3, loc1], { color: "red" }).addTo(map);
       map.fitBounds(bounds);
+      map.setZoom(16);
     }
   } else if (addrLat !== undefined && addrLng !== undefined) {
     const loc = new L.LatLng(addrLat, addrLng);

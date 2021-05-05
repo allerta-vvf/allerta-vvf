@@ -12,7 +12,7 @@ if(!is_null($debugbar)){
     $enable_debugbar = false;
 }
 
-$url_software = $database->get_option("web_url");
+$url_software = get_option("web_url");
 
 p_start("Load Twig");
 $webpack_manifest = json_decode(
@@ -39,10 +39,7 @@ $filter_translate = new \Twig\TwigFilter(
 $twig->addFilter($filter_translate);
 
 $function_option = new \Twig\TwigFunction(
-    'option', function ($option) {
-        global $database;
-        return $database->get_option($option);
-    }
+    'option', "get_option"
 );
 $twig->addFunction($function_option);
 
@@ -96,7 +93,7 @@ p_stop();
 $template = null;
 function loadtemplate($templatename, $data, $requirelogin=true)
 {
-    global $url_software, $database, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
+    global $url_software, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
     p_start("Render Twig template");
     if($requirelogin) {
         $user->requirelogin();
@@ -107,23 +104,23 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['enable_debug_bar'] = $enable_debugbar;
     $data['debug_bar_head'] = $enable_debugbar ? $debugbarRenderer->renderHead() : "";
     $data['debug_bar'] = $enable_debugbar ? $debugbarRenderer->render() : "";
-    $data['owner'] = $database->get_option("owner");
+    $data['owner'] = get_option("owner");
     $data['urlsoftware'] = $url_software;
     $data['user'] = $user->info();
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
-    if($database->get_option("use_custom_error_sound")) {
+    if(get_option("use_custom_error_sound")) {
         $data['error_sound'] = "custom-error.mp3";
     } else {
         $data['error_sound'] = "error.mp3";
     }
-    if($database->get_option("use_custom_error_image")) {
+    if(get_option("use_custom_error_image")) {
         $data['error_image'] = "custom-error.gif";
     } else {
         $data['error_image'] = "error.gif";
     }
     //TODO: replace this
-    if($messages = $database->get_option("messages")){
+    if($messages = get_option("messages")){
         try {
             $messages = json_decode($messages, true);
             if(isset($messages[$templatename])){

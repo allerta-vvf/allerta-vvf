@@ -4,7 +4,7 @@ init_class(false);
 $user->requirelogin(false);
 
 $user_id = $user->auth->getUserId();
-$result = $database->exec("SELECT * FROM `%PREFIX%_schedules` WHERE `user`={$user_id};", true);
+$result = $db->select("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `user` = :id", ["id" => $user_id]);
 if(!empty($result)){
     $result[0]["schedules"] = json_decode($result[0]["schedules"]);
     $result[0]["holidays"] = json_decode($result[0]["holidays"]);
@@ -15,10 +15,17 @@ if(isset($_POST["hours"])){
     $holidays = (string) json_encode($_POST["holidays"]);
     echo($hours."-".$holidays);
     if(!empty($result)){
-        $database->exec("UPDATE `%PREFIX%_schedules` SET schedules = :schedules, holidays = :holidays WHERE `id` = :id;", false, [":id" => $result[0]["id"], ":schedules" => $hours, ":holidays" => $holidays]);
+        $db->update(
+            DB_PREFIX."_schedules",
+            ["schedules" => $hours, "holidays" => $holidays],
+            ["id" => $result[0]["id"]]
+        );
     } else {
-        $database->exec("INSERT INTO `%PREFIX%_schedules` (`user`, `schedules`, `holidays`) VALUES (:user, :schedules, :holidays);", false, [":user" => $user_id, ":schedules" => $hours, ":holidays" => $holidays]);
+        $db->insert(
+            DB_PREFIX."_schedules",
+            ["schedules" => $hours, "holidays" => $holidays, "user" => $user_id]
+        );
     }
 } else {
-    echo(json_encode(empty($result) ? [] : $result[0]));
+    echo(json_encode(empty($result)||is_null($result) ? [] : $result[0]));
 }
