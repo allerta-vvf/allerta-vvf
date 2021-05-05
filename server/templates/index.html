@@ -37,7 +37,7 @@
       let playerScript = document.createElement("script");
       playerScript.setAttribute("src", "{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}");
       playerScript.setAttribute("async", "false");
-      playerScript.onload = () => {
+      playerScript.onload = function() {
         console.log("player script loaded");
         var sound = new Howl({
           src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],

@@ -12,9 +12,11 @@ if(!is_null($debugbar)){
     $enable_debugbar = false;
 }
 
+$url_software = get_option("web_url");
+
 p_start("Load Twig");
 $webpack_manifest = json_decode(
-    file_get_contents(realpath("resources/dist/manifest.json")),
+    file_get_contents(realpath("resources/dist/assets-manifest.json")),
     true
 );
 try {
@@ -52,10 +54,26 @@ $twig->addFunction($function_username);
 $function_resource = new \Twig\TwigFunction(
     'resource', function ($file) {
         global $webpack_manifest;
-        return $webpack_manifest[$file];
+        return $webpack_manifest[$file]["src"];
     }
 );
 $twig->addFunction($function_resource);
+
+$function_script = new \Twig\TwigFunction(
+    'script', function ($file, $onLoad=false) {
+        global $url_software, $webpack_manifest;
+        $script_url = $url_software . "/resources/dist/" . $webpack_manifest[$file]["src"];
+        $script_integrity = $webpack_manifest[$file]["integrity"];
+
+        $script_tag = "<script src='{$script_url}' integrity='{$script_integrity}' crossorigin='anonymous'";
+        if($onLoad){
+            $script_tag .= " onload='{$onLoad}'";
+        }
+        $script_tag .= "></script>";
+        return $script_tag;
+    }, ['is_safe' => ['html']]
+);
+$twig->addFunction($function_script);
 
 $filter_minimize = new \Twig\TwigFilter(
     'minimize', function ($content) {
@@ -75,7 +93,7 @@ p_stop();
 $template = null;
 function loadtemplate($templatename, $data, $requirelogin=true)
 {
-    global $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
+    global $url_software, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
     p_start("Render Twig template");
     if($requirelogin) {
         $user->requirelogin();
@@ -87,7 +105,7 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['debug_bar_head'] = $enable_debugbar ? $debugbarRenderer->renderHead() : "";
     $data['debug_bar'] = $enable_debugbar ? $debugbarRenderer->render() : "";
     $data['owner'] = get_option("owner");
-    $data['urlsoftware'] = get_option("web_url");
+    $data['urlsoftware'] = $url_software;
     $data['user'] = $user->info();
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);

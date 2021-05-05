@@ -18,7 +18,7 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
     $main_script_url = null;
     $game_script_url = null;
     try{
-        $webpack_manifest_path = isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/manifest.json");
+        $webpack_manifest_path = isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/assets-manifest.json");
         if(!empty($webpack_manifest_path)){
             $webpack_manifest = json_decode(
                 file_get_contents($webpack_manifest_path),
