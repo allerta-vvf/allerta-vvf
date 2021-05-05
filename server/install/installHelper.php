@@ -252,11 +252,16 @@ define('SENTRY_ENV', 'prod');<br>
 function initDB()
 {
     try{
-        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $db = \Delight\Db\PdoDatabase::fromDsn(
+            new \Delight\Db\PdoDsn(
+                "mysql:host=".DB_HOST.";dbname=".DB_NAME,
+                DB_USER,
+                DB_PASSWORD
+            )
+        );
         $prefix = DB_PREFIX;
-        $connection->exec(
-            "
-CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_trainings` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `date` date NOT NULL,
 `name` varchar(999) NOT NULL,
@@ -265,12 +270,15 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_trainings` (
 `crew` text NOT NULL,
 `chief` text NOT NULL,
 `place` text NOT NULL,
+`place_reverse` int(11) NOT NULL,
 `notes` text NOT NULL,
 `increment` varchar(999) NOT NULL,
 `inserted_by` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_services` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `date` date NOT NULL,
 `code` text NOT NULL,
@@ -280,13 +288,16 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_services` (
 `drivers` varchar(999) NOT NULL,
 `crew` varchar(999) NOT NULL,
 `place` varchar(999) NOT NULL,
+`place_reverse` int(11) NOT NULL,
 `notes` varchar(999) NOT NULL,
 `type` text NOT NULL,
 `increment` varchar(999) NOT NULL,
 `inserted_by` varchar(200) NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_intrusions` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_intrusions` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `page` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
 `date` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -295,7 +306,9 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_intrusions` (
 `server_var` varchar(9999) COLLATE utf8mb4_unicode_ci NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `action` varchar(100) NOT NULL,
 `changed` varchar(100),
@@ -306,20 +319,26 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_log` (
 `user_agent` varchar(500),
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_minutes` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_minutes` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `month` int(2) NOT NULL,
 `year` int(2) NOT NULL,
 `list` mediumtext NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_type` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_type` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `name` text NOT NULL,
 PRIMARY KEY (`id`),
 UNIQUE KEY `type_name` (`name`(99))
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_users` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_users` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 `email` varchar(249) COLLATE utf8mb4_unicode_ci NOT NULL,
 `password` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
@@ -334,7 +353,9 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `email` (`email`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_profiles` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 `hidden` BOOLEAN NOT NULL DEFAULT FALSE,
 `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -351,7 +372,9 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_profiles` (
 `image` varchar(1000) DEFAULT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `".$prefix."_users_confirmations` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_users_confirmations` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 `user_id` int(10) unsigned NOT NULL,
 `email` varchar(249) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -363,7 +386,9 @@ UNIQUE KEY `selector` (`selector`),
 KEY `email_expires` (`email`,`expires`),
 KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-CREATE TABLE IF NOT EXISTS `".$prefix."_users_remembered` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_users_remembered` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 `user` int(10) unsigned NOT NULL,
 `selector` varchar(24) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
@@ -373,7 +398,9 @@ PRIMARY KEY (`id`),
 UNIQUE KEY `selector` (`selector`),
 KEY `user` (`user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-CREATE TABLE IF NOT EXISTS `".$prefix."_users_resets` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_users_resets` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 `user` int(10) unsigned NOT NULL,
 `selector` varchar(20) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
@@ -383,7 +410,9 @@ PRIMARY KEY (`id`),
 UNIQUE KEY `selector` (`selector`),
 KEY `user_expires` (`user`,`expires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-CREATE TABLE IF NOT EXISTS `".$prefix."_users_throttling` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_users_throttling` (
 `bucket` varchar(44) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
 `tokens` float unsigned NOT NULL,
 `replenished_at` int(10) unsigned NOT NULL,
@@ -391,7 +420,9 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_users_throttling` (
 PRIMARY KEY (`bucket`),
 KEY `expires_at` (`expires_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-CREATE TABLE IF NOT EXISTS `".$prefix."_options` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE IF NOT EXISTS `{$prefix}_options` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `name` TEXT NOT NULL, `value` MEDIUMTEXT NOT NULL,
 `enabled` BOOLEAN NOT NULL DEFAULT TRUE,
@@ -400,26 +431,34 @@ CREATE TABLE IF NOT EXISTS `".$prefix."_options` (
 `user_id` INT NOT NULL,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `".$prefix."_dbversion` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_dbversion` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `version` INT NOT NULL,
 `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `".$prefix."_api_keys` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_api_keys` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `apikey` VARCHAR(128) NOT NULL,
 `user` INT NOT NULL,
 `permissions` VARCHAR(128) NOT NULL DEFAULT 'ALL',
 PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `".$prefix."_bot_telegram` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_bot_telegram` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `chat_id` VARCHAR(128) NOT NULL,
 `user` INT NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `".$prefix."_schedules` (
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_schedules` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `user` INT NOT NULL,
 `profile_name` VARCHAR(500) NOT NULL DEFAULT 'default',
@@ -429,8 +468,15 @@ CREATE TABLE `".$prefix."_schedules` (
 `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO `".$prefix."_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());"
-        );
+EOL);
+$db->exec(<<<"EOL"
+CREATE TABLE `{$prefix}_places_info` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`reverse_json` VARCHAR(20000) NULL DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=latin1;
+EOL);
+$db->exec("INSERT INTO `{$prefix}_dbversion` (`version`, `timestamp`) VALUES('1', current_timestamp());");
     } catch (Exception $e) {
         if(is_cli()) {
             echo($e);
@@ -471,58 +517,62 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
 {
     try{
         include_once "../config.php";
-        $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $db = \Delight\Db\PdoDatabase::fromDsn(
+            new \Delight\Db\PdoDsn(
+                "mysql:host=".DB_HOST.";dbname=".DB_NAME,
+                DB_USER,
+                DB_PASSWORD
+            )
+        );
         $prefix = DB_PREFIX;
-        $auth = new \Delight\Auth\Auth($connection, $_SERVER['REMOTE_ADDR'], $prefix."_");
+        $auth = new \Delight\Auth\Auth($db, $_SERVER['REMOTE_ADDR'], $prefix."_");
         $userId = $auth->register($report_email, $password, $name);
         $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::SUPER_ADMIN);
         if($developer) {
             $auth->admin()->addRoleForUserById($userId, \Delight\Auth\Role::DEVELOPER);
         }
+        if(is_null($url)){
+            $url = str_replace("install/install.php", "", full_path());
+        }
         $options = [
-            'check_cf_ip' => ':check_cf_ip',
-            'report_email' => ':report_email',
-            'owner' => ':owner',
-            'web_url' => ':web_url',
+            'check_cf_ip' => empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? 0 : 1,
+            'report_email' => $report_email,
+            'owner' => $owner,
+            'web_url' => $url,
             'use_custom_error_sound' => 0,
             'use_custom_error_image' => 0,
             'intrusion_save' => 1,
             'intrusion_save_info' => 0,
             'log_save_ip' => 1,
-            'cron_job_code' => ':cron_job_code',
+            'cron_job_code' => str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30))),
             'cron_job_enabled' => 1,
-            'cron_job_time' => ':cron_job_time',
+            'cron_job_time' => '01;00:00',
             'service_edit' => 1,
             'service_remove' => 1,
             'training_edit' => 1,
             'training_remove' => 1,
             'use_location_picker' => 1,
+            'generate_map_preview' => 1,
+            'map_preview_generator_add_marker' => 1,
+            'map_preview_generator' => 'osm', //[osm, custom]
+            'map_preview_generator_url' => '', //not required for osm
+            'map_preview_generator_url_marker' => '', //not required for osm
             'force_language' => 0,
             'force_remember_cookie' => 0,
             'holidays_provider' => 'USA',
             'holidays_language' => 'en_US',
-            'messages' => "{}"
+            'messages' => '{}'
         ];
-        $query = "";
         foreach ($options as $key => $value) {
-            $query .= "
-INSERT INTO `".$prefix."_options` (`id`, `name`, `value`, `enabled`, `created_time`, `last_edit`, `user_id`) VALUES (NULL, '".$key."', $value, 1, current_timestamp(), current_timestamp(), '1');";
+            $db->insert(
+                $prefix."_options",
+                ["name" => $key, "value" => $value, "enabled" => 1, "user_id" => 1]
+            );
         }
-        $query = "
-INSERT INTO `".$prefix."_profiles` (`id`, `hidden`) VALUES (NULL, :hidden);".$query;
-        $prep = $connection->prepare($query);
-        mt_srand(10);
-        $prep->bindValue(':check_cf_ip', (empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? 0 : 1), PDO::PARAM_INT);
-        $prep->bindValue(':hidden', ($visible ? 0 : 1), PDO::PARAM_INT);
-        $prep->bindValue(':report_email', $report_email, PDO::PARAM_STR);
-        $prep->bindValue(':owner', $owner, PDO::PARAM_STR);
-        if(is_null($url)){
-            $url = str_replace("install/install.php", "", full_path());
-        }
-        $prep->bindValue(':web_url', $url, PDO::PARAM_STR);
-        $prep->bindValue(':cron_job_code', str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30))), PDO::PARAM_STR);
-        $prep->bindValue(':cron_job_time', "01;00:00", PDO::PARAM_STR);
-        $prep->execute();
+        $db->insert(
+            $prefix."_profiles",
+            ["hidden" => $visible ? 0 : 1]
+        );
     } catch (Exception $e) {
         if(is_cli()) {
             echo($e);

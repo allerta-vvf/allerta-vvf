@@ -69,8 +69,8 @@ if($tools->validate_form("mod", "add")) {
         $id = "";
     if(isset($_GET["id"])) {
         $id = $_GET["id"];
-        bdump($database->exists("profiles", $id));
-        $values = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE `id` = :id", true, [":id" => $id])[0];
+        bdump($crud->exists("profiles", $id));
+        $values = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = :id", [":id" => $id])[0];
         bdump($values);
     } else {
         $values = [];
@@ -78,7 +78,7 @@ if($tools->validate_form("mod", "add")) {
     if($modalità=="edit" || $modalità=="delete") {
         if(empty($id)) {
             $tools->redirect("accessdenied.php");
-        } elseif (!$database->exists("profiles", $id)) {
+        } elseif (!$crud->exists("profiles", $id)) {
             $tools->redirect("accessdenied.php");
         }
     }

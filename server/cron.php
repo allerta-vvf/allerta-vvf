@@ -5,7 +5,7 @@ init_class(false);
 header('Content-Type: application/json');
 error_reporting(-1);
 
-list($cronJobDay, $cronJobTime) = explode(";", $database->get_option("cron_job_time"));
+list($cronJobDay, $cronJobTime) = explode(";", get_option("cron_job_time"));
 
 $execDateTime = [
     "day" => date("d"),
@@ -23,7 +23,7 @@ $cronJobDateTime = [
     "minutes" => explode(":", $cronJobTime)[1]
 ];
 
-$start = $database->get_option("cron_job_enabled") && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".$database->get_option("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".$database->get_option("cron_job_code")));
+$start = get_option("cron_job_enabled") && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".get_option("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".get_option("cron_job_code")));
 $start_reset = ( $execDateTime["day"] == $cronJobDateTime["day"] &&
     $execDateTime["day"] == $cronJobDateTime["day"] &&
     $execDateTime["month"] == $cronJobDateTime["month"] &&
@@ -35,21 +35,25 @@ $action = "Availability Minutes ";
 if($start) {
     if($start_reset) {
         $action .= "reset and ";
-        $sql = "SELECT * FROM `%PREFIX%_profiles` WHERE `available` = 1 ";
-        $profiles = $database->exec($sql, true);
+        $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 ");
         if(count($profiles) > 0) {
             $list = [];
             foreach($profiles as $profile){
                 $list[] = [$profile["id"] => $profile["availability_minutes"]];
             }
-            $database->exec("INSERT INTO `%PREFIX%_minutes` (`id`, `month`, `year`, `list`) VALUES (NULL, :month, :year, :list)", false, [":month" => $execDateTime["month"],":year" => $execDateTime["year"],":list"=>json_encode($list)]);
-            $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = 0");
+            $db->insert(
+                DB_PREFIX."_minutes",
+                ["month" => $execDateTime["month"], "year" => $execDateTime["year"], "list"=>json_encode($list)]
+            );
+            $db->update(
+                DB_PREFIX."_profiles",
+                ["availability_minutes" => 0]
+            );
         }
     }
     $action .= "update";
 
-    $sql = "SELECT * FROM `%PREFIX%_profiles` WHERE `available` = 1 ";
-    $profiles = $database->exec($sql, true);
+    $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `available` = 1");
     if(count($profiles) > 0) {
         $output = [];
         $output[] = $profiles;
@@ -59,9 +63,13 @@ if($start) {
             $value = (int)$row["availability_minutes"]+5;
             $id = $row["id"];
             $increment[$id] = $value;
-            $database->exec("UPDATE %PREFIX%_profiles SET availability_minutes = :value WHERE id = :id", true, [":value" => $value, ":id" => $id]);
+            $count = $db->update(
+                DB_PREFIX."_profiles",
+                ["availability_minutes" => $value],
+                ["id" => $id]
+            );
             $tmp = $id . " - " . $value . " ";
-            $tmp .= $database->stmt->rowCount() == 1 ? "success" : "fail";
+            $tmp .= $count == 1 ? "success" : "fail";
             $queries[] = $tmp;
         }
         $output[] = $queries;
@@ -70,7 +78,7 @@ if($start) {
         $output_status = "ok";
     }
 
-    $result = $database->exec("SELECT * FROM `%PREFIX%_schedules`;", true);
+    $result = $db->select("SELECT * FROM `".DB_PREFIX."_schedules`;");
     $schedules_check = [];
     $schedules_users = [];
     $schedules_check["schedules"] = [];
@@ -115,8 +123,16 @@ if($start) {
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
                     if($schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true && !in_array(date('Y-m-d'), $selected_holidays_dates)){
                         $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
-                        $database->exec("UPDATE `%PREFIX%_schedules` SET `last_exec` = :last_exec WHERE `id` = :id;", false, [":id" => $id, ":last_exec" => $last_exec_new]);
-                        $database->exec("UPDATE `%PREFIX%_profiles` SET available = '1', availability_last_change = 'cron' WHERE `id` = :user_id;", false, [":user_id" => $user_id]);
+                        $db->update(
+                            DB_PREFIX."_schedules",
+                            ["last_exec" => $last_exec_new],
+                            ["id" => $id]
+                        );
+                        $db->update(
+                            DB_PREFIX."_profiles",
+                            ["available" => '1', "availability_last_change" => "cron"],
+                            ["id" => $user_id]
+                        );
                         $schedules_check["schedules"][] = [
                             "schedule" => $schedule,
                             "now" => $now,
@@ -129,10 +145,14 @@ if($start) {
             }
         }
         $schedules_check["users"] = $schedules_users;
-        $profiles = $database->exec("SELECT id FROM `%PREFIX%_profiles`", true);
+        $profiles = $db->select("SELECT id FROM `".DB_PREFIX."_profiles`");
         foreach ($profiles as $profile) {
             if(!in_array($profile["id"],$schedules_users)){
-                $database->exec("UPDATE `%PREFIX%_profiles` SET available = '0' WHERE availability_last_change = 'cron' AND id = :id;", false, [":id" => $profile["id"]]);
+                $db->update(
+                    DB_PREFIX."_profiles",
+                    ["available" => 0],
+                    ["availability_last_change" => "cron", "id" => $profile["id"]]
+                );
             }
         }
     }

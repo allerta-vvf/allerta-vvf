@@ -20,7 +20,8 @@
         "maximebf/debugbar": "^1.16",
         "azuyalabs/yasumi": "^2.3",
         "ministryofweb/php-osm-tiles": "^2.0",
-        "jenstornell/tiny-html-minifier": "dev-master"
+        "jenstornell/tiny-html-minifier": "dev-master",
+        "delight-im/db": "^1.3"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

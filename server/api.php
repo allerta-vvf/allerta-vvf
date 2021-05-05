@@ -22,11 +22,14 @@ $dispatcher = FastRoute\simpleDispatcher(
         );
         $r->addRoute(
             'POST', '/login', function ($vars) {
-                global $tools, $database, $user;
+                global $tools, $db, $user;
                 try {
                     $user->auth->loginWithUsername($_POST['username'], $_POST['password']);
                     $apiKey = $tools->createKey();
-                    $database->exec("INSERT INTO `%PREFIX%_api_keys` (`apikey`, `user`, `permissions`) VALUES (:apiKey, :userId, 'ALL');", true, [":apiKey" => $apiKey, ":userId" => $user->auth->getUserId()]);
+                    $db->insert(
+                        DB_PREFIX."_api_keys",
+                        ["apikey" => $apiKey, "user" => $user->auth->getUserId(), "permissions" => "all"]
+                    );
                     return ["status" => "ok", "apiKey" => $apiKey];
                 }
                 catch (\Delight\Auth\UnknownUsernameException $e) {
@@ -54,9 +57,9 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute(
             'GET', '/users', function ($vars) {
                 requireToken();
-                global $database;
-                $users = $database->exec("SELECT * FROM `%PREFIX%_users`;", true);
-                $users_profiles = $database->exec("SELECT * FROM `%PREFIX%_profiles`;", true);
+                global $db;
+                $users = $db->select("SELECT * FROM `".DB_PREFIX."_users`");
+                $users_profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles`");
                 foreach ($users_profiles as $key=>$value){
                     if(is_null($users_profiles[$key]["name"])) {
                         $users_profiles[$key]["name"] = $users[$key]["username"];
@@ -69,9 +72,9 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute(
             'GET', '/user', function ($vars) {
                 requireToken();
-                global $database, $user_info;
-                $users = $database->exec("SELECT * FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $user_info["id"]])[0];
-                $users_profiles = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user_info["id"]])[0];
+                global $db, $user_info;
+                $users = $db->select("SELECT * FROM `".DB_PREFIX."_users` WHERE id = :id", ["id" => $user_info["id"]])[0];
+                $users_profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", ["id" => $user_info["id"]])[0];
                 if(is_null($users_profiles["name"])) {
                     $users_profiles["name"] = $users["username"];
                 }
@@ -82,9 +85,9 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute(
             'GET', '/user/{id:\d+}', function ($vars) {
                 requireToken();
-                global $database;
-                $users = $database->exec("SELECT * FROM `%PREFIX%_users` WHERE id = :id;", true, [":id" => $vars["id"]])[0];
-                $users_profiles = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $vars["id"]])[0];
+                global $db;
+                $users = $db->select("SELECT * FROM `".DB_PREFIX."_users` WHERE id = :id", ["id" => $vars["id"]])[0];
+                $users_profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", ["id" => $vars["id"]])[0];
                 if(is_null($users_profiles["name"])) {
                     $users_profiles["name"] = $users["username"];
                 }
@@ -133,40 +136,40 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute(
             'GET', '/availability', function ($vars) {
                 requireToken();
-                global $database, $user_info;
-                return $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $user_info["id"]])[0]["available"];
+                global $db, $user_info;
+                return $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", ["id" => $user_info["id"]])[0]["available"];
             }
         );
         $r->addRoute(
             'GET', '/availability/{id:\d+}', function ($vars) {
                 requireToken();
-                global $database;
-                return $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $vars["id"]])[0]["available"];
+                global $db;
+                return $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", ["id" => $vars["id"]])[0]["available"];
             }
         );
         $r->addRoute(
             'GET', '/changeAvailability/{available:\d+}', function ($vars) {
                 requireToken();
-                global $user, $database, $user_info;
+                global $user, $db, $user_info;
                 $vars["available"] = (int) $vars["available"];
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
                 $log_message = $vars["available"] ? "Status changed to 'available'" : "Status changed to 'not available'";
-                $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $user_info["id"], ":available" => $vars["available"]]);
+                $db->select("UPDATE `".DB_PREFIX."_profiles` SET `available` = :available WHERE `id` = :id", ["id" => $user_info["id"], "available" => $vars["available"]]);
                 $user->log($log_message);
             }
         );
         $r->addRoute(
             'GET', '/changeAvailability/{id:\d+}/{available:\d+}', function ($vars) {
                 requireToken();
-                global $user, $database, $user_info;
+                global $user, $db, $user_info;
                 $vars["available"] = (int) $vars["available"];
                 if($vars["available"] !== 0 && $vars["available"] !== 1) {
                     return ["status" => "error", "message" => "Availability code not allowed"];
                 }
                 $log_message = $vars["available"] ? "Status changed to 'available'" : "Status changed to 'not available'";
-                $database->exec("UPDATE `%PREFIX%_profiles` SET `available` = :available WHERE `id` = :id;", true, [":id" => $vars["id"], ":available" => $vars["available"]]);
+                $db->select("UPDATE `".DB_PREFIX."_profiles` SET `available` = :available WHERE `id` = :id", ["id" => $vars["id"], "available" => $vars["available"]]);
                 $user->log($log_message, $vars["id"], $user_info["id"]);
             }
         );
@@ -230,13 +233,13 @@ function responseApi($content, $status_code=200)
 
 function validToken()
 {
-    global $database, $user_info;
+    global $db, $user_info;
     $token = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : (isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : (isset($_SERVER['HTTP_APIKEY']) ? $_SERVER['HTTP_APIKEY'] : false));
     if($token == false) {
         return false;
     }
-    if(!empty($api_key_row = $database->exec("SELECT * FROM `%PREFIX%_api_keys` WHERE apikey = :apikey;", true, [":apikey" => $token]))) {
-        $user_info["id"] = $database->exec("SELECT * FROM `%PREFIX%_profiles` WHERE id = :id;", true, [":id" => $api_key_row[0]["user"]])[0]["id"];
+    if(!empty($api_key_row = $db->select("SELECT * FROM `".DB_PREFIX."_api_keys` WHERE apikey = :apikey", ["apikey" => $token]))) {
+        $user_info["id"] = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE id = :id", ["id" => $api_key_row[0]["user"]])[0]["id"];
         return true;
     } else {
         return false;
