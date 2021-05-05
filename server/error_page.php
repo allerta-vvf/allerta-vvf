@@ -16,11 +16,11 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
         }
     }
     $webpack_manifest = json_decode(
-        file_get_contents(isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/manifest.json")),
+        file_get_contents(isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/assets-manifest.json")),
         true
     );
-    $main_script_url = "resources/dist/".$webpack_manifest["main.js"];
-    $game_script_url = "resources/dist/".$webpack_manifest["games.js"];
+    $main_script_url = "resources/dist/".$webpack_manifest["main.js"]["src"];
+    $game_script_url = "resources/dist/".$webpack_manifest["games.js"]["src"];
 
     $error_templates = [
         <<<EOT

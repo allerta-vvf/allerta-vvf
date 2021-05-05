@@ -897,7 +897,7 @@ class translations
         }
     }
 }
-$webpack_manifest_path = realpath("resources/dist/manifest.json");
+$webpack_manifest_path = realpath("resources/dist/assets-manifest.json");
 function init_class($enableDebugger=true, $headers=true)
 {
     global $tools, $database, $user, $crud, $translations, $debugbar;

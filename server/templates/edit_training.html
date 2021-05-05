@@ -77,7 +77,7 @@
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
+      {{ script('maps.js', 'allertaJS.maps.loadMap();') }}
       {% else %}
       <div class="form-group">
         <label for="place">{{ 'Training place'|t }}</label>
