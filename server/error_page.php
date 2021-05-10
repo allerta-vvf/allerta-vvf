@@ -24,8 +24,8 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
                 file_get_contents($webpack_manifest_path),
                 true
             );
-            $main_script_url = "resources/dist/".$webpack_manifest["main.js"];
-            $game_script_url = "resources/dist/".$webpack_manifest["games.js"];
+            $main_script_url = "resources/dist/".$webpack_manifest["main.js"]["src"];
+            $game_script_url = "resources/dist/".$webpack_manifest["games.js"]["src"];
         }
     } catch(\Exception $e) {
     }
