@@ -61,8 +61,14 @@ var prodConfig = {
             use: {
               loader: "babel-loader",
               options: {
-                  presets: ["@babel/preset-env"],
-                  plugins: ["@babel/plugin-transform-runtime"]
+                presets: [
+                  ['@babel/preset-env', {
+                    useBuiltIns: 'usage',
+                    corejs: 3
+                  }]
+                ],
+                plugins: ["@babel/plugin-transform-runtime"],
+                sourceType: "unambiguous"
               }
             }
           }

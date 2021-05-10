@@ -199,11 +199,13 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
       console.log(data);
       if (data.length > 0) {
         fillTableLoaded({ data, replaceLatLngWithMap, callback });
-        const headers = new Headers();
-        headers.append("date", Date.now());
-        caches.open("tables-1").then((cache) => {
-          cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
-        });
+        if(typeof(Headers) == "function"){
+          const headers = new Headers();
+          headers.append("date", Date.now());
+          caches.open("tables-1").then((cache) => {
+            cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
+          });
+        }
       }
       if (offline) { // if xhr request successful, client is online
         console.log(onlineReload);
@@ -245,4 +247,40 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
       loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
     }, interval);
   }
+}
+
+export function activate(id, token_list) {
+  $.ajax({
+    url: "resources/ajax/ajax_change_availability.php",
+    method: "POST",
+    data: {
+      change_id: id,
+      dispo: 1,
+      token_list: token_list
+    },
+    dataType: "json",
+    success: function (data) {
+      console.log(data);
+      toastr.success(data.message);
+      allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+    }
+  });
+}
+
+export function deactivate(id, token_list) {
+  $.ajax({
+    url: "resources/ajax/ajax_change_availability.php",
+    method: "POST",
+    data: {
+      change_id: id,
+      dispo: 0,
+      token_list: token_list
+    },
+    dataType: "json",
+    success: function (data) {
+      console.log(data);
+      toastr.success(data.message);
+      allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+    }
+  });
 }
