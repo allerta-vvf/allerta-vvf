@@ -4,31 +4,34 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "492606c03730f891878c2eddc0bffee0",
+    "content-hash": "36b7ee8aa0a48c8fbf73db8ab8383b82",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azuyalabs/yasumi.git",
-                "reference": "e2f37e6de3b15642b83275a24bbfe101cd5c7791"
+                "reference": "083a0d0579fee17e68d688d463bc01098ac2691f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azuyalabs/yasumi/zipball/e2f37e6de3b15642b83275a24bbfe101cd5c7791",
-                "reference": "e2f37e6de3b15642b83275a24bbfe101cd5c7791",
+                "url": "https://api.github.com/repos/azuyalabs/yasumi/zipball/083a0d0579fee17e68d688d463bc01098ac2691f",
+                "reference": "083a0d0579fee17e68d688d463bc01098ac2691f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.2"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.16",
-                "fzaninotto/faker": "^1.9",
+                "infection/infection": "^0.17 | ^0.22",
                 "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "^8.5"
+                "phan/phan": "^4.0",
+                "phpstan/phpstan": "^0.12.66",
+                "phpunit/phpunit": "^8.5 | ^9.4",
+                "vimeo/psalm": "^4"
             },
             "suggest": {
                 "ext-calendar": "For calculating the date of Easter"
@@ -74,7 +77,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-06-22T12:46:20+00:00"
+            "time": "2021-05-09T09:03:34+00:00"
         },
         {
             "name": "brick/phonenumber",
@@ -1803,16 +1806,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "fb4f83e6e2d718d1e5fbfe3a20cced83f47f040f"
+                "reference": "02237728bdc5b82b0a14c37417644e3f3606db9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/fb4f83e6e2d718d1e5fbfe3a20cced83f47f040f",
-                "reference": "fb4f83e6e2d718d1e5fbfe3a20cced83f47f040f",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/02237728bdc5b82b0a14c37417644e3f3606db9b",
+                "reference": "02237728bdc5b82b0a14c37417644e3f3606db9b",
                 "shasum": ""
             },
             "require": {
@@ -1891,7 +1894,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/3.2.1"
+                "source": "https://github.com/getsentry/sentry-php/tree/3.2.2"
             },
             "funding": [
                 {
@@ -1903,7 +1906,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-04-06T07:55:41+00:00"
+            "time": "2021-05-06T10:15:01+00:00"
         },
         {
             "name": "spatie/array-to-xml",
