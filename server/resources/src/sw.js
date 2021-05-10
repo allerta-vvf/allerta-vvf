@@ -76,14 +76,14 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(cacheName).then((cache) => {
       cache.addAll(urls);
-      fetch("resources/dist/manifest.json")
+      fetch("resources/dist/assets-manifest.json")
         .then((response) => response.json())
         .then((manifest) => {
           const scriptsRequired = ["main.js", "maps.js"];
           scriptsRequired.map((scriptName) => {
             console.log(manifest);
             console.log(scriptName);
-            cache.add("resources/dist/" + manifest[scriptName]);
+            cache.add("resources/dist/" + manifest[scriptName]["src"]);
           });
         });
     })
