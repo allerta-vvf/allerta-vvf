@@ -47,7 +47,7 @@
   /*{% endif %}*/
   </script>
   {% endif %}
-  <script src="{{ urlsoftware }}/resources/dist/{{ resource('main.js') }}"></script>
+  {{ script('main.js') }}
   <script>$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
   {% endblock %}
   {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}

@@ -51,7 +51,7 @@
         {% for user in service.crew %}
         {% if user.driver == 1 and not user.hidden %}
         <div class="form-check">
-          <input aria-label="{{ username(user.id) }}"id="drivers-{{ user.id }}" class="form-check-input drivers drivers-{{ user.id }}"
+          <input aria-label="{{ username(user.id) }}" id="drivers-{{ user.id }}" class="form-check-input drivers drivers-{{ user.id }}"
             style="transform: scale(1.4); -webkit-transform: scale(1.4);" type="checkbox" name='drivers[]'
             value='{{ user.id }}'>
           <label class="form-check-label" for="drivers-{{ user.id }}">
@@ -93,7 +93,7 @@
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script src="{{ urlsoftware }}/resources/dist/{{ resource('maps.js') }}" onload="allertaJS.maps.loadMap();"></script>
+      {{ script('maps.js', 'allertaJS.maps.loadMap();') }}
       {% else %}
       <div class="form-group">
         <label>{{ 'Service place'|t }}</label>
@@ -141,12 +141,12 @@
                 url: "resources/ajax/ajax_add_type.php",
                 method: "POST",
                 data: {
-                    type: new_type
+                  type: new_type
                 },
                 success: function (data) {
-                    $('option:last-of-type').before($('<option>').val(new_type).text(new_type));
-                    $('option[value='+new_type+']').prop('selected', 'selected').change();
-                    toastr.success(`{{ "Type '%s' added successfully."|t|format('${new_type}') }}`);
+                  $('option:last-of-type').before($('<option>').val(new_type).text(new_type));
+                  $('option[value='+new_type+']').prop('selected', 'selected').change();
+                  toastr.success('{{ "Type '%s' added successfully."|t|format('+new_type+')|raw }}');
                 }
             });
         }

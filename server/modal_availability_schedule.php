@@ -163,107 +163,98 @@ echo("</div>");
 ?>
 <script>
 function init_modal() {
-    <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
-
-    var isMouseDown = false;
-    $(document)
-        .mouseup(function () {
-            isMouseDown = false;
-        });
-
-    $(".hour-cell")
-        .mousedown(function () {
-            isMouseDown = true;
-            $(this).toggleClass("highlighted");
-            return false; // prevent text selection
-        })
-        .mouseover(function () {
-            if (isMouseDown) {
-                $(this).toggleClass("highlighted");
-            }
-        });
-
-    function selectDay(id){
-        console.log("day selection " + id);
-        if ($(event.target).hasClass("highlighted_all")) {
-            $("#scheduler_body .day-" + id).toggleClass("highlighted");
-            $(event.target).toggleClass("highlighted_all");
-        } else {
-            $("#scheduler_body .day-" + id).addClass("highlighted");
-            $(event.target).addClass("highlighted_all");
-        }
+  <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
+  var isMouseDown = false;
+  $(document).mouseup(function () {
+    isMouseDown = false;
+  });
+  $(".hour-cell").mousedown(function () {
+    isMouseDown = true;
+    $(this).toggleClass("highlighted");
+    return false; // prevent text selection
+  }).mouseover(function () {
+    if (isMouseDown) {
+      $(this).toggleClass("highlighted");
     }
+  });
 
-    function selectHour(id){
-        console.log("hour selection " + id);
-        if ($(event.target).hasClass("highlighted_all")) {
-            $("#scheduler_body .hour-" + id).toggleClass("highlighted");
-            $(event.target).toggleClass("highlighted_all");
-        } else {
-            $("#scheduler_body .hour-" + id).addClass("highlighted");
-            $(event.target).addClass("highlighted_all");
-        }
+  function selectDay(id) {
+    console.log("day selection " + id);
+
+    if ($(event.target).hasClass("highlighted_all")) {
+      $("#scheduler_body .day-" + id).toggleClass("highlighted");
+      $(event.target).toggleClass("highlighted_all");
+    } else {
+      $("#scheduler_body .day-" + id).addClass("highlighted");
+      $(event.target).addClass("highlighted_all");
     }
+  }
 
-    $(".day")
-        .mousedown(function () {
-            isMouseDown = true;
-            let id = event.target.id;
-            selectDay(id);
-            return false; // prevent text selection
-        })
-        .mouseover(function () {
-            if (isMouseDown) {
-                let id = event.target.id;
-                selectDay(id);
-            }
-        });
+  function selectHour(id) {
+    console.log("hour selection " + id);
 
-    $(".hour")
-        .mousedown(function () {
-            isMouseDown = true;
-            let id = event.target.id.replace(":", "-");
-            selectHour(id);
-            return false; // prevent text selection
-        })
-        .mouseover(function () {
-            if (isMouseDown) {
-                let id = event.target.id.replace(":", "-");
-                selectHour(id);
-            }
-        });
+    if ($(event.target).hasClass("highlighted_all")) {
+      $("#scheduler_body .hour-" + id).toggleClass("highlighted");
+      $(event.target).toggleClass("highlighted_all");
+    } else {
+      $("#scheduler_body .hour-" + id).addClass("highlighted");
+      $(event.target).addClass("highlighted_all");
+    }
+  }
 
-    $("#submit_schedules_change")
-        .unbind()
-        .on("click", submit_changes);
+  $(".day").mousedown(function () {
+    isMouseDown = true;
+    var id = event.target.id;
+    selectDay(id);
+    return false; // prevent text selection
+  }).mouseover(function () {
+    if (isMouseDown) {
+      var id = event.target.id;
+      selectDay(id);
+    }
+  });
+  $(".hour").mousedown(function () {
+    isMouseDown = true;
+    var id = event.target.id.replace(":", "-");
+    selectHour(id);
+    return false; // prevent text selection
+  }).mouseover(function () {
+    if (isMouseDown) {
+      var id = event.target.id.replace(":", "-");
+      selectHour(id);
+    }
+  });
+  $("#submit_schedules_change").unbind().on("click", submit_changes);
 }
 
-function extractSelections(){
-    hours_list = [];
-    $("#scheduler_body td.highlighted").each((key, value) => {
-        let day = value.classList[1].replace("day-","");
-        let hour = value.classList[2].replace("hour-","").replace("-",":");
-        if(hour.length < 5) hour = "0" + hour;
-        console.log(day,hour,value);
-        hours_list.push([day,hour]);
-    });
-    return hours_list;
+function extractSelections() {
+  hours_list = [];
+  $("#scheduler_body td.highlighted").each(function (key, value) {
+    var day = value.classList[1].replace("day-", "");
+    var hour = value.classList[2].replace("hour-", "").replace("-", ":");
+    if (hour.length < 5) hour = "0" + hour;
+    console.log(day, hour, value);
+    hours_list.push([day, hour]);
+  });
+  return hours_list;
 }
 
-function submit_changes(){
-    let hours = extractSelections();
-    let holidays = $.map($('input[name="holiday_check"]:checked'), function(c){return c.value; });
-    $.ajax({
-        url: "resources/ajax/ajax_availability_schedule.php",
-        method: "POST",
-        data: {
-            hours: hours,
-            holidays: holidays
-        },
-        success: function (data) {
-            console.log(data);
-            toastr.success('<?php t('Schedules updated successfully'); ?>');
-        }
-    });
+function submit_changes() {
+  var hours = extractSelections();
+  var holidays = $.map($('input[name="holiday_check"]:checked'), function (c) {
+    return c.value;
+  });
+  $.ajax({
+    url: "resources/ajax/ajax_availability_schedule.php",
+    method: "POST",
+    data: {
+      hours: hours,
+      holidays: holidays
+    },
+    success: function success(data) {
+      console.log(data);
+      toastr.success('<?php t('Schedules updated successfully'); ?>');
+    }
+  });
 }
 </script>
