@@ -7,7 +7,7 @@ $baseConfig = [
 		.github
 		.vscode
         *.json
-        !resources/dist/manifest.json
+        !resources/dist/assets-manifest.json
 		resources/src
         resources/node_modules
         resources/webpack*
