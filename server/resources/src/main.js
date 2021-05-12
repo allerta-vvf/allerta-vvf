@@ -152,6 +152,9 @@ var fillTableLoaded = undefined;
 window.addEventListener("securitypolicyviolation", console.error.bind(console));
 
 $(function() {
+  $("#topNavBar").show();
+  $("#content").show();
+  $("#footer").show();
   $("#menuButton").on("click", function() {
     const topNavBar = document.getElementById("topNavBar");
     if (topNavBar.className === "topnav") {

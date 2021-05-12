@@ -19,10 +19,25 @@ $webpack_manifest = json_decode(
     file_get_contents(realpath("resources/dist/assets-manifest.json")),
     true
 );
+
+if(isset($_COOKIE["JSless"])){
+    $templates_dir = $_COOKIE["JSless"] ? "templates/JSless" : "templates";
+    $JSless = true;
+} else {
+    $templates_dir = "templates";
+    $JSless = false;
+}
+
+if(isset($_GET["JSless"])){
+    setcookie("JSless", $_GET["JSless"] ? true : false, time() + (86400 * 365));
+    $templates_dir = $_GET["JSless"] ? "templates/JSless" : "templates";
+    $JSless = true;
+}
+
 try {
-    $loader = new \Twig\Loader\FilesystemLoader('templates');
+    $loader = new \Twig\Loader\FilesystemLoader($templates_dir);
 } catch (Exception $e) {
-    $loader = new \Twig\Loader\FilesystemLoader('../templates');
+    $loader = new \Twig\Loader\FilesystemLoader('../'.$templates_dir);
 }
 $twig = new \Twig\Environment(
     $loader, [
@@ -50,6 +65,18 @@ $function_username = new \Twig\TwigFunction(
     }
 );
 $twig->addFunction($function_username);
+
+$function_username_list = new \Twig\TwigFunction(
+    'username_list', function ($id_list) {
+        global $user;
+        $user_list = [];
+        foreach (explode(",", $id_list) as $id) {
+            $user_list[] = $user->nameById($id);
+        }
+        return implode(", ", $user_list);
+    }
+);
+$twig->addFunction($function_username_list);
 
 $function_resource = new \Twig\TwigFunction(
     'resource', function ($file) {
@@ -88,6 +115,19 @@ $filter_minimize = new \Twig\TwigFilter(
     }, ['is_safe' => ['html']]
 );
 $twig->addFilter($filter_minimize);
+
+$function_yesOrNo = new \Twig\TwigFunction(
+    'yesOrNo', function ($bool, $onlyString=false) {
+        $string = t($bool ? "yes" : "no", false);
+        if($onlyString){
+            return $string;
+        } else {
+            $colour = $bool ? "green" : "red";
+            return "<p style='color: $colour'>$string</p>";
+        }
+    }, ['is_safe' => ['html']]
+);
+$twig->addFunction($function_yesOrNo);
 p_stop();
 
 $template = null;

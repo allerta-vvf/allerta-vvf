@@ -1,3 +1,7 @@
+#jsDisabledNotice {
+  display: none;
+}
+
 body:not(table) {
   max-width: 100%;
   overflow-x: hidden;
