@@ -140,6 +140,9 @@ $(function () {
   if ($("#frontend_version") !== undefined) {
     $("#frontend_version").append(process.env.GIT_VERSION + " aggiornamento " + new Date(process.env.BUNDLE_DATE).toLocaleString());
   }
+  if(getCookie("JSless")){
+    location.href="?JSless=0";
+  }
 });
 
 var offline = false;
