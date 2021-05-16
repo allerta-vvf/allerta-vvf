@@ -10,7 +10,7 @@
   <meta name="robots" content="none">
   <link rel="manifest" href="manifest.webmanifest">
   {% if delete_caches %}
-  <script>
+  <script nonce="{{ nonce }}">
   //from https://stackoverflow.com/a/57149239
   if ('caches' in window) {
     console.log("Deleting caches...");
@@ -28,7 +28,7 @@
   </script>
   {% endif %}
   {% if delete_service_workers %}
-  <script>
+  <script nonce="{{ nonce }}">
   //from https://stackoverflow.com/a/47515250
   if(window.navigator && navigator.serviceWorker) {
     console.log("UnRegistering service workers...");
@@ -48,7 +48,7 @@
   </script>
   {% endif %}
   {{ script('main.js') }}
-  <script>$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
+  <script nonce="{{ nonce }}">$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
   {% endblock %}
   {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>

@@ -161,7 +161,7 @@ EOT);
 
 echo("</div>");
 ?>
-<script>
+<script nonce="<?php echo(isset($_GET["nonce"]) ? $_GET["nonce"] : ""); ?>">
 function init_modal() {
   <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
   var isMouseDown = false;

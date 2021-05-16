@@ -4,6 +4,32 @@
 {% endblock %}
 
 {% block content %}
+{% if error %}
+<div id="err" class="alert alert-danger m-3" role="alert">
+  <h4 class="alert-heading">{{ error.text|t }}</h4>
+  <p>{{ 'Error'|t}} {{ 'code'|t}} {{ error.code }}. {{ 'Check the entered credentials and make sure they are correct'|t }}.</p>
+  <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
+</div>
+<script nonce="{{ nonce }}">
+  const noSaveData = 'connection' in navigator === false || ('connection' in navigator && !navigator.connection.saveData);
+  if (noSaveData) {
+    let playerScript = document.createElement("script");
+    playerScript.setAttribute("src", "{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}");
+    playerScript.setAttribute("nonce", "{{ nonce }}");
+    playerScript.setAttribute("async", "false");
+    playerScript.onload = function() {
+      console.log("player script loaded");
+      var sound = new Howl({
+        src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
+        autoplay: true
+      });
+      sound.play();
+    };
+    document.head.insertBefore(playerScript, document.head.firstElementChild);
+  }
+  $("#err").delay(20000).fadeOut(300);
+</script>
+{% endif %}
 <div class="align-items-center container d-flex justify-content-center" id="modulogin">
   <form method="post">
     <img alt="VVF" src="{{ urlsoftware }}/resources/images/logo.png" class="img-resposive"><br><br>
@@ -25,31 +51,6 @@
     {% endif %}
     <input type="submit" name="login" class="btn btn-block btn-lg btn-success" value="{{ 'Login'|t }}">
   </form>
-  {% if error %}
-  <div id="err" class="alert alert-danger m-3" role="alert">
-    <h4 class="alert-heading">{{ error.text|t }}</h4>
-    <p>{{ 'Error'|t}} {{ 'code'|t}} {{ error.code }}. {{ 'Check the entered credentials and make sure they are correct'|t }}.</p>
-    <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
-  </div>
-  <script>
-    const noSaveData = 'connection' in navigator === false || ('connection' in navigator && !navigator.connection.saveData);
-    if (noSaveData) {
-      let playerScript = document.createElement("script");
-      playerScript.setAttribute("src", "{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}");
-      playerScript.setAttribute("async", "false");
-      playerScript.onload = function() {
-        console.log("player script loaded");
-        var sound = new Howl({
-          src: ['{{ urlsoftware }}/resources/sounds/{{ error_sound }}'],
-          autoplay: true
-        });
-        sound.play();
-      };
-      document.head.insertBefore(playerScript, document.head.firstElementChild);
-    }
-    $("#err").delay(20000).fadeOut(300);
-  </script>
-  {% endif %}
 </div>
 <br><br>
 

@@ -40,7 +40,7 @@
         {% endif %}
         {% endfor %}
       </div>
-      <script>
+      <script nonce="{{ nonce }}">
         $('.chief').on('change', function () {
           $('input[name="' + this.name + '"]').not(this).prop('checked', false);
         });
@@ -96,7 +96,7 @@
       <button id="submit_button" type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
     </div>
   </form>
-  <script>
+  <script nonce="{{ nonce }}">
     {% if training.modalità == "edit" %}
     {% if option('use_location_picker') %}
     {% set place = values.place|split('#')[0] %}
@@ -121,7 +121,7 @@
       <input id="id" type="hidden" value="{{ training.id }}" name="id"></input>
       <button id="remove" type="submit">{{ 'Submit'|t }}</button>
     </form>
-    <script>
+    <script nonce="{{ nonce }}">
       $('form').submit(function () {
         return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
       });

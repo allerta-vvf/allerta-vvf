@@ -2,6 +2,8 @@
 require_once 'core.php';
 init_class();
 
+$nonce = $tools->script_nonce;
+
 if(!is_null($debugbar)){
     $enable_debugbar = true;
     $debugbarRenderer = $debugbar->getJavascriptRenderer("./vendor/maximebf/debugbar/src/DebugBar/Resources");
@@ -20,7 +22,7 @@ $webpack_manifest = json_decode(
     true
 );
 
-if(isset($_COOKIE["JSless"])){
+if(isset($_COOKIE["JSless"]) && $_COOKIE["JSless"]){
     $templates_dir = $_COOKIE["JSless"] ? "templates/JSless" : "templates";
     $JSless = true;
 } else {
@@ -29,9 +31,15 @@ if(isset($_COOKIE["JSless"])){
 }
 
 if(isset($_GET["JSless"])){
-    setcookie("JSless", $_GET["JSless"] ? true : false, time() + (86400 * 365));
-    $templates_dir = $_GET["JSless"] ? "templates/JSless" : "templates";
-    $JSless = true;
+    if($_GET["JSless"]){
+        setcookie("JSless", true, time() + (86400 * 365));
+        $templates_dir = "templates/JSless";
+        $JSless = true;
+    } else {
+        setcookie("JSless", null, time() - 3600);
+        $templates_dir = "templates";
+        $JSless = false;
+    }
 }
 
 try {
@@ -88,11 +96,11 @@ $twig->addFunction($function_resource);
 
 $function_script = new \Twig\TwigFunction(
     'script', function ($file, $onLoad=false) {
-        global $url_software, $webpack_manifest;
+        global $nonce, $url_software, $webpack_manifest;
         $script_url = $url_software . "/resources/dist/" . $webpack_manifest[$file]["src"];
         $script_integrity = $webpack_manifest[$file]["integrity"];
 
-        $script_tag = "<script src='{$script_url}' integrity='{$script_integrity}' crossorigin='anonymous'";
+        $script_tag = "<script src='{$script_url}' integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
         if($onLoad){
             $script_tag .= " onload='{$onLoad}'";
         }
@@ -133,11 +141,12 @@ p_stop();
 $template = null;
 function loadtemplate($templatename, $data, $requirelogin=true)
 {
-    global $url_software, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
+    global $nonce, $url_software, $user, $twig, $template, $enable_debugbar, $debugbarRenderer;
     p_start("Render Twig template");
     if($requirelogin) {
         $user->requirelogin();
     }
+    $data['nonce'] = $nonce;
     $data['delete_caches'] = isset($_GET["deleteCache"]) || isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
     $data['delete_service_workers'] = isset($_GET["unregisterSW"]) || isset($_GET["unregisterSWandDisable"]);
     $data['delete_service_workers_and_disable'] = isset($_GET["unregisterSWandDisable"]);

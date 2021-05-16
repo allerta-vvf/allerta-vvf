@@ -34,11 +34,21 @@ class tools
     public $db;
     public $profiler_enabled;
     public $profiler_last_name = "";
+    public $script_nonce = null;
+
+    public function generateNonce($bytes_lenght = 16, $base64_encode = false){
+        $nonce = bin2hex(random_bytes($bytes_lenght));
+        if($base64_encode){
+            $nonce = base64_encode($nonce);
+        }
+        return $nonce;
+    }
 
     public function __construct($db, $profiler_enabled)
     {
         $this->db = $db;
         $this->profiler_enabled = $profiler_enabled;
+        $this->script_nonce = $this->generateNonce(16);
     }
 
     public function validate_form($data, $expected_value=null, $data_source=null)
@@ -910,19 +920,28 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
-        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
+        $csp_rules = [
+            "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
+            "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",
+            "script-src 'nonce-{$tools->script_nonce}' 'self'",
+            "img-src 'self' data: *.tile.openstreetmap.org",
+            "object-src",
+            "style-src 'self' 'unsafe-inline'",
+            "base-uri 'self'"
+        ];
         if(defined(SENTRY_CSP_REPORT_URI) && SENTRY_CSP_REPORT_URI !== false){
-            $csp .= " report-uri ".SENTRY_CSP_REPORT_URI.";";
+            $csp_rules[] = "report-uri ".SENTRY_CSP_REPORT_URI;
         }
-        header("Content-Security-Policy: $csp");
-        header("X-Content-Security-Policy: $csp");
-        header("X-WebKit-CSP: $csp");
-        header("X-XSS-Protection: 1; mode=block");
-        header("X-Content-Type-Options: nosniff");
-        header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
+        $csp = implode("; ", $csp_rules);
+        if(!isset($_COOKIE["JSless"]) && (isset($_GET["JSless"]) ? !$_GET["JSless"] : true)){
+            header("Content-Security-Policy: $csp");
+            header("X-XSS-Protection: 1; mode=block");
+            header("X-Content-Type-Options: nosniff");
+            header("Permissions-Policy: interest-cohort=(), camera=(), microphone=(), payment=(), usb=()");
+            header("Referrer-Policy: no-referrer");
+            header("X-Frame-Options: DENY");
+        }
     }
-    //var_dump($user);
-    //exit();
 
     if(SENTRY_ENABLED){
         Sentry\configureScope(function (Sentry\State\Scope $scope): void {
