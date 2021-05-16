@@ -297,17 +297,6 @@ PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 EOL);
 $db->exec(<<<"EOL"
-CREATE TABLE IF NOT EXISTS `{$prefix}_intrusions` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`page` varchar(999) COLLATE utf8mb4_unicode_ci NOT NULL,
-`date` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-`hour` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-`ip` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-`server_var` varchar(9999) COLLATE utf8mb4_unicode_ci NOT NULL,
-PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
-EOL);
-$db->exec(<<<"EOL"
 CREATE TABLE IF NOT EXISTS `{$prefix}_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `action` varchar(100) NOT NULL,
@@ -541,8 +530,6 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'web_url' => $url,
             'use_custom_error_sound' => 0,
             'use_custom_error_image' => 0,
-            'intrusion_save' => 1,
-            'intrusion_save_info' => 0,
             'log_save_ip' => 1,
             'cron_job_code' => str_replace(".", "", bin2hex(random_bytes(10)).base64_encode(openssl_random_pseudo_bytes(30))),
             'cron_job_enabled' => 1,

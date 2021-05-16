@@ -415,17 +415,6 @@ class user
     {
         $this->tools->profiler_start("Require login");
         if(!$this->authenticated()) {
-            if(get_option("intrusion_save")) {
-                if(get_option("intrusion_save_info")) {
-                    $params = ["page" => $this->tools->get_page_url(), "ip" => $this->tools->get_ip(), "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode($_SERVER)];
-                } else {
-                    $params = ["page" => $this->tools->get_page_url(), "ip" => "redacted", "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode(["redacted" => "true"])];
-                }
-                $this->db->insert(
-                    "intrusions",
-                    $params
-                );
-            }
             if($redirect) {
                 $this->tools->redirect(get_option("web_url"));
             } else {
