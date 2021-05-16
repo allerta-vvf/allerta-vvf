@@ -21,10 +21,10 @@
       </div>
     </div>
   </div>
-  <script>
+  <script nonce="{{ nonce }}">
     $('#schedulesModal').on('show.bs.modal', function (event) {
       //$( ".modal-body" ).loading("show");
-      $(".modal-body").load("modal_availability_schedule.php", {
+      $(".modal-body").load("modal_availability_schedule.php?nonce={{ nonce }}", {
         orientation: window.innerHeight > window.innerWidth ? "portrait" : "landscape"
       }, function() {
         init_modal();
@@ -69,7 +69,7 @@
     <tbody id="table_body">
     </tbody>
   </table>
-  <script>
+  <script nonce="{{ nonce }}">
     allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
   </script>
 </div>
