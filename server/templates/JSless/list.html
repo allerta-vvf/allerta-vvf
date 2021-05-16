@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="text-center">
+  <p>{{ 'Are you available in case of alert?'|t }}</p>
+  <button class="btn btn-success">{{ 'Activate'|t }}</button>
+  <button class="btn btn-danger">{{ 'Deactivate'|t }}</button>
+</div>
+<br>
+<br>
+<img alt="VVF" src="./resources/images/owner.png" width="150"
+  style="display: block; margin-left: auto; margin-right: auto;">
+<br>
+<br>
+<table style="width:100%">
+  <tr class="tHead">
+    <th>{{ 'Name'|t }}</th>
+    <th>{{ 'Available'|t }}</th>
+    {% if user.full_viewer %}
+    <th>{{ 'Driver'|t }}</th>
+    <th>{{ 'Call'|t }}</th>
+    <th>{{ 'Write'|t }}</th>
+    <th>{{ 'Services'|t }}</th>
+    <th>{{ 'Availability Minutes'|t }}</th>
+    {# <th>{{ 'Other'|t }}</th> TODO: fix "Other" page #}
+    {% endif %}
+  </tr>
+{% for row in query_results %}
+  <tr class="tBody">
+    <th>{{ username(row.id) }}</th>
+    <th>{{ yesOrNo(row.available) }}</th>
+    {% if user.full_viewer %}
+    <th>{{ yesOrNo(row.driver) }}</th>
+    {% if row.phone_number %}
+    <th><a href='tel:{{ row.phone_number }}'>Chiama</a></th>
+    {% else %}
+    <th></th>
+    {% endif %}
+    {% if row.phone_number %}
+    <th><a href='https://api.whatsapp.com/send?phone={{ row.phone_number }}&text=ALLERTA IN CORSO.%20Mettiti%20in%20contatto%20con%20{{ username(row.id)|url_encode }}'>Manda un messaggio</a></th>
+    {% else %}
+    <th></th>
+    {% endif %}
+    <th>{{ row.services }}</th>
+    <th>{{ row.availability_minutes }}</th>
+    {# <th>{{ 'Other'|t }}</th> TODO: fix "Other" page #}
+    {% endif %}
+  </tr>
+{% endfor %}
+</table>
+
+<br><br>
+<p style="text-align: center;">
+  <button class="btn btn-success btn-small">{{ 'Add user'|t }}</button>
+</p>
+<br>
+<br>
+{% endblock %}

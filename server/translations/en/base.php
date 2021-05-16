@@ -123,5 +123,8 @@ return [
     "Sun" => "Sun",
     "Do you want to exclude holidays from schedules?" => "Do you want to exclude holidays from schedules?",
     "Select all" => "Select all",
-    "Remove selections" => "Remove selections"
+    "Remove selections" => "Remove selections",
+    "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>." => "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>.",
+    "yes" => "yes",
+    "no" => "no"
 ];

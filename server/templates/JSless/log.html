@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<img alt="VVF" src="./resources/images/owner.png" width="150"
+  style="display: block; margin-left: auto; margin-right: auto;">
+<br>
+<table style="width:100%">
+  <tr class="tHead">
+    <th>{{ 'Action'|t }}</th>
+    <th>{{ 'Interested'|t }}</th>
+    <th>{{ 'Made by'|t }}</th>
+    <th>{{ 'Datetime'|t }}</th>
+  </tr>
+{% for row in query_results %}
+  <tr class="tBody">
+    <th>{{ row.action }}</th>
+    <th>{{ username(row.changed) }}</th>
+    <th>{{ username(row.editor) }}</th>
+    <th>{{ row.timestamp }}</th>
+  </tr>
+{% endfor %}
+</table>
+  <br>
+  <br>
+  {% endblock %}

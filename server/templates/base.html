@@ -56,7 +56,7 @@
 {% if show_menu %}
   {% block menu %}
   {# Menu #}
-  <div class="topnav" id="topNavBar">
+  <div style="display: none" class="topnav" id="topNavBar">
     <a href="{{ urlsoftware }}list.php" class="active">{{ 'Availability List'|t }}</a>
     <a href="{{ urlsoftware }}services.php">{{ 'Services'|t }}</a>
     <a href="{{ urlsoftware }}trainings.php">{{ 'Trainings'|t }}</a>
@@ -71,8 +71,11 @@
   <div class="alert alert-danger m-3" id="offline_alert" style="display: none" role="alert">
     <b>{{ 'You are offline'|t }}.</b> {{ 'Last update'|t }}: <p style="display: inline" id="offline_update"></p>
   </div>
+  <div id="jsDisabledNotice">
+    <p>{{ "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>."|t|raw }}</p>
+  </div>
   {# Content #}
-  <div id="content">
+  <div style="display: none" id="content">
 {% block pjax_content %}
 {% if message %}
 <div class="alert alert-info m-3" role="alert">
@@ -88,7 +91,7 @@
 {% if show_footer %}
   {% block footer %}
   {# Footer #}
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+  <div id="footer" class="footer text-center p-3" style="background-color: rgba(0, 0, 0, 0.2); display: none;">
     Allerta-VVF, software libero realizzato per {{ owner }}.<br>
     <p style="margin-bottom: 0" id="frontend_version">Frontend versione </p>
   </div>

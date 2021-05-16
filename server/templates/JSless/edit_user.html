@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
+TODO
+  {% if modalità == "edit" or modalità == "add" %}
+  <form method="post">
+    <div class="container">
+      <div class="form-group">
+        <label for="mail">{{ 'E-mail'|t }}</label>
+        <input id="mail" class="form-control" type="text" name="mail" placeholder="{{ 'user@provider-email-domain.com'|t }}" required>
+      </div>
+      <div class="form-group">
+        <label for="name">{{ 'Name'|t }}</label>
+        <input id="name" class="form-control" type="text" name="name" placeholder="{{ 'Name Surname'|t }}" required>
+      </div>
+      <div class="form-group">
+        <label for="username">{{ 'Username'|t }}</label>
+        <input id="username" class="form-control" type="text" name="username" placeholder="{{ 'name.surname'|t }}" required>
+      </div>
+      <div class="form-group">
+        <label>{{ 'Password'|t }}</label>
+        <input id="password" class="form-control" type="text" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="phone_number">{{ 'Phone number'|t }}</label>
+        <input id="phone_number" class="form-control" type="tel" name="phone_number" required>
+      </div>
+      <div class="form-group">
+        <label for="date-picker">{{ 'Birthday'|t }}</label>
+        <input id="date-picker" placeholder="DD/MM/YYY" autocomplete="off" name="birthday" data-provide="datepicker"
+          value="{{ values.date }}" type="text" class="form-control">
+      </div>
+      <style>
+        .toggle.workaround {
+          border: 1px solid black;
+        }
+      </style>
+      <div class="form-group">
+        <label for="chief">{{ 'Chief'|t }}</label><br>
+        <input id="chief" class="form-control" type="checkbox" name="chief" data-toggle="toggle" data-style="workaround">
+      </div>
+      <div class="form-group">
+      <label for="driver">{{ 'Driver'|t }}</label><br>
+      <input id="driver" class="form-control" type="checkbox" name="driver" data-toggle="toggle" data-style="workaround">
+      </div>
+      <div class="form-group">
+        <label for="visible">{{ 'Visible'|t }}</label><br>
+        <input id="visible" class="form-control" type="checkbox" name="visible" checked data-toggle="toggle" data-style="workaround">
+      </div>
+      <div class="form-group">
+        <label for="enabled">{{ 'Enabled'|t }}</label><br>
+        <input id="enabled" class="form-control" type="checkbox" name="enabled" checked data-toggle="toggle" data-style="workaround">
+      </div>
+      <br>
+      <input id="modalità" type="hidden" value="{{ modalità }}" name="mod"></input>
+      <input id="token" type="hidden" value="{{ token }}" name="token"></input>
+      <button type="submit" class="btn btn-primary">{{ 'Submit'|t }}</button>
+    </div>
+  </form>
+  {% endif %}
+  {% if modalità == "delete" %}
+  <div style="margin: 0 auto; text-align: center">
+    <p>{{ 'Are you sure you want to delete the user?'|t }}</p>
+    <form method="post">
+      <input id="modalità" type="hidden" value="delete" name="mod"></input>
+      <input id="token" type="hidden" value="{{ token }}" name="token"></input>
+      <input id="id" type="hidden" value="{{ id }}" name="id"></input>
+      <button id="remove" type="submit">{{ 'Submit'|t }}</button>
+    </form>
+    <script>
+      $('form').submit(function () {
+        return confirm("{{ 'The action cannot be canceled. Are you sure you want to continue?'|t }}");
+      });
+    </script>
+  </div>
+  {% endif %}
+
+{% block footer %}
+{% endblock %}
+
+{% endblock %}
