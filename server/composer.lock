@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2adebcfb9ca49c9b44be96b6e0bd5c6",
+    "content-hash": "7c4057567b13ddf492603d706b796c68",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -2841,16 +2841,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.3.1",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ac44433c49892bf28d47c852b19832f3823bd351"
+                "reference": "21578f00e83d4a82ecfa3d50752b609f13de6790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ac44433c49892bf28d47c852b19832f3823bd351",
-                "reference": "ac44433c49892bf28d47c852b19832f3823bd351",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21578f00e83d4a82ecfa3d50752b609f13de6790",
+                "reference": "21578f00e83d4a82ecfa3d50752b609f13de6790",
                 "shasum": ""
             },
             "require": {
@@ -2901,7 +2901,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.3.1"
+                "source": "https://github.com/twigphp/Twig/tree/v3.3.2"
             },
             "funding": [
                 {
@@ -2913,7 +2913,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-12T08:05:35+00:00"
+            "time": "2021-05-16T12:14:13+00:00"
         },
         {
             "name": "ulrichsg/getopt-php",
