@@ -912,9 +912,9 @@ function init_class($enableDebugger=true, $headers=true)
         $csp_rules = [
             "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
             "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",
-            "script-src 'nonce-{$tools->script_nonce}' 'self'",
+            "script-src 'nonce-{$tools->script_nonce}' 'self' 'unsafe-eval'",
             "img-src 'self' data: *.tile.openstreetmap.org",
-            "object-src",
+            "object-src 'self'",
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'"
         ];

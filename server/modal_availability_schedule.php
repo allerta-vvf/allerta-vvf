@@ -43,6 +43,8 @@ $days = [
     t("Sun",false)
 ];
 
+$nonce = isset($_GET["nonce"]) ? $_GET["nonce"] : "";
+
 $user_id = $user->auth->getUserId();
 $result = $db->select("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `user`={$user_id}");
 if(!empty($result)){
@@ -140,7 +142,11 @@ $holidays_select_none = t("Remove selections", false);
 echo(<<<EOL
 <div class="form-group">
     <label>{$holidays_selection_question}</label>
-    <a onclick="$('.holiday_check').prop('checked', true);" class="text-primary">{$holidays_select_all}</a> / <a onclick="$('.holiday_check').prop('checked', false);" class="text-primary">{$holidays_select_none}</a>
+    <a id="select-all-holiday" class="text-primary">{$holidays_select_all}</a> / <a id="select-none-holiday" class="text-primary">{$holidays_select_none}</a>
+    <script nonce="{$nonce}"
+    $('.holiday_check').prop('checked', true);
+    $('.holiday_check').prop('checked', true);
+    </script>
 EOL);
 
 $i = 0;
@@ -161,9 +167,9 @@ EOT);
 
 echo("</div>");
 ?>
-<script nonce="<?php echo(isset($_GET["nonce"]) ? $_GET["nonce"] : ""); ?>">
+<script nonce="<?php echo($nonce); ?>">
 function init_modal() {
-  <?php if($orienation == "landscape"){ ?>$(".modal-dialog").css("max-width", "99%");<?php } ?>
+  <?php if($orienation == "landscape"){ ?> $(".modal-dialog").css("max-width", "99%"); <?php } ?>
   var isMouseDown = false;
   $(document).mouseup(function () {
     isMouseDown = false;

@@ -36,9 +36,8 @@
 </div>
 <div class="text-center">
   <p>{{ 'Are you available in case of alert?'|t }}</p>
-  <button class="btn btn-lg btn-success" onclick="allertaJS.main.activate('{{ user.id }}', '')">{{ 'Activate'|t }}</button>
-  <button class="btn btn-lg btn-danger" style="background-color: red"
-    onclick="allertaJS.main.deactivate('{{ user.id }}', '')">{{ 'Deactivate'|t }}</button>
+  <button id="activate-btn" class="btn btn-lg btn-success">{{ 'Activate'|t }}</button>
+  <button id="deactivate-btn" class="btn btn-lg btn-danger" style="background-color: red">{{ 'Deactivate'|t }}</button>
   <br>
   <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#schedulesModal">
     {{ 'Edit availability schedules'|t }}
@@ -70,7 +69,26 @@
     </tbody>
   </table>
   <script nonce="{{ nonce }}">
-    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+    $("#activate-btn").click(()=>{
+        allertaJS.main.activate('{{ user.id }}', '');
+    });
+    $("#deactivate-btn").click(()=>{
+        allertaJS.main.deactivate('{{ user.id }}', '');
+    });
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callbackRepeat: true, callback: () => {
+        $("tbody tr").each((key, el) => {
+            $(el.children[1]).click((event) => {
+                console.log(event.target);
+                userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.id.replace("username-","");
+                console.log(userId);
+                if(event.target.classList.contains("fa-times")) {
+                    allertaJS.main.activate(userId,0);
+                } else {
+                    allertaJS.main.deactivate(userId,0);
+                }
+            });
+        });
+    }});
   </script>
 </div>
 

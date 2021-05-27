@@ -210,19 +210,52 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
     }
   } else if (!checkClipboard) {
     $.getJSON("https://nominatim.openstreetmap.org/search?format=json&limit=5&q=" + inp, function (data) {
-      const items = [];
+      var list = document.createElement('ul');
+      list.classList.add("results-list");
 
       $.each(data, function (key, val) {
-        items.push("<li><a href='' onclick='allertaJS.maps.chooseAddr(\"" + val.lat + "\", \"" + val.lon + "\", undefined, " + val.boundingbox[0] + ", " + val.boundingbox[2] + ", " + val.boundingbox[1] + ", " + val.boundingbox[3] + ", \"" + val.osm_type + "\"); return false;'>" + val.display_name + "</a></li>");
+        var item_a = document.createElement('a');
+        item_a.href = "#";
+        item_a.textContent = val.display_name;
+
+        item_a.dataset.addrLat = val.lat;
+        item_a.dataset.addrLng = val.lon;
+        item_a.dataset.zoom = undefined;
+        item_a.dataset.lat1 = val.boundingbox[0];
+        item_a.dataset.lng1 = val.boundingbox[2];
+        item_a.dataset.lat2 = val.boundingbox[1];
+        item_a.dataset.lng2 = val.boundingbox[3];
+        item_a.dataset.osmType = val.osm_type;
+
+        var item = document.createElement('li');
+        item.appendChild(item_a);
+
+        list.appendChild(item);
       });
 
-      if (items.length !== 0) {
+      console.log(list);
+
+      if (data.length !== 0) {
         $("#results").empty();
         $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
-        $("<ul/>", {
-          class: "results-list",
-          html: items.join("")
-        }).appendTo("#results");
+        $(list).appendTo("#results");
+
+        $("#results li").click(function(e){
+            e.preventDefault()
+            var row = e.target;
+            console.log(row);
+            console.log(row.dataset);
+            allertaJS.maps.chooseAddr(
+                row.dataset.addrLat,
+                row.dataset.addrLng,
+                row.dataset.zoom,
+                row.dataset.lat1,
+                row.dataset.lat2,
+                row.dataset.lng1,
+                row.dataset.lng2,
+                row.dataset.osmType
+            );
+        })
       } else {
         $("#results").empty();
         $("<p>", { html: stringResultsNotFound }).appendTo("#results");
@@ -232,3 +265,10 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
     return false;
   }
 }
+
+$(function () {
+    if(typeof loadMapOnScriptLoad !== undefined){
+        console.log("Loading map...");
+        allertaJS.maps.loadMap();
+    }
+});
