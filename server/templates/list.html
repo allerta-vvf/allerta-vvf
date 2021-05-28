@@ -69,15 +69,15 @@
     </tbody>
   </table>
   <script nonce="{{ nonce }}">
-    $("#activate-btn").click(()=>{
+    $("#activate-btn").click(function(){
         allertaJS.main.activate('{{ user.id }}', '');
     });
-    $("#deactivate-btn").click(()=>{
+    $("#deactivate-btn").click(function(){
         allertaJS.main.deactivate('{{ user.id }}', '');
     });
-    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callbackRepeat: true, callback: () => {
-        $("tbody tr").each((key, el) => {
-            $(el.children[1]).click((event) => {
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callbackRepeat: true, callback: function() {
+        $("tbody tr").each(function(key, el) {
+            $(el.children[1]).click(function(event) {
                 console.log(event.target);
                 userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.id.replace("username-","");
                 console.log(userId);

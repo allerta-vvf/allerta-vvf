@@ -66,7 +66,7 @@
     <a class="pjax_disable icon" id="menuButton">☰</a>
   </div>
   <script nonce="{{ nonce }}">
-  $("#logout-text").click(()=>{ location.href='{{ urlsoftware }}logout.php'; });
+  $("#logout-text").click(function(){ location.href='{{ urlsoftware }}logout.php'; });
   </script>
   {# /Menu #}
   {% endblock %}

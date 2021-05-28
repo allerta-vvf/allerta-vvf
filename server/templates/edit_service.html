@@ -90,7 +90,7 @@
                 {{ 'Search'|t }}
             </button>
             <script nonce="{{ nonce }}">
-            $("#search_button").click(()=>{
+            $("#search_button").click(function(){
                 allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');
             });
             </script>
