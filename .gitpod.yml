@@ -41,7 +41,7 @@ tasks:
         echo "$(tput setaf 2)Full webserver url$(tput sgr0) $(tput setaf 4)$WEBSERVER_URL$(tput sgr0)";
         echo "$(tput setaf 2)Allerta username$(tput sgr0) $(tput setaf 4)admin$(tput sgr0)";
         echo "$(tput setaf 2)Allerta password$(tput sgr0) $(tput setaf 4)password$(tput sgr0)";
-        echo "$(tput setaf 2)PHP Adminer url$(tput sgr0) $(tput setaf 4)$WEBSERVER_URL/adminer.php$(tput sgr0)";
+        echo "$(tput setaf 2)PHP Adminer$(tput sgr0) $(tput setaf 4)$WEBSERVER_URL/adminer.php$(tput sgr0)";
         echo "$(tput setaf 2)DB user$(tput sgr0) $(tput setaf 4)allerta$(tput sgr0)";
         echo "$(tput setaf 2)DB password$(tput sgr0) $(tput setaf 4)allerta_pwd$(tput sgr0)";
         echo "$(tput setaf 2)DB name$(tput sgr0) $(tput setaf 4)allerta$(tput sgr0)";
