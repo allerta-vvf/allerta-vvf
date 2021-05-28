@@ -210,6 +210,7 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
     }
   } else if (!checkClipboard) {
     $.getJSON("https://nominatim.openstreetmap.org/search?format=json&limit=5&q=" + inp, function (data) {
+      console.log(data);
       var list = document.createElement('ul');
       list.classList.add("results-list");
 
@@ -250,8 +251,8 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
                 row.dataset.addrLng,
                 row.dataset.zoom,
                 row.dataset.lat1,
-                row.dataset.lat2,
                 row.dataset.lng1,
+                row.dataset.lat2,
                 row.dataset.lng2,
                 row.dataset.osmType
             );
