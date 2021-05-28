@@ -48,7 +48,17 @@ class tools
     {
         $this->db = $db;
         $this->profiler_enabled = $profiler_enabled;
-        $this->script_nonce = $this->generateNonce(16);
+        if(defined("UI_MODE")){
+            if(isset($_SESSION["script_nonce"]) && (
+                (isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])) || 
+                strpos($_SERVER['REQUEST_URI'], "edit_")
+            )){
+                $this->script_nonce = $_SESSION["script_nonce"];
+            } else {
+                $this->script_nonce = $this->generateNonce(16);
+                $_SESSION["script_nonce"] = $this->script_nonce;
+            }
+        }
     }
 
     public function validate_form($data, $expected_value=null, $data_source=null)
@@ -909,10 +919,11 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
+        $script_nonce_csp = defined("UI_MODE") ? "'nonce-{$tools->script_nonce}' " : "";
         $csp_rules = [
             "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
             "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",
-            "script-src 'nonce-{$tools->script_nonce}' 'self' 'unsafe-eval'",
+            "script-src {$script_nonce_csp}'self' 'unsafe-eval'",
             "img-src 'self' data: *.tile.openstreetmap.org",
             "object-src 'self'",
             "style-src 'self' 'unsafe-inline'",

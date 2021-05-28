@@ -51,16 +51,23 @@ export function loadMap (lat = undefined, lng = undefined, selectorId = undefine
     selectorId = "map";
   }
   let container = L.DomUtil.get(selectorId);
-  if(container._leaflet_id){
-    console.log(mapsList);
-    if(removeMap){
-      mapsList[0].off();
-      mapsList[0].remove();
-      mapsList.splice(0, 1);
-    } else {
-      console.log("Skipping map loading because already loaded...");
-      return true;
+  console.log(container);
+  try{
+    if(container._leaflet_id){
+      console.log(mapsList);
+      if(removeMap){
+        mapsList[0].off();
+        mapsList[0].remove();
+        mapsList.splice(0, 1);
+      } else {
+        console.log("Skipping map loading because already loaded...");
+        return true;
+      }
     }
+  } catch(e){
+    //console.log(e);
+    console.log("Skipping map loading...");
+    return true;
   }
   const zoom = select ? 10 : 17;
   const latLng = new L.LatLng(lat, lng);

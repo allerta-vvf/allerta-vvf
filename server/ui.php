@@ -1,4 +1,5 @@
 <?php
+define("UI_MODE", true);
 require_once 'core.php';
 init_class();
 

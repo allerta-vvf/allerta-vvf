@@ -143,9 +143,13 @@ echo(<<<EOL
 <div class="form-group">
     <label>{$holidays_selection_question}</label>
     <a id="select-all-holiday" class="text-primary">{$holidays_select_all}</a> / <a id="select-none-holiday" class="text-primary">{$holidays_select_none}</a>
-    <script nonce="{$nonce}"
-    $('.holiday_check').prop('checked', true);
-    $('.holiday_check').prop('checked', true);
+    <script nonce="{$nonce}">
+    $('#select-all-holiday').click(function(){
+        $('.holiday_check').prop('checked', true);
+    });
+    $('#select-none-holiday').click(function(){
+        $('.holiday_check').prop('checked', false);
+    });
     </script>
 EOL);
 
