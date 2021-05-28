@@ -18,9 +18,9 @@ const iconDefault = new L.Icon({
   shadowSize: [41, 41]
 });
 
-let marker;
-let feature;
-let map;
+var marker;
+var feature;
+var map;
 
 export function setMarker (LatLng, move=false) {
   if (marker) {
@@ -32,6 +32,7 @@ export function setMarker (LatLng, move=false) {
   if ($("input[name='place']").val() !== undefined) {
     $("input[name='place']").val(LatLng.lat + ";" + LatLng.lng);
   }
+  console.log(map);
   marker = L.marker(LatLng, { icon: iconDefault }).addTo(map);
   if(move){
     map.setView(LatLng, 17);

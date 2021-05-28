@@ -161,7 +161,9 @@
     {% if service.modalità == "edit" %}
     {% if option('use_location_picker') %}
     {% set place = values.place|split('#')[0] %}
-    allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
+    $(function(){
+      allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
+    });
     {% endif %}
     $.each('{{ values.chief }}'.split(','), function (index, value) {
       $('.chief-' + value).prop('checked', true);
