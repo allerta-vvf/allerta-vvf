@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b75ca84c59d5468883ebe8a230f59fe9",
+    "content-hash": "4c5225e9eaf82f46758dd24bc5717c7d",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -876,16 +876,16 @@
         },
         {
             "name": "maximebf/debugbar",
-            "version": "v1.16.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/maximebf/php-debugbar.git",
-                "reference": "6d51ee9e94cff14412783785e79a4e7ef97b9d62"
+                "url": "https://github.com/allerta-vvf/php-debugbar.git",
+                "reference": "f9b3c4b7c1a79db817435d3817c3a997101fefa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/6d51ee9e94cff14412783785e79a4e7ef97b9d62",
-                "reference": "6d51ee9e94cff14412783785e79a4e7ef97b9d62",
+                "url": "https://api.github.com/repos/allerta-vvf/php-debugbar/zipball/f9b3c4b7c1a79db817435d3817c3a997101fefa9",
+                "reference": "f9b3c4b7c1a79db817435d3817c3a997101fefa9",
                 "shasum": ""
             },
             "require": {
@@ -901,6 +901,7 @@
                 "monolog/monolog": "Log using Monolog",
                 "predis/predis": "Redis storage"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -912,7 +913,6 @@
                     "DebugBar\\": "src/DebugBar/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -934,10 +934,9 @@
                 "debugbar"
             ],
             "support": {
-                "issues": "https://github.com/maximebf/php-debugbar/issues",
-                "source": "https://github.com/maximebf/php-debugbar/tree/v1.16.5"
+                "source": "https://github.com/allerta-vvf/php-debugbar/tree/master"
             },
-            "time": "2020-12-07T11:07:24+00:00"
+            "time": "2021-05-27T13:04:53+00:00"
         },
         {
             "name": "ministryofweb/php-osm-tiles",
@@ -998,12 +997,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/FastRoute.git",
-                "reference": "b5543adef5e16738471a52fdf55ff802edf1141d"
+                "reference": "dafa1911fd7c1560c64d19556cbd4c599fed15ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/b5543adef5e16738471a52fdf55ff802edf1141d",
-                "reference": "b5543adef5e16738471a52fdf55ff802edf1141d",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/dafa1911fd7c1560c64d19556cbd4c599fed15ea",
+                "reference": "dafa1911fd7c1560c64d19556cbd4c599fed15ea",
                 "shasum": ""
             },
             "require": {
@@ -1011,7 +1010,7 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^9.0",
-                "phpbench/phpbench": "^1.0@beta",
+                "phpbench/phpbench": "^1.0",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12",
                 "phpstan/phpstan-deprecation-rules": "^0.12",
@@ -1053,7 +1052,7 @@
                 "issues": "https://github.com/nikic/FastRoute/issues",
                 "source": "https://github.com/nikic/FastRoute/tree/master"
             },
-            "time": "2021-04-27T09:57:16+00:00"
+            "time": "2021-05-24T09:28:21+00:00"
         },
         {
             "name": "php-http/client-common",
@@ -3135,6 +3134,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "nikic/fast-route": 20,
+        "maximebf/debugbar": 20,
         "jenstornell/tiny-html-minifier": 20
     },
     "prefer-stable": false,

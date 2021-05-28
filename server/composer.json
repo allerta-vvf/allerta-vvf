@@ -6,6 +6,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/allerta-vvf/tiny-html-minifier"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/allerta-vvf/php-debugbar"
         }
     ],
     "require": {
@@ -17,7 +21,7 @@
         "ezyang/htmlpurifier": "^4.13",
         "brick/phonenumber": "^0.2.2",
         "sentry/sdk": "^3.1",
-        "maximebf/debugbar": "^1.16",
+        "maximebf/debugbar": "dev-master",
         "azuyalabs/yasumi": "^2.4",
         "ministryofweb/php-osm-tiles": "^2.0",
         "jenstornell/tiny-html-minifier": "dev-master",
