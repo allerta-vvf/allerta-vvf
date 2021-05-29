@@ -35,7 +35,9 @@ $.fn.loading = function (action = "start", options) {
  
   if (action === "show") {
     this.addClass("loading_blur");
-    $("body").append("<div id='loading_div' class='loading_overlay'><p class=''><b>" + opts.message + "</b></p></div>");
+    let message_b = $("<b>").text(opts.message);
+    let message = $("<div>", {id: "loading_div", "class": "loading_overlay"}).append(message_b);
+    $("body").append(message);
   } else if (action === "hide") {
     this.removeClass("loading_blur");
     this.addClass("loading_no_blur");
