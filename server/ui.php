@@ -1,4 +1,5 @@
 <?php
+define("UI_MODE", true);
 require_once 'core.php';
 init_class();
 
@@ -10,6 +11,7 @@ if(!is_null($debugbar)){
     $debugbarRenderer->disableVendor("jquery");
     $debugbarRenderer->setEnableJqueryNoConflict(false);
     $debugbarRenderer->setOpenHandlerUrl('debug_open.php');
+    $debugbarRenderer->setJSNonce($nonce);
 } else {
     $enable_debugbar = false;
 }
@@ -95,15 +97,12 @@ $function_resource = new \Twig\TwigFunction(
 $twig->addFunction($function_resource);
 
 $function_script = new \Twig\TwigFunction(
-    'script', function ($file, $onLoad=false) {
+    'script', function ($file) {
         global $nonce, $url_software, $webpack_manifest;
         $script_url = $url_software . "/resources/dist/" . $webpack_manifest[$file]["src"];
         $script_integrity = $webpack_manifest[$file]["integrity"];
 
         $script_tag = "<script src='{$script_url}' integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
-        if($onLoad){
-            $script_tag .= " onload='{$onLoad}'";
-        }
         $script_tag .= "></script>";
         return $script_tag;
     }, ['is_safe' => ['html']]

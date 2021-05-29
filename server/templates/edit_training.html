@@ -70,14 +70,21 @@
             <input type="text" class="form-control" name="addr" value="" id="addr" size="50" />
           </div>
           <div class="form-group mx-sm-3 mb-2">
-            <button id="search_button" type="button" onclick="allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');"
-              class="btn btn-primary mb-2">{{ 'Search'|t }}</button>
+            <button id="search_button" type="button" class="btn btn-primary mb-2">
+                {{ 'Search'|t }}
+            </button>
+            <script nonce="{{ nonce }}">
+            $("#search_button").click(function(){
+                allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');
+            });
+            </script>
           </div>
         </div>
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      {{ script('maps.js', 'allertaJS.maps.loadMap();') }}
+      <script nonce="{{ nonce }}">window.loadMapOnScriptLoad = true;</script>
+      {{ script('maps.js') }}
       {% else %}
       <div class="form-group">
         <label for="place">{{ 'Training place'|t }}</label>
@@ -100,7 +107,9 @@
     {% if training.modalità == "edit" %}
     {% if option('use_location_picker') %}
     {% set place = values.place|split('#')[0] %}
-    allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
+    $(function(){
+      allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
+    });
     {% endif %}
     $.each('{{ values.chief|striptags|e("js") }}'.split(','), function (index, value) {
       $('.chief-' + value).prop('checked', true);
