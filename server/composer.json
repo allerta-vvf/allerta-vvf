@@ -5,10 +5,12 @@
     "repositories": [
         {
             "type": "vcs",
+            "no-api": true,
             "url": "https://github.com/allerta-vvf/tiny-html-minifier"
         },
         {
             "type": "vcs",
+            "no-api": true,
             "url": "https://github.com/allerta-vvf/php-debugbar"
         }
     ],
