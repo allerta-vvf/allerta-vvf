@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c5225e9eaf82f46758dd24bc5717c7d",
+    "content-hash": "5f55194177a557ae099185aac0b768b0",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -838,7 +838,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/allerta-vvf/tiny-html-minifier.git",
+                "url": "https://github.com/allerta-vvf/tiny-html-minifier",
                 "reference": "5e997f570fe637a4c1c996bdcc8f9beaa26940a2"
             },
             "dist": {
@@ -869,9 +869,6 @@
                 "minifier",
                 "minify"
             ],
-            "support": {
-                "source": "https://github.com/allerta-vvf/tiny-html-minifier/tree/master"
-            },
             "time": "2021-04-27T22:20:43+00:00"
         },
         {
@@ -879,7 +876,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/allerta-vvf/php-debugbar.git",
+                "url": "https://github.com/allerta-vvf/php-debugbar",
                 "reference": "f9b3c4b7c1a79db817435d3817c3a997101fefa9"
             },
             "dist": {
@@ -933,9 +930,6 @@
                 "debug",
                 "debugbar"
             ],
-            "support": {
-                "source": "https://github.com/allerta-vvf/php-debugbar/tree/master"
-            },
             "time": "2021-05-27T13:04:53+00:00"
         },
         {
