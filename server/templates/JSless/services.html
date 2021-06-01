@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<img alt="VVF" src="./resources/images/owner.png" width="150"
+  style="display: block; margin-left: auto; margin-right: auto;">
+<br>
+<p style="text-align: center;">
+  <button class="btn btn-success btn-small">{{ 'Add service'|t }}</button>
+</p>
+<br>
+<table style="width:100%">
+  <tr class="tHead">
+    <th>{{ 'Date'|t }}</th>
+    <th>{{ 'code'|t|capitalize }}</th>
+    <th>{{ 'Start time'|t }}</th>
+    <th>{{ 'End time'|t }}</th>
+    <th>{{ 'Chief'|t }}</th>
+    <th>{{ 'Drivers'|t }}</th>
+    <th>{{ 'Crew'|t }}</th>
+    <th>{{ 'Place'|t }}</th>
+    <th>{{ 'Notes'|t }}</th>
+    <th>{{ 'Type'|t }}</th>
+    {% if option('service_edit') %}
+    <th>{{ 'Edit'|t }}</th>
+    {% endif %}
+    {% if option('service_remove') %}
+    <th>{{ 'Remove'|t }}</th>
+    {% endif %}
+  </tr>
+{% for row in query_results %}
+  <tr class="tBody">
+    <th>{{ row.date }}</th>
+    <th>{{ row.code }}</th>
+    <th>{{ row.beginning }}</th>
+    <th>{{ row.end }}</th>
+    <th>{{ username(row.chief) }}</th>
+    <th>{{ username_list(row.drivers) }}</th>
+    <th>{{ username_list(row.crew) }}</th>
+    <th>
+      {% if "#" in row.place %}
+      {% set mapImageID = row.place|split('#')[1] %}
+      {% set place = row.place|split('#')[0] %}
+      {% set place_lat = place|split(';')[0] %}
+      {% set place_lng = place|split(';')[1] %}
+      <img src="resources/images/map_cache/{{ mapImageID }}.png"></img><br>
+      {% endif %}
+      <a href="https://www.google.com/maps/search/?api=1&query={{ place_lat }},{{ place_lng }}" target="_blank">Apri la mappa in Google Maps</a><br>
+      <a href="https://www.openstreetmap.org/#map=18/{{ place_lat }}/{{ place_lng }}" target="_blank">Apri la mappa in OpenStreetMap</a><br>
+      Lat: <b>{{ place_lat }}</b><br>
+      Lng: <b>{{ place_lng }}</b><br>
+    </th>
+    <th>{{ row.notes }}</th>
+    <th>{{ row.type }}</th>
+    {% if option('service_edit') %}
+    <th><a href='edit_service.php?edit&id={{ row.id }}'>Modifica</a></th>
+    {% endif %}
+    {% if option('service_remove') %}
+    <th><a href='edit_service.php?delete&id={{ row.id }}'>Rimuovi</a></th>
+    {% endif %}
+  </tr>
+{% endfor %}
+</table>
+<br>
+<br>
+{% endblock %}

@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+TODO
   {% if service.modalità == "edit" or service.modalità == "add" %}
   <form method="post">
     <div class="container">
@@ -89,18 +90,11 @@
             <button id="search_button" type="button" class="btn btn-primary mb-2">
                 {{ 'Search'|t }}
             </button>
-            <script nonce="{{ nonce }}">
-            $("#search_button").click(function(){
-                allertaJS.maps.addrSearch('{{ 'Search results'|t }}', '{{ 'No results found'|t }}');
-            });
-            </script>
           </div>
         </div>
         <div id="results"></div>
       </div>
       <input type="hidden" name="place" value="" />
-      <script nonce="{{ nonce }}">window.loadMapOnScriptLoad = true;</script>
-      {{ script('maps.js') }}
       {% else %}
       <div class="form-group">
         <label>{{ 'Service place'|t }}</label>
@@ -161,9 +155,7 @@
     {% if service.modalità == "edit" %}
     {% if option('use_location_picker') %}
     {% set place = values.place|split('#')[0] %}
-    $(function(){
-      allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
-    });
+    allertaJS.maps.setMarker(new L.LatLng({{place|split(';')[0]}}, {{place|split(';')[1]}}), true);
     {% endif %}
     $.each('{{ values.chief }}'.split(','), function (index, value) {
       $('.chief-' + value).prop('checked', true);

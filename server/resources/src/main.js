@@ -10,7 +10,7 @@ import "time-input-polyfill/auto";
 import "jquery-pjax";
 import toastr from "expose-loader?exposes=toastr!toastr";
 import "toastr/build/toastr.css";
-
+ 
 window.toastr = toastr;
 toastr.options = {
   closeButton: false,
@@ -29,13 +29,15 @@ toastr.options = {
   showMethod: "fadeIn",
   hideMethod: "fadeOut"
 };
-
+ 
 $.fn.loading = function (action = "start", options) {
   const opts = $.extend({}, $.fn.loading.defaults, options);
-
+ 
   if (action === "show") {
     this.addClass("loading_blur");
-    $("body").append("<div id='loading_div' class='loading_overlay'><p class=''><b>" + opts.message + "</b></p></div>");
+    let message_b = $("<b>").text(opts.message);
+    let message = $("<div>", {id: "loading_div", "class": "loading_overlay"}).append(message_b);
+    $("body").append(message);
   } else if (action === "hide") {
     this.removeClass("loading_blur");
     this.addClass("loading_no_blur");
@@ -45,16 +47,16 @@ $.fn.loading = function (action = "start", options) {
     $("#loading_div").remove();
   }
 };
-
+ 
 $.fn.loading.defaults = {
   message: "Loading..."
 };
-
+ 
 console.log("Commit: " + process.env.GIT_VERSION);
 console.log("Date: " + process.env.GIT_AUTHOR_DATE);
 console.log("Bundle mode: " + process.env.BUNDLE_MODE);
 console.log("Bundle date: " + new Date(process.env.BUNDLE_DATE).toISOString());
-
+ 
 $(document).pjax("a:not(.pjax_disable)", "#content", { timeout: 100000 });
 $(document).on("pjax:start", function () {
   if (document.getElementById("topNavBar") !== undefined) {
@@ -68,7 +70,7 @@ $(document).on("pjax:start", function () {
     loadTableInterval = undefined;
   }
 });
-
+ 
 // Cookie functions from w3schools
 function setCookie (cname, cvalue, exdays) {
   const d = new Date();
@@ -91,14 +93,14 @@ function getCookie (cname) {
   }
   return "";
 }
-
+ 
 $(document).ajaxError(function (event, xhr, settings, error) {
   console.error("Error requesting content: " + error + " - status code " + xhr.status);
   console.log(event);
   console.log(xhr);
   console.log(settings);
 });
-
+ 
 if (getCookie("authenticated")) {
   var installServiceWorker = false;
   if (window.skipServiceWorkerInstallation !== undefined) { // if you want to disable SW for example via GreasyFork userscript
@@ -135,23 +137,29 @@ if (installServiceWorker) {
     });
   });
 }
-
+ 
 $(function () {
   if ($("#frontend_version") !== undefined) {
     $("#frontend_version").append(process.env.GIT_VERSION + " aggiornamento " + new Date(process.env.BUNDLE_DATE).toLocaleString());
   }
+  if(getCookie("JSless")){
+    location.href="?JSless=0";
+  }
 });
-
+ 
 var offline = false;
 var loadTableInterval = undefined;
 var oldData = "null";
 var tableEngine = "datatables";
 var fillTable = undefined;
 var fillTableLoaded = undefined;
-
+ 
 window.addEventListener("securitypolicyviolation", console.error.bind(console));
-
+ 
 $(function() {
+  $("#topNavBar").show();
+  $("#content").show();
+  $("#footer").show();
   $("#menuButton").on("click", function() {
     const topNavBar = document.getElementById("topNavBar");
     if (topNavBar.className === "topnav") {
@@ -161,8 +169,17 @@ $(function() {
     }
   });
 });
-
-export async function loadTable ({ tablePage, setTableRefreshInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callback = false }) {
+ 
+export var lastTableLoadConfig = {
+    tablePage: undefined,
+    setTableRefreshInterval: true,
+    interval: 10000,
+    onlineReload: false, 
+    useCustomTableEngine: false,
+    callback: false
+}
+ 
+export async function loadTable ({ tablePage, setTableRefreshInterval = true, interval = 10000, onlineReload = false, useCustomTableEngine = false, callbackRepeat = false, callback = false, saveFuncParam = true }) {
   if(loadTableInterval !== undefined) {
     clearInterval(loadTableInterval);
     loadTableInterval = undefined;
@@ -190,6 +207,16 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
   if ("deviceMemory" in navigator && navigator.deviceMemory < 0.2) {
     return;
   }
+  if(saveFuncParam){
+      lastTableLoadConfig = {
+        tablePage: tablePage,
+        setTableRefreshInterval: setTableRefreshInterval,
+        interval: interval,
+        onlineReload: onlineReload, 
+        useCustomTableEngine: useCustomTableEngine,
+        callback: callback
+      }
+  }
   const replaceLatLngWithMap = tablePage === "services" || tablePage === "trainings";
   $.getJSON({
     url: "resources/ajax/ajax_" + tablePage + ".php",
@@ -199,11 +226,13 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
       console.log(data);
       if (data.length > 0) {
         fillTableLoaded({ data, replaceLatLngWithMap, callback });
-        const headers = new Headers();
-        headers.append("date", Date.now());
-        caches.open("tables-1").then((cache) => {
-          cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
-        });
+        if(typeof(Headers) == "function"){
+          const headers = new Headers();
+          headers.append("date", Date.now());
+          caches.open("tables-1").then((cache) => {
+            cache.put("/table_" + tablePage + ".json", new Response(xhr.responseText, { headers: headers }));
+          });
+        }
       }
       if (offline) { // if xhr request successful, client is online
         console.log(onlineReload);
@@ -242,7 +271,57 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
     }
     console.log("table_load interval " + interval);
     loadTableInterval = setInterval(function () {
-      loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: false });
+      loadTable({ tablePage, setTableRefreshInterval: false, interval, onlineReload, useCustomTableEngine, callback: callbackRepeat ? callback : false, saveFuncParam: false });
     }, interval);
   }
+}
+ 
+export function reloadTable(){
+  allertaJS.main.loadTable({
+    tablePage: lastTableLoadConfig.tablePage,
+    setTableRefreshInterval: lastTableLoadConfig.setTableRefreshInterval,
+    interval: lastTableLoadConfig.interval,
+    onlineReload: lastTableLoadConfig.onlineReload,
+    useCustomTableEngine: lastTableLoadConfig.useCustomTableEngine,
+    callback: lastTableLoadConfig.callback,
+  });
+  if (loadTableInterval !== undefined) {
+    clearInterval(loadTableInterval);
+    loadTableInterval = undefined;
+  }
+}
+export function activate(id, token_list) {
+  $.ajax({
+    url: "resources/ajax/ajax_change_availability.php",
+    method: "POST",
+    data: {
+      change_id: id,
+      dispo: 1,
+      token_list: token_list
+    },
+    dataType: "json",
+    success: function (data) {
+      console.log(data);
+      toastr.success(data.message);
+      allertaJS.main.reloadTable();
+    }
+  });
+}
+ 
+export function deactivate(id, token_list) {
+  $.ajax({
+    url: "resources/ajax/ajax_change_availability.php",
+    method: "POST",
+    data: {
+      change_id: id,
+      dispo: 0,
+      token_list: token_list
+    },
+    dataType: "json",
+    success: function (data) {
+      console.log(data);
+      toastr.success(data.message);
+      allertaJS.main.reloadTable();
+    }
+  });
 }

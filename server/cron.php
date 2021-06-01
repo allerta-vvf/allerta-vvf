@@ -45,10 +45,7 @@ if($start) {
                 DB_PREFIX."_minutes",
                 ["month" => $execDateTime["month"], "year" => $execDateTime["year"], "list"=>json_encode($list)]
             );
-            $db->update(
-                DB_PREFIX."_profiles",
-                ["availability_minutes" => 0]
-            );
+            $db->exec("UPDATE `".DB_PREFIX."_profiles` SET `availability_minutes` = 0");
         }
     }
     $action .= "update";

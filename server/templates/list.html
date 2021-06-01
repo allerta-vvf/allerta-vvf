@@ -21,10 +21,10 @@
       </div>
     </div>
   </div>
-  <script>
+  <script nonce="{{ nonce }}">
     $('#schedulesModal').on('show.bs.modal', function (event) {
       //$( ".modal-body" ).loading("show");
-      $(".modal-body").load("modal_availability_schedule.php", {
+      $(".modal-body").load("modal_availability_schedule.php?nonce={{ nonce }}", {
         orientation: window.innerHeight > window.innerWidth ? "portrait" : "landscape"
       }, function() {
         init_modal();
@@ -36,9 +36,8 @@
 </div>
 <div class="text-center">
   <p>{{ 'Are you available in case of alert?'|t }}</p>
-  <button class="btn btn-lg btn-success" onclick="activate('{{ user.id }}')">{{ 'Activate'|t }}</button>
-  <button class="btn btn-lg btn-danger" style="background-color: red"
-    onclick="deactivate('{{ user.id }}')">{{ 'Deactivate'|t }}</button>
+  <button id="activate-btn" class="btn btn-lg btn-success">{{ 'Activate'|t }}</button>
+  <button id="deactivate-btn" class="btn btn-lg btn-danger" style="background-color: red">{{ 'Deactivate'|t }}</button>
   <br>
   <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#schedulesModal">
     {{ 'Edit availability schedules'|t }}
@@ -46,48 +45,6 @@
 </div>
 <br>
 <br>
-<script>
-  function generate_alert_string(id){
-    if(id == '{{ user.id }}'){
-      return '{{ "your availability"|t }}';
-    } else {
-      username = document.querySelector("#username-"+id).innerText;
-      return `{{ "%s availability"|t|format('${username}') }}`;
-    }
-  }
-
-  function activate(id) {
-    $.ajax({
-      url: "resources/ajax/ajax_change_availability.php",
-      method: "POST",
-      data: {
-        change_id: id,
-        dispo: 1,
-        token_list: "{{ token_list }}"
-      },
-      success: function (data) {
-        toastr.success(`{{ 'Thanks, %s, you have given %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
-      }
-    });
-  }
-
-  function deactivate(id) {
-    $.ajax({
-      url: "resources/ajax/ajax_change_availability.php",
-      method: "POST",
-      data: {
-        change_id: id,
-        dispo: 0,
-        token_list: "{{ token_list }}"
-      },
-      success: function (data) {
-        toastr.success(`{{ 'Thanks, %s, you have removed %s in case of alert.'|t|format(user.name, '${generate_alert_string(id)}') }}`);
-        allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
-      }
-    });
-  }
-</script>
 <img alt="VVF" src="./resources/images/owner.png" width="150"
   style="display: block; margin-left: auto; margin-right: auto;">
 <br>
@@ -111,8 +68,27 @@
     <tbody id="table_body">
     </tbody>
   </table>
-  <script>
-    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default"});
+  <script nonce="{{ nonce }}">
+    $("#activate-btn").click(function(){
+        allertaJS.main.activate('{{ user.id }}', '');
+    });
+    $("#deactivate-btn").click(function(){
+        allertaJS.main.deactivate('{{ user.id }}', '');
+    });
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callbackRepeat: true, callback: function() {
+        $("tbody tr").each(function(key, el) {
+            $(el.children[1]).click(function(event) {
+                console.log(event.target);
+                userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.id.replace("username-","");
+                console.log(userId);
+                if(event.target.classList.contains("fa-times")) {
+                    allertaJS.main.activate(userId,0);
+                } else {
+                    allertaJS.main.deactivate(userId,0);
+                }
+            });
+        });
+    }});
   </script>
 </div>
 

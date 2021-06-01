@@ -12,10 +12,9 @@ foreach(!is_null($result) ? $result : [] as $row){
     if($user->requireRole(Role::FULL_VIEWER)){
       $name = $user->nameById($row["id"]);
       $name_encoded = urlencode($user->name());
-      $functionName = $row["available"] ? "deactivate" : "activate";
       $helmet_colour = $row["chief"] ? "red" : "black";
-      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;' onclick='$functionName(".$row["id"].");'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
-      $secondCell = $row["available"] ? "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-check' style='color:green'></i></a>" : "<a onclick='$functionName(".$row["id"].");'><i class='fa fa-times' style='color:red'></i></a>";
+      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
+      $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
       $response[] = [
         (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
         $secondCell,

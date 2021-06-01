@@ -61,8 +61,14 @@ var prodConfig = {
             use: {
               loader: "babel-loader",
               options: {
-                  presets: ["@babel/preset-env"],
-                  plugins: ["@babel/plugin-transform-runtime"]
+                presets: [
+                  ['@babel/preset-env', {
+                    useBuiltIns: 'usage',
+                    corejs: 3
+                  }]
+                ],
+                plugins: ["@babel/plugin-transform-runtime"],
+                sourceType: "unambiguous"
               }
             }
           }
@@ -75,7 +81,6 @@ var prodConfig = {
       minimizer: [new TerserPlugin({
         parallel: true,
         extractComments: true,
-        sourceMap: sentryEnabled ? true : false,
         terserOptions: {
           compress: {
             drop_console: true

@@ -34,11 +34,31 @@ class tools
     public $db;
     public $profiler_enabled;
     public $profiler_last_name = "";
+    public $script_nonce = null;
+
+    public function generateNonce($bytes_lenght = 16, $base64_encode = false){
+        $nonce = bin2hex(random_bytes($bytes_lenght));
+        if($base64_encode){
+            $nonce = base64_encode($nonce);
+        }
+        return $nonce;
+    }
 
     public function __construct($db, $profiler_enabled)
     {
         $this->db = $db;
         $this->profiler_enabled = $profiler_enabled;
+        if(defined("UI_MODE")){
+            if(isset($_SESSION["script_nonce"]) && (
+                (isset($_SERVER["HTTP_X_PJAX"]) || isset($_GET["X_PJAX"]) || isset($_GET["_PJAX"])) || 
+                strpos($_SERVER['REQUEST_URI'], "edit_")
+            )){
+                $this->script_nonce = $_SESSION["script_nonce"];
+            } else {
+                $this->script_nonce = $this->generateNonce(16);
+                $_SESSION["script_nonce"] = $this->script_nonce;
+            }
+        }
     }
 
     public function validate_form($data, $expected_value=null, $data_source=null)
@@ -405,17 +425,6 @@ class user
     {
         $this->tools->profiler_start("Require login");
         if(!$this->authenticated()) {
-            if(get_option("intrusion_save")) {
-                if(get_option("intrusion_save_info")) {
-                    $params = ["page" => $this->tools->get_page_url(), "ip" => $this->tools->get_ip(), "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode($_SERVER)];
-                } else {
-                    $params = ["page" => $this->tools->get_page_url(), "ip" => "redacted", "date" => date("d/m/Y"), "hour" => date("H:i.s"), "server_var" => json_encode(["redacted" => "true"])];
-                }
-                $this->db->insert(
-                    "intrusions",
-                    $params
-                );
-            }
             if($redirect) {
                 $this->tools->redirect(get_option("web_url"));
             } else {
@@ -897,7 +906,7 @@ function init_db(){
     $db = \Delight\Db\PdoDatabase::fromDataSource($dataSource);
 }
 
-$webpack_manifest_path = realpath("resources/dist/manifest.json");
+$webpack_manifest_path = realpath("resources/dist/assets-manifest.json");
 function init_class($enableDebugger=true, $headers=true)
 {
     global $tools, $options, $db, $user, $crud, $translations, $debugbar;
@@ -910,19 +919,29 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
-        $csp = "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org; connect-src 'self' *.sentry.io nominatim.openstreetmap.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: *.tile.openstreetmap.org; object-src; style-src 'self' 'unsafe-inline';";
+        $script_nonce_csp = defined("UI_MODE") ? "'nonce-{$tools->script_nonce}' " : "";
+        $csp_rules = [
+            "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
+            "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",
+            "script-src {$script_nonce_csp}'self' 'unsafe-eval'",
+            "img-src 'self' data: *.tile.openstreetmap.org",
+            "object-src 'self'",
+            "style-src 'self' 'unsafe-inline'",
+            "base-uri 'self'"
+        ];
         if(defined(SENTRY_CSP_REPORT_URI) && SENTRY_CSP_REPORT_URI !== false){
-            $csp .= " report-uri ".SENTRY_CSP_REPORT_URI.";";
+            $csp_rules[] = "report-uri ".SENTRY_CSP_REPORT_URI;
         }
-        header("Content-Security-Policy: $csp");
-        header("X-Content-Security-Policy: $csp");
-        header("X-WebKit-CSP: $csp");
-        header("X-XSS-Protection: 1; mode=block");
-        header("X-Content-Type-Options: nosniff");
-        header("Feature-Policy: autoplay 'none'; camera 'none'; microphone 'none'; payment 'none'");
+        $csp = implode("; ", $csp_rules);
+        if(!isset($_COOKIE["JSless"]) && (isset($_GET["JSless"]) ? !$_GET["JSless"] : true)){
+            header("Content-Security-Policy: $csp");
+            header("X-XSS-Protection: 1; mode=block");
+            header("X-Content-Type-Options: nosniff");
+            header("Permissions-Policy: interest-cohort=(), camera=(), microphone=(), payment=(), usb=()");
+            header("Referrer-Policy: no-referrer");
+            header("X-Frame-Options: DENY");
+        }
     }
-    //var_dump($user);
-    //exit();
 
     if(SENTRY_ENABLED){
         Sentry\configureScope(function (Sentry\State\Scope $scope): void {

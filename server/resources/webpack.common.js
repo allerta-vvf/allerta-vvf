@@ -90,7 +90,17 @@ module.exports = {
         { from: "node_modules/leaflet/dist/images", to: ".", noErrorOnMissing: true }
       ],
     }),
-    new WebpackAssetsManifest()
+    new WebpackAssetsManifest({
+      writeToDisk: true,
+      integrity: true,
+      customize(entry) {
+        allowed_entries = ["main.js", "maps.js", "players.js", "games.js"]
+        if (entry.key.startsWith('fonts') || allowed_entries.includes(entry.key)) {
+          return entry;
+        }
+        return false;
+      }
+    })
   ],
   optimization: {
     mergeDuplicateChunks: true

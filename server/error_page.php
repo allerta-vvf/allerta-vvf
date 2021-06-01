@@ -1,6 +1,6 @@
 <?php
 function show_error_page($error=null, $error_message=null, $error_message_advanced=null){
-    global $webpack_manifest_path;
+    global $tools, $webpack_manifest_path;
     $error = !is_null($error) ? $error : (isset($_GET["error"]) ? $_GET["error"] : 404);
     if(is_null($error_message)){
         switch ($error){
@@ -18,14 +18,14 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
     $main_script_url = null;
     $game_script_url = null;
     try{
-        $webpack_manifest_path = isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/manifest.json");
+        $webpack_manifest_path = isset($webpack_manifest_path) ? $webpack_manifest_path : realpath("resources/dist/assets-manifest.json");
         if(!empty($webpack_manifest_path)){
             $webpack_manifest = json_decode(
                 file_get_contents($webpack_manifest_path),
                 true
             );
-            $main_script_url = "resources/dist/".$webpack_manifest["main.js"];
-            $game_script_url = "resources/dist/".$webpack_manifest["games.js"];
+            $main_script_url = "resources/dist/".$webpack_manifest["main.js"]["src"];
+            $game_script_url = "resources/dist/".$webpack_manifest["games.js"]["src"];
         }
     } catch(\Exception $e) {
     }
@@ -65,6 +65,12 @@ function show_error_page($error=null, $error_message=null, $error_message_advanc
     $key = isset($_GET["force_page"]) ? $_GET["force_page"] : array_rand($error_templates);
     $credits = $credits_list[$key];
     echo($error_templates[$key]);
+
+    $nonce = false;
+    try {
+        if (is_object($tools)) $nonce = $tools->script_nonce;
+    } catch (\Exception $e) {
+    }
 ?>
 <br><br>
 <?php
@@ -80,8 +86,8 @@ if(!is_null($game_script_url)){
 <div class="credits" style="position:absolute;opacity: 0.5;bottom: 5px;right: 5px;">
   Error page based on work by <?php echo($credits); ?>.
 </div>
-<script src="<?php echo($main_script_url); ?>"></script>
-<script src="<?php echo($game_script_url); ?>"></script>
+<script src="<?php echo($main_script_url); ?>"<?php if($nonce){ echo("nonce='{$nonce}'"); } ?>></script>
+<script src="<?php echo($game_script_url); ?>"<?php if($nonce){ echo("nonce='{$nonce}'"); } ?>></script>
 <?php
 }
 }
