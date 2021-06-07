@@ -29,7 +29,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^9.0.0",
-    "core-js": "^3.13.1",
+    "core-js": "^3.14.0",
     "css-loader": "^5.2.6",
     "datatables.net-bs4": "^1.10.23",
     "datatables.net-buttons-bs4": "^1.6.5",
