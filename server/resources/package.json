@@ -32,7 +32,7 @@
     "core-js": "^3.13.1",
     "css-loader": "^5.2.6",
     "datatables.net-bs4": "^1.10.23",
-    "datatables.net-buttons-bs4": "^1.6.5",
+    "datatables.net-buttons-bs4": "^1.7.1",
     "datatables.net-plugins": "^1.10.23",
     "datatables.net-responsive-bs4": "^2.2.7",
     "expose-loader": "^3.0.0",
