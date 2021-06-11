@@ -1,5 +1,37 @@
 {
   "extends": [
     "config:base"
+  ],
+  "dependencyDashboard": true,
+  "automerge": true,
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchManagers": ["npm"],
+      "groupName": "frontendDevDependencies",
+      "schedule": [
+        "before 6pm"
+      ],
+      "prPriority": 2
+    },
+    {
+      "matchDepTypes": ["dependencies"],
+      "matchManagers": ["npm"],
+      "groupName": "frontendDependencies",
+      "prPriority": 3
+    },
+    {
+      "matchManagers": ["composer"],
+      "groupName": "backendDependencies",
+      "prPriority": 4,
+      "automerge": false
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "groupName": "docker",
+      "prPriority": 5,
+      "stabilityDays": 3,
+      "automerge": false
+    }
   ]
 }
