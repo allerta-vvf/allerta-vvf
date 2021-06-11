@@ -19,7 +19,7 @@
         "delight-im/auth": "8.3.0",
         "ulrichsg/getopt-php": "4.0.0",
         "nikic/fast-route": "^2.0@dev",
-        "spatie/array-to-xml": "3.0.0",
+        "spatie/array-to-xml": "^2.16",
         "ezyang/htmlpurifier": "4.13.0",
         "brick/phonenumber": "0.2.2",
         "sentry/sdk": "3.1.0",
