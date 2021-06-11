@@ -97,18 +97,20 @@ if (file_exists('../vendor/autoload.php')) {
     try {
         include '../vendor/autoload.php';
     } catch (Exception $e) {
+        echo("Please install composer and run composer install (".$e.")");
         if(is_cli()) {
-            echo($e);
             exit(1);
+        } else {
+            exit();
         }
-        die("Please install composer and run composer install (".$e);
     }
 } else {
+    echo("Please install composer and run composer install");
     if(is_cli()) {
-        echo($e);
         exit(1);
+    } else {
+        exit();
     }
-    die("Please install composer and run composer install");
 }
 
 function checkConnection($host, $user, $password, $database, $return=false)
