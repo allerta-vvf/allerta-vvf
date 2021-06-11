@@ -45,7 +45,7 @@ jobs:
         sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: '12'
 
@@ -121,7 +121,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: '12'
 
@@ -178,7 +178,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: '12'
 
@@ -224,7 +224,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: '12'
 
