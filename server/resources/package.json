@@ -14,8 +14,8 @@
   "author": "",
   "license": "GPL3",
   "dependencies": {
-    "@sentry/browser": "6.6.0",
-    "@sentry/tracing": "6.6.0",
+    "@sentry/browser": "6.7.0",
+    "@sentry/tracing": "6.7.0",
     "bootstrap": "4.6.0",
     "bootstrap-datepicker": "1.9.0",
     "bootstrap-toggle": "2.2.2",
