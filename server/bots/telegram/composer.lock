@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ccc28951b663c8565859b5c40789b12",
+    "content-hash": "0f03c6fd8c49570e6afc15adbbabbee0",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -229,16 +229,16 @@
         },
         {
             "name": "longman/telegram-bot",
-            "version": "0.72.0",
+            "version": "0.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-telegram-bot/core.git",
-                "reference": "b6ea355a4d16e8b1879b6a485d664a6a5a9c6ea3"
+                "reference": "ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/b6ea355a4d16e8b1879b6a485d664a6a5a9c6ea3",
-                "reference": "b6ea355a4d16e8b1879b6a485d664a6a5a9c6ea3",
+                "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75",
+                "reference": "ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75",
                 "shasum": ""
             },
             "require": {
@@ -322,7 +322,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-16T21:55:37+00:00"
+            "time": "2021-06-14T13:56:42+00:00"
         },
         {
             "name": "psr/http-client",
