@@ -75,24 +75,7 @@
     $("#deactivate-btn").click(function(){
         allertaJS.main.deactivate('{{ user.id }}', '');
     });
-    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callback: function() {
-      $("tbody tr").on("click", function(key, el) {
-        let targetElem = event.target;
-        let userInfoElem = event.currentTarget.querySelector("[data-user]");
-        let userId = userInfoElem.dataset.user;
-        if(
-          targetElem.hasAttribute("data-clickable") ||
-          targetElem.parentElement.hasAttribute("data-clickable") ||
-          (targetElem.childElementCount > 0 && targetElem.firstElementChild.hasAttribute("data-clickable"))
-        ){
-          if(userInfoElem.dataset.userAvailable === "1") {
-            allertaJS.main.deactivate(userId,0);
-          } else {
-            allertaJS.main.activate(userId,0);
-          }
-        }
-      });
-    }});
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callback: allertaJS.main.loadListListCallback});
   </script>
 </div>
 
