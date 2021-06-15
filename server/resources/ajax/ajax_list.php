@@ -13,10 +13,11 @@ foreach(!is_null($result) ? $result : [] as $row){
       $name = $user->nameById($row["id"]);
       $name_encoded = urlencode($user->name());
       $helmet_colour = $row["chief"] ? "red" : "black";
-      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
+      $firstCellName = (time()-$row["online_time"])<=30 ? "<u>".$name."</u>" : $name;
+      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
       $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
       $response[] = [
-        (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
+        $firstCell,
         $secondCell,
         $row['driver'] ? "<img alt='driver' src='./resources/images/wheel.png' width='20px'>" : "",
         !empty($row['phone_number']) ? "<a href='tel:".$row['phone_number']."'><i class='fa fa-phone'></i></a>" : "",
@@ -28,10 +29,11 @@ foreach(!is_null($result) ? $result : [] as $row){
     } else {
       $name = $user->nameById($row["id"]);
       $helmet_colour = $row["chief"] ? "red" : "black";
-      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$name</a>";
+      $firstCellName = (time()-$row["online_time"])<=30 ? "<u>".$name."</u>" : $name;
+      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
       $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
       $response[] = [
-        (time()-$row["online_time"])<=30 ? "<u>".$firstCell."</u>" : $firstCell,
+        $firstCell,
         $secondCell
       ];
     }

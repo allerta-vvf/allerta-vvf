@@ -79,7 +79,7 @@
         $("tbody tr").each(function(key, el) {
             $(el.children[1]).click(function(event) {
                 console.log(event.target);
-                userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.id.replace("username-","");
+                userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.id.replace("username-","");
                 console.log(userId);
                 if(event.target.classList.contains("fa-times")) {
                     allertaJS.main.activate(userId,0);
