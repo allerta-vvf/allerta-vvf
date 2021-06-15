@@ -75,20 +75,7 @@
     $("#deactivate-btn").click(function(){
         allertaJS.main.deactivate('{{ user.id }}', '');
     });
-    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callbackRepeat: true, callback: function() {
-        $("tbody tr").each(function(key, el) {
-            $(el.children[1]).click(function(event) {
-                console.log(event.target);
-                userId = event.target.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.id.replace("username-","");
-                console.log(userId);
-                if(event.target.classList.contains("fa-times")) {
-                    allertaJS.main.activate(userId,0);
-                } else {
-                    allertaJS.main.deactivate(userId,0);
-                }
-            });
-        });
-    }});
+    allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callback: allertaJS.main.loadListListCallback});
   </script>
 </div>
 

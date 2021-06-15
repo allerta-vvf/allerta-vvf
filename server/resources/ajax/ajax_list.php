@@ -14,8 +14,8 @@ foreach(!is_null($result) ? $result : [] as $row){
       $name_encoded = urlencode($user->name());
       $helmet_colour = $row["chief"] ? "red" : "black";
       $firstCellName = (time()-$row["online_time"])<=30 ? "<u>".$name."</u>" : $name;
-      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
-      $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
+      $firstCell = "<a data-clickable data-user='{$row['id']}' data-user-available='{$row['available']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
+      $secondCell = $row["available"] ? "<a data-clickable><i class='fa fa-check' style='color:green'></i></a>" : "<a data-clickable><i class='fa fa-times' style='color:red'></i></a>";
       $response[] = [
         $firstCell,
         $secondCell,
@@ -30,7 +30,7 @@ foreach(!is_null($result) ? $result : [] as $row){
       $name = $user->nameById($row["id"]);
       $helmet_colour = $row["chief"] ? "red" : "black";
       $firstCellName = (time()-$row["online_time"])<=30 ? "<u>".$name."</u>" : $name;
-      $firstCell = "<a id='username-{$row['id']}' style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
+      $firstCell = "<a style='text-align: left;'><img alt='{$helmet_colour} helmet' src='./resources/images/{$helmet_colour}_helmet.png' width='20px'>$firstCellName</a>";
       $secondCell = $row["available"] ? "<a><i class='fa fa-check' style='color:green'></i></a>" : "<a><i class='fa fa-times' style='color:red'></i></a>";
       $response[] = [
         $firstCell,
