@@ -65,9 +65,6 @@
         id="logout-text">{{ 'Logout'|t }}</b></a>
     <a class="pjax_disable icon" id="menuButton">☰</a>
   </div>
-  <script nonce="{{ nonce }}">
-  $("#logout-text").click(function(){ location.href='{{ urlsoftware }}logout.php'; });
-  </script>
   {# /Menu #}
   {% endblock %}
 {% endif %}

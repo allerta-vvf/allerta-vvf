@@ -138,15 +138,6 @@ if (installServiceWorker) {
   });
 }
  
-$(function () {
-  if ($("#frontend_version") !== undefined) {
-    $("#frontend_version").append(process.env.GIT_VERSION + " aggiornamento " + new Date(process.env.BUNDLE_DATE).toLocaleString());
-  }
-  if(getCookie("JSless")){
-    location.href="?JSless=0";
-  }
-});
- 
 var offline = false;
 var loadTableInterval = undefined;
 var oldData = "null";
@@ -157,9 +148,15 @@ var fillTableLoaded = undefined;
 window.addEventListener("securitypolicyviolation", console.error.bind(console));
  
 $(function() {
+  if(getCookie("JSless")){
+    location.href="?JSless=0";
+  }
   $("#topNavBar").show();
   $("#content").show();
   $("#footer").show();
+  if ($("#frontend_version") !== undefined) {
+    $("#frontend_version").append(process.env.GIT_VERSION + " aggiornamento " + new Date(process.env.BUNDLE_DATE).toLocaleString());
+  }
   $("#menuButton").on("click", function() {
     const topNavBar = document.getElementById("topNavBar");
     if (topNavBar.className === "topnav") {
@@ -168,6 +165,7 @@ $(function() {
       topNavBar.className = "topnav";
     }
   });
+  $("#logout-text").on("click", function(){ location.href='{{ urlsoftware }}logout.php'; });
 });
  
 export var lastTableLoadConfig = {
