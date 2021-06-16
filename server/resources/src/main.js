@@ -275,7 +275,7 @@ export async function loadTable ({ tablePage, setTableRefreshInterval = true, in
     }, interval);
   }
 }
- 
+
 export function reloadTable(){
   allertaJS.main.loadTable({
     tablePage: lastTableLoadConfig.tablePage,
@@ -290,6 +290,7 @@ export function reloadTable(){
     loadTableInterval = undefined;
   }
 }
+
 export function activate(id, token_list) {
   $.ajax({
     url: "resources/ajax/ajax_change_availability.php",
@@ -322,6 +323,25 @@ export function deactivate(id, token_list) {
       console.log(data);
       toastr.success(data.message);
       allertaJS.main.reloadTable();
+    }
+  });
+}
+
+export function loadListListCallback(){
+  $("tbody tr").on("click", function(event) {
+    let targetElem = event.target;
+    let userInfoElem = event.currentTarget.querySelector("[data-user]");
+    let userId = userInfoElem.dataset.user;
+    if(
+      targetElem.hasAttribute("data-clickable") ||
+      targetElem.parentElement.hasAttribute("data-clickable") ||
+      (targetElem.childElementCount > 0 && targetElem.firstElementChild.hasAttribute("data-clickable"))
+    ){
+      if(userInfoElem.dataset.userAvailable === "1") {
+        allertaJS.main.deactivate(userId,0);
+      } else {
+        allertaJS.main.activate(userId,0);
+      }
     }
   });
 }
