@@ -5,7 +5,7 @@ $user->requirelogin(false);
 $user->online_time_update();
 
 function generate_message($change_user, $action){
-    global $tools, $user;
+    global $user;
     if($action == "activate"){
         $action_string = "Thanks, %s, you have given %s in case of alert.";
     } else {
@@ -19,7 +19,19 @@ function generate_message($change_user, $action){
     return sprintf(t($action_string, false), $user->nameById($user->auth->getUserId()), $user_string);
 }
 
-if(isset($_POST["change_id"]) && $_POST["dispo"] == 1 /* && $_POST["token_list"] == $_SESSION['token_list'] */){
+if(!isset($_POST["change_id"]) || !isset($_POST["change_id"])){
+    http_response_code(400);
+    echo(json_encode(["message" => t("Bad request.",false)]));
+    exit();
+}
+
+if(!$user->hasRole(Role::FULL_VIEWER) && $_POST["change_id"] !== $user->auth->getUserId()){
+    http_response_code(401);
+    echo(json_encode(["message" => t("You are not authorized to perform this action.",false)]));
+    exit();
+}
+
+if($_POST["dispo"] == 1 /* && $_POST["token_list"] == $_SESSION['token_list'] */){
     $db->update(
         DB_PREFIX."_profiles",
         ["available" => 1, "availability_last_change" => "manual"],
@@ -27,7 +39,7 @@ if(isset($_POST["change_id"]) && $_POST["dispo"] == 1 /* && $_POST["token_list"]
     );
     $user->log("Status changed to 'available'", $_POST["change_id"], $user->auth->getUserId());
     $message = generate_message($_POST["change_id"], "activate");
-} else if(isset($_POST["change_id"]) && $_POST["dispo"] == 0 /* && $_POST["token_list"] == $_SESSION['token_list'] */){
+} else if($_POST["dispo"] == 0 /* && $_POST["token_list"] == $_SESSION['token_list'] */){
     $db->update(
         DB_PREFIX."_profiles",
         ["available" => 0, "availability_last_change" => "manual"],

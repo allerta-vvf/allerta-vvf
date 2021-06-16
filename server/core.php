@@ -434,7 +434,7 @@ class user
         $this->tools->profiler_stop();
     }
 
-    public function requireRole($role, $adminGranted=true)
+    public function hasRole($role, $adminGranted=true)
     {
         return $this->auth->hasRole($role) || $adminGranted && $role !== Role::DEVELOPER && $this->auth->hasRole(Role::ADMIN) || $role !== Role::DEVELOPER && $this->auth->hasRole(Role::SUPER_ADMIN);
     }
@@ -501,7 +501,7 @@ class user
 
     public function info()
     {
-        return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
+        return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->hasRole(Role::FULL_VIEWER), "tester" => $this->hasRole(Role::TESTER), "developer" => $this->hasRole(Role::DEVELOPER));
     }
 
     public function login($name, $password, $remember_me)
@@ -962,7 +962,7 @@ function init_class($enableDebugger=true, $headers=true)
         //TODO: add Monolog here
     }
 
-    if($enableDebugger && $user->requireRole(Role::DEVELOPER)) {
+    if($enableDebugger && $user->hasRole(Role::DEVELOPER)) {
         $debugbar = new StandardDebugBar();
         bdump(__DIR__);
         $dir = str_replace("resources\ajax\\", "", __DIR__).DIRECTORY_SEPARATOR.'debug_storage';

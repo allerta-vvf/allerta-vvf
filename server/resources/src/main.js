@@ -29,7 +29,34 @@ toastr.options = {
   showMethod: "fadeIn",
   hideMethod: "fadeOut"
 };
- 
+
+if(!('fetch' in window)){
+  import(`./polyfills.js`).then((_ ) => {
+    window.Promise = _.Promise;
+    window.fetch = _.fetch;
+  });
+}
+
+function objectToURLParams(list){
+  let params = new URLSearchParams();
+  list.forEach((el) => {
+    params.append(el[0], el[1]);
+  });
+  return params.toString();
+}
+
+function displayResponseMessage(r){
+  console.log(r);
+  let statusCode = r.status;
+  r.json().then(r => {
+    if(statusCode === 200){
+      toastr.success(r.message);
+    } else {
+      toastr.error(r.message);
+    }
+  });
+}
+
 $.fn.loading = function (action = "start", options) {
   const opts = $.extend({}, $.fn.loading.defaults, options);
  
@@ -290,38 +317,38 @@ export function reloadTable(){
 }
 
 export function activate(id, token_list) {
-  $.ajax({
-    url: "resources/ajax/ajax_change_availability.php",
-    method: "POST",
-    data: {
-      change_id: id,
-      dispo: 1,
-      token_list: token_list
+  fetch("resources/ajax/ajax_change_availability.php", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    dataType: "json",
-    success: function (data) {
-      console.log(data);
-      toastr.success(data.message);
-      allertaJS.main.reloadTable();
-    }
+    body: objectToURLParams([
+      ["change_id", id],
+      ["dispo", 1],
+      ["token_list", token_list]
+    ])
+  }).then(r => {
+    displayResponseMessage(r);
+    allertaJS.main.reloadTable();
   });
 }
  
 export function deactivate(id, token_list) {
-  $.ajax({
-    url: "resources/ajax/ajax_change_availability.php",
-    method: "POST",
-    data: {
-      change_id: id,
-      dispo: 0,
-      token_list: token_list
+  fetch("resources/ajax/ajax_change_availability.php", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    dataType: "json",
-    success: function (data) {
-      console.log(data);
-      toastr.success(data.message);
-      allertaJS.main.reloadTable();
-    }
+    body: objectToURLParams([
+      ["change_id", id],
+      ["dispo", 0],
+      ["token_list", token_list]
+    ])
+  }).then(r => {
+    displayResponseMessage(r);
+    allertaJS.main.reloadTable();
   });
 }
 
