@@ -4,12 +4,12 @@ describe("Service management", () => {
     })
 
     it('Add Service with new type', function () {
-        cy.get('tr:has(> td:has(> a[id="username-11"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-4"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-9"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-7"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-2"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-6"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="11"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="4"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="9"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="7"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="2"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="6"])) > :nth-child(6)').should('contain', '0');
         cy.visit("/edit_service.php?add", {
             onBeforeLoad(win) {
                 cy.stub(win, 'prompt').returns('test');
@@ -47,12 +47,12 @@ describe("Service management", () => {
         cy.contains("Service added");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
-        cy.get('tr:has(> td:has(> a[id="username-11"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-4"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-9"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-7"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-2"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-6"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="11"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="4"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="9"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="7"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="2"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="6"])) > :nth-child(6)').should('contain', '1');
     });
 
     it('Edit service', function() {
@@ -80,12 +80,12 @@ describe("Service management", () => {
         cy.contains("Service edited");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
-        cy.get('tr:has(> td:has(> a[id="username-11"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-8"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-4"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-9"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-3"])) > :nth-child(6)').should('contain', '1');
-        cy.get('tr:has(> td:has(> a[id="username-5"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="11"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="8"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="4"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="9"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="3"])) > :nth-child(6)').should('contain', '1');
+        cy.get('tr:has(> td:has(> [data-user="5"])) > :nth-child(6)').should('contain', '1');
     });
 
     it('Delete Service', function() {
@@ -99,12 +99,12 @@ describe("Service management", () => {
         cy.contains("Service removed");
         cy.visit("/list.php");
         cy.wait('@ajax_list');
-        cy.get('tr:has(> td:has(> a[id="username-8"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-3"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-5"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-7"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-2"])) > :nth-child(6)').should('contain', '0');
-        cy.get('tr:has(> td:has(> a[id="username-6"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="8"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="3"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="5"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="7"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="2"])) > :nth-child(6)').should('contain', '0');
+        cy.get('tr:has(> td:has(> [data-user="6"])) > :nth-child(6)').should('contain', '0');
     });
 
 })
