@@ -192,7 +192,7 @@ $(function() {
       topNavBar.className = "topnav";
     }
   });
-  $("#logout-text").on("click", function(){ location.href='{{ urlsoftware }}logout.php'; });
+  $("#logout-text").on("click", function(){ location.href='logout.php'; });
 });
  
 export var lastTableLoadConfig = {
