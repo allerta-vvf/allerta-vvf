@@ -10,7 +10,7 @@ if(!empty($result)){
     $result[0]["holidays"] = json_decode($result[0]["holidays"]);
 }
 
-if(isset($_POST["hours"])){
+if(isset($_POST["hours"]) && isset($_POST["holidays"])){
     $hours = (string) json_encode($_POST["hours"]);
     $holidays = (string) json_encode($_POST["holidays"]);
     echo($hours."-".$holidays);
