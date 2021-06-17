@@ -128,5 +128,6 @@ return [
     "yes" => "yes",
     "no" => "no",
     "You are not authorized to perform this action." => "You are not authorized to perform this action.",
-    "Bad request." => "Bad request."
+    "Bad request." => "Bad request.",
+    "User not exists." => "User not exists."
 ];

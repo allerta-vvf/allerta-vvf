@@ -19,10 +19,20 @@ function generate_message($change_user, $action){
     return sprintf(t($action_string, false), $user->nameById($user->auth->getUserId()), $user_string);
 }
 
-if(!isset($_POST["change_id"]) || !isset($_POST["change_id"])){
+if(!isset($_POST["change_id"]) || !isset($_POST["change_id"]) || !is_numeric($_POST["change_id"])){
     http_response_code(400);
     echo(json_encode(["message" => t("Bad request.",false)]));
     exit();
+} else {
+    $rows = $db->select(
+        "SELECT available FROM ".DB_PREFIX."_profiles WHERE id = ?",
+        [$_POST["change_id"]]
+    );
+    if(is_null($rows) || count($rows) !== 1) {
+        http_response_code(400);
+        echo(json_encode(["message" => t("Bad request.",false)." ".t("User not exists.",false)]));
+        exit();
+    }
 }
 
 if(!$user->hasRole(Role::FULL_VIEWER) && $_POST["change_id"] !== $user->auth->getUserId()){
