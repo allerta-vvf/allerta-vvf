@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f03c6fd8c49570e6afc15adbbabbee0",
+    "content-hash": "8ba4ae7ec7635f3b6e6b669ceffb94e0",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -229,16 +229,16 @@
         },
         {
             "name": "longman/telegram-bot",
-            "version": "0.73.0",
+            "version": "0.73.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-telegram-bot/core.git",
-                "reference": "ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75"
+                "reference": "163ca3bd6048f7ab0491f4116a2eb74e2310f032"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75",
-                "reference": "ed2df605b2f7fa77db527ef70dc5cec7cd4fdf75",
+                "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/163ca3bd6048f7ab0491f4116a2eb74e2310f032",
+                "reference": "163ca3bd6048f7ab0491f4116a2eb74e2310f032",
                 "shasum": ""
             },
             "require": {
@@ -322,7 +322,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-14T13:56:42+00:00"
+            "time": "2021-06-20T08:46:33+00:00"
         },
         {
             "name": "psr/http-client",
