@@ -129,5 +129,6 @@ return [
     "no" => "no",
     "You are not authorized to perform this action." => "Non sei autorizzato ad eseguire questa azione.",
     "Bad request." => "Errore nella richiesta.",
-    "User not exists." => "L'utente non esiste."
+    "User not exists." => "L'utente non esiste.",
+    "Change" => "Cambia"
 ];
