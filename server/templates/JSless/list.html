@@ -4,8 +4,18 @@
 <br>
 <div class="text-center">
   <p>{{ 'Are you available in case of alert?'|t }}</p>
-  <button class="btn btn-success">{{ 'Activate'|t }}</button>
-  <button class="btn btn-danger">{{ 'Deactivate'|t }}</button>
+  <form method="post">
+    <input type="hidden" name="token_list" value="{{ token_list }}"/>
+    <input type="hidden" name="action" value="activate"/>
+    <input type="hidden" name="user_id" value="{{ user.id }}"/>
+    <button type="submit" class="btn btn-success">{{ 'Activate'|t }}</button>
+  </form>
+  <form method="post">
+    <input type="hidden" name="token_list" value="{{ token_list }}"/>
+    <input type="hidden" name="action" value="deactivate"/>
+    <input type="hidden" name="user_id" value="{{ user.id }}"/>
+    <button type="submit" class="btn btn-danger">{{ 'Deactivate'|t }}</button>
+  </form>
 </div>
 <br>
 <br>
@@ -28,8 +38,21 @@
   </tr>
 {% for row in query_results %}
   <tr class="tBody">
-    <th>{{ username(row.id) }}</th>
-    <th>{{ yesOrNo(row.available) }}</th>
+    {% if (date().timestamp-row.online_time) <= 30 %}
+      <th><u>{{ username(row.id) }}</u></th>
+    {% else %}
+      <th>{{ username(row.id) }}</th>
+    {% endif %}
+    <th>
+      {{ yesOrNo(row.available) }}
+      {% set function = row.available ? "deactivate" : "activate" %}
+      <form method="post">
+        <input type="hidden" name="token_list" value="{{ token_list }}"/>
+        <input type="hidden" name="action" value="{{ function }}"/>
+        <input type="hidden" name="user_id" value="{{ row.id }}"/>
+        <button type="submit">{{ 'Change'|t }}</button>
+      </form>
+    </th>
     {% if user.full_viewer %}
     <th>{{ yesOrNo(row.driver) }}</th>
     {% if row.phone_number %}
@@ -52,7 +75,7 @@
 
 <br><br>
 <p style="text-align: center;">
-  <button class="btn btn-success btn-small">{{ 'Add user'|t }}</button>
+  <a href="edit_user.php?add" class="btn btn-success btn-small">{{ 'Add user'|t }}</a>
 </p>
 <br>
 <br>

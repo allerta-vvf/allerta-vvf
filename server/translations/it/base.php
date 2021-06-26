@@ -126,5 +126,11 @@ return [
     "Remove selections" => "Rimuovi selezioni",
     "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>." => "JavaScript è disabilitato o non è supportato dal tuo browser, ma è richiesto per utilizzare Allerta-VVF. Per continuare, abilita JS <a href='?JSless=1'>o usa la versione senza JS</a>.",
     "yes" => "si",
-    "no" => "no"
+    "no" => "no",
+    "You are not authorized to perform this action." => "Non sei autorizzato ad eseguire questa azione.",
+    "Bad request." => "Errore nella richiesta.",
+    "User not exists." => "L'utente non esiste.",
+    "Change" => "Cambia",
+    "Delete the offline version of Allerta-VVF from this device." => "Cancella la versione offline di Allerta-VVF da questo dispositivo.",
+    "You have cleared the cache; the table will be loaded when the device is connected to the Internet." => "Hai svuotato la cache; la tabella verrà caricata quando il dispositivo sarà connesso ad Internet."
 ];

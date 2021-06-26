@@ -9,7 +9,7 @@ $result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available
 $response = [];
 foreach(!is_null($result) ? $result : [] as $row){
   if(!$user->hidden($row["id"])){
-    if($user->requireRole(Role::FULL_VIEWER)){
+    if($user->hasRole(Role::FULL_VIEWER)){
       $name = $user->nameById($row["id"]);
       $name_encoded = urlencode($user->name());
       $helmet_colour = $row["chief"] ? "red" : "black";

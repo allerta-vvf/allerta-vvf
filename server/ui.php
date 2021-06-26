@@ -97,15 +97,16 @@ $function_resource = new \Twig\TwigFunction(
 $twig->addFunction($function_resource);
 
 $function_script = new \Twig\TwigFunction(
-    'script', function ($file) {
+    'script', function ($context, $file) {
         global $nonce, $url_software, $webpack_manifest;
         $script_url = $url_software . "/resources/dist/" . $webpack_manifest[$file]["src"];
         $script_integrity = $webpack_manifest[$file]["integrity"];
 
-        $script_tag = "<script src='{$script_url}' integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
+        $script_tag = "<script src='{$script_url}'";
+        if(!$context["is_offline_page"]) $script_tag .= " integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
         $script_tag .= "></script>";
         return $script_tag;
-    }, ['is_safe' => ['html']]
+    }, ['needs_context' => true, 'is_safe' => ['html']]
 );
 $twig->addFunction($function_script);
 
@@ -157,6 +158,7 @@ function loadtemplate($templatename, $data, $requirelogin=true)
     $data['user'] = $user->info();
     $data['show_menu'] = !isset($_REQUEST["hide_menu"]);
     $data['show_footer'] = !isset($_REQUEST["hide_footer"]);
+    $data['is_offline_page'] = strpos($_SERVER["PHP_SELF"], "offline.php") !== false;
     if(get_option("use_custom_error_sound")) {
         $data['error_sound'] = "custom-error.mp3";
     } else {
