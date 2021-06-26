@@ -550,7 +550,8 @@ function initOptions($name, $visible, $developer, $password, $report_email, $own
             'force_remember_cookie' => 0,
             'holidays_provider' => 'USA',
             'holidays_language' => 'en_US',
-            'messages' => '{}'
+            'messages' => '{}',
+            'enable_js_nonce' => 0
         ];
         foreach ($options as $key => $value) {
             $db->insert(

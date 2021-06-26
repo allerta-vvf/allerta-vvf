@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-  <script nonce="{{ nonce }}">
+  <script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
     $('#schedulesModal').on('show.bs.modal', function (event) {
       //$( ".modal-body" ).loading("show");
       $(".modal-body").load("modal_availability_schedule.php?nonce={{ nonce }}", {
@@ -68,7 +68,7 @@
     <tbody id="table_body">
     </tbody>
   </table>
-  <script nonce="{{ nonce }}">
+  <script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
     $("#activate-btn").on("click",function(){
       allertaJS.main.activate('{{ user.id }}', '');
     });
