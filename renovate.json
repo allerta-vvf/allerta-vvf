@@ -23,15 +23,13 @@
     {
       "matchManagers": ["composer"],
       "groupName": "backendDependencies",
-      "prPriority": 4,
-      "automerge": false
+      "prPriority": 4
     },
     {
       "matchManagers": ["dockerfile"],
       "groupName": "docker",
       "prPriority": 5,
-      "stabilityDays": 3,
-      "automerge": false
+      "stabilityDays": 3
     }
   ]
 }
