@@ -10,12 +10,12 @@
   <p>{{ 'Error'|t}} {{ 'code'|t}} {{ error.code }}. {{ 'Check the entered credentials and make sure they are correct'|t }}.</p>
   <img src='{{ urlsoftware }}/resources/images/{{ error_image }}'></img>
 </div>
-<script nonce="{{ nonce }}">
+<script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
   const noSaveData = 'connection' in navigator === false || ('connection' in navigator && !navigator.connection.saveData);
   if (noSaveData) {
     let playerScript = document.createElement("script");
     playerScript.setAttribute("src", "{{ urlsoftware }}/resources/dist/{{ resource('players.js') }}");
-    playerScript.setAttribute("nonce", "{{ nonce }}");
+    {% if enable_js_nonce %} playerScript.setAttribute("nonce", "{{ nonce }}"); {% endif %}
     playerScript.setAttribute("async", "false");
     playerScript.onload = function() {
       console.log("player script loaded");

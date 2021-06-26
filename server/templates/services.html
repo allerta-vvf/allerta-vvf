@@ -35,7 +35,7 @@
     <tbody id="table_body">
     </tbody>
   </table>
-  <script nonce="{{ nonce }}">
+  <script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
     allertaJS.main.loadTable({tablePage: "services", interval: 120000});
   </script>
 </div>
