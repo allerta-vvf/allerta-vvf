@@ -760,7 +760,6 @@ class crud
         $this->user->log("Service removed");
     }
 
-
     public function edit_service($id, $date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
     {
         $this->remove_service($id);
@@ -936,7 +935,7 @@ function init_class($enableDebugger=true, $headers=true)
             $csp_rules[] = "report-uri ".SENTRY_CSP_REPORT_URI;
         }
         $csp = implode("; ", $csp_rules);
-        if(!isset($_COOKIE["JSless"]) && (isset($_GET["JSless"]) ? !$_GET["JSless"] : true)){
+        if((isset($_GET["JSless"]) ? !$_GET["JSless"] : true) && !strpos($_SERVER["PHP_SELF"], "offline.php")){
             header("Content-Security-Policy: $csp");
             header("X-XSS-Protection: 1; mode=block");
             header("X-Content-Type-Options: nosniff");

@@ -48,7 +48,7 @@
   </script>
   {% endif %}
   {{ script('main.js') }}
-  <script nonce="{{ nonce }}">$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
+  <script{% if not is_offline_page %} nonce="{{ nonce }}"{% endif %}>$.fn.loading.defaults.message = "{{ 'Loading...'|t }}";</script>
   {% endblock %}
   {% if enable_debug_bar %}{{ debug_bar_head|raw }}{% endif %}
 </head>

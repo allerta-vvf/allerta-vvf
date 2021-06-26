@@ -95,7 +95,8 @@ module.exports = {
       integrity: true,
       customize(entry) {
         allowed_entries = ["main.js", "maps.js", "players.js", "games.js"]
-        if (entry.key.startsWith('fonts') || allowed_entries.includes(entry.key)) {
+        if (entry.key.startsWith('fonts') || entry.key.includes("table_engine") || allowed_entries.includes(entry.key)) {
+          entry.key = entry.key.split("?")[0];
           return entry;
         }
         return false;

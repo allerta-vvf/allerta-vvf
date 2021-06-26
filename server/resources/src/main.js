@@ -129,7 +129,7 @@ $(document).ajaxError(function (event, xhr, settings, error) {
 });
  
 if (getCookie("authenticated")) {
-  var installServiceWorker = false;
+  var installServiceWorker = true;
   if (window.skipServiceWorkerInstallation !== undefined) { // if you want to disable SW for example via GreasyFork userscript
     installServiceWorker = false;
   }

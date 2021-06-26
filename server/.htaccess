@@ -98,7 +98,7 @@
   <FilesMatch "\.(js|css|woff|woff2|ttf|eot)$">
     Header set Cache-Control "max-age=2592000, public"
   </FilesMatch>
-  <FilesMatch "\\.(jpe?g|png|gif|swf|flv|pdf|svg)$">
+  <FilesMatch "\.(jpe?g|png|gif|swf|flv|pdf|svg|ico)$">
     Header set Cache-Control "max-age=604800, public"
   </FilesMatch>
 </IfModule>
