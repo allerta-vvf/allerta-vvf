@@ -921,7 +921,7 @@ function init_class($enableDebugger=true, $headers=true)
 
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
-        $script_nonce_csp = (defined("UI_MODE") && get_option("enable_js_nonce")) ? "'nonce-{$tools->script_nonce}' " : "";
+        $script_nonce_csp = (defined("UI_MODE") && get_option("enable_js_nonce")) ? "'nonce-{$tools->script_nonce}' " : "'unsafe-inline' ";
         $csp_rules = [
             "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
             "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",

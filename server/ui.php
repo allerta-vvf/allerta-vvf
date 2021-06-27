@@ -103,7 +103,7 @@ $function_script = new \Twig\TwigFunction(
         $script_integrity = $webpack_manifest[$file]["integrity"];
 
         $script_tag = "<script src='{$script_url}'";
-        if(!$context["enable_js_nonce"]) $script_tag .= " integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
+        if($context["enable_js_nonce"]) $script_tag .= " integrity='{$script_integrity}' crossorigin='anonymous' nonce='".$nonce."'";
         $script_tag .= "></script>";
         return $script_tag;
     }, ['needs_context' => true, 'is_safe' => ['html']]
