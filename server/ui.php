@@ -136,6 +136,26 @@ $function_yesOrNo = new \Twig\TwigFunction(
     }, ['is_safe' => ['html']]
 );
 $twig->addFunction($function_yesOrNo);
+
+$function_hasRole = new \Twig\TwigFunction(
+    'hasRole', function ($role) {
+        global $user;
+
+        $GUEST = \Delight\Auth\Role::AUTHOR;
+        $BASIC_VIEWER = \Delight\Auth\Role::COLLABORATOR;
+        $FULL_VIEWER = \Delight\Auth\Role::CONSULTANT;
+        $EDITOR = \Delight\Auth\Role::CONSUMER;
+        $SUPER_EDITOR = \Delight\Auth\Role::CONTRIBUTOR;
+        $DEVELOPER = \Delight\Auth\Role::DEVELOPER;
+        $TESTER = \Delight\Auth\Role::CREATOR;
+        $EXTERNAL_VIEWER = \Delight\Auth\Role::REVIEWER;
+        $ADMIN = \Delight\Auth\Role::ADMIN;
+        $SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
+
+        return $user->hasRole($$role);
+    }
+);
+$twig->addFunction($function_hasRole);
 p_stop();
 
 $template = null;

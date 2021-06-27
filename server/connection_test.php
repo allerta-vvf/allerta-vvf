@@ -10,9 +10,7 @@ try {
     $server_side = ["status" => "error", "status_msg" => $e];
 }
 try {
-    $server_info = $_SERVER;
-    unset($server_info["DOCUMENT_ROOT"], $server_info["REQUEST_URI"], $server_info["SCRIPT_NAME"], $server_info["PHP_SELF"], $server_info["REMOTE_ADDR"], $server_info["REMOTE_PORT"], $server_info["SERVER_SOFTWARE"], $server_info["SERVER_NAME"], $server_info["SERVER_PORT"], $server_info["SCRIPT_FILENAME"]);
-    $client_side = ["status" => "ok", "status_msg" => null, "info" => $server_info, "ip" => $tools->get_ip()];
+    $client_side = ["status" => "ok", "status_msg" => null, "ip" => $tools->get_ip()];
 } catch (Exception $e) {
     $server_side = ["status" => "error", "status_msg" => $e];
 }

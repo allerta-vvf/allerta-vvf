@@ -2,7 +2,6 @@
 require_once 'core.php';
 
 init_class(false);
-header('Content-Type: application/json');
 error_reporting(-1);
 
 list($cronJobDay, $cronJobTime) = explode(";", get_option("cron_job_time"));
@@ -153,8 +152,13 @@ if($start) {
             }
         }
     }
+} else {
+    require("error_page.php");
+    show_error_page(405, "Method not allowed", "Allowed methods: POST");
+    exit();
 }
 
+header('Content-Type: application/json');
 echo(json_encode(
     [
     "start" => $start,
