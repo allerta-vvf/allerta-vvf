@@ -14,7 +14,7 @@ self.addEventListener('install', (event) => {
       .then((response) => response.json())
       .then((manifest) => {
         console.log(manifest);
-        const scriptsRequired = ["main.js", "src_table_engine_default_js.bundle.js"];
+        const scriptsRequired = ["main.js", "table_engine_default-js.js"];
         scriptsRequired.map((scriptName) => {
           console.log(scriptName);
           cache.add(new Request("resources/dist/" + manifest[scriptName]["src"], {cache: 'reload'}));
