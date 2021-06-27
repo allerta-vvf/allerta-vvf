@@ -78,11 +78,12 @@
     allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callback: allertaJS.main.loadListListCallback});
   </script>
 </div>
-
+{% if hasRole("SUPER_ADMIN") %}
 <br><br>
 <p style="text-align: center;">
   <a class='pjax_disable' id='add' href="edit_user.php?add">{{ 'Add user'|t }}</a>
 </p>
+{% endif %}
 <br>
 <br>
 {% endblock %}
