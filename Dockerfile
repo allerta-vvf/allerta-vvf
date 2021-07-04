@@ -1,4 +1,4 @@
-FROM trafex/alpine-nginx-php7:2.0.2 AS webserver
+FROM trafex/alpine-nginx-php7:2.1.0 AS webserver
 
 LABEL maintainer="matteo@matteogheza.it"
 LABEL version="1.0"
