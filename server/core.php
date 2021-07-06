@@ -138,8 +138,7 @@ class tools
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             "https://www.youtube.com/watch?v=ub82Xb1C8os",
             "https://www.youtube.com/watch?v=Wjy3o0FoLYc",
-            "https://www.youtube.com/watch?v=bxqLsrlakK8",
-            "https://www.youtube.com/watch?v=Lrj2Hq7xqQ8"
+            "https://www.youtube.com/watch?v=bxqLsrlakK8"
         ];
         $this->redirect($rickrolls[array_rand($rickrolls)]); //Dear attacker/bot, have fun!
     }
