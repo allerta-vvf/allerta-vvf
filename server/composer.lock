@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "585e39b7d73172ce1d87d1e462c98c01",
+    "content-hash": "6e450ec775ccd3c52c87a7380ac6bcc8",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -1440,16 +1440,16 @@
         },
         {
             "name": "phpfastcache/phpfastcache",
-            "version": "8.0.5",
+            "version": "8.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPSocialNetwork/phpfastcache.git",
-                "reference": "6d66cc0604bcbd7681ef1b3fdd1ba22901a16b1c"
+                "reference": "c93bd7d341176b64b428953365ef67002af9f61e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/6d66cc0604bcbd7681ef1b3fdd1ba22901a16b1c",
-                "reference": "6d66cc0604bcbd7681ef1b3fdd1ba22901a16b1c",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/c93bd7d341176b64b428953365ef67002af9f61e",
+                "reference": "c93bd7d341176b64b428953365ef67002af9f61e",
                 "shasum": ""
             },
             "require": {
@@ -1541,7 +1541,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPSocialNetwork/phpfastcache/issues",
-                "source": "https://github.com/PHPSocialNetwork/phpfastcache/tree/8.0.5"
+                "source": "https://github.com/PHPSocialNetwork/phpfastcache/tree/8.0.6"
             },
             "funding": [
                 {
@@ -1553,7 +1553,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-04-05T22:24:16+00:00"
+            "time": "2021-07-07T14:21:56+00:00"
         },
         {
             "name": "psr/cache",
