@@ -58,7 +58,7 @@
     "speed-measure-webpack-plugin": "1.5.0",
     "style-loader": "3.0.0",
     "terser-webpack-plugin": "5.1.4",
-    "webpack": "5.43.0",
+    "webpack": "5.44.0",
     "webpack-assets-manifest": "5.0.6",
     "webpack-bundle-analyzer": "4.4.2",
     "webpack-cli": "4.7.2",
