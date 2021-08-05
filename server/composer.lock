@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e450ec775ccd3c52c87a7380ac6bcc8",
+    "content-hash": "d30d67a3d35d7b27225ad1a87c04d1c6",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -81,25 +81,26 @@
         },
         {
             "name": "brick/phonenumber",
-            "version": "0.2.2",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/phonenumber.git",
-                "reference": "8bce37b0a4e569bae773fc2a254892acd0eb05d1"
+                "reference": "e74ed15e1eca12ced1d893201afeae50ecd7bb0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/phonenumber/zipball/8bce37b0a4e569bae773fc2a254892acd0eb05d1",
-                "reference": "8bce37b0a4e569bae773fc2a254892acd0eb05d1",
+                "url": "https://api.github.com/repos/brick/phonenumber/zipball/e74ed15e1eca12ced1d893201afeae50ecd7bb0d",
+                "reference": "e74ed15e1eca12ced1d893201afeae50ecd7bb0d",
                 "shasum": ""
             },
             "require": {
-                "giggsey/libphonenumber-for-php": "7.* || 8.*",
-                "php": ">=7.1"
+                "ext-json": "*",
+                "giggsey/libphonenumber-for-php": "^7.0 || ^8.0",
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "2.*",
-                "phpunit/phpunit": "7.*"
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
             },
             "type": "library",
             "autoload": {
@@ -120,9 +121,19 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/phonenumber/issues",
-                "source": "https://github.com/brick/phonenumber/tree/master"
+                "source": "https://github.com/brick/phonenumber/tree/0.3.0"
             },
-            "time": "2020-02-06T21:38:12+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/BenMorel",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/brick/phonenumber",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-08-05T08:21:50+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -466,16 +477,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.12.25",
+            "version": "8.12.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "7d397cbd2e01e78cf79ff347e40a403dbc4c22fa"
+                "reference": "f503d56d269e9b8572440820ef029e296dadaa1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/7d397cbd2e01e78cf79ff347e40a403dbc4c22fa",
-                "reference": "7d397cbd2e01e78cf79ff347e40a403dbc4c22fa",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f503d56d269e9b8572440820ef029e296dadaa1e",
+                "reference": "f503d56d269e9b8572440820ef029e296dadaa1e",
                 "shasum": ""
             },
             "require": {
@@ -535,7 +546,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2021-06-14T11:44:26+00:00"
+            "time": "2021-07-20T13:33:24+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -2563,16 +2574,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.23.0",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "2df51500adbaebdc4c38dea4c89a2e131c45c8a1"
+                "reference": "9174a3d80210dca8daa7f31fec659150bbeabfc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2df51500adbaebdc4c38dea4c89a2e131c45c8a1",
-                "reference": "2df51500adbaebdc4c38dea4c89a2e131c45c8a1",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/9174a3d80210dca8daa7f31fec659150bbeabfc6",
+                "reference": "9174a3d80210dca8daa7f31fec659150bbeabfc6",
                 "shasum": ""
             },
             "require": {
@@ -2623,7 +2634,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.23.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.23.1"
             },
             "funding": [
                 {
@@ -2639,7 +2650,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-27T09:27:20+00:00"
+            "time": "2021-05-27T12:26:48+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
