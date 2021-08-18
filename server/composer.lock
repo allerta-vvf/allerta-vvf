@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d30d67a3d35d7b27225ad1a87c04d1c6",
+    "content-hash": "48e96bdc8b01c96dc74075e44d099ff9",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -1451,16 +1451,16 @@
         },
         {
             "name": "phpfastcache/phpfastcache",
-            "version": "8.0.6",
+            "version": "8.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPSocialNetwork/phpfastcache.git",
-                "reference": "c93bd7d341176b64b428953365ef67002af9f61e"
+                "reference": "c413ffd8185564db3d670e20f9135497be9ebe85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/c93bd7d341176b64b428953365ef67002af9f61e",
-                "reference": "c93bd7d341176b64b428953365ef67002af9f61e",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/c413ffd8185564db3d670e20f9135497be9ebe85",
+                "reference": "c413ffd8185564db3d670e20f9135497be9ebe85",
                 "shasum": ""
             },
             "require": {
@@ -1471,15 +1471,16 @@
                 "psr/simple-cache": "~1.0.0"
             },
             "conflict": {
-                "basho/riak": "*",
                 "doctrine/couchdb": "*"
             },
             "require-dev": {
+                "ext-gettext": "*",
                 "league/climate": "^3.5"
             },
             "suggest": {
                 "ext-apc": "*",
                 "ext-couchbase": "*",
+                "ext-couchbase_v3": "*",
                 "ext-intl": "*",
                 "ext-leveldb": "*",
                 "ext-memcache": "*",
@@ -1488,16 +1489,16 @@
                 "ext-sqlite": "*",
                 "ext-wincache": "*",
                 "ext-xcache": "*",
-                "mongodb/mongodb": "^1.1",
+                "mongodb/mongodb": "^1.9",
                 "phpfastcache/couchdb": "~1.0.0",
                 "phpfastcache/phpssdb": "~1.0.0",
-                "phpfastcache/riak-client": "~1.4.4",
-                "predis/predis": "~1.1.0"
+                "predis/predis": "^1.1"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Phpfastcache\\": "lib/Phpfastcache/"
+                    "Phpfastcache\\": "lib/Phpfastcache/",
+                    "Phpfastcache\\Tests\\": "tests/lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1552,7 +1553,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPSocialNetwork/phpfastcache/issues",
-                "source": "https://github.com/PHPSocialNetwork/phpfastcache/tree/8.0.6"
+                "source": "https://github.com/PHPSocialNetwork/phpfastcache/tree/8.0.8"
             },
             "funding": [
                 {
@@ -1564,7 +1565,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-07-07T14:21:56+00:00"
+            "time": "2021-08-18T01:26:03+00:00"
         },
         {
             "name": "psr/cache",
