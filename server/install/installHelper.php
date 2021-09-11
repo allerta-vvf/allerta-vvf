@@ -232,6 +232,10 @@ define( 'DB_HOST', '<?php echo $host; ?>' );<br>
 /* Database hostname */<br>
 define( 'DB_PREFIX', '<?php echo $prefix; ?>' );<br>
 <br>
+/* Telegram bot options */<br>
+define('BOT_TELEGRAM_API_KEY', '');<br>
+define('BOT_TELEGRAM_USERNAME', '');<br>
+<br>
 /* Sentry options */<br>
 define('SENTRY_CSP_REPORT_URI', '');<br>
 define('SENTRY_ENABLED', false);<br>
@@ -444,6 +448,7 @@ $db->exec(<<<"EOL"
 CREATE TABLE `{$prefix}_bot_telegram` (
 `id` INT NOT NULL AUTO_INCREMENT,
 `chat_id` VARCHAR(128) NOT NULL,
+`tmp_login_token` VARCHAR(128) NOT NULL,
 `user` INT NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=latin1;
