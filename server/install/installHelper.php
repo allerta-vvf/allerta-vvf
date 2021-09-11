@@ -749,7 +749,7 @@ function run_cli()
     }
 
     $options = $getopt->getOptions();
-    switch ($command->name()) {
+    switch ($command->getName()) {
     case "config":
         cli_helper("config", $options);
     case "populate":
