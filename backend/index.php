@@ -6,20 +6,24 @@ $MIMEdetector = new League\MimeTypeDetection\ExtensionMimeTypeDetector();
 
 $dispatcher = FastRoute\simpleDispatcher(
     function (FastRoute\RouteCollector $r) {
-        $r->addRoute(
-            'GET',
-            '/healthcheck',
-            function ($vars) {
-                apiResponse(["state" => "SUCCESS", "description" => ""]);
-            }
-        );
-        $r->addRoute(
-            ['GET', 'POST'],
-            '/requestDebug',
-            function ($vars) {
-                apiResponse(["get" => $_GET, "post" => $_POST, "server" => $_SERVER]);
-            }
-        );
+        $r->addGroup('/api', function (RouteCollector $r) {
+            $r->addRoute(
+                'GET',
+                '/healthcheck',
+                function ($vars) {
+                    apiResponse(["state" => "SUCCESS", "description" => ""]);
+                }
+            );
+            $r->addRoute(
+                ['GET', 'POST'],
+                '/requestDebug',
+                function ($vars) {
+                    apiResponse(["get" => $_GET, "post" => $_POST, "server" => $_SERVER]);
+                }
+            );
+        });
+
+
         $r->addRoute(
             'GET',
             '/',
