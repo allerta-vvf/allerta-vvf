@@ -1,0 +1,10 @@
+<div [className]="menuButtonClicked ? 'topnav responsive' : 'topnav'" id="topNavBar">
+  <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/list">Lista disponibilità</a>
+  <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/services">Interventi</a>
+  <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/trainings">Esercitazioni</a>
+  <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/logs">Logs</a>
+  <a style="float: right;" id="logout">Ciao, utente. <b id="logout-text">Logout</b></a>
+  <a class="icon" id="menuButton" (click)="menuButtonClicked = !menuButtonClicked">☰</a>
+</div>
+
+<router-outlet></router-outlet>

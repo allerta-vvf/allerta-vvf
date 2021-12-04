@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+table {
+  margin: auto;
+  max-width: 95%;
+  text-align: center;
+  overflow-x: auto;
+}
+
+#table_wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+}
+
+th,
+td {
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.fa {
+  vertical-align: middle;
+  font-size: 20px;
+}
+
+.table > :not(:first-child) {
+  border-top: none;
+}
