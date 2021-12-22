@@ -44,11 +44,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/services',
         function ($vars) {
-            global $db;
-            $response = $db->select("SELECT * FROM `".DB_PREFIX."_services` ORDER BY date DESC, beginning DESC");
-            apiResponse(
-                !is_null($response) ? $response : []
-            );
+            global $services;
+            apiResponse($services->list());
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/services',
+        function ($vars) {
+            global $services;
+            apiResponse([]);
         }
     );
 

@@ -114,4 +114,55 @@ class Users
     }
 }
 
+class Services {
+    private $db = null;
+    
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function list() {
+        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` ORDER BY date DESC, beginning DESC");
+        return !is_null($response) ? $response : [];
+    }
+
+    public function increment_counter($increment)
+    {
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `services`= services + 1 WHERE id IN ($increment)"
+        );
+    }
+
+    public function decrement_counter($decrement)
+    {
+        $this->db->exec(
+            "UPDATE `".DB_PREFIX."_profiles` SET `services`= services - 1 WHERE id IN ($decrement)"
+        );
+    }
+
+    public function get_selected_users($id)
+    {
+        return $this->db->selectValue(
+            "SELECT `increment` FROM `".DB_PREFIX."_services` WHERE `id` = :id LIMIT 0, 1",
+            ["id" => $id]
+        );
+    }
+
+    public function add($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
+    {
+        $drivers = implode(",", $drivers);
+        $crew = implode(",", $crew);
+        $increment = implode(",", $increment);
+        $date = date('Y-m-d H:i:s', strtotime($date));
+        $this->db->insert(
+            DB_PREFIX."_services",
+            ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->tools->savePlaceReverse($place), "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
+        );
+        $this->increment_counter($increment);
+        //$this->user->log("Service added");
+    }
+}
+
 $users = new Users($db, $auth);
+$services = new Services($db);
