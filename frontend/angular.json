@@ -94,10 +94,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "allerta-vvf:build:production"
+              "browserTarget": "allerta-vvf:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
-              "browserTarget": "allerta-vvf:build:development"
+              "browserTarget": "allerta-vvf:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
