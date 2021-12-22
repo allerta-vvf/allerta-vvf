@@ -2,8 +2,15 @@
     "name": "allerta-vvf/allerta-vvf",
     "description": "Un software di allertamento per i vvf",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "no-api": true,
+            "url": "https://github.com/allerta-vvf/PHP-Auth-JWT"
+        }
+    ],
     "require": {
-        "delight-im/auth": "8.3.0",
+        "delight-im/auth": "dev-master",
         "ulrichsg/getopt-php": "4.0.0",
         "nikic/fast-route": "^2.0@dev",
         "spatie/array-to-xml": "2.16.0",
