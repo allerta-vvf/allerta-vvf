@@ -10,9 +10,34 @@ function apiRouter (FastRoute\RouteCollector $r) {
     );
     $r->addRoute(
         ['GET', 'POST'],
-        '/requestDebug',
+        '/debug/request',
         function ($vars) {
             apiResponse(["get" => $_GET, "post" => $_POST, "server" => $_SERVER]);
+        }
+    );
+    $r->addRoute(
+        ['GET', 'POST'],
+        '/debug/token',
+        function ($vars) {
+            global $users;
+            $token = isset($_GET['token']) ? $_GET['token'] : $_POST['token'];
+            $token_parsed = $users->auth->parseToken($token);
+
+            $claims = $token_parsed !== false ? $token_parsed->claims() : null;
+            $jti = isset($claims) ? $claims->get('jti') : null;
+            $exp = isset($claims) ? $claims->get('exp') : null;
+            $iat = isset($claims) ? $claims->get('iat') : null;
+            $nbf = isset($claims) ? $claims->get('nbf') : null;
+            $user_info = isset($claims) ? $claims->get('user_info') : null;
+
+            apiResponse([
+                "user_info" => $user_info,
+                "jti" => $jti,
+                "exp" => $exp,
+                "iat" => $iat,
+                "nbf" => $nbf,
+                "valid" => $users->auth->isTokenValid($token_parsed),
+            ]);
         }
     );
 
@@ -100,6 +125,55 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users;
             $users->remove_user($vars["userId"], "unknown");
             apiResponse(["status" => "success"]);
+        }
+    );
+
+    $r->addRoute(
+        ['POST'],
+        '/login',
+        function ($vars) {
+            global $users;
+            try {
+                $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
+                apiResponse(["status" => "success", "token" => $token]);
+            }
+            catch (\Delight\Auth\InvalidEmailException $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Wrong email address"]);
+            }
+            catch (\Delight\Auth\InvalidPasswordException $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Wrong password"]);
+            }
+            catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Email not verified"]);
+            }
+            catch (\Delight\Auth\UnknownUsernameException $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Wrong username"]);
+            }
+            catch (\Delight\Auth\TooManyRequestsException $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Too many requests"]);
+            }
+            catch (Exception $e) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
+            }
+        }
+    );
+    $r->addRoute(
+        ['GET', 'POST'],
+        '/validateToken',
+        function ($vars) {
+            global $users;
+            $token = isset($_GET['token']) ? $_GET['token'] : $_POST['token'];
+            $token_parsed = $users->auth->parseToken($token);
+
+            apiResponse([
+                "valid" => $users->auth->isTokenValid($token_parsed),
+            ]);
         }
     );
 }
