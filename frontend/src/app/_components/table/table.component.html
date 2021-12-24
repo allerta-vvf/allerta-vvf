@@ -14,8 +14,8 @@
         <tbody id="table_body">
             <tr *ngFor="let row of data">
                 <td>
-                    <img alt="red helmet" src="/assets/img/red_helmet.png" width="20px" *ngIf="row.chief">
-                    <img alt="red helmet" src="/assets/img/black_helmet.png" width="20px" *ngIf="!row.chief">
+                    <img alt="red helmet" src="./assets/img/red_helmet.png" width="20px" *ngIf="row.chief">
+                    <img alt="red helmet" src="./assets/img/black_helmet.png" width="20px" *ngIf="!row.chief">
                     {{ row.name }}
                 </td>
                 <td (click)="changeAvailability.emit({user: row.id, newState: row.available ? 0 : 1})">
@@ -23,7 +23,7 @@
                     <i class="fa fa-times" style="color:red" *ngIf="!row.available"></i>
                 </td>
                 <td>
-                    <img alt="driver" src="/assets/img/wheel.png" width="20px" *ngIf="row.driver">
+                    <img alt="driver" src="./assets/img/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
                 <td>
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>

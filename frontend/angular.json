@@ -40,7 +40,6 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "baseHref": "./",
-            "deployUrl": "./",
             "outputPath": "../backend/dist-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
