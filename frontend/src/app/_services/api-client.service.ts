@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,13 +8,20 @@ export class ApiClientService {
   private apiRoot = '/api/';
   public requestOptions = {};
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.requestOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    }
+  }
 
   public setToken(token: string) {
     this.requestOptions = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
     }
   }
 
@@ -32,9 +39,12 @@ export class ApiClientService {
     });
   }
 
-  public post(endpoint: string, body: any) {
+  public post(endpoint: string, data: any) {
+    let params = new HttpParams({
+      fromObject: data,
+    });
     return new Promise<any>((resolve, reject) => {
-      this.http.post(this.apiEndpoint(endpoint), body, this.requestOptions).subscribe((data: any) => {
+      this.http.post(this.apiEndpoint(endpoint), params.toString(), this.requestOptions).subscribe((data: any) => {
         resolve(data);
       }, (err) => {
         reject(err);
@@ -42,9 +52,12 @@ export class ApiClientService {
     });
   }
 
-  public put(endpoint: string, body: any) {
+  public put(endpoint: string, data: any) {
+    let params = new HttpParams({
+      fromObject: data,
+    });
     return new Promise<any>((resolve, reject) => {
-      this.http.put(this.apiEndpoint(endpoint), body, this.requestOptions).subscribe((data: any) => {
+      this.http.put(this.apiEndpoint(endpoint), params.toString(), this.requestOptions).subscribe((data: any) => {
         resolve(data);
       }, (err) => {
         reject(err);

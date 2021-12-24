@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ApiClientService } from 'src/app/_services/api-client.service';
 
 @Component({
   selector: 'app-list',
@@ -7,7 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('table') table!: any;
+
+  constructor(private api: ApiClientService) {}
+
+
+  changeAvailibility(available: 0|1, id?: number|undefined) {
+    this.api.post("availability", {
+      id: id,
+      available: available
+    });
+    this.table.loadTableData();
+  }
 
   ngOnInit(): void {
   }

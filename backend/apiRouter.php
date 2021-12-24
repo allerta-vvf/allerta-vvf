@@ -129,13 +129,51 @@ function apiRouter (FastRoute\RouteCollector $r) {
     );
 
     $r->addRoute(
+        ['GET'],
+        '/availability',
+        function ($vars) {
+            global $users, $db;
+
+            requireLogin() || accessDenied();
+
+            apiResponse([
+                "available" => $db->selectValue(
+                    "SELECT `available` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
+                    [$users->auth->getUserId()]
+                )
+            ]);
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/availability',
+        function ($vars) {
+            global $users, $db;
+
+            requireLogin() || accessDenied();
+
+            apiResponse([
+                "response" => $db->update(
+                    DB_PREFIX.'_profiles',
+                    [
+                        'available' => $_POST['available'],
+                    ],
+                    [
+                        'id' => is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId()
+                    ]
+                )
+            ]);
+        }
+    );
+
+    $r->addRoute(
         ['POST'],
         '/login',
         function ($vars) {
             global $users;
             try {
                 $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
-                apiResponse(["status" => "success", "token" => $token]);
+                apiResponse(["status" => "success", "access_token" => $token]);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {
                 statusCode(401);
