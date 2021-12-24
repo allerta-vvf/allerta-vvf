@@ -9,7 +9,7 @@ describe("User management", () => {
             .then((users) => {
                 cy.getApiKey().then((apiKey) => {
                     var i = 1
-                    var phone_number = "+1-202-555-0100"; // https://fakenumber.org/
+                    var phone_number = "+1-800-555-0199";
                     users.forEach(user => {
                         console.log("User '"+user.name+"' number "+i);
                         if(i == 1){

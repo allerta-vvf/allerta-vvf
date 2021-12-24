@@ -1,0 +1,8 @@
+RewriteEngine On
+
+RewriteCond dist-frontend/$1 -f
+RewriteRule ^(.*)$ dist-frontend/$1 [L]
+
+RewriteCond %{THE_REQUEST} \s/dist-frontend/ [NC,OR]
+RewriteCond $1 !^dist-frontend/
+RewriteRule ^(.*)$ router.php [L]

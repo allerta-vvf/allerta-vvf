@@ -9,15 +9,14 @@
       "matchDepTypes": ["devDependencies"],
       "matchManagers": ["npm"],
       "groupName": "frontendDevDependencies",
-      "schedule": [
-        "before 6pm"
-      ],
+      "extends": ["schedule:weekly"],
       "prPriority": 2
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchManagers": ["npm"],
       "groupName": "frontendDependencies",
+      "extends": ["schedule:weekly"],
       "prPriority": 3
     },
     {

@@ -14,13 +14,10 @@ on:
 jobs:
   tests:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
-    defaults:
-      run:
-        working-directory: ./server
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.4']
+        php-versions: ['8.0']
     name: Testing ${{ matrix.php-versions }}
     steps:
     - name: Checkout
@@ -39,125 +36,21 @@ jobs:
         ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
 
-    - name: Start webserver
-      run: |
-        nohup php -S 0.0.0.0:8080 &
-        sleep 5 && curl 127.0.0.1:8080/.htaccess # request a simple static file
-
     - name: Setup NodeJS
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
 
-    - name: WebPack Setup
-      working-directory: server/resources
+    - name: Build frontend
+      working-directory: frontend
       run: |
-        npm install
-        ./node_modules/.bin/webpack --version
-        ./node_modules/.bin/webpack --config webpack.prod.js
-        ls dist
-
-    - name: Shutdown Ubuntu MySQL (SUDO)
-      run: sudo service mysql stop
-
-    - uses: mirromutth/mysql-action@v1.1
-      with:
-        mysql root password: 'password'
-        mysql user: 'user'
-        mysql password: 'password'
+        npm ci
+        npm run build
 
     - name: Install dependencies
+      working-directory: backend
       run: |
         composer install --prefer-dist --no-progress
-        npm init --yes
-        npm install --save-dev cypress
-
-    - name: Mysql test
-      run: mysql -u root -h "127.0.0.1" -ppassword -e "SHOW DATABASES;"
-
-    - name: Cypress run
-      uses: cypress-io/github-action@v2
-      with:
-        browser: chrome
-        record: true
-        working-directory: server
-        tag: php-${{ matrix.php-versions }}
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: php_log_${{ github.run_id }}
-        path: /tmp/php.log
-
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: cypress_screenshots_php-${{ matrix.php-versions }}_${{ github.run_id }}
-        path: server/cypress/screenshots
-
-  code_quality:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
-    defaults:
-      run:
-        working-directory: ./server
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['7.4']
-    name: Code Quality ${{ matrix.php-versions }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        extensions: mbstring, intl
-        ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
-        coverage: xdebug, pcov
-
-    - name: Setup NodeJS
-      uses: actions/setup-node@v2
-      with:
-        node-version: '12'
-
-    - name: WebPack Setup
-      run: |
-        cd resources
-        npm install
-        ./node_modules/.bin/webpack --version
-        ./node_modules/.bin/webpack --config webpack.prod.js
-        ls dist
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: PhpCS report
-      run: ./vendor/bin/phpcs . --extensions="php,js" --ignore="resources/dist,resources/node_modules,vendor,sw.js" --config-set ignore_errors_on_exit 1 --config-set ignore_warnings_on_exit 1 --report=json > /tmp/phpcs_report.json
-
-    - uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: phpcs_report_${{ github.run_id }}
-        path: /tmp/phpcs_report.json
-
-    - uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: webpack_report_${{ github.run_id }}
-        path: server/resources/dist/report.html
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: webpack_dist_${{ github.run_id }}
-        path: server/resources/dist
 
   staging_deployment:
     if: github.event.ref == 'refs/heads/staging'
@@ -172,7 +65,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.4
+        php-version: 8.0
         extensions: mbstring, intl
         ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
@@ -180,7 +73,7 @@ jobs:
     - name: Setup NodeJS
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
 
     - name: Deploy
       run: |
@@ -218,7 +111,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.4
+        php-version: 8.0
         extensions: mbstring, intl
         ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
@@ -226,7 +119,7 @@ jobs:
     - name: Setup NodeJS
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
 
     - name: Deploy
       run: |

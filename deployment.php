@@ -1,22 +1,12 @@
 <?php
 
 $baseConfig = [
-    'local' => 'server',
+    'local' => 'backend',
     'ignore' => '
 		.git*
 		.github
 		.vscode
         *.json
-        !resources/dist/assets-manifest.json
-		resources/src
-        resources/node_modules
-        resources/webpack*
-		resources/images/logo.png
-		resources/images/owner.png
-		cypress
-        debug_storage/exception*
-        debug_storage/*.log
-		debug_storage/*.json
 		config.old.php
 		config.php
 		*tests*
@@ -31,7 +21,6 @@ $baseConfig = [
 		*.md
 		*.rst
 		*.txt
-		!resources/dist/*.LICENSE.txt
 		!robots.txt
 		*.sh
 		*editorconfig
@@ -46,17 +35,15 @@ $baseConfig = [
 		*phpstan*
 		*phpunit*
 		vendor/nikic/fast-route/test
-		vendor/twig/twig/src/Node/Expression/Test
-		vendor/twig/twig/src/Test
 		*.lock
 		*.zip
     ',
 	'allowDelete' => false,
     'before' =>  [
-        'local: cd server && composer update --no-dev -o'
+        'local: cd backend && composer update --no-dev -o'
     ],
     'after' => [
-        'local: cd server && composer install'
+        'local: cd backend && composer install'
     ],
     'filePermissions' => "0644",
     'dirPermissions' => "0755"
@@ -77,7 +64,7 @@ foreach ($remotes as $key => $value) {
 		$config[$key]["before"] = [];
 	} else {
 		$env = isset($config[$key]["sentry_env"]) ? $config[$key]["sentry_env"] : "prod";
-		$config[$key]["before"][] = "local: cd server/resources && npm i && npm run prod -- --env sentryEnvironment=".$env;
+		$config[$key]["before"][] = "local: cd frontend && npm ci && npm run build";
 	}
 	if(isset($value["after"]) && $value["after"] === false){
 		$config[$key]["after"] = [];

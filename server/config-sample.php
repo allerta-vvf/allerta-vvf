@@ -15,6 +15,10 @@ define('DB_HOST', '@@host@@');
 /* Database hostname */
 define('DB_PREFIX', '@@prefix@@');
 
+/* Telegram bot options */
+define('BOT_TELEGRAM_API_KEY', '');
+define('BOT_TELEGRAM_USERNAME', '');
+
 /* Sentry options */
 define('SENTRY_CSP_REPORT_URI', '');
 define('SENTRY_ENABLED', false);

@@ -1,0 +1,12 @@
+<div class="text-center">
+    <p>Sei disponibile in caso di allerta?</p>
+    <div id="availability-btn-group">
+        <button (click)="changeAvailibility(1)" id="activate-btn" class="btn btn-lg btn-success me-1">Attiva</button>
+        <button (click)="changeAvailibility(0)" id="deactivate-btn" class="btn btn-lg btn-danger">Disattiva</button>
+    </div>
+    <button type="button" class="btn btn-lg">
+        Modifica orari disponibilità
+    </button>
+</div>
+<owner-image></owner-image>
+<app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" #table></app-table>
