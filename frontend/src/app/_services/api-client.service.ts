@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ApiClientService {
-  private apiRoot = '/api/';
+  private apiRoot = 'api/';
   public requestOptions = {};
 
   constructor(private http: HttpClient) {

@@ -24,3 +24,5 @@ define('SENTRY_CSP_REPORT_URI', '');
 define('SENTRY_ENABLED', false);
 define('SENTRY_DSN', '');
 define('SENTRY_ENV', 'prod');
+
+//define('BASE_PATH', 'allerta/');

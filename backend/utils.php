@@ -46,16 +46,12 @@ class Users
 {
     private $db = null;
     public $auth = null;
-    private $profile_names = [];
-    private $user_names = [];
     public $holidays = null;
     
     public function __construct($db, $auth)
     {
         $this->db = $db;
         $this->auth = $auth;
-        $this->profile_names = $this->db->select("SELECT `id`, `name` FROM `".DB_PREFIX."_profiles`");
-        $this->user_names = $this->db->select("SELECT `id`, `username` FROM `".DB_PREFIX."_users`");
         //$this->holidays = Yasumi\Yasumi::create(get_option("holidays_provider") ?: "USA", date("Y"), get_option("holidays_language") ?: "en_US");
     }
 

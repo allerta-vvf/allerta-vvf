@@ -39,6 +39,9 @@ $dispatcher = FastRoute\simpleDispatcher(
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
+if(defined('BASE_PATH')){
+    $uri = str_replace(BASE_PATH, "", $uri);
+}
 $uri = str_replace("index.php", "", $uri);
 $uri = str_replace("///", "/", $uri);
 $uri = str_replace("//", "/", $uri);
