@@ -17,8 +17,9 @@ export class ListComponent implements OnInit {
     this.api.post("availability", {
       id: id,
       available: available
+    }).then((response) => {
+      this.table.loadTableData();
     });
-    this.table.loadTableData();
   }
 
   ngOnInit(): void {
