@@ -1,8 +1,12 @@
-RewriteEngine On
+#Thanks u/IZEN_R!
 
-RewriteCond dist-frontend/$1 -f
-RewriteRule ^(.*)$ dist-frontend/$1 [L]
+RewriteEngine on
 
-RewriteCond %{THE_REQUEST} \s/dist-frontend/ [NC,OR]
-RewriteCond $1 !^dist-frontend/
-RewriteRule ^(.*)$ router.php [L]
+RewriteCond %{REQUEST_URI} !^(.*)dist-frontend/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ dist-frontend/$1
+RewriteRule ^(.*)api/(.*) router.php [L]
+
+DirectoryIndex dist-frontend/index.html
+ErrorDocument 404 router.php
