@@ -20,7 +20,10 @@ export class TableComponent implements OnInit {
   loadTableData() {
     this.apiClient.get(this.sourceType || "list").then((data: any) => {
       console.log(data);
-      this.data = data;
+      this.data = data.filter((row: any) => {
+        if(typeof row.hidden !== 'undefined') return !row.hidden;
+        return true;
+      });
     });
   }
 
