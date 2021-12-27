@@ -45,7 +45,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/list',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
             apiResponse(
                 !is_null($response) ? $response : []
@@ -57,7 +58,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/logs',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
             apiResponse(
                 !is_null($response) ? $response : []
@@ -69,7 +71,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/services',
         function ($vars) {
-            global $services;
+            global $services, $users;
+            $users->online_time_update();
             apiResponse($services->list());
         }
     );
@@ -77,7 +80,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['POST'],
         '/services',
         function ($vars) {
-            global $services;
+            global $services, $users;
+            $users->online_time_update();
             apiResponse([]);
         }
     );
@@ -86,7 +90,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/trainings',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_trainings` ORDER BY date DESC, beginning desc");
             apiResponse(
                 !is_null($response) ? $response : []
@@ -98,7 +103,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/users',
         function ($vars) {
-            global $users;
+            global $users, $users;
+            $users->online_time_update();
             apiResponse($users->get_users());
         }
     );
@@ -136,6 +142,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
             requireLogin() || accessDenied();
 
+            $users->online_time_update();
             apiResponse([
                 "available" => $db->selectValue(
                     "SELECT `available` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
@@ -152,6 +159,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
             requireLogin() || accessDenied();
 
+            $users->online_time_update();
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
