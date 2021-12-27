@@ -17,6 +17,10 @@ export class TableComponent implements OnInit {
 
   constructor(public apiClient: ApiClientService) {}
 
+  getTime() {
+    return Math.floor(Date.now() / 1000);
+  }
+
   loadTableData() {
     this.apiClient.get(this.sourceType || "list").then((data: any) => {
       console.log(data);
