@@ -16,7 +16,8 @@
                 <td>
                     <img alt="red helmet" src="./assets/img/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/img/black_helmet.png" width="20px" *ngIf="!row.chief">
-                    {{ row.name }}
+                    <ng-container *ngIf="(getTime() - row.online_time) < 30"><u>{{ row.name }}</u></ng-container>
+                    <ng-container *ngIf="(getTime() - row.online_time) > 30">{{ row.name }}</ng-container>
                 </td>
                 <td (click)="changeAvailability.emit({user: row.id, newState: row.available ? 0 : 1})">
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
@@ -50,7 +51,7 @@
                 <td>{{ row.action }}</td>
                 <td>{{ row.changed }}</td>
                 <td>{{ row.editor }}</td>
-                <td>{{ row.timestamp | date: 'MM/dd/yyyy HH:mm' }}</td>
+                <td>{{ row.timestamp }}</td>
             </tr>
         </tbody>
     </table>

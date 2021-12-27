@@ -45,7 +45,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/list',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
             apiResponse(
                 !is_null($response) ? $response : []
@@ -57,11 +59,19 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/logs',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
-            apiResponse(
-                !is_null($response) ? $response : []
-            );
+            if(!is_null($response)) {
+                foreach($response as &$row) {
+                    $row['changed'] = $users->getName($row['changed']);
+                    $row['editor'] = $users->getName($row['editor']);
+                }
+            } else {
+                $response = [];
+            }
+            apiResponse($response);
         }
     );
 
@@ -69,7 +79,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/services',
         function ($vars) {
-            global $services;
+            global $services, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             apiResponse($services->list());
         }
     );
@@ -77,7 +89,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['POST'],
         '/services',
         function ($vars) {
-            global $services;
+            global $services, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             apiResponse([]);
         }
     );
@@ -86,7 +100,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/trainings',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_trainings` ORDER BY date DESC, beginning desc");
             apiResponse(
                 !is_null($response) ? $response : []
@@ -98,7 +114,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['GET'],
         '/users',
         function ($vars) {
-            global $users;
+            global $users, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
             apiResponse($users->get_users());
         }
     );
@@ -107,6 +125,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users',
         function ($vars) {
             global $users;
+            requireLogin() || accessDenied();
             apiResponse(["userId" => $users->add_user($_POST["email"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"], $_POST["chief"], $_POST["driver"], $_POST["hidden"], $_POST["disabled"], "unknown")]);
         }
     );
@@ -115,6 +134,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users/{userId}',
         function ($vars) {
             global $users;
+            requireLogin() || accessDenied();
             apiResponse($users->get_user($vars["userId"]));
         }
     );
@@ -123,6 +143,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users/{userId}',
         function ($vars) {
             global $users;
+            requireLogin() || accessDenied();
             $users->remove_user($vars["userId"], "unknown");
             apiResponse(["status" => "success"]);
         }
@@ -133,9 +154,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/availability',
         function ($vars) {
             global $users, $db;
-
             requireLogin() || accessDenied();
-
+            $users->online_time_update();
             apiResponse([
                 "available" => $db->selectValue(
                     "SELECT `available` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
@@ -149,9 +169,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/availability',
         function ($vars) {
             global $users, $db;
-
             requireLogin() || accessDenied();
-
+            $users->online_time_update();
+            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId());
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
@@ -173,6 +193,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users;
             try {
                 $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
+                logger("Login effettuato");
                 apiResponse(["status" => "success", "access_token" => $token]);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {

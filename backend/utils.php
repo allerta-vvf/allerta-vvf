@@ -20,7 +20,23 @@ $JWTconfig = Configuration::forAsymmetricSigner(
     InMemory::base64Encoded('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEwNzhCUE96TFlFUkdDMHkrR2g0VQpLTjJjNklKc2NiekZMQ3B6ODhzVWJOV0sxemtqcWNEZEo2YkYycXdTaWxTRkREUzN4VGc2Zjc1MEo5bWFkT2pmCkZ4dWZWZ0Rpc0x3dURIOFN3MEpBUGlWNElNeDVaRzFhRXpmblZKSFdDQmFraXJnRHhzSWxrNkVTdGtzUklZbzkKNnhOaFRqZkkwR2J3OFdaSWovV3VMOFNUdHprejBNQ3EzblZ4WWptN0Z3LzNOMGJTeFlTbkxZd3NoemlLejlHMApCTEhudjV1eVRiUnVLOHVnVDdyRGVzRy9yeWFPWW5nV0QydDNOZldwRGF1cXY1MkZvYVpZWkpDVXJtanF5K2NWCnhCY3lPVTczTDUxMGVldkJsWE1TdkdDM3haSGNhYkZ4cmVhd0czb2RJZjFPWkNDeEFLci9EL1R4azJhWW5DbTYKNXdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t')
 );
 
-$auth = new \Delight\Auth\Auth($db, $JWTconfig, null, DB_PREFIX."_");
+function get_ip()
+{
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }else{
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    //if(get_option("check_cf_ip")) {
+        if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+        }
+    //}
+    return $ip;
+}
+$auth = new \Delight\Auth\Auth($db, $JWTconfig, get_ip(), DB_PREFIX."_");
 
 final class Role
 {
@@ -42,6 +58,31 @@ final class Role
 
 }
 
+function logger($action, $changed=null, $editor=null, $timestamp=null)
+{
+    global $db, $users;
+    //timestamp added by default in DB
+    if(is_null($changed)){
+        $changed = $users->auth->getUserId();
+    }
+    if(is_null($editor)){
+        $editor = $changed;
+    }
+    if(!$users->isHidden($editor)){
+        //if(get_option("log_save_ip")){
+            $ip = get_ip();
+        //} else {
+        //    $ip = null;
+        //}
+        $source_type = defined("REQUEST_USING_API") ? "api" : "web";
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
+        $db->insert(
+            DB_PREFIX."_log",
+            ["action" => $action, "changed" => $changed, "editor" => $editor, "timestamp" => $timestamp, "ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent]
+        );
+    }
+}
+
 class Users
 {
     private $db = null;
@@ -58,7 +99,6 @@ class Users
     public function add_user($email, $name, $username, $password, $phone_number, $birthday, $chief, $driver, $hidden, $disabled, $inserted_by)
     {
         //TODO: save birthday in db
-        //$this->tools->profiler_start("Add user");
         $userId = $this->auth->admin()->createUserWithUniqueUsername($email, $password, $username);
         if($userId) {
             $hidden = $hidden ? 1 : 0;
@@ -72,11 +112,9 @@ class Users
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
             }
-            //$this->log("User added", $userId, $inserted_by);
-            //$this->tools->profiler_stop();
+            logger("User added", $userId, $inserted_by);
             return $userId;
         } else {
-            //$this->tools->profiler_stop();
             return false;
         }
     }
@@ -93,7 +131,6 @@ class Users
     
     public function remove_user($id, $removed_by)
     {
-        //$this->tools->profiler_start("Remove user");
         $this->db->delete(
             DB_PREFIX."_users",
             ["id" => $id]
@@ -102,12 +139,10 @@ class Users
             DB_PREFIX."_profiles",
             ["id" => $id]
         );
-        //$this->log("User removed", null, $removed_by);
-        //$this->tools->profiler_stop();
+        logger("User removed", null, $removed_by);
     }
     
     public function online_time_update($id=null){
-        //$this->tools->profiler_start("Update online timestamp");
         if(is_null($id)) $id = $this->auth->getUserId();
         $time = time();
         $this->db->update(
@@ -115,17 +150,25 @@ class Users
             ["online_time" => $time],
             ["id" => $id]
         );
-        //bdump(["id" => $id, "time" => $time]);
-        //$this->tools->profiler_stop();
     }
 
     public function loginAndReturnToken($username, $password)
     {
-        //$this->tools->profiler_start("Login");
         $this->auth->loginWithUsername($username, $password);
         $token = $this->auth->generateJWTtoken();
-        //$this->tools->profiler_stop();
         return $token;
+    }
+
+    public function isHidden($id)
+    {
+        $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
+        return $user["hidden"];
+    }
+
+    public function getName($id)
+    {
+        $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
+        return $user["name"];
     }
 }
 
@@ -175,7 +218,7 @@ class Services {
             ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->tools->savePlaceReverse($place), "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
         );
         $this->increment_counter($increment);
-        //$this->user->log("Service added");
+        logger("Service added");
     }
 }
 
