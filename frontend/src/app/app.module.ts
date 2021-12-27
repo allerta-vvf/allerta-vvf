@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,6 +38,7 @@ import { TrainingsComponent } from './_components/trainings/trainings.component'
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ModalModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable

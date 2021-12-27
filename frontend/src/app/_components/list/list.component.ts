@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { TableComponent } from '../table/table.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-list',
@@ -7,11 +9,10 @@ import { ApiClientService } from 'src/app/_services/api-client.service';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+  scheduleModalRef?: BsModalRef;
+  @ViewChild('table') table!: TableComponent;
 
-  @ViewChild('table') table!: any;
-
-  constructor(private api: ApiClientService) {}
-
+  constructor(private api: ApiClientService, private modalService: BsModalService) {}
 
   changeAvailibility(available: 0|1, id?: number|undefined) {
     this.api.post("availability", {
@@ -20,6 +21,10 @@ export class ListComponent implements OnInit {
     }).then((response) => {
       this.table.loadTableData();
     });
+  }
+
+  openScheduleModal(template: TemplateRef<any>) {
+    this.scheduleModalRef = this.modalService.show(template);
   }
 
   ngOnInit(): void {

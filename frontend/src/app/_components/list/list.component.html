@@ -4,9 +4,21 @@
         <button (click)="changeAvailibility(1)" id="activate-btn" class="btn btn-lg btn-success me-1">Attiva</button>
         <button (click)="changeAvailibility(0)" id="deactivate-btn" class="btn btn-lg btn-danger">Disattiva</button>
     </div>
-    <button type="button" class="btn btn-lg">
+    <button type="button" class="btn btn-lg" (click)="openScheduleModal(scheduleModal)">
         Modifica orari disponibilità
     </button>
 </div>
 <owner-image></owner-image>
 <app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" #table></app-table>
+
+<ng-template #scheduleModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Modal</h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="scheduleModalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        This is a modal.
+    </div>
+</ng-template>
