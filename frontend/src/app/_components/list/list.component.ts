@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableComponent } from '../table/table.component';
+import { ModalAvailabilityScheduleComponent } from '../modal-availability-schedule/modal-availability-schedule.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -23,8 +24,8 @@ export class ListComponent implements OnInit {
     });
   }
 
-  openScheduleModal(template: TemplateRef<any>) {
-    this.scheduleModalRef = this.modalService.show(template);
+  openScheduleModal() {
+    this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
   }
 
   ngOnInit(): void {

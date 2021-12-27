@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Modifica orari disponibilità</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body" style="overflow-x: auto">
+    <table cellpadding="0" cellspacing="0" id="scheduler_table">
+        <thead>
+            <tr>
+                <td style="background-color: white;"></td>
+                <ng-container *ngIf="orientation === 'portrait'">
+                    <ng-container *ngFor="let day of days; let i = index">
+                        <td class="day" (click)="selectDay(i)">{{ day.short }}</td>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="orientation === 'landscape'">
+                    <ng-container *ngFor="let hour of hours">
+                        <td class="hour" (click)="selectHour(hour)">{{ hour }}</td>
+                    </ng-container>
+                </ng-container>
+            </tr>
+        </thead>
+        <tbody id="scheduler_body" *ngIf="orientation === 'portrait'">
+            <ng-container *ngFor="let hour of hours">
+                <tr>
+                    <td class="hour" (click)="selectHour(hour)">{{ hour }}</td>
+                    <ng-container *ngFor="let day of days; let i = index">
+                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, hour)" (mousedown)="mouseDownCell(i, hour)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, hour)"></td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+        </tbody>
+        <tbody id="scheduler_body" *ngIf="orientation === 'landscape'">
+            <ng-container *ngFor="let day of days; let i = index">
+                <tr>
+                    <td class="day" (click)="selectDay(i)">{{ day.short }}</td>
+                    <ng-container *ngFor="let hour of hours">
+                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, hour)" (mousedown)="mouseDownCell(i, hour)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, hour)"></td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary">Salva le modifiche</button>
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Chiudi</button>
+</div>
