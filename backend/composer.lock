@@ -207,12 +207,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/allerta-vvf/PHP-Auth-JWT",
-                "reference": "ddb3236ae79fcd0e706d108332dbad9dcdffc2c6"
+                "reference": "3ea0aa3d7e74528c57932872bbda339e995a9d9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allerta-vvf/PHP-Auth-JWT/zipball/ddb3236ae79fcd0e706d108332dbad9dcdffc2c6",
-                "reference": "ddb3236ae79fcd0e706d108332dbad9dcdffc2c6",
+                "url": "https://api.github.com/repos/allerta-vvf/PHP-Auth-JWT/zipball/3ea0aa3d7e74528c57932872bbda339e995a9d9a",
+                "reference": "3ea0aa3d7e74528c57932872bbda339e995a9d9a",
                 "shasum": ""
             },
             "require": {
@@ -240,7 +240,7 @@
                 "login",
                 "security"
             ],
-            "time": "2021-12-24T14:07:13+00:00"
+            "time": "2021-12-27T18:35:45+00:00"
         },
         {
             "name": "delight-im/base64",
@@ -3263,5 +3263,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

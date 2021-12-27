@@ -155,20 +155,30 @@ class Users
     public function loginAndReturnToken($username, $password)
     {
         $this->auth->loginWithUsername($username, $password);
-        $token = $this->auth->generateJWTtoken();
+        $token = $this->auth->generateJWTtoken([
+            "chief" => $this->auth->hasRole(Role::FULL_VIEWER),
+            "name" => $this->getName(),
+        ]);
         return $token;
     }
 
-    public function isHidden($id)
+    public function isHidden($id=null)
     {
+        if(is_null($id)) $id = $this->auth->getUserId();
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["hidden"];
     }
 
-    public function getName($id)
+    public function getName($id=null)
     {
+        if(is_null($id)) $id = $this->auth->getUserId();
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["name"];
+    }
+
+    public function hasRole($role, $adminGranted=true)
+    {
+        return $this->auth->hasRole($role) || $adminGranted && $role !== Role::DEVELOPER && $this->auth->hasRole(Role::ADMIN) || $role !== Role::DEVELOPER && $this->auth->hasRole(Role::SUPER_ADMIN);
     }
 }
 

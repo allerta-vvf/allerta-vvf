@@ -4,11 +4,13 @@
             <tr>
                 <th>Nome</th>
                 <th>Disponibile</th>
+                <ng-container *ngIf="auth.profile.chief">
                 <th>Autista</th>
                 <th>Chiama</th>
                 <th>Scrivi</th>
                 <th>Interventi</th>
                 <th>Minuti disponibilità</th>
+                </ng-container>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -19,10 +21,11 @@
                     <ng-container *ngIf="(getTime() - row.online_time) < 30"><u>{{ row.name }}</u></ng-container>
                     <ng-container *ngIf="(getTime() - row.online_time) > 30">{{ row.name }}</ng-container>
                 </td>
-                <td (click)="changeAvailability.emit({user: row.id, newState: row.available ? 0 : 1})">
+                <td (click)="onChangeAvailability(row.id, row.available ? 0 : 1)">
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
                     <i class="fa fa-times" style="color:red" *ngIf="!row.available"></i>
                 </td>
+                <ng-container *ngIf="auth.profile.chief">
                 <td>
                     <img alt="driver" src="./assets/img/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
@@ -34,6 +37,7 @@
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
+                </ng-container>
             </tr>
         </tbody>
     </table>

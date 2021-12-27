@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TableType } from 'src/app/_models/TableType';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
   selector: 'app-table',
@@ -15,7 +16,7 @@ export class TableComponent implements OnInit {
 
   public data: any = [];
 
-  constructor(public apiClient: ApiClientService) {}
+  constructor(public apiClient: ApiClientService, public auth: AuthService) {}
 
   getTime() {
     return Math.floor(Date.now() / 1000);
@@ -36,4 +37,9 @@ export class TableComponent implements OnInit {
     this.loadTableData();
   }
 
+  onChangeAvailability(user: number, newState: 0|1) {
+    if(this.auth.profile.chief) {
+      this.changeAvailability.emit({user, newState});
+    }
+  }
 }
