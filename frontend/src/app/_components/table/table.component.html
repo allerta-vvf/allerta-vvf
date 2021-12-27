@@ -16,8 +16,8 @@
         <tbody id="table_body">
             <tr *ngFor="let row of data">
                 <td>
-                    <img alt="red helmet" src="./assets/img/red_helmet.png" width="20px" *ngIf="row.chief">
-                    <img alt="red helmet" src="./assets/img/black_helmet.png" width="20px" *ngIf="!row.chief">
+                    <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
+                    <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
                     <ng-container *ngIf="(getTime() - row.online_time) < 30"><u>{{ row.name }}</u></ng-container>
                     <ng-container *ngIf="(getTime() - row.online_time) > 30">{{ row.name }}</ng-container>
                 </td>
@@ -27,7 +27,7 @@
                 </td>
                 <ng-container *ngIf="auth.profile.chief">
                 <td>
-                    <img alt="driver" src="./assets/img/wheel.png" width="20px" *ngIf="row.driver">
+                    <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
                 <td>
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
