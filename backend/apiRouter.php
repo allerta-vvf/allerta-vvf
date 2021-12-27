@@ -63,9 +63,15 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin() || accessDenied();
             $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
-            apiResponse(
-                !is_null($response) ? $response : []
-            );
+            if(!is_null($response)) {
+                foreach($response as &$row) {
+                    $row['changed'] = $users->getName($row['changed']);
+                    $row['editor'] = $users->getName($row['editor']);
+                }
+            } else {
+                $response = [];
+            }
+            apiResponse($response);
         }
     );
 
@@ -165,6 +171,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users, $db;
             requireLogin() || accessDenied();
             $users->online_time_update();
+            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId());
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
@@ -186,6 +193,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users;
             try {
                 $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
+                logger("Login effettuato");
                 apiResponse(["status" => "success", "access_token" => $token]);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {
