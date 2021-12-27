@@ -3,7 +3,7 @@
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/services">Interventi</a>
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/trainings">Esercitazioni</a>
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/logs">Logs</a>
-  <a style="float: right;" id="logout">Ciao, {{ auth.profile.auth_username }}. <b id="logout-text" (click)="auth.logout()">Logout</b></a>
+  <a style="float: right;" id="logout">Ciao, {{ auth.profile.name }}. <b id="logout-text" (click)="auth.logout()">Logout</b></a>
   <a class="icon" id="menuButton" (click)="menuButtonClicked = !menuButtonClicked">☰</a>
 </div>
 
