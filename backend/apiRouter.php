@@ -9,6 +9,29 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
     $r->addRoute(
         'GET',
+        '/owner_image',
+        function ($vars) {
+            if(get_option("use_custom_owner_image", false)) {
+                $owner_image = get_option("owner_image", false);
+                if($owner_image) {
+                    header('Cache-control: max-age='.(60*60*24*31));
+                    header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*24*31));
+                    header('Content-Type: image/png');
+                    readfile($owner_image);
+                } else {
+                    statusCode(404);
+                }
+            } else {
+                header('Cache-control: max-age='.(60*60*24*31));
+                header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*24*31));
+                header('Content-Type: image/png');
+                readfile("dist-frontend/assets/img/owner.png");
+            }
+        }
+    );
+
+    $r->addRoute(
+        'GET',
         '/healthcheck',
         function ($vars) {
             apiResponse(["state" => "SUCCESS", "description" => ""]);
