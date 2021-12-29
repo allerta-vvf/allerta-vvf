@@ -11,10 +11,13 @@ import { AuthService } from '../../_services/auth.service';
 export class TableComponent implements OnInit {
 
   @Input() sourceType?: string;
+  @Input() refreshInterval?: number;
 
   @Output() changeAvailability: EventEmitter<{user: number, newState: 0|1}> = new EventEmitter<{user: number, newState: 0|1}>();
 
   public data: any = [];
+
+  public loadDataInterval: NodeJS.Timer | number = 0;
 
   constructor(public apiClient: ApiClientService, public auth: AuthService) {}
 
@@ -35,6 +38,10 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.sourceType);
     this.loadTableData();
+    this.loadDataInterval = setInterval(() => {
+      console.log("Refreshing data...");
+      this.loadTableData();
+    }, this.refreshInterval || 10000);
   }
 
   onChangeAvailability(user: number, newState: 0|1) {
