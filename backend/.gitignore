@@ -1,2 +1,6 @@
 vendor
 dist-frontend
+tmp/*
+!tmp/.gitkeep
+uploads/*
+!uploads/.gitkeep

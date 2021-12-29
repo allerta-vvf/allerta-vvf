@@ -45,7 +45,7 @@ export class TableComponent implements OnInit {
   }
 
   onChangeAvailability(user: number, newState: 0|1) {
-    if(this.auth.profile.chief) {
+    if(this.auth.profile.full_viewer) {
       this.changeAvailability.emit({user, newState});
     }
   }
