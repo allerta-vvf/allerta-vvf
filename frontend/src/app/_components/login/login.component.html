@@ -1,6 +1,6 @@
 <div class="container text-center d-flex justify-content-center pt-3">
     <main class="form-signin">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <owner-image></owner-image>
         <div class="my-2 text-danger" *ngIf="!loginResponse.loginOk">{{ loginResponse.message }}</div>
         <div class="form-floating">
             <input type="text" class="form-control" (keydown.enter)="inputPassword.focus()" [(ngModel)]="username" id="username" placeholder="Username">
