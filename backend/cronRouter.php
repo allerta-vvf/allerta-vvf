@@ -169,7 +169,7 @@ function cronRouter (FastRoute\RouteCollector $r) {
         '/execute',
         function ($vars) {
             global $db, $executed_actions;
-            $cron_job_allowed = true;
+            $cron_job_allowed = get_option("cron_job_enabled", false) && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".get_option("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".get_option("cron_job_code")));
 
             if(!$cron_job_allowed) {
                 statusCode(403);
