@@ -209,6 +209,30 @@ function apiRouter (FastRoute\RouteCollector $r) {
     );
 
     $r->addRoute(
+        ['GET'],
+        '/schedules',
+        function ($vars) {
+            global $users, $schedules;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            apiResponse($schedules->get());
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/schedules',
+        function ($vars) {
+            global $users, $schedules;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $new_schedules = !is_string($_POST["schedules"]) ? json_encode($_POST["schedules"]) : $_POST["schedules"];
+            apiResponse([
+                "response" => $schedules->update($new_schedules)
+            ]);
+        }
+    );
+
+    $r->addRoute(
         ['POST'],
         '/login',
         function ($vars) {

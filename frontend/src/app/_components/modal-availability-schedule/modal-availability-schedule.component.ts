@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ApiClientService } from 'src/app/_services/api-client.service';
 
 @Component({
   selector: 'modal-availability-schedule',
@@ -75,10 +76,34 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
 
   public isSelecting = false;
 
-  constructor(public bsModalRef: BsModalRef) { }
+  constructor(public bsModalRef: BsModalRef, private api: ApiClientService) { }
+
+  loadSchedules(schedules: any) {
+    this.selectedCells = schedules;
+  }
 
   ngOnInit(): void {
     this.orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+    if(localStorage.getItem('schedules') === null) {
+      this.api.get("schedules").then((response: any) => {
+        this.loadSchedules(response.schedules);
+      });
+    } else {
+      this.loadSchedules(JSON.parse((localStorage.getItem('schedules') as string)));
+    }
+  }
+
+  saveChanges() {
+    console.log("Selected cells", this.selectedCells);
+    this.api.post("schedules", {
+      schedules: this.selectedCells
+    });
+    localStorage.removeItem('schedules');
+    this.bsModalRef.hide();
+  }
+
+  saveChangesInLocal() {
+    localStorage.setItem('schedules', JSON.stringify(this.selectedCells));
   }
 
   @HostListener('window:resize', ['$event'])
@@ -98,6 +123,7 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
     } else {
       this.selectedCells = this.selectedCells.filter((cell: any) => cell.day !== day || cell.hour !== hour);
     }
+    this.saveChangesInLocal();
   }
 
   selectHour(hour: string) {
@@ -117,6 +143,7 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
       });
       this.selectedHours.push(hour);
     }
+    this.saveChangesInLocal();
   }
 
   selectDay(day: number) {
@@ -136,6 +163,7 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
       });
       this.selectedDays.push(day);
     }
+    this.saveChangesInLocal();
   }
 
   mouseDownCell(day: number, hour: string) {
