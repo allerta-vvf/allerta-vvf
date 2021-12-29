@@ -31,7 +31,7 @@ function get_ip()
     }else{
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    if(get_option("check_cf_ip", false)) {
+    if(get_option("check_cf_ip", false)) { //TODO: fix options not defined yet
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
@@ -320,6 +320,7 @@ $schedules = new Schedules($db, $users);
 
 function get_option($name, $default=null) {
     global $options;
+    if(is_null($options)) return $default;
     try {
         return $options->get($name);
     } catch(Exception $e) {
