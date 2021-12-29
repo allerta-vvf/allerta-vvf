@@ -165,7 +165,7 @@ function job_schedule_availability() {
 
 function cronRouter (FastRoute\RouteCollector $r) {
     $r->addRoute(
-        'GET',
+        'POST',
         '/execute',
         function ($vars) {
             global $db, $executed_actions;
