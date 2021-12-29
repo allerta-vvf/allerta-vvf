@@ -155,20 +155,30 @@ class Users
     public function loginAndReturnToken($username, $password)
     {
         $this->auth->loginWithUsername($username, $password);
-        $token = $this->auth->generateJWTtoken();
+        $token = $this->auth->generateJWTtoken([
+            "chief" => $this->auth->hasRole(Role::FULL_VIEWER),
+            "name" => $this->getName(),
+        ]);
         return $token;
     }
 
-    public function isHidden($id)
+    public function isHidden($id=null)
     {
+        if(is_null($id)) $id = $this->auth->getUserId();
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["hidden"];
     }
 
-    public function getName($id)
+    public function getName($id=null)
     {
+        if(is_null($id)) $id = $this->auth->getUserId();
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["name"];
+    }
+
+    public function hasRole($role, $adminGranted=true)
+    {
+        return $this->auth->hasRole($role) || $adminGranted && $role !== Role::DEVELOPER && $this->auth->hasRole(Role::ADMIN) || $role !== Role::DEVELOPER && $this->auth->hasRole(Role::SUPER_ADMIN);
     }
 }
 
@@ -222,5 +232,44 @@ class Services {
     }
 }
 
+class Schedules {
+    private $db = null;
+    private $users = null;
+
+    public function __construct($db, $users)
+    {
+        $this->db = $db;
+        $this->users = $users;
+    }
+
+    public function get($profile="default") {
+        $response = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `user` = ? AND `profile_name` = ?", [$this->users->auth->getUserId(), $profile]);
+        if(!is_null($response)) {
+            $response["schedules"] = json_decode($response["schedules"], true);
+            return $response;
+        }
+        return [];
+    }
+
+    public function update($schedules, $profile="default") {
+        //TODO implement multiple profiles
+        //TODO implement holidays
+        logger("Aggiornata programmazione orari disponibilità");
+        if(empty($this->get($profile))) {
+            return $this->db->insert(
+                DB_PREFIX."_schedules",
+                ["user" => $this->users->auth->getUserId(), "schedules" => $schedules, "profile_name" => $profile]
+            );
+        } else {
+            return $this->db->update(
+                DB_PREFIX."_schedules",
+                ["schedules" => $schedules, "last_update" => null],
+                ["user" => $this->users->auth->getUserId(), "profile_name" => $profile]
+            );
+        }
+    }
+}
+
 $users = new Users($db, $auth);
 $services = new Services($db);
+$schedules = new Schedules($db, $users);

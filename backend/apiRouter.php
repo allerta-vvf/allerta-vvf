@@ -1,6 +1,12 @@
 <?php
 require_once 'utils.php';
+require_once 'cronRouter.php';
+
 function apiRouter (FastRoute\RouteCollector $r) {
+    $r->addGroup('/cron', function (FastRoute\RouteCollector $r) {
+        cronRouter($r);
+    });
+
     $r->addRoute(
         'GET',
         '/healthcheck',
@@ -48,7 +54,11 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $db, $users;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
+            if($users->hasRole(Role::FULL_VIEWER)) {
+                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
+            } else {
+                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `name` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
+            }
             apiResponse(
                 !is_null($response) ? $response : []
             );
@@ -126,6 +136,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
+            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+                exit;
+            }
             apiResponse(["userId" => $users->add_user($_POST["email"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"], $_POST["chief"], $_POST["driver"], $_POST["hidden"], $_POST["disabled"], "unknown")]);
         }
     );
@@ -135,6 +148,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
+            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+                exit;
+            }
             apiResponse($users->get_user($vars["userId"]));
         }
     );
@@ -144,6 +160,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
+            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+                exit;
+            }
             $users->remove_user($vars["userId"], "unknown");
             apiResponse(["status" => "success"]);
         }
@@ -171,17 +190,44 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users, $db;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId());
+            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+                exit;
+            }
+            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId(), $users->auth->getUserId());
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
                     [
-                        'available' => $_POST['available'],
+                        'available' => $_POST['available'], 'availability_last_change' => 'manual'
                     ],
                     [
                         'id' => is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId()
                     ]
                 )
+            ]);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/schedules',
+        function ($vars) {
+            global $users, $schedules;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            apiResponse($schedules->get());
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/schedules',
+        function ($vars) {
+            global $users, $schedules;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $new_schedules = !is_string($_POST["schedules"]) ? json_encode($_POST["schedules"]) : $_POST["schedules"];
+            apiResponse([
+                "response" => $schedules->update($new_schedules)
             ]);
         }
     );

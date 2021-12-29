@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,6 +11,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 import { TableComponent } from './_components/table/table.component';
+import { ModalAvailabilityScheduleComponent } from './_components/modal-availability-schedule/modal-availability-schedule.component';
 import { OwnerImageComponent } from './_components/owner-image/owner-image.component';
 
 import { LoginComponent } from './_components/login/login.component';
@@ -23,6 +26,7 @@ import { TrainingsComponent } from './_components/trainings/trainings.component'
     AppComponent,
     //
     TableComponent,
+    ModalAvailabilityScheduleComponent,
     OwnerImageComponent,
     //
     LoginComponent,
@@ -37,6 +41,8 @@ import { TrainingsComponent } from './_components/trainings/trainings.component'
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ModalModule.forRoot(),
+    TooltipModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable

@@ -40,9 +40,10 @@ export class ApiClientService {
   }
 
   public post(endpoint: string, data: any) {
-    let params = new HttpParams({
-      fromObject: data,
-    });
+    let params = Object.keys(data).reduce(function (params, key) {
+      params.set(key, JSON.stringify(data[key]));
+      return params;
+    }, new URLSearchParams());
     return new Promise<any>((resolve, reject) => {
       this.http.post(this.apiEndpoint(endpoint), params.toString(), this.requestOptions).subscribe((data: any) => {
         resolve(data);
