@@ -4,7 +4,7 @@
             <tr>
                 <th>Nome</th>
                 <th>Disponibile</th>
-                <ng-container *ngIf="auth.profile.chief">
+                <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Autista</th>
                 <th>Chiama</th>
                 <th>Scrivi</th>
@@ -25,7 +25,7 @@
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
                     <i class="fa fa-times" style="color:red" *ngIf="!row.available"></i>
                 </td>
-                <ng-container *ngIf="auth.profile.chief">
+                <ng-container *ngIf="auth.profile.full_viewer">
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>

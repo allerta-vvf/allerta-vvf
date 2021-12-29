@@ -156,7 +156,7 @@ class Users
     {
         $this->auth->loginWithUsername($username, $password);
         $token = $this->auth->generateJWTtoken([
-            "chief" => $this->auth->hasRole(Role::FULL_VIEWER),
+            "full_viewer" => $this->hasRole(Role::FULL_VIEWER),
             "name" => $this->getName(),
         ]);
         return $token;
