@@ -22,6 +22,16 @@ $JWTconfig = Configuration::forAsymmetricSigner(
     InMemory::base64Encoded('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEwNzhCUE96TFlFUkdDMHkrR2g0VQpLTjJjNklKc2NiekZMQ3B6ODhzVWJOV0sxemtqcWNEZEo2YkYycXdTaWxTRkREUzN4VGc2Zjc1MEo5bWFkT2pmCkZ4dWZWZ0Rpc0x3dURIOFN3MEpBUGlWNElNeDVaRzFhRXpmblZKSFdDQmFraXJnRHhzSWxrNkVTdGtzUklZbzkKNnhOaFRqZkkwR2J3OFdaSWovV3VMOFNUdHprejBNQ3EzblZ4WWptN0Z3LzNOMGJTeFlTbkxZd3NoemlLejlHMApCTEhudjV1eVRiUnVLOHVnVDdyRGVzRy9yeWFPWW5nV0QydDNOZldwRGF1cXY1MkZvYVpZWkpDVXJtanF5K2NWCnhCY3lPVTczTDUxMGVldkJsWE1TdkdDM3haSGNhYkZ4cmVhd0czb2RJZjFPWkNDeEFLci9EL1R4azJhWW5DbTYKNXdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t')
 );
 
+$options = new Options($db, $cache);
+function get_option($name, $default=null) {
+    global $options;
+    try {
+        return $options->get($name);
+    } catch(Exception $e) {
+        return $default;
+    }
+}
+
 function get_ip()
 {
     if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -31,7 +41,7 @@ function get_ip()
     }else{
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    if(get_option("check_cf_ip", false)) { //TODO: fix options not defined yet
+    if(get_option("check_cf_ip", false)) {
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
@@ -313,17 +323,6 @@ class Schedules {
     }
 }
 
-$options = new Options($db, $cache);
 $users = new Users($db, $auth);
 $services = new Services($db);
 $schedules = new Schedules($db, $users);
-
-function get_option($name, $default=null) {
-    global $options;
-    if(is_null($options)) return $default;
-    try {
-        return $options->get($name);
-    } catch(Exception $e) {
-        return $default;
-    }
-}
