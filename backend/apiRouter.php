@@ -193,7 +193,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
             if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
-            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId(), $users->auth->getUserId());
+            $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
+            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), $user_id);
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
@@ -201,9 +202,11 @@ function apiRouter (FastRoute\RouteCollector $r) {
                         'available' => $_POST['available'], 'availability_last_change' => 'manual'
                     ],
                     [
-                        'id' => is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId()
+                        'id' => $user_id
                     ]
-                )
+                ),
+                "updated_user" => $user_id,
+                "updated_user_name" => $users->getName($user_id)
             ]);
         }
     );

@@ -84,6 +84,10 @@ export class AuthService {
                     error_message = error_messages.map((val: any) => {
                         return `${val.msg} in ${val.param}`;
                     }).join(" & ");
+                } else if (err.status = 500) {
+                    error_message = "Server error";
+                } else {
+                    error_message = "Unknown error";
                 }
                 resolve({
                     loginOk: false,

@@ -29,6 +29,16 @@ export class ApiClientService {
     return this.apiRoot + endpoint;
   }
 
+  public dataToParams(data: any): string {
+    return Object.keys(data).reduce(function (params, key) {
+      if(typeof data[key] === 'object') {
+        data[key] = JSON.stringify(data[key]);
+      }
+      params.set(key, data[key]);
+      return params;
+    }, new URLSearchParams()).toString();
+  }
+
   public get(endpoint: string) {
     return new Promise<any>((resolve, reject) => {
       this.http.get(this.apiEndpoint(endpoint), this.requestOptions).subscribe((data: any) => {
@@ -40,12 +50,8 @@ export class ApiClientService {
   }
 
   public post(endpoint: string, data: any) {
-    let params = Object.keys(data).reduce(function (params, key) {
-      params.set(key, JSON.stringify(data[key]));
-      return params;
-    }, new URLSearchParams());
     return new Promise<any>((resolve, reject) => {
-      this.http.post(this.apiEndpoint(endpoint), params.toString(), this.requestOptions).subscribe((data: any) => {
+      this.http.post(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);
       }, (err) => {
         reject(err);
@@ -58,7 +64,7 @@ export class ApiClientService {
       fromObject: data,
     });
     return new Promise<any>((resolve, reject) => {
-      this.http.put(this.apiEndpoint(endpoint), params.toString(), this.requestOptions).subscribe((data: any) => {
+      this.http.put(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);
       }, (err) => {
         reject(err);

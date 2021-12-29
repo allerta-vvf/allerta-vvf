@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -38,9 +40,16 @@ import { TrainingsComponent } from './_components/trainings/trainings.component'
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ToastrModule.forRoot({
+      progressBar: true,
+      easeTime: 300,
+      timeOut: 2500,
+      positionClass: 'toast-bottom-right'
+    }),
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
