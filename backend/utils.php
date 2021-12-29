@@ -243,7 +243,7 @@ class Schedules {
     }
 
     public function get($profile="default") {
-        $response = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `id` = ? AND `profile_name` = ?", [$this->users->auth->getUserId(), $profile]);
+        $response = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_schedules` WHERE `user` = ? AND `profile_name` = ?", [$this->users->auth->getUserId(), $profile]);
         if(!is_null($response)) {
             $response["schedules"] = json_decode($response["schedules"], true);
             return $response;
@@ -258,13 +258,13 @@ class Schedules {
         if(empty($this->get($profile))) {
             return $this->db->insert(
                 DB_PREFIX."_schedules",
-                ["id" => $this->users->auth->getUserId(), "schedules" => $schedules, "profile_name" => $profile]
+                ["user" => $this->users->auth->getUserId(), "schedules" => $schedules, "profile_name" => $profile]
             );
         } else {
             return $this->db->update(
                 DB_PREFIX."_schedules",
-                ["schedules" => $schedules],
-                ["id" => $this->users->auth->getUserId(), "profile_name" => $profile]
+                ["schedules" => $schedules, "last_update" => null],
+                ["user" => $this->users->auth->getUserId(), "profile_name" => $profile]
             );
         }
     }

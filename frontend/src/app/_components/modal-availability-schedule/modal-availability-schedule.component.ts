@@ -79,6 +79,13 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
   constructor(public bsModalRef: BsModalRef, private api: ApiClientService) { }
 
   loadSchedules(schedules: any) {
+    console.log("Loaded schedules", schedules);
+    if(typeof schedules === "undefined") {
+      schedules = [];
+    }
+    if(typeof schedules === "string") {
+      schedules = JSON.parse(schedules);
+    }
     this.selectedCells = schedules;
   }
 

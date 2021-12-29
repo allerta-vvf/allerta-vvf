@@ -198,7 +198,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',
                     [
-                        'available' => $_POST['available'],
+                        'available' => $_POST['available'], 'availability_last_change' => 'manual'
                     ],
                     [
                         'id' => is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId()
