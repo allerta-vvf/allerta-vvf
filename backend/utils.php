@@ -2,6 +2,8 @@
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 
 require_once("vendor/autoload.php");
 require("config.php");
@@ -80,6 +82,48 @@ function logger($action, $changed=null, $editor=null, $timestamp=null)
             DB_PREFIX."_log",
             ["action" => $action, "changed" => $changed, "editor" => $editor, "timestamp" => $timestamp, "ip" => $ip, "source_type" => $source_type, "user_agent" => $user_agent]
         );
+    }
+}
+
+CacheManager::setDefaultConfig(new ConfigurationOption([
+    'path' => realpath(dirname(__FILE__).'/tmp')
+]));
+$cache = CacheManager::getInstance('files');
+
+class options
+{
+    protected $db;
+    protected $cache;
+    public $options = [];
+    public $optionsCache;
+
+    public function __construct($db, $cache, $bypassCache=false){
+        $this->db = $db;
+        $this->cache = $cache;
+        if(!$bypassCache){
+            $this->optionsCache = $this->cache->getItem("options");
+            if (is_null($this->optionsCache->get())) {
+                $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
+                $this->cache->save($this->optionsCache);
+            }
+            $this->options = $this->optionsCache->get();
+        } else {
+            $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
+        }
+    }
+
+    public function get($name)
+    {
+        if(defined($name)) {
+            return constant($name);
+        } else {
+            foreach($this->options as $option){
+                if($name == $option["name"]) {
+                    return empty($option["value"]) ? false : $option["value"];
+                }
+            }
+            throw new \Exception("Option not found: ".$name);
+        }
     }
 }
 
@@ -270,6 +314,16 @@ class Schedules {
     }
 }
 
+$options = new Options($db, $cache);
 $users = new Users($db, $auth);
 $services = new Services($db);
 $schedules = new Schedules($db, $users);
+
+function get_option($name, $default=null) {
+    global $options;
+    try {
+        return $options->get($name);
+    } catch(Exception $e) {
+        return $default;
+    }
+}
