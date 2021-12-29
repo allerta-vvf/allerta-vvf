@@ -31,11 +31,11 @@ function get_ip()
     }else{
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    //if(get_option("check_cf_ip")) {
+    if(get_option("check_cf_ip", false)) {
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
-    //}
+    }
     return $ip;
 }
 $auth = new \Delight\Auth\Auth($db, $JWTconfig, get_ip(), DB_PREFIX."_");
@@ -60,7 +60,7 @@ final class Role
 
 }
 
-function logger($action, $changed=null, $editor=null, $timestamp=null)
+function logger($action, $changed=null, $editor=null, $timestamp=null, $source_type="api")
 {
     global $db, $users;
     //timestamp added by default in DB
@@ -71,12 +71,11 @@ function logger($action, $changed=null, $editor=null, $timestamp=null)
         $editor = $changed;
     }
     if(!$users->isHidden($editor)){
-        //if(get_option("log_save_ip")){
+        if(get_option("log_save_ip", true)){
             $ip = get_ip();
-        //} else {
-        //    $ip = null;
-        //}
-        $source_type = defined("REQUEST_USING_API") ? "api" : "web";
+        } else {
+            $ip = null;
+        }
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
         $db->insert(
             DB_PREFIX."_log",
