@@ -3,6 +3,13 @@ require_once 'ui.php';
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberFormat;
 use Brick\PhoneNumber\PhoneNumberParseException;
+
+if(!$user->hasRole(Role::SUPER_ADMIN)){
+    require("error_page.php");
+    show_error_page(401, t("You are not authorized to perform this action.",false), "");
+    exit();
+}
+
 function debug(){
     echo("<pre>"); var_dump($_POST); echo("</pre>"); exit();
 }

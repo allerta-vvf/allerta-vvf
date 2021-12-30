@@ -93,9 +93,14 @@ module.exports = {
     new WebpackAssetsManifest({
       writeToDisk: true,
       integrity: true,
-      customize(entry) {
+      entrypointsUseAssets: true,
+      customize(entry, original, manifest, asset) {
+        if(asset.name.includes("table_engine")){
+          return entry;
+        }
         allowed_entries = ["main.js", "maps.js", "players.js", "games.js"]
-        if (entry.key.startsWith('fonts') || allowed_entries.includes(entry.key)) {
+        if (entry.key.includes("table_engine") || allowed_entries.includes(entry.key)) {
+          entry.key = entry.key.split("?")[0];
           return entry;
         }
         return false;

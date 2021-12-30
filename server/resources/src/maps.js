@@ -249,7 +249,7 @@ export function addrSearch (stringResultsFound= undefined, stringResultsNotFound
         $("<p>", { html: stringResultsFound+ ":" }).appendTo("#results");
         $(list).appendTo("#results");
 
-        $("#results li").click(function(e){
+        $("#results li").on("click",function(e){
             e.preventDefault()
             var row = e.target;
             console.log(row);

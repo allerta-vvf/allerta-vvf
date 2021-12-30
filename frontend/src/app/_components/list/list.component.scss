@@ -1,0 +1,23 @@
+#availability-btn-group {
+    margin: 10px;
+}
+
+#activate-btn {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+#activate-btn:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+#deactivate-btn {
+    color: #fff;
+    background-color: #fd0019;
+    border-color: #fd0019;
+}
+#deactivate-btn:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}

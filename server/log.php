@@ -1,6 +1,7 @@
 <?php
 require_once 'ui.php';
 if($JSless){
+    $user->online_time_update();
     $query_results = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
 } else {
     $query_results = null;

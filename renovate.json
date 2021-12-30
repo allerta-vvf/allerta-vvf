@@ -9,29 +9,26 @@
       "matchDepTypes": ["devDependencies"],
       "matchManagers": ["npm"],
       "groupName": "frontendDevDependencies",
-      "schedule": [
-        "before 6pm"
-      ],
+      "extends": ["schedule:weekly"],
       "prPriority": 2
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchManagers": ["npm"],
       "groupName": "frontendDependencies",
+      "extends": ["schedule:weekly"],
       "prPriority": 3
     },
     {
       "matchManagers": ["composer"],
       "groupName": "backendDependencies",
-      "prPriority": 4,
-      "automerge": false
+      "prPriority": 4
     },
     {
       "matchManagers": ["dockerfile"],
       "groupName": "docker",
       "prPriority": 5,
-      "stabilityDays": 3,
-      "automerge": false
+      "stabilityDays": 3
     }
   ]
 }

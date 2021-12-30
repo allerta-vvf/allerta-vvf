@@ -3,13 +3,15 @@ require_once 'vendor/autoload.php';
 use DebugBar\StandardDebugBar;
 use MinistryOfWeb\OsmTiles\Converter;
 use MinistryOfWeb\OsmTiles\LatLng;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 
-if(!file_exists("config.php") && !file_exists("../../config.php")) {
+if(!file_exists(realpath(dirname(__FILE__).'/config.php'))) {
     header('Location: install/install.php');
     exit();
 }
 
-require_once 'config.php';
+require_once realpath(dirname(__FILE__).'/config.php');
 
 if(SENTRY_ENABLED){
     \Sentry\init([
@@ -35,6 +37,7 @@ class tools
     public $profiler_enabled;
     public $profiler_last_name = "";
     public $script_nonce = null;
+    public $cache;
 
     public function generateNonce($bytes_lenght = 16, $base64_encode = false){
         $nonce = bin2hex(random_bytes($bytes_lenght));
@@ -59,6 +62,10 @@ class tools
                 $_SESSION["script_nonce"] = $this->script_nonce;
             }
         }
+        CacheManager::setDefaultConfig(new ConfigurationOption([
+            'path' => realpath(dirname(__FILE__).'/cache')
+        ]));
+        $this->cache = CacheManager::getInstance('files');
     }
 
     public function validate_form($data, $expected_value=null, $data_source=null)
@@ -131,8 +138,7 @@ class tools
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             "https://www.youtube.com/watch?v=ub82Xb1C8os",
             "https://www.youtube.com/watch?v=Wjy3o0FoLYc",
-            "https://www.youtube.com/watch?v=bxqLsrlakK8",
-            "https://www.youtube.com/watch?v=Lrj2Hq7xqQ8"
+            "https://www.youtube.com/watch?v=bxqLsrlakK8"
         ];
         $this->redirect($rickrolls[array_rand($rickrolls)]); //Dear attacker/bot, have fun!
     }
@@ -246,7 +252,7 @@ class tools
         }
     }
 
-    public function cachePreviewMap($filename, $lat, $lng, $zoom=16){
+    public function savePreviewMap($filename, $lat, $lng, $zoom=16){
         $url = $this->convertMapAddressToUrl($lat, $lng, $zoom);
         $options = ['http' => [
             'user_agent' => 'AllertaVVF dev version (cached map previews generator)'
@@ -284,7 +290,7 @@ class tools
                 $lat = explode(";", $place)[0];
                 $lng = explode(";", $place)[1];
                 $mapImageID = \Delight\Auth\Auth::createUuid();
-                $this->cachePreviewMap($mapImageID, $lat, $lng);
+                $this->savePreviewMap($mapImageID, $lat, $lng);
                 $place = $place . "#" . $mapImageID;
             }
         }
@@ -314,25 +320,21 @@ class tools
 class options
 {
     protected $db;
-    public $load_from_file = true;
+    protected $tools;
+    public $bypassCache = false;
     public $options = [];
-    public $options_cache_file = null;
+    public $optionsCache;
 
-    public function __construct($db){
+    public function __construct($db, $tools){
         $this->db = $db;
-        $file_infos = pathinfo(array_reverse(debug_backtrace())[0]['file']);
-        if(strpos($file_infos['dirname'], 'resources') !== false) {
-            $this->options_cache_file = "../../options.txt";
-        } else {
-            $this->options_cache_file = "options.txt";
-        }
-        if($this->load_from_file) {
-            if(file_exists($this->options_cache_file)/* && time()-@filemtime($this->options_cache_file) < 604800*/) {
-                $this->options = json_decode(file_get_contents($this->options_cache_file), true);
-            } else {
-                $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
-                file_put_contents($this->options_cache_file, json_encode($this->options));
+        $this->tools = $tools;
+        if(!$this->bypassCache){
+            $this->optionsCache = $this->tools->cache->getItem("options");
+            if (is_null($this->optionsCache->get())) {
+                $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
+                $this->tools->cache->save($this->optionsCache);
             }
+            $this->options = $this->optionsCache->get();
         } else {
             $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
         }
@@ -434,7 +436,7 @@ class user
         $this->tools->profiler_stop();
     }
 
-    public function requireRole($role, $adminGranted=true)
+    public function hasRole($role, $adminGranted=true)
     {
         return $this->auth->hasRole($role) || $adminGranted && $role !== Role::DEVELOPER && $this->auth->hasRole(Role::ADMIN) || $role !== Role::DEVELOPER && $this->auth->hasRole(Role::SUPER_ADMIN);
     }
@@ -501,7 +503,7 @@ class user
 
     public function info()
     {
-        return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->requireRole(Role::FULL_VIEWER), "tester" => $this->requireRole(Role::TESTER), "developer" => $this->requireRole(Role::DEVELOPER));
+        return array("autenticated" => $this->authenticated(), "id" => $this->auth->getUserId(), "name" => $this->name(), "full_viewer" => $this->hasRole(Role::FULL_VIEWER), "tester" => $this->hasRole(Role::TESTER), "developer" => $this->hasRole(Role::DEVELOPER));
     }
 
     public function login($name, $password, $remember_me)
@@ -757,7 +759,6 @@ class crud
         $this->user->log("Service removed");
     }
 
-
     public function edit_service($id, $date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
     {
         $this->remove_service($id);
@@ -911,15 +912,15 @@ function init_class($enableDebugger=true, $headers=true)
 {
     global $tools, $options, $db, $user, $crud, $translations, $debugbar;
     init_db();
-    $options = new options($db);
     $tools = new tools($db, $enableDebugger);
+    $options = new options($db, $tools);
     $user = new user($db, $tools);
     $crud = new crud($tools, $db, $user);
     $translations = new translations(get_option("force_language"));
 
     if($headers) {
         //TODO adding require-trusted-types-for 'script';
-        $script_nonce_csp = defined("UI_MODE") ? "'nonce-{$tools->script_nonce}' " : "";
+        $script_nonce_csp = (defined("UI_MODE") && get_option("enable_js_nonce")) ? "'nonce-{$tools->script_nonce}' " : "'unsafe-inline' ";
         $csp_rules = [
             "default-src 'self' data: *.tile.openstreetmap.org nominatim.openstreetmap.org",
             "connect-src 'self' *.sentry.io nominatim.openstreetmap.org",
@@ -933,7 +934,7 @@ function init_class($enableDebugger=true, $headers=true)
             $csp_rules[] = "report-uri ".SENTRY_CSP_REPORT_URI;
         }
         $csp = implode("; ", $csp_rules);
-        if(!isset($_COOKIE["JSless"]) && (isset($_GET["JSless"]) ? !$_GET["JSless"] : true)){
+        if((isset($_GET["JSless"]) ? !$_GET["JSless"] : true) && !strpos($_SERVER["PHP_SELF"], "offline.php")){
             header("Content-Security-Policy: $csp");
             header("X-XSS-Protection: 1; mode=block");
             header("X-Content-Type-Options: nosniff");
@@ -962,7 +963,7 @@ function init_class($enableDebugger=true, $headers=true)
         //TODO: add Monolog here
     }
 
-    if($enableDebugger && $user->requireRole(Role::DEVELOPER)) {
+    if($enableDebugger && $user->hasRole(Role::DEVELOPER)) {
         $debugbar = new StandardDebugBar();
         bdump(__DIR__);
         $dir = str_replace("resources\ajax\\", "", __DIR__).DIRECTORY_SEPARATOR.'debug_storage';

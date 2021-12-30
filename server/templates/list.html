@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-  <script nonce="{{ nonce }}">
+  <script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
     $('#schedulesModal').on('show.bs.modal', function (event) {
       //$( ".modal-body" ).loading("show");
       $(".modal-body").load("modal_availability_schedule.php?nonce={{ nonce }}", {
@@ -68,21 +68,22 @@
     <tbody id="table_body">
     </tbody>
   </table>
-  <script nonce="{{ nonce }}">
-    $("#activate-btn").click(function(){
-        allertaJS.main.activate('{{ user.id }}', '');
+  <script{% if enable_js_nonce %} nonce="{{ nonce }}"{% endif %}>
+    $("#activate-btn").on("click",function(){
+      allertaJS.main.activate('{{ user.id }}', '');
     });
-    $("#deactivate-btn").click(function(){
-        allertaJS.main.deactivate('{{ user.id }}', '');
+    $("#deactivate-btn").on("click",function(){
+      allertaJS.main.deactivate('{{ user.id }}', '');
     });
     allertaJS.main.loadTable({tablePage: "list", useCustomTableEngine: "default", callback: allertaJS.main.loadListListCallback});
   </script>
 </div>
-
+{% if hasRole("SUPER_ADMIN") %}
 <br><br>
 <p style="text-align: center;">
   <a class='pjax_disable' id='add' href="edit_user.php?add">{{ 'Add user'|t }}</a>
 </p>
+{% endif %}
 <br>
 <br>
 {% endblock %}

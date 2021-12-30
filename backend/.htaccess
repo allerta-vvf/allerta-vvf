@@ -1,0 +1,15 @@
+RewriteEngine on
+
+#https://stackoverflow.com/a/26791450
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+#Thanks u/IZEN_R!
+RewriteCond %{REQUEST_URI} !^(.*)dist-frontend/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ dist-frontend/$1
+RewriteRule ^(.*)api/(.*) router.php [L]
+
+DirectoryIndex dist-frontend/index.html
+ErrorDocument 404 router.php

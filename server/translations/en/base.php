@@ -126,5 +126,11 @@ return [
     "Remove selections" => "Remove selections",
     "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>." => "JavaScript is disabled or it's not supported in your browser but it's required for using Allerta-VVF. If you want to continue, please enable JS <a href='?JSless=1'>or use the JS-less version</a>.",
     "yes" => "yes",
-    "no" => "no"
+    "no" => "no",
+    "You are not authorized to perform this action." => "You are not authorized to perform this action.",
+    "Bad request." => "Bad request.",
+    "User not exists." => "User not exists.",
+    "Change" => "Change",
+    "Delete the offline version of Allerta-VVF from this device." => "Delete the offline version of Allerta-VVF from this device.",
+    "You have cleared the cache; the table will be loaded when the device is connected to the Internet." => "You have cleared the cache; the table will be loaded when the device is connected to the Internet."
 ];

@@ -144,10 +144,10 @@ echo(<<<EOL
     <label>{$holidays_selection_question}</label>
     <a id="select-all-holiday" class="text-primary">{$holidays_select_all}</a> / <a id="select-none-holiday" class="text-primary">{$holidays_select_none}</a>
     <script nonce="{$nonce}">
-    $('#select-all-holiday').click(function(){
+    $('#select-all-holiday').on("click",function(){
         $('.holiday_check').prop('checked', true);
     });
-    $('#select-none-holiday').click(function(){
+    $('#select-none-holiday').on("click",function(){
         $('.holiday_check').prop('checked', false);
     });
     </script>
@@ -171,7 +171,7 @@ EOT);
 
 echo("</div>");
 ?>
-<script nonce="<?php echo($nonce); ?>">
+<script<?php if(get_option("enable_js_nonce")){ echo("nonce='$nonce'"); } ?>>
 function init_modal() {
   <?php if($orienation == "landscape"){ ?> $(".modal-dialog").css("max-width", "99%"); <?php } ?>
   var isMouseDown = false;

@@ -45,8 +45,9 @@ export default async function fillTable ({ data, replaceLatLngWithMap = false, c
               </div>
               <div class="modal-body" id="map-modal-${rowNum}-body">
                 <div id="map-container-${rowNum}" class="map"></div><br>
-                <p>Lat: <b id="map-${rowNum}-lat">${lat}</b></p>
-                <p>Lng: <b id="map-${rowNum}-lng">${lng}</b></p>
+                <p>Lat: <b id="map-${rowNum}-lat">${lat}</b><br><p>Lng: <b id="map-${rowNum}-lng">${lng}</b></p>
+                <a href="https://www.google.com/maps/search/?api=1&query=${lat}%2C${lng}" id="map-${rowNum}-open-gmaps" target="_blank" rel="noopener noreferrer">Apri in Google Maps</a><br>
+                <a href="https://www.openstreetmap.org/#map=18/${lat}/${lng}" id="map-${rowNum}-open-osm" target="_blank" rel="noopener noreferrer">Apri in OpenStreetMaps</a>
               </div>
             </div>
           </div>`;

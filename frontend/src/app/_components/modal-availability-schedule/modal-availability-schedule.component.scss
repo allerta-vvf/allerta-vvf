@@ -1,0 +1,21 @@
+.hour-cell {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ccc;
+    border: 1px solid #fff;
+}
+
+.hour-cell.highlighted {
+    background-color: #999;
+}
+#scheduler_body td {
+    min-width: 40px;
+}
+
+.modal-custom {
+    overflow-x: auto;
+    max-width: 99%;
+    margin-bottom: 5em;
+}
