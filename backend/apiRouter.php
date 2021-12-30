@@ -217,7 +217,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
                 exit;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
-            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), $user_id);
+            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), $user_id, $users->auth->getUserId());
             apiResponse([
                 "response" => $db->update(
                     DB_PREFIX.'_profiles',

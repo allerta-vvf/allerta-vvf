@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { TableType } from 'src/app/_models/TableType';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from '../../_services/auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../_services/auth.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
 
   @Input() sourceType?: string;
   @Input() refreshInterval?: number;
@@ -17,7 +17,7 @@ export class TableComponent implements OnInit {
 
   public data: any = [];
 
-  public loadDataInterval: NodeJS.Timer | number = 0;
+  public loadDataInterval: NodeJS.Timer | undefined = undefined;
 
   constructor(public apiClient: ApiClientService, public auth: AuthService) {}
 
@@ -42,6 +42,12 @@ export class TableComponent implements OnInit {
       console.log("Refreshing data...");
       this.loadTableData();
     }, this.refreshInterval || 10000);
+  }
+
+  ngOnDestroy(): void {
+    if(typeof this.loadDataInterval !== 'undefined') {
+      clearInterval(this.loadDataInterval);
+    }
   }
 
   onChangeAvailability(user: number, newState: 0|1) {
