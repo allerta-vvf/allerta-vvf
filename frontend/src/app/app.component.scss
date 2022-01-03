@@ -63,3 +63,14 @@
     text-align: left;
   }
 }
+
+.footer {
+  background-color: rgba(0, 0, 0, 0.2);
+  font-style: italic;
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+.footer > :last-child {
+  margin-bottom: 0;
+}

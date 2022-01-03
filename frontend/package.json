@@ -2,6 +2,8 @@
   "name": "allerta-vvf",
   "version": "0.0.0",
   "scripts": {
+    "prestart": "node git.version.js",
+    "prebuild": "node git.version.js",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --base-href=./",
