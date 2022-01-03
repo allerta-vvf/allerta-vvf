@@ -2,6 +2,8 @@
   "name": "allerta-vvf",
   "version": "0.0.0",
   "scripts": {
+    "prestart": "node git.version.js",
+    "prebuild": "node git.version.js",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --base-href=./",
@@ -35,7 +37,7 @@
     "@angular/compiler-cli": "~13.0.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "16.11.17",
-    "jasmine-core": "~3.10.0",
+    "jasmine-core": "4.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.0.3",

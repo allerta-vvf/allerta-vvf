@@ -114,6 +114,11 @@ function job_schedule_availability() {
                     $schedule["minutes"] <= $now["minutes"] &&
                     $now["minutes"] - $schedule["minutes"] <= 30
                 ){
+                    $availability_last_change = $db->select("SELECT availability_last_change FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
+                    if($availability_last_change === "manual" && $last_exec["day"] === $now["day"]){
+                        break;
+                    }
+
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
                     if(is_null($last_exec) || (is_array($last_exec) && $schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true)/* && !in_array(date('Y-m-d'), $selected_holidays_dates)*/){
                         $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
