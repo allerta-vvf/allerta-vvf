@@ -4,3 +4,5 @@ tmp/*
 !tmp/.gitkeep
 uploads/*
 !uploads/.gitkeep
+keys/*
+!keys/gen.ps1
