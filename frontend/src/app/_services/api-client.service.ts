@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +60,6 @@ export class ApiClientService {
   }
 
   public put(endpoint: string, data: any) {
-    let params = new HttpParams({
-      fromObject: data,
-    });
     return new Promise<any>((resolve, reject) => {
       this.http.put(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);

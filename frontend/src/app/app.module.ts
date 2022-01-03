@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -22,6 +22,8 @@ import { ListComponent } from './_components/list/list.component';
 import { LogsComponent } from './_components/logs/logs.component';
 import { ServicesComponent } from './_components/services/services.component';
 import { TrainingsComponent } from './_components/trainings/trainings.component';
+
+import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.provider';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,11 @@ import { TrainingsComponent } from './_components/trainings/trainings.component'
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS, 
+    useClass: UnauthorizedInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
