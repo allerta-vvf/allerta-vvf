@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +62,6 @@ export class ApiClientService {
   }
 
   public put(endpoint: string, data: any) {
-    let params = new HttpParams({
-      fromObject: data,
-    });
     return new Promise<any>((resolve, reject) => {
       this.http.put(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);
@@ -80,5 +79,25 @@ export class ApiClientService {
         reject(err);
       });
     });
+  }
+}
+ 
+@Injectable()
+export class UnauthorizedInterceptor implements HttpInterceptor {
+  constructor(private auth: AuthService) { }
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe( tap({
+      next: () => {},
+      error: (err: any) => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status !== 401) {
+         return;
+        }
+        console.log("Login richiesto");
+        this.auth.logout();
+        //this.router.navigate(['login']);
+      }
+    }}));
   }
 }
