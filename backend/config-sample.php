@@ -15,6 +15,10 @@ define('DB_HOST', '@@host@@');
 /* Database hostname */
 define('DB_PREFIX', '@@prefix@@');
 
+/* JWT Keys */
+define('JWT_PUBLIC_KEY', '@@public_key@@');
+define('JWT_PRIVATE_KEY', '@@private_key@@');
+
 /* Telegram bot options */
 define('BOT_TELEGRAM_API_KEY', '');
 define('BOT_TELEGRAM_USERNAME', '');
