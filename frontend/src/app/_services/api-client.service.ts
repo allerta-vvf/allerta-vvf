@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { AuthService } from './auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -79,25 +77,5 @@ export class ApiClientService {
         reject(err);
       });
     });
-  }
-}
- 
-@Injectable()
-export class UnauthorizedInterceptor implements HttpInterceptor {
-  constructor(private auth: AuthService) { }
-
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe( tap({
-      next: () => {},
-      error: (err: any) => {
-      if (err instanceof HttpErrorResponse) {
-        if (err.status !== 401) {
-         return;
-        }
-        console.log("Login richiesto");
-        this.auth.logout();
-        //this.router.navigate(['login']);
-      }
-    }}));
   }
 }
