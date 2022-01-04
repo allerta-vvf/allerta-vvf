@@ -1,11 +1,20 @@
 <?php
 require_once 'utils.php';
+require_once 'telegramBotRouter.php';
 require_once 'cronRouter.php';
 
 function apiRouter (FastRoute\RouteCollector $r) {
     $r->addGroup('/cron', function (FastRoute\RouteCollector $r) {
         cronRouter($r);
     });
+
+    $r->addRoute(
+        ['GET', 'POST'],
+        '/bot/telegram',
+        function ($vars) {
+            telegramBotRouter();
+        }
+    );
 
     $r->addRoute(
         'GET',
