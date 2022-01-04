@@ -1,0 +1,73 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+categories:
+  - fleet-management
+  - data-analytics
+  - data-collection
+  - data-visualization
+description:
+  it:
+    features:
+      - |-
+        Sistema di login multi-utente con gestione dei ruoli e delle
+        autorizzazioni
+      - Possibilità di registrare interventi e esercitazioni
+      - Tabella di log di azioni effettuate dai diversi utenti
+      - Gestione della disponibilità per singolo utente
+      - Possibilità di registrare programmazioni orarie della disponibilità
+    genericName: software allertamento VVF Volontari
+    longDescription: |
+      Questa web-app viene utilizzata per gestire la disponibilità di squadre di
+      vigili del fuoco volontari, per registrare internamente alla squadra
+      l'elenco di vigili disponibili in una determinata giornata, e in modo da
+      velocizzare le operazioni di comunicazione della reperibilità attraverso
+      portali esterni.
+
+      É possibile inoltre registrare interventi e esercitazioni svolte dai vigili, che saranno utilizzati per riordinare dinamicamente la tabella delle disponibilità.
+
+      Gli utenti hanno inoltre la possibilità di registrare delle fasce orarie
+      in cui la disponibilità deve essere automaticamente aggiornata.
+    shortDescription: |-
+      Software utilizzato per gestire la disponibilità di vigili del fuoco
+      volontari in caso di allertamento
+developmentStatus: development
+intendedAudience:
+  scope:
+    - emergency-services
+    - defence
+    - security
+    - transportation
+it:
+  conforme:
+    gdpr: false
+    lineeGuidaDesign: false
+    misureMinimeSicurezza: false
+    modelloInteroperabilita: false
+  countryExtensionVersion: '0.2'
+  piattaforme:
+    anpr: false
+    cie: false
+    pagopa: false
+    spid: false
+legal:
+  license: GPL-3.0-only
+localisation:
+  availableLanguages:
+    - it
+  localisationReady: false
+maintenance:
+  contacts:
+    - email: me@matteogheza.it
+      name: Matteo Gheza
+  type: internal
+name: Allerta-VVF
+platforms:
+  - web
+releaseDate: '2022-01-03'
+roadmap: 'https://github.com/orgs/allerta-vvf/projects/1'
+softwareType: standalone/web
+softwareVersion: v0.0.1
+url: 'https://github.com/allerta-vvf/allerta-vvf'

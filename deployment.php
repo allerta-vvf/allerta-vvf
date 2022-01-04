@@ -9,6 +9,7 @@ $baseConfig = [
         *.json
 		config.old.php
 		config.php
+		keys
 		*tests*
 		*tests
 		*examples*
