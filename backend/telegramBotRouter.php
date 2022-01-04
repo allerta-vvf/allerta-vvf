@@ -12,6 +12,7 @@ function telegramBotRouter() {
     }
     $_SERVER['SCRIPT_URL'] = $base_path;
 
+    //TODO: fix NovaGram ip check and enable it again
     $Bot = new Bot(BOT_TELEGRAM_API_KEY, ["disable_ip_check" => true]);
 
     $Bot->addErrorHandler(function ($e) {
