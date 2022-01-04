@@ -269,6 +269,28 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
     $r->addRoute(
         ['POST'],
+        '/telegram_login_token',
+        function ($vars) {
+            global $users, $db;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $token = bin2hex(random_bytes(16));
+            apiResponse([
+                "response" => $db->insert(
+                    DB_PREFIX.'_bot_telegram',
+                    [
+                        'user' => $users->auth->getUserId(),
+                        'tmp_login_token' => $token
+                    ]
+                ),
+                "start_link" => "https://t.me/".BOT_TELEGRAM_USERNAME."?start=".$token,
+                "token" => $token
+            ]);
+        }
+    );
+
+    $r->addRoute(
+        ['POST'],
         '/login',
         function ($vars) {
             global $users;

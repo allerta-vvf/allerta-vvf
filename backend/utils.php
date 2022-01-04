@@ -16,10 +16,14 @@ $db = \Delight\Db\PdoDatabase::fromDsn(
         )
     );
 
-CacheManager::setDefaultConfig(new ConfigurationOption([
-    'path' => realpath(dirname(__FILE__).'/tmp')
-]));
-$cache = CacheManager::getInstance('files');
+try {
+    CacheManager::setDefaultConfig(new ConfigurationOption([
+        'path' => realpath(dirname(__FILE__).'/tmp')
+    ]));
+    $cache = CacheManager::getInstance('files');
+} catch(Exception $e) {
+    $cache = null;
+}
 $options = new Options($db, $cache);
 function get_option($name, $default=null) {
     global $options;
@@ -110,12 +114,16 @@ class options
         $this->db = $db;
         $this->cache = $cache;
         if(!$bypassCache){
-            $this->optionsCache = $this->cache->getItem("options");
-            if (is_null($this->optionsCache->get())) {
-                $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
-                $this->cache->save($this->optionsCache);
+            try {
+                $this->optionsCache = $this->cache->getItem("options");
+                if (is_null($this->optionsCache->get())) {
+                    $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
+                    $this->cache->save($this->optionsCache);
+                }
+                $this->options = $this->optionsCache->get();
+            } catch(Exception $e) {
+                $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
             }
-            $this->options = $this->optionsCache->get();
         } else {
             $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
         }
