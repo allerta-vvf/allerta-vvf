@@ -16,10 +16,14 @@ $db = \Delight\Db\PdoDatabase::fromDsn(
         )
     );
 
-CacheManager::setDefaultConfig(new ConfigurationOption([
-    'path' => realpath(dirname(__FILE__).'/tmp')
-]));
-$cache = CacheManager::getInstance('files');
+try {
+    CacheManager::setDefaultConfig(new ConfigurationOption([
+        'path' => realpath(dirname(__FILE__).'/tmp')
+    ]));
+    $cache = CacheManager::getInstance('files');
+} catch(Exception $e) {
+    $cache = null;
+}
 $options = new Options($db, $cache);
 function get_option($name, $default=null) {
     global $options;
@@ -110,12 +114,16 @@ class options
         $this->db = $db;
         $this->cache = $cache;
         if(!$bypassCache){
-            $this->optionsCache = $this->cache->getItem("options");
-            if (is_null($this->optionsCache->get())) {
-                $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
-                $this->cache->save($this->optionsCache);
+            try {
+                $this->optionsCache = $this->cache->getItem("options");
+                if (is_null($this->optionsCache->get())) {
+                    $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
+                    $this->cache->save($this->optionsCache);
+                }
+                $this->options = $this->optionsCache->get();
+            } catch(Exception $e) {
+                $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
             }
-            $this->options = $this->optionsCache->get();
         } else {
             $this->options = $db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1");
         }
@@ -222,6 +230,7 @@ class Users
     public function isHidden($id=null)
     {
         if(is_null($id)) $id = $this->auth->getUserId();
+        if(is_null($id)) return true;
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["hidden"];
     }
@@ -236,6 +245,37 @@ class Users
     public function hasRole($role, $adminGranted=true)
     {
         return $this->auth->hasRole($role) || ($adminGranted && ($this->auth->hasRole(Role::ADMIN) || $this->auth->hasRole(Role::SUPER_ADMIN)));
+    }
+}
+
+class Availability {
+    private $db = null;
+    private $users = null;
+    
+    public function __construct($db, $users)
+    {
+        $this->db = $db;
+        $this->users = $users;
+    }
+
+    public function change($availability, $user_id)
+    {
+        logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        
+        $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
+        if($available_users_count >= 5) {
+            sendTelegramNotification("✅ Distaccamento operativo con squadra completa");
+        } else if($available_users_count >= 2) {
+            sendTelegramNotification("🚒 Distaccamento operativo per supporto");
+        } else {
+            sendTelegramNotification("⚠️ Distaccamento non operativo");
+        }
+        
+        return $this->db->update(
+            DB_PREFIX."_profiles",
+            ["available" => $availability, 'availability_last_change' => 'manual'],
+            ["id" => $user_id]
+        );
     }
 }
 
@@ -328,5 +368,6 @@ class Schedules {
 }
 
 $users = new Users($db, $auth);
+$availability = new Availability($db, $users);
 $services = new Services($db);
 $schedules = new Schedules($db, $users);

@@ -7,7 +7,6 @@
                 <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Autista</th>
                 <th>Chiama</th>
-                <th>Scrivi</th>
                 <th>Interventi</th>
                 <th>Minuti disponibilità</th>
                 </ng-container>
@@ -31,9 +30,6 @@
                 </td>
                 <td>
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
-                </td>
-                <td>
-                    <a target="_blank" href="https://wa.me/{{row.phone_number}}?text=Allerta%20in%20corso.%20Mettiti%20in%20contatto%20al%20più%20presto%20con%20me."><i class="fab fa-whatsapp"></i></a>
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
