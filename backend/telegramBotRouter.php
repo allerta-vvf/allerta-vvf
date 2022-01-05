@@ -101,7 +101,6 @@ function telegramBotRouter() {
     $Bot->onCommand('info', function (Message $message) {
         global $users;
         $user_id = getUserIdByMessage($message);
-        $message->reply(json_encode($message->from));
         if(is_null($user_id)) {
             $message->chat->sendMessage('⚠️ Questo account Telegram non è associato a nessun utente di Allerta.');
         } else {
