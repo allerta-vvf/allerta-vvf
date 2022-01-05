@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c24f492bcd977f01ae44c4ee0c7ae1e4",
+    "content-hash": "9193956804bd765f7fe3f29d0c61472e",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -3107,16 +3107,16 @@
         },
         {
             "name": "ulrichsg/getopt-php",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getopt-php/getopt-php.git",
-                "reference": "073e809a5a4811b0caec43a2151b0e8ccbe29e4b"
+                "reference": "ad9e8cdf1b709caf84ca545ff90bcc7298f0fa5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getopt-php/getopt-php/zipball/073e809a5a4811b0caec43a2151b0e8ccbe29e4b",
-                "reference": "073e809a5a4811b0caec43a2151b0e8ccbe29e4b",
+                "url": "https://api.github.com/repos/getopt-php/getopt-php/zipball/ad9e8cdf1b709caf84ca545ff90bcc7298f0fa5a",
+                "reference": "ad9e8cdf1b709caf84ca545ff90bcc7298f0fa5a",
                 "shasum": ""
             },
             "require": {
@@ -3147,13 +3147,13 @@
                     "email": "thflori@gmail.com"
                 }
             ],
-            "description": "Command line arguments parser for PHP 5.4 - 7.3",
+            "description": "Command line arguments parser for PHP 7.1 and above",
             "homepage": "http://getopt-php.github.io/getopt-php",
             "support": {
                 "issues": "https://github.com/getopt-php/getopt-php/issues",
-                "source": "https://github.com/getopt-php/getopt-php/tree/v4.0.0"
+                "source": "https://github.com/getopt-php/getopt-php/tree/v4.0.1"
             },
-            "time": "2021-05-02T13:05:10+00:00"
+            "time": "2022-01-04T11:01:04+00:00"
         }
     ],
     "packages-dev": [
@@ -3265,5 +3265,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
