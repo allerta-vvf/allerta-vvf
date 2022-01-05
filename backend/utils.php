@@ -95,6 +95,9 @@ function logger($action, $changed=null, $editor=null, $timestamp=null, $source_t
         } else {
             $ip = null;
         }
+        if(defined("running_telegram_bot_webhook")) {
+            $source_type = "telegram";
+        }
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
         $db->insert(
             DB_PREFIX."_log",
@@ -258,24 +261,28 @@ class Availability {
         $this->users = $users;
     }
 
-    public function change($availability, $user_id)
+    public function change($availability, $user_id, $change_type="manual")
     {
-        logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        if($change_type === "manual") logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
         
-        $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
-        if($available_users_count >= 5) {
-            sendTelegramNotification("✅ Distaccamento operativo con squadra completa");
-        } else if($available_users_count >= 2) {
-            sendTelegramNotification("🚒 Distaccamento operativo per supporto");
-        } else {
-            sendTelegramNotification("⚠️ Distaccamento non operativo");
-        }
-        
-        return $this->db->update(
+        $response = $this->db->update(
             DB_PREFIX."_profiles",
-            ["available" => $availability, 'availability_last_change' => 'manual'],
+            ["available" => $availability, 'availability_last_change' => $change_type],
             ["id" => $user_id]
         );
+
+        if(!$this->users->isHidden($user_id)) {
+            $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
+            if($available_users_count === 5) {
+                sendTelegramNotification("✅ Distaccamento operativo con squadra completa");
+            } else if($available_users_count === 2) {
+                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
+            } else if($available_users_count === 1 && !$availability) {
+                sendTelegramNotification("⚠️ Distaccamento non operativo");
+            }
+        }
+
+        return $response;
     }
 }
 
