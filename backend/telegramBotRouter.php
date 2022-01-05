@@ -155,21 +155,21 @@ function telegramBotRouter() {
     //Too difficult and "spaghetti to explain it here in comments, please use https://regexr.com/
     //Jokes apart, checks if text contains something like "Attiva", "attiva", "Disponibile", "disponibile" but not "Non ", "non ", "Non_", "non_", "Dis" or "dis"
     $Bot->onText("/\/?(Sono |sono |Io sono |Io sono )?(?<!non( |_))(?<!dis)(?<!Non( |_))(?<!Dis)(Attiva|Attivami|Attivo|Disponibile|Operativo|attiva|attivami|attivo|disponibile|operativo)/", function (Message $message, $matches = []) {
-        global $availability;
+        global $Bot, $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
-        $availability->change(0, $user_id);
-        $message->reply("Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
+        $availability->change(1, $user_id);
+        $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
     });
 
-    $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
-        global $availability;
+    $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|disattivo|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
+        global $Bot, $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
         $availability->change(0, $user_id);
-        $message->reply("Disponibilità aggiorata con successo.\nOra sei <b>non operativo</b>.");
+        $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>non operativo</b>.");
     });
 
     $Bot->onText("/\/?(Elenco|elenco|Elenca|elenca)(_| )(Disponibili|disponibili)/", function (Message $message, $matches = []) {
@@ -177,7 +177,6 @@ function telegramBotRouter() {
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;
         $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 and hidden = 0 ORDER BY chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
-        var_dump($result);
         if(!is_null($result) && count($result) > 0) {
             $msg = "ℹ️ Vigili attualmente disponibili:";
             foreach($result as $user) {
