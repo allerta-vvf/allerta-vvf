@@ -95,6 +95,9 @@ function logger($action, $changed=null, $editor=null, $timestamp=null, $source_t
         } else {
             $ip = null;
         }
+        if(defined("running_telegram_bot_webhook")) {
+            $source_type = "telegram";
+        }
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? mb_strimwidth($_SERVER['HTTP_USER_AGENT'], 0, 200, "...") : null;
         $db->insert(
             DB_PREFIX."_log",

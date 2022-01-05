@@ -78,6 +78,8 @@ function yesOrNo($value)
 function telegramBotRouter() {
     global $Bot;
 
+    define("running_telegram_bot_webhook", true);
+
     initializeBot();
 
     $Bot->addErrorHandler(function ($e) {
@@ -102,6 +104,7 @@ function telegramBotRouter() {
                 ['tmp_login_token' => $args[0]]
             );
             if($response === 1) {
+                logger("Utente collegato ad account telegram (".$message->from->id.")");
                 $message->chat->sendMessage(
                     "✅ Login avvenuto con successo!".
                     "\nPer ottenere informazioni sul profilo, utilizzare il comando /info".
