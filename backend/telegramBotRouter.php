@@ -163,7 +163,7 @@ function telegramBotRouter() {
         $message->reply("Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
     });
 
-    $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
+    $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
         global $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 4) return;
@@ -184,9 +184,7 @@ function telegramBotRouter() {
                 $msg .= "\n<b>".$user["name"]."</b>";
                 if($user["driver"]) $msg .= " 🚒";
                 if($user["chief"]) {
-                    $msg .= " 🟥";
-                } else {
-                    $msg .= " ⬛";
+                    $msg .= " CS";
                 }
             }
         } else {
