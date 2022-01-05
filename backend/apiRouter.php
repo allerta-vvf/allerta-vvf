@@ -219,24 +219,15 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['POST'],
         '/availability',
         function ($vars) {
-            global $users, $db;
+            global $users, $availability;
             requireLogin() || accessDenied();
             $users->online_time_update();
             if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
-            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), $user_id, $users->auth->getUserId());
             apiResponse([
-                "response" => $db->update(
-                    DB_PREFIX.'_profiles',
-                    [
-                        'available' => $_POST['available'], 'availability_last_change' => 'manual'
-                    ],
-                    [
-                        'id' => $user_id
-                    ]
-                ),
+                "response" => $availability->change($_POST["available"], $user_id),
                 "updated_user" => $user_id,
                 "updated_user_name" => $users->getName($user_id)
             ]);

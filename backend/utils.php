@@ -230,6 +230,7 @@ class Users
     public function isHidden($id=null)
     {
         if(is_null($id)) $id = $this->auth->getUserId();
+        if(is_null($id)) return true;
         $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
         return $user["hidden"];
     }
@@ -244,6 +245,28 @@ class Users
     public function hasRole($role, $adminGranted=true)
     {
         return $this->auth->hasRole($role) || ($adminGranted && ($this->auth->hasRole(Role::ADMIN) || $this->auth->hasRole(Role::SUPER_ADMIN)));
+    }
+}
+
+class Availability {
+    private $db = null;
+    private $users = null;
+    
+    public function __construct($db, $users)
+    {
+        $this->db = $db;
+        $this->users = $users;
+    }
+
+    public function change($availability, $user_id)
+    {
+        //sendTelegramNotification("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'));
+        logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        return $this->db->update(
+            DB_PREFIX."_profiles",
+            ["available" => $availability, 'availability_last_change' => 'manual'],
+            ["id" => $user_id]
+        );
     }
 }
 
@@ -336,5 +359,6 @@ class Schedules {
 }
 
 $users = new Users($db, $auth);
+$availability = new Availability($db, $users);
 $services = new Services($db);
 $schedules = new Schedules($db, $users);

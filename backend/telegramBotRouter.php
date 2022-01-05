@@ -4,6 +4,34 @@ use skrtdev\Telegram\Message;
 
 require_once 'utils.php';
 
+define('NONE', 0);
+define('WEBHOOK', 1);
+$Bot = null;
+
+function initializeBot($mode = WEBHOOK) {
+    global $Bot;
+    if (is_null($Bot)) {
+        if(defined("BASE_PATH")){
+            $base_path = "/".BASE_PATH."api/bot/telegram";
+        } else {
+            $base_path = "/api/bot/telegram";
+        }
+        $_SERVER['SCRIPT_URL'] = $base_path;
+    
+        $NovagramConfig = [
+            "disable_ip_check" => true, //TODO: fix NovaGram ip check and enable it again
+            "parse_mode" => "HTML",
+            "mode" => $mode
+        ];
+    
+        if(defined("BOT_TELEGRAM_DEBUG_USER")){
+            $NovagramConfig["debug"] = BOT_TELEGRAM_DEBUG_USER;
+        }
+    
+        $Bot = new Bot(BOT_TELEGRAM_API_KEY, $NovagramConfig);
+    }
+}
+
 function getUserIdByMessage(Message $message)
 {
     global $db;
@@ -22,29 +50,35 @@ function requireBotLogin(Message $message)
     }
 }
 
+function sendTelegramNotification($message)
+{
+    global $Bot, $db;
+
+    if(is_null($Bot)) initializeBot(NONE);
+
+    //TODO: implement different types of notifications
+    //TODO: add command for subscribing to notifications
+    $chats = $db->select("SELECT `chat_id` FROM `".DB_PREFIX."_bot_telegram_notifications`");
+    if(!is_null($chats)) {
+        foreach ($chats as $chat) {
+            $chat = $chat['chat_id'];
+            $Bot->sendMessage([
+                "chat_id" => $chat,
+                "text" => $message
+            ]);
+        }
+    }
+}
+
 function yesOrNo($value)
 {
     return ($value === 1 || $value) ? '<b>SI</b>' : '<b>NO</b>';
 }
 
 function telegramBotRouter() {
-    if(defined("BASE_PATH")){
-        $base_path = "/".BASE_PATH."api/bot/telegram";
-    } else {
-        $base_path = "/api/bot/telegram";
-    }
-    $_SERVER['SCRIPT_URL'] = $base_path;
+    global $Bot;
 
-    $NovagramConfig = [
-        "disable_ip_check" => true, //TODO: fix NovaGram ip check and enable it again
-        "parse_mode" => "HTML"
-    ];
-
-    if(defined("BOT_TELEGRAM_DEBUG_USER")){
-        $NovagramConfig["debug"] = BOT_TELEGRAM_DEBUG_USER;
-    }
-
-    $Bot = new Bot(BOT_TELEGRAM_API_KEY, $NovagramConfig);
+    initializeBot();
 
     $Bot->addErrorHandler(function ($e) {
         print('Caught '.get_class($e).' exception from general handler'.PHP_EOL);
@@ -121,30 +155,20 @@ function telegramBotRouter() {
     //Too difficult and "spaghetti to explain it here in comments, please use https://regexr.com/
     //Jokes apart, checks if text contains something like "Attiva", "attiva", "Disponibile", "disponibile" but not "Non ", "non ", "Non_", "non_", "Dis" or "dis"
     $Bot->onText("/\/?(Sono |sono |Io sono |Io sono )?(?<!non( |_))(?<!dis)(?<!Non( |_))(?<!Dis)(Attiva|Attivami|Attivo|Disponibile|Operativo|attiva|attivami|attivo|disponibile|operativo)/", function (Message $message, $matches = []) {
-        global $db, $users;
+        global $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
-        logger('Disponibilità cambiata in "non disponibile"', $users->auth->getUserId(), null, null, "bot_telegram");
-        $db->update(
-            DB_PREFIX.'_profiles',
-            ['available' => 1, 'availability_last_change' => 'manual'],
-            ['id' => $user_id]
-        );
+        $availability->change(0, $user_id);
         $message->reply("Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
     });
 
     $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
-        global $db, $users;
+        global $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
-        logger('Disponibilità cambiata in "non disponibile"', $users->auth->getUserId(), null, null, "bot_telegram");
-        $db->update(
-            DB_PREFIX.'_profiles',
-            ['available' => 0, 'availability_last_change' => 'manual'],
-            ['id' => $user_id]
-        );
+        $availability->change(0, $user_id);
         $message->reply("Disponibilità aggiorata con successo.\nOra sei <b>non operativo</b>.");
     });
 
