@@ -260,8 +260,17 @@ class Availability {
 
     public function change($availability, $user_id)
     {
-        //sendTelegramNotification("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'));
         logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        
+        $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
+        if($available_users_count >= 5) {
+            sendTelegramNotification("✅ Distaccamento operativo con squadra completa");
+        } else if($available_users_count >= 2) {
+            sendTelegramNotification("🚒 Distaccamento operativo per supporto");
+        } else {
+            sendTelegramNotification("⚠️ Distaccamento non operativo");
+        }
+        
         return $this->db->update(
             DB_PREFIX."_profiles",
             ["available" => $availability, 'availability_last_change' => 'manual'],
