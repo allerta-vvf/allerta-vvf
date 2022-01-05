@@ -40,11 +40,9 @@ function telegramBotRouter() {
         "parse_mode" => "HTML"
     ];
 
-    /*
     if(defined("BOT_TELEGRAM_DEBUG_USER")){
         $NovagramConfig["debug"] = BOT_TELEGRAM_DEBUG_USER;
     }
-    */
 
     $Bot = new Bot(BOT_TELEGRAM_API_KEY, $NovagramConfig);
 
@@ -103,6 +101,7 @@ function telegramBotRouter() {
     $Bot->onCommand('info', function (Message $message) {
         global $users;
         $user_id = getUserIdByMessage($message);
+        $message->reply(json_encode($message->from));
         if(is_null($user_id)) {
             $message->chat->sendMessage('⚠️ Questo account Telegram non è associato a nessun utente di Allerta.');
         } else {
@@ -110,7 +109,7 @@ function telegramBotRouter() {
             $message->chat->sendMessage(
                 "ℹ️ Informazioni sul profilo:".
                 "\n<i>Nome:</i> <b>".$user["name"]."</b>".
-                "\n<i>Disponibile:</i> ".yesOrNo($user["availability"]).
+                "\n<i>Disponibile:</i> ".yesOrNo($user["available"]).
                 "\n<i>Caposquadra:</i> ".yesOrNo($user["chief"] === 1).
                 "\n<i>Autista:</i> ".yesOrNo($user["driver"] === 1).
                 "\n<i>Interventi svolti:</i> <b>".$user["services"]."</b>".
@@ -151,7 +150,7 @@ function telegramBotRouter() {
     $Bot->onText("/\/?(Elenco|elenco|Elenca|elenca)(_| )(Disponibili|disponibili)/", function (Message $message, $matches = []) {
         global $db, $users;
         requireBotLogin($message);
-        $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 ORDER BY chief DESC, services ASC, availability_minutes ASC, name ASC");
+        $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 ORDER BY chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
         var_dump($result);
         if(!is_null($result) && count($result) > 0) {
             $msg = "ℹ️ Vigili attualmente disponibili:";
