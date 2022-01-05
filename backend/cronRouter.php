@@ -65,7 +65,7 @@ function job_increment_availability() {
 }
 
 function job_schedule_availability() {
-    global $db, $executed_actions;
+    global $availability, $db, $executed_actions;
     $result = $db->select("SELECT * FROM `".DB_PREFIX."_schedules`;");
     $schedules_check = [];
     $schedules_users = [];
@@ -127,11 +127,7 @@ function job_schedule_availability() {
                             ["last_exec" => $last_exec_new],
                             ["id" => $id]
                         );
-                        $db->update(
-                            DB_PREFIX."_profiles",
-                            ["available" => '1', "availability_last_change" => "cron"],
-                            ["id" => $user_id]
-                        );
+                        $availability->change(1, $user_id, "cron");
                         $schedules_check["schedules"][] = [
                             "schedule" => $schedule,
                             "now" => $now,
@@ -147,11 +143,7 @@ function job_schedule_availability() {
         $profiles = $db->select("SELECT id FROM `".DB_PREFIX."_profiles`");
         foreach ($profiles as $profile) {
             if(!in_array($profile["id"],$schedules_users)){
-                $db->update(
-                    DB_PREFIX."_profiles",
-                    ["available" => 0],
-                    ["availability_last_change" => "cron", "id" => $profile["id"]]
-                );
+                $availability->change(0, $profile["id"], "cron");
             }
         }
         $output = $schedules_check;

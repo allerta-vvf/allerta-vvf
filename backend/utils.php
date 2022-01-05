@@ -261,13 +261,13 @@ class Availability {
         $this->users = $users;
     }
 
-    public function change($availability, $user_id)
+    public function change($availability, $user_id, $change_type="manual")
     {
-        logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        if($change_type === "manual") logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
         
         $response = $this->db->update(
             DB_PREFIX."_profiles",
-            ["available" => $availability, 'availability_last_change' => 'manual'],
+            ["available" => $availability, 'availability_last_change' => $change_type],
             ["id" => $user_id]
         );
 
