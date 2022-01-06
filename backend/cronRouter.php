@@ -196,7 +196,7 @@ function cronRouter (FastRoute\RouteCollector $r) {
             }
 
             job_schedule_availability();
-            //job_reset_availability();
+            job_reset_availability();
             job_increment_availability();
             job_send_notification_if_manual_mode();
 
