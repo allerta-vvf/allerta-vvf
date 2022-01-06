@@ -146,7 +146,9 @@ function telegramBotRouter() {
             "\n/help - Ottieni informazioni sui comandi".
             "\n/attiva - Modifica la tua disponibilità in \"reperibile\"".
             "\n/disattiva - Modifica la tua disponibilità in \"non reperibile\"".
-            "\n/elenco_disponibili - Mostra un elenco dei vigili attualmente disponibili"
+            "\n/programma - Abilita programmazione oraria".
+            "\n/disponibili - Mostra un elenco dei vigili attualmente disponibili".
+            "\n/stato - Mostra lo stato della disponibilità della squadra"
         );
     });
     
@@ -194,7 +196,7 @@ function telegramBotRouter() {
         global $Bot, $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
-        $availability->change_manual_mode(1);
+        $availability->change_manual_mode(0);
         $Bot->sendMessage($message->from->id, "Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
     });
 
