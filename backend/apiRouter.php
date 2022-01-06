@@ -207,11 +207,13 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users, $db;
             requireLogin() || accessDenied();
             $users->online_time_update();
+            $row = $db->selectRow(
+                "SELECT `available`, `manual_mode` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
+                [$users->auth->getUserId()]
+            );
             apiResponse([
-                "available" => $db->selectValue(
-                    "SELECT `available` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
-                    [$users->auth->getUserId()]
-                )
+                "available" => $row["available"],
+                "manual_mode" => $row["manual_mode"]
             ]);
         }
     );
@@ -227,10 +229,29 @@ function apiRouter (FastRoute\RouteCollector $r) {
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
             apiResponse([
-                "response" => $availability->change($_POST["available"], $user_id),
+                "response" => $availability->change($_POST["available"], $user_id, true),
                 "updated_user" => $user_id,
                 "updated_user_name" => $users->getName($user_id)
             ]);
+        }
+    );
+    $r->addRoute(
+        "POST",
+        "/manual_mode",
+        function ($vars) {
+            global $users, $db;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $db->update(
+                DB_PREFIX."_profiles",
+                [
+                    "manual_mode" => $_POST["manual_mode"]
+                ],
+                [
+                    "id" => $users->auth->getUserId()
+                ]
+            );
+            apiResponse(["status" => "success"]);
         }
     );
 
@@ -255,6 +276,29 @@ function apiRouter (FastRoute\RouteCollector $r) {
             apiResponse([
                 "response" => $schedules->update($new_schedules)
             ]);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/service_types',
+        function ($vars) {
+            global $users, $db;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $response = $db->select("SELECT * FROM `".DB_PREFIX."_type`");
+            apiResponse(is_null($response) ? [] : $response);
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/service_types',
+        function ($vars) {
+            global $users, $db;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $response = $db->insert(DB_PREFIX."_type", ["name" => $_POST["name"]]);
+            apiResponse($response);
         }
     );
 
