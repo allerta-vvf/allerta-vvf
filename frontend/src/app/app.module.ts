@@ -23,7 +23,7 @@ import { LoginComponent } from './_components/login/login.component';
 import { ListComponent } from './_components/list/list.component';
 import { LogsComponent } from './_components/logs/logs.component';
 import { ServicesComponent } from './_components/services/services.component';
-import { EditServiceComponent } from './_components/edit-service/edit-service.component';
+//import { EditServiceComponent } from './_components/edit-service/edit-service.component';
 import { TrainingsComponent } from './_components/trainings/trainings.component';
 
 import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.provider';
