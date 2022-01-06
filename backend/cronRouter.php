@@ -135,7 +135,7 @@ function job_schedule_availability() {
             }
         }
         $schedules_check["users"] = $schedules_users;
-        $profiles = $db->select("SELECT id FROM `".DB_PREFIX."_profiles`");
+        $profiles = $db->select("SELECT id FROM `".DB_PREFIX."_profiles` WHERE `manual_mode` = 0");
         foreach ($profiles as $profile) {
             if(!in_array($profile["id"],$schedules_users)){
                 $availability->change(0, $profile["id"], false);
