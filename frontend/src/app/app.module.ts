@@ -41,7 +41,7 @@ import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.p
     ListComponent,
     LogsComponent,
     ServicesComponent,
-    EditServiceComponent,
+    //EditServiceComponent,
     TrainingsComponent
   ],
   imports: [
@@ -59,7 +59,7 @@ import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.p
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    LeafletModule,
+    //LeafletModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable
