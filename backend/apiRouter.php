@@ -239,18 +239,10 @@ function apiRouter (FastRoute\RouteCollector $r) {
         "POST",
         "/manual_mode",
         function ($vars) {
-            global $users, $db;
+            global $users, $availability;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            $db->update(
-                DB_PREFIX."_profiles",
-                [
-                    "manual_mode" => $_POST["manual_mode"]
-                ],
-                [
-                    "id" => $users->auth->getUserId()
-                ]
-            );
+            $availability->change_manual_mode($_POST["manual_mode"]);
             apiResponse(["status" => "success"]);
         }
     );

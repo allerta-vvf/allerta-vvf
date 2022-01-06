@@ -70,6 +70,21 @@ function sendTelegramNotification($message)
     }
 }
 
+function sendTelegramNotificationToUser($message, $userId)
+{
+    global $Bot, $db;
+
+    if(is_null($Bot)) initializeBot(NONE);
+
+    $chat = $db->selectValue("SELECT `chat_id` FROM `".DB_PREFIX."_bot_telegram` WHERE `user` = ?", [$userId]);
+    if(!is_null($chat)) {
+        $Bot->sendMessage([
+            "chat_id" => $chat,
+            "text" => $message
+        ]);
+    }
+}
+
 function yesOrNo($value)
 {
     return ($value === 1 || $value) ? '<b>SI</b>' : '<b>NO</b>';
@@ -163,7 +178,7 @@ function telegramBotRouter() {
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
         $availability->change(1, $user_id, true);
-        $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
+        $Bot->sendMessage($message->from->id, "Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
     });
 
     $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|disattivo|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
@@ -172,10 +187,32 @@ function telegramBotRouter() {
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
         $availability->change(0, $user_id, true);
-        $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>non operativo</b>.");
+        $Bot->sendMessage($message->from->id, "Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
     });
 
-    $Bot->onText("/\/?(Elenco|elenco|Elenca|elenca)(_| )(Disponibili|disponibili)/", function (Message $message, $matches = []) {
+    $Bot->onText("/\/?(Abilita( |_)|abilita( |_)|Attiva( |_)|attiva( |_))?(Programma|Programmazione|programmazione|Programmazione( |_)oraria|programma|programmazione( |_)oraria)/", function (Message $message, $matches = []) {
+        global $Bot, $availability;
+        requireBotLogin($message);
+        if(count(explode(" ", $message->text)) > 3) return;
+        $availability->change_manual_mode(1);
+        $Bot->sendMessage($message->from->id, "Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
+    });
+
+    $Bot->onText("/\/?(Stato|stato)( |_)?(Distaccamento|distaccamento)?/", function (Message $message, $matches = []) {
+        global $db;
+        requireBotLogin($message);
+        if(count(explode(" ", $message->text)) > 2) return;
+        $available_users_count = $db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
+        if($available_users_count === 5) {
+            $message->reply("✅ Distaccamento operativo con squadra completa");
+        } else if($available_users_count === 2) {
+            $message->reply("🧯 Distaccamento operativo per supporto");
+        } else if($available_users_count === 1) {
+            $message->reply("⚠️ Distaccamento non operativo");
+        }
+    });
+
+    $Bot->onText("/\/?(Elenco|elenco|Elenca|elenca)?(_| )?(Disponibili|disponibili)/", function (Message $message, $matches = []) {
         global $db, $users;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;

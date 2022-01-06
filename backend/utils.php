@@ -261,6 +261,19 @@ class Availability {
         $this->users = $users;
     }
 
+    public function change_manual_mode($manual_mode) {
+        global $db, $users;
+        $db->update(
+            DB_PREFIX."_profiles",
+            [
+                "manual_mode" => $manual_mode
+            ],
+            [
+                "id" => $users->auth->getUserId()
+            ]
+        );
+    }
+
     public function change($availability, $user_id, $is_manual_mode=true)
     {
         if($is_manual_mode) logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
@@ -273,18 +286,6 @@ class Availability {
             $change_values,
             ["id" => $user_id]
         );
-
-        if(!$this->users->isHidden($user_id)) {
-            $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
-            if($available_users_count === 5) {
-                sendTelegramNotification("✅ Distaccamento operativo con squadra completa");
-            } else if($available_users_count === 2) {
-                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
-            } else if($available_users_count === 1 && !$availability) {
-                sendTelegramNotification("⚠️ Distaccamento non operativo");
-            }
-        }
-
         return $response;
     }
 }

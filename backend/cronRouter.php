@@ -108,30 +108,28 @@ function job_schedule_availability() {
                     "minutes"  => (int) date("i")
                 ];
 
-                $manual_mode = $db->select("SELECT manual_mode FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
+                $manual_mode = $db->selectValue("SELECT `manual_mode` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
                 if(
-                    !$manual_mode &&
+                    $manual_mode == 0 &&
                     $schedule["day"] == $now["day"] &&
                     $schedule["hour"] == $now["hour"] &&
                     $schedule["minutes"] <= $now["minutes"] &&
                     $now["minutes"] - $schedule["minutes"] <= 30
                 ){
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
-                    if(is_null($last_exec) || (is_array($last_exec) && $schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true)/* && !in_array(date('Y-m-d'), $selected_holidays_dates)*/){
-                        $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
-                        $db->update(
-                            DB_PREFIX."_schedules",
-                            ["last_exec" => $last_exec_new],
-                            ["id" => $id]
-                        );
-                        $availability->change(1, $user_id, false);
-                        $schedules_check["schedules"][] = [
-                            "schedule" => $schedule,
-                            "now" => $now,
-                            "last_exec" => $last_exec,
-                            "last_exec_new" => $last_exec_new,
-                        ];
-                    }
+                    $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
+                    $db->update(
+                        DB_PREFIX."_schedules",
+                        ["last_exec" => $last_exec_new],
+                        ["id" => $id]
+                    );
+                    $availability->change(1, $user_id, false);
+                    $schedules_check["schedules"][] = [
+                        "schedule" => $schedule,
+                        "now" => $now,
+                        "last_exec" => $last_exec,
+                        "last_exec_new" => $last_exec_new,
+                    ];
                 }
 
             }
@@ -157,6 +155,33 @@ function job_schedule_availability() {
     ];
 }
 
+function job_send_notification_if_manual_mode() {
+    global $db, $executed_actions;
+    if(
+        (int) date("H") === 7 &&
+        (int) date("i") - 5 < 0
+    ) {
+        $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `manual_mode` = 1");
+        $notified_users = [];
+        foreach ($profiles as $profile) {
+            $notified_users[] = $profiles["id"];
+            $stato = $profile["available"] ? "disponibile" : "non disponibile";
+            sendTelegramNotificationToUser("⚠️ Attenzione! La tua disponibilità non segue la programmazione oraria.\nAttualmente sei {$stato}.\nScrivi \"/programma\" se vuoi ripristinare la programmazione.", $profile["id"]);
+        }
+        $output = $notified_users;
+        $output_status = "ok";
+    } else {
+        $output = ["notification not sent"];
+        $output_status = "ok";
+    }
+    $executed_actions[] = [
+        "title" => "Send notification if manual mode",
+        "description" => "Send notification to users at 7:00 if they are in manual mode",
+        "output" => $output,
+        "output_status" => $output_status
+    ];
+}
+
 function cronRouter (FastRoute\RouteCollector $r) {
     $r->addRoute(
         'POST',
@@ -171,8 +196,9 @@ function cronRouter (FastRoute\RouteCollector $r) {
             }
 
             job_schedule_availability();
-            //job_reset_availability();
+            job_reset_availability();
             job_increment_availability();
+            job_send_notification_if_manual_mode();
 
             apiResponse(["excuted_actions" => $executed_actions]);
         }
