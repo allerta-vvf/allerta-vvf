@@ -77,14 +77,14 @@ export class AuthService {
                 });
             }).catch((err) => {
                 let error_message = "";
-                if(err.status == 401) {
+                if(err.status === 401) {
                     error_message = err.error.message;
-                } else if (err.status = 400) {
+                } else if (err.status === 400) {
                     let error_messages = err.error.errors;
                     error_message = error_messages.map((val: any) => {
                         return `${val.msg} in ${val.param}`;
                     }).join(" & ");
-                } else if (err.status = 500) {
+                } else if (err.status === 500) {
                     error_message = "Server error";
                 } else {
                     error_message = "Unknown error";

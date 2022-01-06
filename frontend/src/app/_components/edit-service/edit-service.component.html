@@ -1,0 +1,93 @@
+  <form method="post">
+    <div class="container">
+      <div class="form-group">
+        <label for="date-picker">Giorno</label>
+        <input id="date-picker" type="text" placeholder="Premi per selezionare una data" class="form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }">
+      </div>
+      <div class="form-group">
+        <label for="progressivo">Progressivo</label>
+        <input id="progressivo" class="form-control" type="text" placeholder="1234/5" required>
+      </div>
+      <div class="form-group">
+        <label for="timePicker1">Ora inizio</label>
+        <input id="timePicker1" class="form-control" type="time" required>
+      </div>
+      <div class="form-group">
+        <label for="timePicker2">Ora fine</label>
+        <input id="timePicker2" class="form-control" type="time" required>
+      </div>
+      <div class="form-group">
+        <label>Caposquadra</label>
+        <br>
+        <ng-container *ngFor="let user of users">
+            <div class="form-check" *ngIf="user.chief">
+                <input class="form-check-input chief-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
+                <label class="form-check-label" for="chief-{{ user.id }}">
+                  {{ user.name }}
+                </label>
+            </div>
+        </ng-container>
+      </div>
+      <div class="form-group">
+        <label>Autisti</label>
+        <br>
+        <ng-container *ngFor="let user of users">
+            <div class="form-check" *ngIf="user.driver">
+                <input class="form-check-input driver-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
+                <label class="form-check-label" for="driver-{{ user.id }}">
+                  {{ user.name }}
+                </label>
+            </div>
+        </ng-container>
+      </div>
+      <div class="form-group">
+        <label>Altri membri della squadra</label>
+        <br>
+        <ng-container *ngFor="let user of users">
+            <div class="form-check" *ngIf="!user.chief && !user.driver">
+                <input class="form-check-input crew-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
+                <label class="form-check-label" for="crew-{{ user.id }}">
+                  {{ user.name }}
+                </label>
+            </div>
+        </ng-container>
+      </div>
+      <label>Luogo dell'intervento</label>
+      <div id="map"></div>
+      <div id="search">
+        <div class="form-inline">
+          <div class="form-group mx-sm-3 mb-2">
+            <input type="text" class="form-control" value="" id="addr" size="50" />
+          </div>
+          <div class="form-group mx-sm-3 mb-2">
+            <button id="search_button" type="button" class="btn btn-primary mb-2">
+                Cerca
+            </button>
+          </div>
+        </div>
+        <div id="results"></div>
+      </div>
+      <div class="form-group">
+        <label for="notes">Note (es. altre informazioni)</label><br>
+        <textarea class="form-control" id="notes"></textarea>
+      </div>
+      <br>
+      <div class="form-group">
+        <label>Tipologia</label>
+        <br>
+        <!--
+        <select id="types" class="form-control" class="types">
+          {% for type in service.types %}
+          <option value='{{ type.name }}'>{{ type.name }}</option>
+          {% endfor %}
+          {% if service.types is empty %}
+          <option id="empty_option" value=''></option>
+          {% endif %}
+          <option value='add_new'>{{ 'Add type...'|t }}</option>
+        </select>
+        -->
+      </div>
+      <br>
+      <button id="submit_button" type="submit" class="btn btn-primary">Invia</button>
+    </div>
+  </form>

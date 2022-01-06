@@ -41,4 +41,11 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  requestTelegramToken() {
+    this.api.post("telegram_login_token", {}).then((response) => {
+      console.log(response);
+      window.open(response.start_link, "_blank");
+    });
+  }
+
 }

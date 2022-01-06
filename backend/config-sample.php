@@ -22,6 +22,7 @@ define('JWT_PRIVATE_KEY', '@@private_key@@');
 /* Telegram bot options */
 define('BOT_TELEGRAM_API_KEY', '');
 define('BOT_TELEGRAM_USERNAME', '');
+define('BOT_TELEGRAM_DEBUG_USER', null);
 
 /* Sentry options */
 define('SENTRY_CSP_REPORT_URI', '');

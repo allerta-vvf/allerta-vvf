@@ -1,11 +1,20 @@
 <?php
 require_once 'utils.php';
+require_once 'telegramBotRouter.php';
 require_once 'cronRouter.php';
 
 function apiRouter (FastRoute\RouteCollector $r) {
     $r->addGroup('/cron', function (FastRoute\RouteCollector $r) {
         cronRouter($r);
     });
+
+    $r->addRoute(
+        ['GET', 'POST'],
+        '/bot/telegram',
+        function ($vars) {
+            telegramBotRouter();
+        }
+    );
 
     $r->addRoute(
         'GET',
@@ -78,9 +87,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin() || accessDenied();
             $users->online_time_update();
             if($users->hasRole(Role::FULL_VIEWER)) {
-                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             } else {
-                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `name` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `name` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             }
             apiResponse(
                 !is_null($response) ? $response : []
@@ -210,24 +219,15 @@ function apiRouter (FastRoute\RouteCollector $r) {
         ['POST'],
         '/availability',
         function ($vars) {
-            global $users, $db;
+            global $users, $availability;
             requireLogin() || accessDenied();
             $users->online_time_update();
             if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
-            logger("Disponibilità cambiata in ".($_POST["available"] ? '"disponibile"' : '"non disponibile"'), $user_id, $users->auth->getUserId());
             apiResponse([
-                "response" => $db->update(
-                    DB_PREFIX.'_profiles',
-                    [
-                        'available' => $_POST['available'], 'availability_last_change' => 'manual'
-                    ],
-                    [
-                        'id' => $user_id
-                    ]
-                ),
+                "response" => $availability->change($_POST["available"], $user_id),
                 "updated_user" => $user_id,
                 "updated_user_name" => $users->getName($user_id)
             ]);
@@ -254,6 +254,28 @@ function apiRouter (FastRoute\RouteCollector $r) {
             $new_schedules = !is_string($_POST["schedules"]) ? json_encode($_POST["schedules"]) : $_POST["schedules"];
             apiResponse([
                 "response" => $schedules->update($new_schedules)
+            ]);
+        }
+    );
+
+    $r->addRoute(
+        ['POST'],
+        '/telegram_login_token',
+        function ($vars) {
+            global $users, $db;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $token = bin2hex(random_bytes(16));
+            apiResponse([
+                "response" => $db->insert(
+                    DB_PREFIX.'_bot_telegram',
+                    [
+                        'user' => $users->auth->getUserId(),
+                        'tmp_login_token' => $token
+                    ]
+                ),
+                "start_link" => "https://t.me/".BOT_TELEGRAM_USERNAME."?start=".$token,
+                "token" => $token
             ]);
         }
     );
