@@ -196,7 +196,8 @@ function telegramBotRouter() {
         global $Bot, $availability;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
-        $availability->change_manual_mode(0);
+        $userId = getUserIdByMessage($message);
+        $availability->change_manual_mode(0, $userId);
         $Bot->sendMessage($message->from->id, "Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
     });
 
@@ -205,11 +206,11 @@ function telegramBotRouter() {
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;
         $available_users_count = $db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
-        if($available_users_count === 5) {
+        if($available_users_count >= 5) {
             $message->reply("✅ Distaccamento operativo con squadra completa");
-        } else if($available_users_count === 2) {
+        } else if($available_users_count >= 2) {
             $message->reply("🧯 Distaccamento operativo per supporto");
-        } else if($available_users_count === 1) {
+        } else if($available_users_count >= 0) {
             $message->reply("⚠️ Distaccamento non operativo");
         }
     });

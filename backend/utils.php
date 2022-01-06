@@ -261,15 +261,16 @@ class Availability {
         $this->users = $users;
     }
 
-    public function change_manual_mode($manual_mode) {
+    public function change_manual_mode($manual_mode, $user_id = null) {
         global $db, $users;
+        if(is_null($user_id)) $user_id = $users->auth->getUserId();
         $db->update(
             DB_PREFIX."_profiles",
             [
                 "manual_mode" => $manual_mode
             ],
             [
-                "id" => $users->auth->getUserId()
+                "id" => $user_id
             ]
         );
     }
