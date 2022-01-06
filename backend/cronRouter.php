@@ -108,9 +108,9 @@ function job_schedule_availability() {
                     "minutes"  => (int) date("i")
                 ];
 
-                $manual_mode = $db->select("SELECT manual_mode FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
+                $manual_mode = $db->selectValue("SELECT `manual_mode` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
                 if(
-                    !$manual_mode &&
+                    $manual_mode == 0 &&
                     $schedule["day"] == $now["day"] &&
                     $schedule["hour"] == $now["hour"] &&
                     $schedule["minutes"] <= $now["minutes"] &&
