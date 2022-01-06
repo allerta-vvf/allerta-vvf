@@ -70,6 +70,21 @@ function sendTelegramNotification($message)
     }
 }
 
+function sendTelegramNotificationToUser($message, $userId)
+{
+    global $Bot, $db;
+
+    if(is_null($Bot)) initializeBot(NONE);
+
+    $chat = $db->selectValue("SELECT `chat_id` FROM `".DB_PREFIX."_bot_telegram` WHERE `user` = ?", [$userId]);
+    if(!is_null($chat)) {
+        $Bot->sendMessage([
+            "chat_id" => $chat,
+            "text" => $message
+        ]);
+    }
+}
+
 function yesOrNo($value)
 {
     return ($value === 1 || $value) ? '<b>SI</b>' : '<b>NO</b>';
