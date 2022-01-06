@@ -108,17 +108,14 @@ function job_schedule_availability() {
                     "minutes"  => (int) date("i")
                 ];
 
+                $manual_mode = $db->select("SELECT manual_mode FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
                 if(
+                    !$manual_mode &&
                     $schedule["day"] == $now["day"] &&
                     $schedule["hour"] == $now["hour"] &&
                     $schedule["minutes"] <= $now["minutes"] &&
                     $now["minutes"] - $schedule["minutes"] <= 30
                 ){
-                    $availability_last_change = $db->select("SELECT availability_last_change FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$user_id]);
-                    if($availability_last_change === "manual" && $last_exec["day"] === $now["day"]){
-                        break;
-                    }
-
                     if(!in_array($user_id,$schedules_users)) $schedules_users[] = $user_id;
                     if(is_null($last_exec) || (is_array($last_exec) && $schedule["hour"] == $last_exec["hour"] ? $schedule["minutes"] !== $last_exec["minutes"] : true)/* && !in_array(date('Y-m-d'), $selected_holidays_dates)*/){
                         $last_exec_new = $schedule["day"].";".sprintf("%02d", $schedule["hour"]).":".sprintf("%02d", $schedule["minutes"]);
@@ -127,7 +124,7 @@ function job_schedule_availability() {
                             ["last_exec" => $last_exec_new],
                             ["id" => $id]
                         );
-                        $availability->change(1, $user_id, "cron");
+                        $availability->change(1, $user_id, false);
                         $schedules_check["schedules"][] = [
                             "schedule" => $schedule,
                             "now" => $now,
@@ -143,7 +140,7 @@ function job_schedule_availability() {
         $profiles = $db->select("SELECT id FROM `".DB_PREFIX."_profiles`");
         foreach ($profiles as $profile) {
             if(!in_array($profile["id"],$schedules_users)){
-                $availability->change(0, $profile["id"], "cron");
+                $availability->change(0, $profile["id"], false);
             }
         }
         $output = $schedules_check;

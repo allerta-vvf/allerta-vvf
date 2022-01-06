@@ -162,7 +162,7 @@ function telegramBotRouter() {
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
-        $availability->change(1, $user_id);
+        $availability->change(1, $user_id, true);
         $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>operativo</b>.");
     });
 
@@ -171,7 +171,7 @@ function telegramBotRouter() {
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
-        $availability->change(0, $user_id);
+        $availability->change(0, $user_id, true);
         $Bot->sendMessage($message->from->id, "Disponibilità aggiorata con successo.\nOra sei <b>non operativo</b>.");
     });
 

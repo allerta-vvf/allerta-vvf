@@ -53,17 +53,11 @@
         </ng-container>
       </div>
       <label>Luogo dell'intervento</label>
-      <div id="map"></div>
-      <div id="search">
-        <div class="form-inline">
-          <div class="form-group mx-sm-3 mb-2">
-            <input type="text" class="form-control" value="" id="addr" size="50" />
-          </div>
-          <div class="form-group mx-sm-3 mb-2">
-            <button id="search_button" type="button" class="btn btn-primary mb-2">
-                Cerca
-            </button>
-          </div>
+      <div id="map" style="height: 300px;" leaflet [leafletOptions]="options" (leafletMapReady)="mapReady($event)"></div> 
+      <div id="search" class="mt-2">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Luogo">
+          <button class="btn btn-outline-secondary" type="button">Cerca</button>
         </div>
         <div id="results"></div>
       </div>
@@ -75,17 +69,19 @@
       <div class="form-group">
         <label>Tipologia</label>
         <br>
-        <!--
-        <select id="types" class="form-control" class="types">
-          {% for type in service.types %}
-          <option value='{{ type.name }}'>{{ type.name }}</option>
-          {% endfor %}
-          {% if service.types is empty %}
-          <option id="empty_option" value=''></option>
-          {% endif %}
-          <option value='add_new'>{{ 'Add type...'|t }}</option>
-        </select>
-        -->
+        <div class="input-group">
+          <select class="form-control mr-2">
+            <option selected disabled>Seleziona tipologia..</option>
+            <option *ngFor="let type of types" value="{{ type.id }}">{{ type.name }}</option>
+          </select>
+          <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
+            Aggiungi
+          </button>
+        </div>
+        <div class="input-group mb-2 mt-2" *ngIf="addingType">
+          <input type="text" class="form-control" placeholder="Nome della tipologia" [(ngModel)]="newType" [ngModelOptions]="{standalone: true}">
+          <button class="btn btn-secondary" type="button" (click)="addType()">Invia</button>
+        </div>
       </div>
       <br>
       <button id="submit_button" type="submit" class="btn btn-primary">Invia</button>

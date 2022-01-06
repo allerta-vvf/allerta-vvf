@@ -1,9 +1,18 @@
 <div class="text-center">
-    <p>Sei disponibile in caso di allerta?</p>
+    <h3 *ngIf="available !== undefined">Attualmente sei: <b>{{ available ? "Disponibile" : "Non disponibile" }}{{ manual_mode ? "" : " (programmato)" }}</b></h3>
     <div id="availability-btn-group">
         <button (click)="changeAvailibility(1)" type="button" [delay]="1000" tooltip="Cambia la tua disponibilità in 'attivo'" id="activate-btn" class="btn btn-lg btn-success me-1">Attiva</button>
         <button (click)="changeAvailibility(0)" type="button" [delay]="1000" tooltip="Cambia la tua disponibilità in 'non attivo'" id="deactivate-btn" class="btn btn-lg btn-danger">Disattiva</button>
     </div>
+    <ng-container *ngIf="manual_mode !== undefined">
+        <button type="button" class="btn btn-secondary" *ngIf="manual_mode" (click)="updateManualMode(0)">
+            Attiva programmazione oraria
+        </button>
+        <button type="button" class="btn btn-secondary" *ngIf="!manual_mode" (click)="updateManualMode(1)">
+            Disattiva programmazione oraria
+        </button>
+        <br>
+    </ng-container>
     <button type="button" class="btn btn-lg" (click)="openScheduleModal()">
         Modifica orari disponibilità
     </button>
