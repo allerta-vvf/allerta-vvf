@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -9,16 +10,31 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./edit-service.component.scss']
 })
 export class EditServiceComponent implements OnInit {
-  public serviceId: string | undefined;
-  public users: any[] = [];
-  public types: any[] = [];
-  public addingType = false;
-  public newType = "";
+  serviceId: string | undefined;
+
+  users: any[] = [];
+  types: any[] = [];
+  
+  addingType = false;
+  newType = "";
+
+  //TODO: display errors in the form using Bootstrap
+  //TODO: add better validators
+  //TODO: add all form inputs
+  serviceForm = this.fb.group({
+    day: ['', [Validators.required, Validators.minLength(2)]],
+    code: ['', [Validators.required, Validators.minLength(2)]],
+    start_time: ['', [Validators.required, Validators.minLength(2)]],
+    end_time: ['', [Validators.required, Validators.minLength(2)]],
+    notes: ['', [Validators.required, Validators.minLength(2)]],
+    type: ['', [Validators.required, Validators.minLength(2)]]
+  });
 
   constructor(
     private route: ActivatedRoute,
     private api: ApiClientService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private fb: FormBuilder
   ) {
     this.route.paramMap.subscribe(params => {
       this.serviceId = params.get('id') || undefined;
@@ -62,5 +78,9 @@ export class EditServiceComponent implements OnInit {
 
   setPlace(lat: number, lng: number) {
     console.log("Place selected", lat, lng);
+  }
+
+  formSubmit() {
+    console.log(this.serviceForm.value);
   }
 }

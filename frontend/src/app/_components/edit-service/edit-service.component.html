@@ -1,20 +1,20 @@
-  <form method="post">
+  <form method="post" [formGroup]="serviceForm" (ngSubmit)="formSubmit()">
     <div class="container">
       <div class="form-group">
         <label for="date-picker">Giorno</label>
-        <input id="date-picker" type="text" placeholder="Premi per selezionare una data" class="form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }">
+        <input formControlName="day" id="date-picker" type="text" placeholder="Premi per selezionare una data" class="form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }">
       </div>
       <div class="form-group">
         <label for="progressivo">Progressivo</label>
-        <input id="progressivo" class="form-control" type="text" placeholder="1234/5" required>
+        <input formControlName="code" id="progressivo" class="form-control" type="text" placeholder="1234/5" required>
       </div>
       <div class="form-group">
         <label for="timePicker1">Ora inizio</label>
-        <input id="timePicker1" class="form-control" type="time" required>
+        <input formControlName="start_time" id="timePicker1" class="form-control" type="time" required>
       </div>
       <div class="form-group">
         <label for="timePicker2">Ora fine</label>
-        <input id="timePicker2" class="form-control" type="time" required>
+        <input formControlName="end_time" id="timePicker2" class="form-control" type="time" required>
       </div>
       <div class="form-group">
         <label>Caposquadra</label>
@@ -56,14 +56,14 @@
       <map-picker (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
       <div class="form-group">
         <label for="notes">Note (es. altre informazioni)</label><br>
-        <textarea class="form-control" id="notes"></textarea>
+        <textarea formControlName="notes" class="form-control" id="notes"></textarea>
       </div>
       <br>
       <div class="form-group">
         <label>Tipologia</label>
         <br>
         <div class="input-group">
-          <select class="form-control mr-2">
+          <select formControlName="type" class="form-control mr-2">
             <option selected disabled>Seleziona tipologia..</option>
             <option *ngFor="let type of types" value="{{ type.id }}">{{ type.name }}</option>
           </select>
