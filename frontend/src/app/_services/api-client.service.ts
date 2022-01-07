@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,9 @@ export class ApiClientService {
   }
 
   public apiEndpoint(endpoint: string): string {
+    if(endpoint.startsWith('https')) {
+      return endpoint;
+    }
     return this.apiRoot + endpoint;
   }
 
@@ -39,9 +42,12 @@ export class ApiClientService {
     }, new URLSearchParams()).toString();
   }
 
-  public get(endpoint: string) {
+  public get(endpoint: string, data: any = {}) {
     return new Promise<any>((resolve, reject) => {
-      this.http.get(this.apiEndpoint(endpoint), this.requestOptions).subscribe((data: any) => {
+      this.http.get(this.apiEndpoint(endpoint), {
+        ...this.requestOptions,
+        params: new HttpParams({ fromObject: data })
+      }).subscribe((data: any) => {
         resolve(data);
       }, (err) => {
         reject(err);

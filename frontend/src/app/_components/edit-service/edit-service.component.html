@@ -53,14 +53,7 @@
         </ng-container>
       </div>
       <label>Luogo dell'intervento</label>
-      <div id="map" style="height: 300px;" leaflet [leafletOptions]="options" (leafletMapReady)="mapReady($event)"></div> 
-      <div id="search" class="mt-2">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Luogo">
-          <button class="btn btn-outline-secondary" type="button">Cerca</button>
-        </div>
-        <div id="results"></div>
-      </div>
+      <map-picker></map-picker>
       <div class="form-group">
         <label for="notes">Note (es. altre informazioni)</label><br>
         <textarea class="form-control" id="notes"></textarea>

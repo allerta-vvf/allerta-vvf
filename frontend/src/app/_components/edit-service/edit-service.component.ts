@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
-import { latLng, tileLayer } from 'leaflet';
-import "leaflet.locatecontrol";
 
 @Component({
   selector: 'app-edit-service',
@@ -16,13 +14,6 @@ export class EditServiceComponent implements OnInit {
   public types: any[] = [];
   public addingType = false;
   public newType = "";
-  public options = {
-    layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
-    ],
-    zoom: 5,
-    center: latLng(46.879966, -121.726909)
-  };
 
   constructor(
     private route: ActivatedRoute,
@@ -68,10 +59,4 @@ export class EditServiceComponent implements OnInit {
       this.loadTypes();
     });
   }
-
-  mapReady(map: any) {
-    console.log(map);
-    (window as any).L.control.locate().addTo(map);
-  }
-
 }
