@@ -8,6 +8,33 @@ categories:
   - data-analytics
   - data-collection
   - data-visualization
+dependsOn:
+  open:
+    - name: MariaDB
+      optional: false
+      version: ''
+      versionMax: ''
+      versionMin: ''
+    - name: Apache2
+      optional: false
+      version: ''
+      versionMax: ''
+      versionMin: ''
+    - name: PHP
+      optional: false
+      version: ''
+      versionMax: ''
+      versionMin: 8.0.0
+    - name: Telegram
+      optional: true
+      version: ''
+      versionMax: ''
+      versionMin: ''
+    - name: Cron
+      optional: true
+      version: ''
+      versionMax: ''
+      versionMin: ''
 description:
   it:
     features:
