@@ -207,7 +207,7 @@ function telegramBotRouter() {
         if(count(explode(" ", $message->text)) > 2) return;
         $available_users_count = $db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
         if($available_users_count >= 5) {
-            $message->reply("✅ Distaccamento operativo con squadra completa");
+            $message->reply("🚒 Distaccamento operativo con squadra completa");
         } else if($available_users_count >= 2) {
             $message->reply("🧯 Distaccamento operativo per supporto");
         } else if($available_users_count >= 0) {
