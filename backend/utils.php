@@ -106,7 +106,7 @@ function logger($action, $changed=null, $editor=null, $timestamp=null, $source_t
     }
 }
 
-class options
+class Options
 {
     protected $db;
     protected $cache;
@@ -120,7 +120,7 @@ class options
             try {
                 $this->optionsCache = $this->cache->getItem("options");
                 if (is_null($this->optionsCache->get())) {
-                    $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60);
+                    $this->optionsCache->set($db->select("SELECT * FROM `".DB_PREFIX."_options` WHERE `enabled` = 1"))->expiresAfter(60*60*24*7);
                     $this->cache->save($this->optionsCache);
                 }
                 $this->options = $this->optionsCache->get();
@@ -189,7 +189,7 @@ class Users
 
     public function get_users()
     {
-        return $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles`");
+        return $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0");
     }
     
     public function get_user($id)
@@ -341,6 +341,46 @@ class Services {
     }
 }
 
+class Places {
+    private $cache;
+    private $users;
+    private $placesCache;
+
+    public function __construct($cache, $users)
+    {
+        $this->cache = $cache;
+        $this->users = $users;
+    }
+
+    public function search($query)
+    {
+        $this->placesCache = $this->cache->getItem("place_".md5($query));
+        $cache_element = $this->placesCache->get();
+        if (is_null($cache_element)) {
+            $useragent = "Allerta-VVF (https://github.com/allerta-vvf/allerta-vvf) place search proxy (see utils.php class Places)";
+            try {
+                $hostname = gethostname();
+                if(!is_null($hostname) && $hostname != "") $useragent .= " - server hostname: ".$hostname;
+            } catch (Exception $e) {
+                //
+            }
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?format=json&limit=6&q=".urlencode($query));
+            curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+            $response = json_decode(curl_exec($ch), true);
+            curl_close($ch);
+            
+            $this->placesCache->set($response)->expiresAfter(60*60*24*365);
+            $this->cache->save($this->placesCache);
+
+            return $response;
+        } else {
+            return $cache_element;
+        }
+    }
+}
+
 class Schedules {
     private $db = null;
     private $users = null;
@@ -382,4 +422,5 @@ class Schedules {
 $users = new Users($db, $auth);
 $availability = new Availability($db, $users);
 $services = new Services($db);
+$places = new Places($cache, $users);
 $schedules = new Schedules($db, $users);

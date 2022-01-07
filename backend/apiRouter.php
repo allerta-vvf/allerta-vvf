@@ -87,9 +87,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin() || accessDenied();
             $users->online_time_update();
             if($users->hasRole(Role::FULL_VIEWER)) {
-                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC WHERE `hidden` = 0");
             } else {
-                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `name` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC WHERE `hidden` = 0");
             }
             apiResponse(
                 !is_null($response) ? $response : []
@@ -291,6 +291,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
             $users->online_time_update();
             $response = $db->insert(DB_PREFIX."_type", ["name" => $_POST["name"]]);
             apiResponse($response);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/places/search',
+        function ($vars) {
+            global $places;
+            requireLogin() || accessDenied();
+            apiResponse($places->search($_GET["q"]));
         }
     );
 

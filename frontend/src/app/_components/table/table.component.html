@@ -4,12 +4,12 @@
             <tr>
                 <th>Nome</th>
                 <th>Disponibile</th>
-                <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Autista</th>
+                <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Chiama</th>
+                </ng-container>
                 <th>Interventi</th>
                 <th>Minuti disponibilità</th>
-                </ng-container>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -24,16 +24,14 @@
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
                     <i class="fa fa-times" style="color:red" *ngIf="!row.available"></i>
                 </td>
-                <ng-container *ngIf="auth.profile.full_viewer">
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td>
+                <td *ngIf="auth.profile.full_viewer">
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
-                </ng-container>
             </tr>
         </tbody>
     </table>
