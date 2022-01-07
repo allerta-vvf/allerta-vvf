@@ -53,7 +53,7 @@
         </ng-container>
       </div>
       <label>Luogo dell'intervento</label>
-      <map-picker></map-picker>
+      <map-picker (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
       <div class="form-group">
         <label for="notes">Note (es. altre informazioni)</label><br>
         <textarea class="form-control" id="notes"></textarea>

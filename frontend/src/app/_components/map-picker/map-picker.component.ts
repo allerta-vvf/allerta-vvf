@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { LatLng, latLng, tileLayer, Marker, Map } from 'leaflet';
@@ -10,12 +10,17 @@ import "leaflet.locatecontrol";
   styleUrls: ['./map-picker.component.scss']
 })
 export class MapPickerComponent implements OnInit {
+  @Input() lat = 45.88283872530;
+  @Input() lng = 10.18226623535;
+
+  @Output() onMarkerSet = new EventEmitter<any>();
+
   options = {
     layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })
+      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })
     ],
     zoom: 10,
-    center: latLng(45.88283872530, 10.18226623535)
+    center: latLng(this.lat, this.lng)
   };
   isMarkerSet = false;
   marker: Marker;
@@ -33,7 +38,12 @@ export class MapPickerComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  setMarker(LatLng: LatLng) {
+  setMarker(latLng: LatLng) {
+    this.onMarkerSet.emit({
+      lat: latLng.lat,
+      lng: latLng.lng
+    });
+  
     const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
     const iconUrl = "./assets/icons/marker-icon.png";
     const shadowUrl = "./assets/icons/marker-shadow.png";
@@ -48,7 +58,7 @@ export class MapPickerComponent implements OnInit {
       shadowSize: [41, 41]
     });
     this.marker.remove();
-    this.marker = (window as any).L.marker(LatLng, { icon: iconDefault });
+    this.marker = (window as any).L.marker(latLng, { icon: iconDefault });
     this.isMarkerSet = true;
   }
 

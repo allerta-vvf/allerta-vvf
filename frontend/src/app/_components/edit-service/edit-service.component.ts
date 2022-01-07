@@ -59,4 +59,8 @@ export class EditServiceComponent implements OnInit {
       this.loadTypes();
     });
   }
+
+  setPlace(lat: number, lng: number) {
+    console.log("Place selected", lat, lng);
+  }
 }
