@@ -18,6 +18,8 @@ description:
       - Tabella di log di azioni effettuate dai diversi utenti
       - Gestione della disponibilità per singolo utente
       - Possibilità di registrare programmazioni orarie della disponibilità
+      - Rapida attivazione e disattivazione della programmazione oraria
+      - Integrazione del programma con bot Telegram personalizzato
     genericName: software allertamento VVF Volontari
     longDescription: |
       Questa web-app viene utilizzata per gestire la disponibilità di squadre di
@@ -29,7 +31,11 @@ description:
       É possibile inoltre registrare interventi e esercitazioni svolte dai vigili, che saranno utilizzati per riordinare dinamicamente la tabella delle disponibilità.
 
       Gli utenti hanno inoltre la possibilità di registrare delle fasce orarie
-      in cui la disponibilità deve essere automaticamente aggiornata.
+      in cui la disponibilità deve essere automaticamente aggiornata, attivabili rapidamente con un tasto apposito nella dashboard.
+
+      Il software include anche un modulo che permette l'attivazione (seguendo una procedura guidata) di un bot Telegram utilizzabile da tutti gli utenti,
+      attraverso il quale è possibile gestire la disponibilità e la programmazione oraria di questa, e ricevere notifiche.
+      Il bot è programmato per funzionare non sono con i comandi classici (preceduti da uno "/") ma anche con veri e propri messaggi testuali come "Attivo" "Non disponibile" "Elenco disponibili" e tanti altri.
     shortDescription: |-
       Software utilizzato per gestire la disponibilità di vigili del fuoco
       volontari in caso di allertamento
