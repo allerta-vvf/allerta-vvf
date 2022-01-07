@@ -366,15 +366,21 @@ class Places {
             }
 
             $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?format=json&limit=6&q=".urlencode($query));
             curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-            $response = json_decode(curl_exec($ch), true);
+            $plain_place_response = curl_exec($ch);
+            $place_response = json_decode($plain_place_response, true);
             curl_close($ch);
-            
-            $this->placesCache->set($response)->expiresAfter(60*60*24*365);
+
+            if(is_null($place_response)) {
+                $place_response = [];
+            }
+
+            $this->placesCache->set($place_response)->expiresAfter(60*60*24*365);
             $this->cache->save($this->placesCache);
 
-            return $response;
+            return $place_response;
         } else {
             return $cache_element;
         }

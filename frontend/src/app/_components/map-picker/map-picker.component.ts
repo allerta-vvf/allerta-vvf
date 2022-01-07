@@ -90,9 +90,7 @@ export class MapPickerComponent implements OnInit {
       this.toastr.error("Il nome della località deve essere di almeno 3 caratteri");
       return;
     }
-    this.api.get("https://nominatim.openstreetmap.org/search", {
-      format: "json",
-      limit: 5,
+    this.api.get("places/search", {
       q: this.placeName
     }).then((places) => {
       this.isPlaceSearchResultsOpen = true;
