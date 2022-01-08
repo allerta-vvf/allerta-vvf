@@ -219,7 +219,7 @@ function telegramBotRouter() {
         global $db, $users;
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;
-        $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 and hidden = 0 ORDER BY chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+        $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 and hidden = 0 ORDER BY chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC");
         if(!is_null($result) && count($result) > 0) {
             $msg = "ℹ️ Vigili attualmente disponibili:";
             foreach($result as $user) {
