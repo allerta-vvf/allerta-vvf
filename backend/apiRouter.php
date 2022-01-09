@@ -134,7 +134,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $services, $users;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            apiResponse($_POST);
+            apiResponse(["response" => $services->add($_POST["start"], $_POST["end"], $_POST["code"], $_POST["chief"], $_POST["drivers"], $_POST["crew"], $_POST["place"], $_POST["notes"], $_POST["type"], $users->auth->getUserId())]);
         }
     );
 

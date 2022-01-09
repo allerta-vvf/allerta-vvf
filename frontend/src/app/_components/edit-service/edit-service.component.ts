@@ -117,6 +117,8 @@ export class EditServiceComponent implements OnInit {
   formSubmit() {
     this.formSubmitAttempt = true;
     if(this.serviceForm.valid) {
+      let origValues = this.serviceForm.value; //very simple hack to get the original values
+
       let values = this.serviceForm.value;
       values.start = values.start.getTime();
       values.end = values.end.getTime();
@@ -125,11 +127,13 @@ export class EditServiceComponent implements OnInit {
       console.log(values);
       this.api.post("services", values).then((res) => {
         console.log(res);
-        if(res === 1) this.toastr.success("Intervento aggiunto con successo.");
+        this.toastr.success("Intervento aggiunto con successo.");
       }).catch((err) => {
         console.error(err);
         this.toastr.error("Errore durante l'aggiunta dell'intervento");
       });
+
+      this.serviceForm.value = origValues;
     }
   }
 

@@ -234,15 +234,13 @@ class Users
     {
         if(is_null($id)) $id = $this->auth->getUserId();
         if(is_null($id)) return true;
-        $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
-        return $user["hidden"];
+        return $this->db->selectValue("SELECT hidden FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
     }
 
     public function getName($id=null)
     {
         if(is_null($id)) $id = $this->auth->getUserId();
-        $user = $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
-        return $user["name"];
+        return $this->db->selectValue("SELECT name FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
     }
 
     public function hasRole($role, $adminGranted=true)
@@ -293,19 +291,40 @@ class Availability {
 
 class Services {
     private $db = null;
+    private $users = null;
+    private $places = null;
     
-    public function __construct($db)
+    public function __construct($db, $users, $places)
     {
         $this->db = $db;
+        $this->users = $users;
+        $this->places = $places;
     }
 
     public function list() {
-        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` ORDER BY date DESC, beginning DESC");
-        return !is_null($response) ? $response : [];
+        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` ORDER BY start DESC");
+        $response = is_null($response) ? [] : $response;
+        foreach($response as &$service) {
+            $service["chief"] = $this->users->getName($service["chief"]);
+
+            $drivers = explode(";", $service["drivers"]);
+            foreach($drivers as &$driver) {
+                $driver = $this->users->getName($driver);
+            }
+            $service["drivers"] = implode(", ", $drivers);
+
+            $crew = explode(";", $service["crew"]);
+            foreach($crew as &$member) {
+                $member = $this->users->getName($member);
+            }
+            $service["crew"] = implode(", ", $crew);
+        }
+        return $response;
     }
 
     public function increment_counter($increment)
     {
+        $increment = str_replace(";", ",", $increment);
         $this->db->exec(
             "UPDATE `".DB_PREFIX."_profiles` SET `services`= services + 1 WHERE id IN ($increment)"
         );
@@ -313,6 +332,7 @@ class Services {
 
     public function decrement_counter($decrement)
     {
+        $decrement = str_replace(";", ",", $decrement);
         $this->db->exec(
             "UPDATE `".DB_PREFIX."_profiles` SET `services`= services - 1 WHERE id IN ($decrement)"
         );
@@ -320,36 +340,57 @@ class Services {
 
     public function get_selected_users($id)
     {
-        return $this->db->selectValue(
-            "SELECT `increment` FROM `".DB_PREFIX."_services` WHERE `id` = :id LIMIT 0, 1",
+        $response = $this->db->selectRow(
+            "SELECT `chief`, `drivers`, `crew` FROM `".DB_PREFIX."_services` WHERE `id` = :id",
             ["id" => $id]
         );
+        return $response["chief"].";".$response["drivers"].";".$response["crew"];
     }
 
-    public function add($date, $code, $beginning, $end, $chief, $drivers, $crew, $place, $notes, $type, $increment, $inserted_by)
+    public function add($start, $end, $code, $chief, $drivers, $crew, $place, $notes, $type, $inserted_by)
     {
-        $drivers = implode(",", $drivers);
-        $crew = implode(",", $crew);
-        $increment = implode(",", $increment);
-        $date = date('Y-m-d H:i:s', strtotime($date));
         $this->db->insert(
             DB_PREFIX."_services",
-            ["date" => $date, "code" => $code, "beginning" => $beginning, "end" => $end, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->tools->savePlaceReverse($place), "notes" => $notes, "type" => $type, "increment" => $increment, "inserted_by" => $inserted_by]
+            ["start" => $start, "end" => $end, "code" => $code, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->places->save_place_reverse(explode(";", $place)[0], explode(";", $place)[1]), "notes" => $notes, "type" => $type, "inserted_by" => $inserted_by]
         );
-        $this->increment_counter($increment);
+        $this->increment_counter($chief.";".$drivers.";".$crew);
         logger("Service added");
+
+        return $this->db->getLastInsertId();
     }
+}
+
+function curl_call($url, $is_response_json=true)
+{
+    $useragent = "Allerta-VVF (https://github.com/allerta-vvf/allerta-vvf) place search proxy (see utils.php class Places)";
+    try {
+        $hostname = gethostname();
+        if(!is_null($hostname) && $hostname != "") $useragent .= " - server hostname: ".$hostname;
+    } catch (Exception $e) {
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+    $response = curl_exec($ch);
+    if($is_response_json) $response = json_decode($response, true);
+    curl_close($ch);
+
+    return $response;
 }
 
 class Places {
     private $cache;
     private $users;
+    private $db;
     private $placesCache;
 
-    public function __construct($cache, $users)
+    public function __construct($cache, $users, $db)
     {
         $this->cache = $cache;
         $this->users = $users;
+        $this->db = $db;
     }
 
     public function search($query)
@@ -357,21 +398,7 @@ class Places {
         $this->placesCache = $this->cache->getItem("place_".md5($query));
         $cache_element = $this->placesCache->get();
         if (is_null($cache_element)) {
-            $useragent = "Allerta-VVF (https://github.com/allerta-vvf/allerta-vvf) place search proxy (see utils.php class Places)";
-            try {
-                $hostname = gethostname();
-                if(!is_null($hostname) && $hostname != "") $useragent .= " - server hostname: ".$hostname;
-            } catch (Exception $e) {
-                //
-            }
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?format=json&limit=6&q=".urlencode($query));
-            curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-            $plain_place_response = curl_exec($ch);
-            $place_response = json_decode($plain_place_response, true);
-            curl_close($ch);
+            $place_response = curl_call("https://nominatim.openstreetmap.org/search?format=json&limit=6&q=".urlencode($query));
 
             if(is_null($place_response)) {
                 $place_response = [];
@@ -384,6 +411,63 @@ class Places {
         } else {
             return $cache_element;
         }
+    }
+
+    public function save_place_reverse($lat, $lng)
+    {
+        $this->save_static_map_image($lat, $lng);
+
+        $response = curl_call("https://nominatim.openstreetmap.org/reverse?format=json&lat=".$lat."&lon=".$lng);
+
+        if(is_null($response) || empty($response)) {
+            $response = "{}";
+            $place_name = "";
+            $address = [];
+        } else {
+            $place_name = $response["display_name"];
+            $address = $response["address"];
+        }
+
+        $row = ["lat" => $lat, "lng" => $lng, "place_name" => $place_name, "place" => json_encode($response)];
+        if(isset($address["country"])) $row["country"] = $address["country"];
+        if(isset($address["country_code"])) $row["country_code"] = $address["country_code"];
+        if(isset($address["postcode"])) $row["postcode"] = $address["postcode"];
+        if(isset($address["region"])) $row["state"] = $address["region"];
+        if(isset($address["state"])) $row["state"] = $address["state"];
+        if(isset($address["municipality"])) $row["municipality"] = $address["municipality"];
+        if(isset($address["village"])) $row["village"] = $address["village"];
+        if(isset($address["hamlet"])) $row["hamlet"] = $address["hamlet"];
+        if(isset($address["road"])) $row["road"] = $address["road"];
+        if(isset($address["tourism"])) $row["building_service_name"] = $address["tourism"];
+        if(isset($address["croft"])) $row["building_service_name"] = $address["croft"];
+        if(isset($address["isolated_dwelling"])) $row["building_service_name"] = $address["isolated_dwelling"];
+        if(isset($address["amenity"])) $row["building_service_name"] = $address["amenity"];
+        if(isset($address["building"])) $row["building_service_name"] = $address["building"];
+        if(isset($address["house_number"])) $row["house_number"] = $address["house_number"];
+
+        $this->db->insert(
+            DB_PREFIX."_places_info",
+            $row
+        );
+
+        return $this->db->getLastInsertId();
+    }
+
+    function save_static_map_image($lat, $lng)
+    {
+        if(get_option("use_static_map_image_generator", false)) {
+            $url = get_option("static_map_image_generator_url", "");
+            $url = str_replace("{{lat}}", $lat, $url);
+            $url = str_replace("{{lng}}", $lng, $url);
+        } else {
+            $tile_x = floor($lng / 360 * pow(2, get_option("static_map_image_zoom", 18)));
+            $tile_y = floor(log(tan((90 + $lat) * pi() / 360)) / pi() * pow(2, get_option("static_map_image_zoom", 18)));
+
+            $url = "https://a.tile.openstreetmap.org/".get_option("static_map_image_zoom", 18)."/".$tile_x."/".$tile_y.".png";
+        }
+        $image = curl_call($url, false);
+        $image_path = "tmp/".md5($lat.";".$lng).".jpg";
+        file_put_contents($image_path, $image);
     }
 }
 
@@ -427,6 +511,6 @@ class Schedules {
 
 $users = new Users($db, $auth);
 $availability = new Availability($db, $users);
-$services = new Services($db);
-$places = new Places($cache, $users);
+$places = new Places($cache, $users, $db);
+$services = new Services($db, $users, $places);
 $schedules = new Schedules($db, $users);
