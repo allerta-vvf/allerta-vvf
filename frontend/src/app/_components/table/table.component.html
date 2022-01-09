@@ -58,8 +58,8 @@
             <tr>
                 <th>Data</th>
                 <th>Codice</th>
-                <th>Tempo inizio</th>
-                <th>Tempo fine</th>
+                <th>Inizio</th>
+                <th>Fine</th>
                 <th>Caposquadra</th>
                 <th>Autisti</th>
                 <th>Altre persone</th>
@@ -74,8 +74,8 @@
             <tr *ngFor="let row of data">
                 <td>{{ row.date | date: 'MM/dd/yyyy HH:mm' }}</td>
                 <td>{{ row.code }}</td>
-                <td>{{ row.beginning }}</td>
-                <td>{{ row.end }}</td>
+                <td>{{ row.start | date:'DD/MM/YYYY, hh:mm' }}</td>
+                <td>{{ row.end | date:'DD/MM/YYYY, hh:mm' }}</td>
                 <td>{{ row.chief }}</td>
                 <td>{{ row.drivers }}</td>
                 <td>{{ row.crew }}</td>

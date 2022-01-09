@@ -18,17 +18,31 @@ export class EditServiceComponent implements OnInit {
   addingType = false;
   newType = "";
 
-  //TODO: display errors in the form using Bootstrap
-  //TODO: add better validators
-  //TODO: add all form inputs
-  serviceForm = this.fb.group({
-    day: ['', [Validators.required, Validators.minLength(2)]],
-    code: ['', [Validators.required, Validators.minLength(2)]],
-    start_time: ['', [Validators.required, Validators.minLength(2)]],
-    end_time: ['', [Validators.required, Validators.minLength(2)]],
-    notes: ['', [Validators.required, Validators.minLength(2)]],
-    type: ['', [Validators.required, Validators.minLength(2)]]
-  });
+  serviceForm: any;
+  private formSubmitAttempt: boolean = false;
+
+  get start() { return this.serviceForm.get('start'); }
+  get end() { return this.serviceForm.get('end'); }
+  get code() { return this.serviceForm.get('code'); }
+  get chief() { return this.serviceForm.get('chief'); }
+  get drivers() { return this.serviceForm.get('drivers'); }
+  get crew() { return this.serviceForm.get('crew'); }
+  get place() { return this.serviceForm.get('place'); }
+  get type() { return this.serviceForm.get('type'); }
+
+  ngOnInit() {
+    this.serviceForm = this.fb.group({
+      start: ['', [Validators.required]],
+      end: ['', [Validators.required]],
+      code: ['', [Validators.required, Validators.minLength(3)]],
+      chief: ['', [Validators.required]],
+      drivers: [[], [Validators.required]],
+      crew: [[], [Validators.required]],
+      place: ['', [Validators.required, Validators.minLength(3)]],
+      notes: [''],
+      type: ['', [Validators.required, Validators.minLength(1)]]
+    });
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -54,8 +68,6 @@ export class EditServiceComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
-
   addType() {
     if(this.newType.length < 2) {
       this.toastr.error("Il nome della tipologia deve essere lungo almeno 2 caratteri");
@@ -76,11 +88,53 @@ export class EditServiceComponent implements OnInit {
     });
   }
 
+  onDriversCheckboxChange(event: any) {
+    if (event.target.checked) {
+      this.drivers.setValue([...this.drivers.value, event.target.value]);
+    } else {
+      this.drivers.setValue(this.drivers.value.filter((x: number) => x !== event.target.value));
+    }
+  }
+
+  onCrewCheckboxChange(event: any) {
+    if (event.target.checked) {
+      this.crew.setValue([...this.crew.value, event.target.value]);
+    } else {
+      this.crew.setValue(this.crew.value.filter((x: number) => x !== event.target.value));
+    }
+  }
+
   setPlace(lat: number, lng: number) {
     console.log("Place selected", lat, lng);
+    this.place.setValue(lat + ";" + lng);
+  }
+
+  //https://loiane.com/2017/08/angular-reactive-forms-trigger-validation-on-submit/
+  isFieldValid(field: string) {
+    return this.formSubmitAttempt ? this.serviceForm.get(field).valid : true;
   }
 
   formSubmit() {
-    console.log(this.serviceForm.value);
+    this.formSubmitAttempt = true;
+    if(this.serviceForm.valid) {
+      let values = this.serviceForm.value;
+      values.start = values.start.getTime();
+      values.end = values.end.getTime();
+      values.drivers = values.drivers.join(";");
+      values.crew = values.crew.join(";");
+      console.log(values);
+      this.api.post("services", values).then((res) => {
+        console.log(res);
+        if(res === 1) this.toastr.success("Intervento aggiunto con successo.");
+      }).catch((err) => {
+        console.error(err);
+        this.toastr.error("Errore durante l'aggiunta dell'intervento");
+      });
+    }
+  }
+
+  formReset() {
+    this.formSubmitAttempt = false;
+    this.serviceForm.reset();
   }
 }
