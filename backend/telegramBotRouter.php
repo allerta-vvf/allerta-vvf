@@ -58,14 +58,20 @@ function sendTelegramNotification($message)
 
     //TODO: implement different types of notifications
     //TODO: add command for subscribing to notifications
-    $chats = $db->select("SELECT `chat_id` FROM `".DB_PREFIX."_bot_telegram_notifications`");
+    $chats = $db->select("SELECT * FROM `".DB_PREFIX."_bot_telegram_notifications`");
     if(!is_null($chats)) {
         foreach ($chats as $chat) {
+            if($chat['last_notification'] === $message) continue;
             $chat = $chat['chat_id'];
             $Bot->sendMessage([
                 "chat_id" => $chat,
                 "text" => $message
             ]);
+            $db->update(
+                "`".DB_PREFIX."_bot_telegram_notifications`",
+                ["last_notification" => $message],
+                ["id" => $chat["id"]]
+            );
         }
     }
 }
