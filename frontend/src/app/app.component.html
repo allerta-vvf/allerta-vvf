@@ -7,6 +7,10 @@
   <a class="icon" id="menuButton" (click)="menuButtonClicked = !menuButtonClicked">☰</a>
 </div>
 
+<div class="d-flex justify-content-center mt-4 pt-4 mb-3" *ngIf="loadingRoute">
+  <div class="spinner spinner-border"></div>
+</div>
+
 <router-outlet></router-outlet>
 
 <div id="footer" class="footer text-center p-3">
