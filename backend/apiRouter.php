@@ -38,6 +38,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
             }
         }
     );
+    $r->addRoute(
+        'GET',
+        '/place_image',
+        function ($vars) {
+            header('Cache-control: max-age='.(60*60*24*31));
+            header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*24*31));
+            header('Content-Type: image/png');
+            readfile("tmp/".md5($_GET["lat"].";".$_GET["lng"]).".jpg");
+        }
+    );
 
     $r->addRoute(
         'GET',

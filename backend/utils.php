@@ -302,7 +302,7 @@ class Services {
     }
 
     public function list() {
-        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` ORDER BY start DESC");
+        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` JOIN ".DB_PREFIX."_places_info place ON ".DB_PREFIX."_services.place_reverse = place.id ORDER BY start DESC");
         $response = is_null($response) ? [] : $response;
         foreach($response as &$service) {
             $service["chief"] = $this->users->getName($service["chief"]);
@@ -353,10 +353,12 @@ class Services {
             DB_PREFIX."_services",
             ["start" => $start, "end" => $end, "code" => $code, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->places->save_place_reverse(explode(";", $place)[0], explode(";", $place)[1]), "notes" => $notes, "type" => $type, "inserted_by" => $inserted_by]
         );
+        $serviceId = $this->db->lastInsertId();
+
         $this->increment_counter($chief.";".$drivers.";".$crew);
         logger("Service added");
 
-        return $this->db->getLastInsertId();
+        return $serviceId;
     }
 }
 

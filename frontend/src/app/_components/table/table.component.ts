@@ -39,6 +39,9 @@ export class TableComponent implements OnInit, OnDestroy {
     console.log(this.sourceType);
     this.loadTableData();
     this.loadDataInterval = setInterval(() => {
+      if(typeof (window as any).skipTableReload !== 'undefined' && (window as any).skipTableReload) {
+        return;
+      }
       console.log("Refreshing data...");
       this.loadTableData();
     }, this.refreshInterval || 10000);
