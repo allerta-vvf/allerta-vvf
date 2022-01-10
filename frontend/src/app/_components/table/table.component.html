@@ -78,7 +78,7 @@
                 <td>{{ row.drivers }}</td>
                 <td>{{ row.crew }}</td>
                 <td>
-                    <img src="./api/place_image?lat={{ row.lat }}&lng={{ row.lng }}">
+                    <img class="cursor-pointer" src="./api/place_image?lat={{ row.lat }}&lng={{ row.lng }}" (click)="openPlaceDetails(row.lat, row.lng)">
                     <br>
                     {{ row.place_name }}
                 </td>

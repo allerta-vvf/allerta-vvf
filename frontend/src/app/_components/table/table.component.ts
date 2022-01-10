@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { TableType } from 'src/app/_models/TableType';
+import { Router } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from '../../_services/auth.service';
 
@@ -19,7 +19,11 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public loadDataInterval: NodeJS.Timer | undefined = undefined;
 
-  constructor(public apiClient: ApiClientService, public auth: AuthService) {}
+  constructor(
+    private apiClient: ApiClientService,
+    public auth: AuthService,
+    private router: Router
+  ) { }
 
   getTime() {
     return Math.floor(Date.now() / 1000);
@@ -57,5 +61,9 @@ export class TableComponent implements OnInit, OnDestroy {
     if(this.auth.profile.full_viewer) {
       this.changeAvailability.emit({user, newState});
     }
+  }
+
+  openPlaceDetails(lat: number, lng: number) {
+    this.router.navigate(['/place-details', lat, lng]);
   }
 }

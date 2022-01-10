@@ -14,6 +14,11 @@ const routes: Routes = [
   { path: 'logs', component: LogsComponent, canActivate: [AuthorizeGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [AuthorizeGuard] },
   {
+    path: 'place-details', 
+    loadChildren: () => import('./_components/place-details/place-details.module').then(m => m.PlaceDetailsModule),
+    canActivate: [AuthorizeGuard]
+  },
+  {
     path: 'services/:id', 
     loadChildren: () => import('./_components/edit-service/edit-service.module').then(m => m.EditServiceModule),
     canActivate: [AuthorizeGuard]

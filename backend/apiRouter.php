@@ -150,6 +150,18 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
     $r->addRoute(
         ['GET'],
+        '/place_details',
+        function ($vars) {
+            global $db, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $response = $db->selectRow("SELECT * FROM `".DB_PREFIX."_places_info` WHERE `lat` = ? and `lng` = ? LIMIT 0,1;", [$_GET["lat"], $_GET["lng"]]);
+            apiResponse(!is_null($response) ? $response : []);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
         '/trainings',
         function ($vars) {
             global $db, $users;

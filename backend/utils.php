@@ -318,6 +318,8 @@ class Services {
                 $member = $this->users->getName($member);
             }
             $service["crew"] = implode(", ", $crew);
+
+            $service["type"] = $this->db->selectValue("SELECT name FROM `".DB_PREFIX."_type` WHERE `id` = ?", [$service["type"]]);
         }
         return $response;
     }
@@ -353,7 +355,7 @@ class Services {
             DB_PREFIX."_services",
             ["start" => $start, "end" => $end, "code" => $code, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->places->save_place_reverse(explode(";", $place)[0], explode(";", $place)[1]), "notes" => $notes, "type" => $type, "inserted_by" => $inserted_by]
         );
-        $serviceId = $this->db->lastInsertId();
+        $serviceId = $this->db->getLastInsertId();
 
         $this->increment_counter($chief.";".$drivers.";".$crew);
         logger("Service added");

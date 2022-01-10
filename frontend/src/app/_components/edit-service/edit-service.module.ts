@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MapPickerModule } from '../map-picker/map-picker.module';
+import { BackBtnModule } from '../back-btn/back-btn.module';
 
 import { EditServiceRoutingModule } from './edit-service-routing.module';
 import { EditServiceComponent } from './edit-service.component';
@@ -18,7 +19,8 @@ import { EditServiceComponent } from './edit-service.component';
     FormsModule,
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
-    MapPickerModule
+    MapPickerModule,
+    BackBtnModule
   ]
 })
 export class EditServiceModule { }
