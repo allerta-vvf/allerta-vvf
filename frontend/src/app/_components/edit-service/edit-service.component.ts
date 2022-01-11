@@ -119,9 +119,7 @@ export class EditServiceComponent implements OnInit {
     this.formSubmitAttempt = true;
     if(this.serviceForm.valid) {
       this.submittingForm = true;
-      let origValues = this.serviceForm.value; //very simple hack to get the original values
-
-      let values = this.serviceForm.value;
+      let values = Object.assign({}, this.serviceForm.value);
       values.start = values.start.getTime();
       values.end = values.end.getTime();
       values.drivers = values.drivers.join(";");
@@ -136,8 +134,6 @@ export class EditServiceComponent implements OnInit {
         this.toastr.error("Errore durante l'aggiunta dell'intervento");
         this.submittingForm = false;
       });
-
-      this.serviceForm.value = origValues;
     }
   }
 
