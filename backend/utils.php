@@ -314,7 +314,7 @@ class Services {
     }
 
     public function list() {
-        $response = $this->db->select("SELECT * FROM `".DB_PREFIX."_services` JOIN ".DB_PREFIX."_places_info place ON ".DB_PREFIX."_services.place_reverse = place.id ORDER BY start DESC");
+        $response = $this->db->select("SELECT ".DB_PREFIX."_services.*, place.id as place_id, place.lat as lat, place.lng as lng, place.place_name as place_name, place.country as country, place.country_code as country_code, place.postcode as postcode, place.state as state, place.municipality as municipality, place.village as village, place.hamlet as hamlet, place.road as road, place.building_service_name as building_service_name, place.house_number as house_number FROM `".DB_PREFIX."_services` JOIN ".DB_PREFIX."_places_info place ON ".DB_PREFIX."_services.place_reverse = place.id ORDER BY start DESC");
         $response = is_null($response) ? [] : $response;
         foreach($response as &$service) {
             $service["chief"] = $this->users->getName($service["chief"]);
@@ -373,6 +373,23 @@ class Services {
         logger("Service added");
 
         return $serviceId;
+    }
+
+    public function delete($id)
+    {
+        $service = $this->db->selectRow(
+            "SELECT `chief`, `drivers`, `crew` FROM `".DB_PREFIX."_services` WHERE `id` = :id",
+            ["id" => $id]
+        );
+        $this->decrement_counter($service["chief"].";".$service["drivers"].";".$service["crew"]);
+
+        $this->db->delete(
+            DB_PREFIX."_services",
+            ["id" => $id]
+        );
+        logger("Intervento eliminato");
+
+        return true;
     }
 }
 

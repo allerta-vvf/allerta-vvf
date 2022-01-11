@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { Router } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from '../../_services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-table',
@@ -20,9 +22,10 @@ export class TableComponent implements OnInit, OnDestroy {
   public loadDataInterval: NodeJS.Timer | undefined = undefined;
 
   constructor(
-    private apiClient: ApiClientService,
+    private api: ApiClientService,
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   getTime() {
@@ -30,7 +33,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   loadTableData() {
-    this.apiClient.get(this.sourceType || "list").then((data: any) => {
+    this.api.get(this.sourceType || "list").then((data: any) => {
       console.log(data);
       this.data = data.filter((row: any) => {
         if(typeof row.hidden !== 'undefined') return !row.hidden;
@@ -65,5 +68,28 @@ export class TableComponent implements OnInit, OnDestroy {
 
   openPlaceDetails(lat: number, lng: number) {
     this.router.navigate(['/place-details', lat, lng]);
+  }
+
+  deleteService(id: number) {
+    console.log(id);
+    Swal.fire({
+      title: 'Sei del tutto sicuro di voler rimuovere l\'intervento?',
+      text: "Gli interventi eliminati non si possono recuperare.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, rimuovilo',
+      cancelButtonText: 'Annulla'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.api.delete(`services/${id}`).then((response) => {
+          this.toastr.success('Intervento rimosso con successo.');
+          this.loadTableData();
+        }).catch((e) => {
+          this.toastr.error('Errore durante la rimozione dell\'intervento.');
+        });
+      }
+    })
   }
 }

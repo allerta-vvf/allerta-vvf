@@ -85,7 +85,7 @@
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
                 <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
