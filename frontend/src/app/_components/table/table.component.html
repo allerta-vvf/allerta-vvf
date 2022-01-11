@@ -65,7 +65,7 @@
                 <th>Luogo</th>
                 <th>Note</th>
                 <th>Tipo</th>
-                <th>Modifica</th>
+                <th hidden>Modifica</th>
                 <th>Rimuovi</th>
             </tr>
         </thead>
@@ -84,7 +84,7 @@
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
-                <td><i class="fa fa-edit"></i></td>
+                <td hidden><i class="fa fa-edit"></i></td>
                 <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
@@ -100,8 +100,8 @@
                 <th>Altre persone</th>
                 <th>Luogo</th>
                 <th>Note</th>
-                <th>Modifica</th>
-                <th>Rimuovi</th>
+                <th hidden>Modifica</th>
+                <th hidden>Rimuovi</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -114,8 +114,8 @@
                 <td>{{ row.crew }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td hidden><i class="fa fa-edit"></i></td>
+                <td hidden><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
