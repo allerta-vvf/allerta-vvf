@@ -336,6 +336,29 @@ class Services {
         return $response;
     }
 
+    public function get($id) {
+        $response = $this->db->selectRow("SELECT ".DB_PREFIX."_services.*, place.id as place_id, place.lat as lat, place.lng as lng, place.place_name as place_name, place.country as country, place.country_code as country_code, place.postcode as postcode, place.state as state, place.municipality as municipality, place.village as village, place.hamlet as hamlet, place.road as road, place.building_service_name as building_service_name, place.house_number as house_number FROM `".DB_PREFIX."_services` JOIN ".DB_PREFIX."_places_info place ON ".DB_PREFIX."_services.place_reverse = place.id WHERE ".DB_PREFIX."_services.id = ? ORDER BY start DESC", [$id]);
+        if(is_null($response)) return [];
+        return $response;
+
+        $response["chief"] = $this->users->getName($response["chief"]);
+        $response = explode(";", $response["drivers"]);
+        foreach($response as &$driver) {
+            $driver = $this->users->getName($driver);
+        }
+        $response["drivers"] = implode(", ", $response);
+
+        $crew = explode(";", $response["crew"]);
+        foreach($crew as &$member) {
+            $member = $this->users->getName($member);
+        }
+        $response["crew"] = implode(", ", $crew);
+
+        $response["type"] = $this->db->selectValue("SELECT name FROM `".DB_PREFIX."_type` WHERE `id` = ?", [$response["type"]]);
+
+        return $response;
+    }
+
     public function increment_counter($increment)
     {
         $increment = str_replace(";", ",", $increment);

@@ -47,7 +47,7 @@
       <ng-container *ngFor="let user of users">
         <div class="form-check" *ngIf="user.driver">
           <input class="form-check-input driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
-            (change)="onDriversCheckboxChange($event)" type="checkbox" value='{{ user.id }}'>
+            (change)="onDriversCheckboxChange($event)" [checked]="isDriverSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="driver-{{ user.id }}">
             {{ user.name }}
           </label>
@@ -60,7 +60,7 @@
       <ng-container *ngFor="let user of users">
         <div class="form-check" *ngIf="!user.chief && !user.driver">
           <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
-            (change)="onCrewCheckboxChange($event)" type="checkbox" value='{{ user.id }}'>
+            (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">
             {{ user.name }}
           </label>

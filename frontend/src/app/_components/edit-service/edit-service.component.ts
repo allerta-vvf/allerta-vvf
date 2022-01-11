@@ -10,10 +10,25 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./edit-service.component.scss']
 })
 export class EditServiceComponent implements OnInit {
+  addingService = false;
   serviceId: string | undefined;
+  loadedService = {
+    start: '',
+    end: '',
+    code: '',
+    chief: '',
+    drivers: [],
+    crew: [],
+    place: '',
+    notes: '',
+    type: ''
+  };
 
   users: any[] = [];
   types: any[] = [];
+
+  place_lat: number = 0;
+  place_lng: number = 0;
   
   addingType = false;
   newType = "";
@@ -33,15 +48,15 @@ export class EditServiceComponent implements OnInit {
 
   ngOnInit() {
     this.serviceForm = this.fb.group({
-      start: ['', [Validators.required]],
-      end: ['', [Validators.required]],
-      code: ['', [Validators.required, Validators.minLength(3)]],
-      chief: ['', [Validators.required]],
-      drivers: [[], [Validators.required]],
-      crew: [[], [Validators.required]],
-      place: ['', [Validators.required, Validators.minLength(3)]],
-      notes: [''],
-      type: ['', [Validators.required, Validators.minLength(1)]]
+      start: [this.loadedService.start, [Validators.required]],
+      end: [this.loadedService.end, [Validators.required]],
+      code: [this.loadedService.code, [Validators.required, Validators.minLength(3)]],
+      chief: [this.loadedService.chief, [Validators.required]],
+      drivers: [this.loadedService.drivers, [Validators.required]],
+      crew: [this.loadedService.crew, [Validators.required]],
+      place: [this.loadedService.place, [Validators.required, Validators.minLength(3)]],
+      notes: [this.loadedService.notes],
+      type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
     });
   }
 
@@ -53,6 +68,20 @@ export class EditServiceComponent implements OnInit {
   ) {
     this.route.paramMap.subscribe(params => {
       this.serviceId = params.get('id') || undefined;
+      if(this.serviceId === "new") {
+        this.addingService = true;
+      } else {
+        this.api.get(`services/${this.serviceId}`).then((service) => {
+          this.loadedService = service;
+
+          let patch = Object.assign({}, service);
+          patch.start = new Date(parseInt(patch.start));
+          patch.end = new Date(parseInt(patch.end));
+          patch.drivers = patch.drivers.split(";");
+          patch.crew = patch.crew.split(";");
+          this.serviceForm.patchValue(patch);
+        });
+      }
       console.log(this.serviceId);
     });
     this.api.get("users").then((users) => {
@@ -96,6 +125,9 @@ export class EditServiceComponent implements OnInit {
       this.drivers.setValue(this.drivers.value.filter((x: number) => x !== event.target.value));
     }
   }
+  isDriverSelected(id: number) {
+    return this.drivers.value.find((x: number) => x == id);
+  }
 
   onCrewCheckboxChange(event: any) {
     if (event.target.checked) {
@@ -104,10 +136,15 @@ export class EditServiceComponent implements OnInit {
       this.crew.setValue(this.crew.value.filter((x: number) => x !== event.target.value));
     }
   }
+  isCrewSelected(id: number) {
+    return this.crew.value.find((x: number) => x == id);
+  }
 
   setPlace(lat: number, lng: number) {
-    console.log("Place selected", lat, lng);
+    this.place_lat = lat;
+    this.place_lng = lng;
     this.place.setValue(lat + ";" + lng);
+    console.log("Place selected", lat, lng);
   }
 
   //https://loiane.com/2017/08/angular-reactive-forms-trigger-validation-on-submit/
