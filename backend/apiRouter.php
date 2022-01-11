@@ -38,6 +38,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
             }
         }
     );
+    $r->addRoute(
+        'GET',
+        '/place_image',
+        function ($vars) {
+            header('Cache-control: max-age='.(60*60*24*31));
+            header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*24*31));
+            header('Content-Type: image/png');
+            readfile("tmp/".md5($_GET["lat"].";".$_GET["lng"]).".jpg");
+        }
+    );
 
     $r->addRoute(
         'GET',
@@ -87,9 +97,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin() || accessDenied();
             $users->online_time_update();
             if($users->hasRole(Role::FULL_VIEWER)) {
-                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC WHERE `hidden` = 0");
             } else {
-                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `name` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC WHERE `hidden` = 0");
             }
             apiResponse(
                 !is_null($response) ? $response : []
@@ -134,7 +144,40 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $services, $users;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            apiResponse([]);
+            apiResponse(["response" => $services->add($_POST["start"], $_POST["end"], $_POST["code"], $_POST["chief"], $_POST["drivers"], $_POST["crew"], $_POST["place"], $_POST["notes"], $_POST["type"], $users->auth->getUserId())]);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/services/{id}',
+        function ($vars) {
+            global $services, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            apiResponse($services->get($vars['id']));
+        }
+    );
+    $r->addRoute(
+        ['DELETE'],
+        '/services/{id}',
+        function ($vars) {
+            global $services, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            apiResponse(["response" => $services->delete($vars["id"])]);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/place_details',
+        function ($vars) {
+            global $db, $users;
+            requireLogin() || accessDenied();
+            $users->online_time_update();
+            $response = $db->selectRow("SELECT * FROM `".DB_PREFIX."_places_info` WHERE `lat` = ? and `lng` = ? LIMIT 0,1;", [$_GET["lat"], $_GET["lng"]]);
+            apiResponse(!is_null($response) ? $response : []);
         }
     );
 
@@ -239,18 +282,10 @@ function apiRouter (FastRoute\RouteCollector $r) {
         "POST",
         "/manual_mode",
         function ($vars) {
-            global $users, $db;
+            global $users, $availability;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            $db->update(
-                DB_PREFIX."_profiles",
-                [
-                    "manual_mode" => $_POST["manual_mode"]
-                ],
-                [
-                    "id" => $users->auth->getUserId()
-                ]
-            );
+            $availability->change_manual_mode($_POST["manual_mode"]);
             apiResponse(["status" => "success"]);
         }
     );
@@ -299,6 +334,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
             $users->online_time_update();
             $response = $db->insert(DB_PREFIX."_type", ["name" => $_POST["name"]]);
             apiResponse($response);
+        }
+    );
+
+    $r->addRoute(
+        ['GET'],
+        '/places/search',
+        function ($vars) {
+            global $places;
+            requireLogin() || accessDenied();
+            apiResponse($places->search($_GET["q"]));
         }
     );
 

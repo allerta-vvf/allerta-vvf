@@ -4,12 +4,12 @@
             <tr>
                 <th>Nome</th>
                 <th>Disponibile</th>
-                <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Autista</th>
+                <ng-container *ngIf="auth.profile.full_viewer">
                 <th>Chiama</th>
+                </ng-container>
                 <th>Interventi</th>
                 <th>Minuti disponibilità</th>
-                </ng-container>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -24,16 +24,14 @@
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
                     <i class="fa fa-times" style="color:red" *ngIf="!row.available"></i>
                 </td>
-                <ng-container *ngIf="auth.profile.full_viewer">
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td>
+                <td *ngIf="auth.profile.full_viewer">
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
-                </ng-container>
             </tr>
         </tbody>
     </table>
@@ -58,34 +56,36 @@
     <table *ngIf="sourceType === 'services'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Data</th>
+                <th>Inizio</th>
+                <th>Fine</th>
                 <th>Codice</th>
-                <th>Tempo inizio</th>
-                <th>Tempo fine</th>
                 <th>Caposquadra</th>
                 <th>Autisti</th>
                 <th>Altre persone</th>
                 <th>Luogo</th>
                 <th>Note</th>
                 <th>Tipo</th>
-                <th>Modifica</th>
+                <th hidden>Modifica</th>
                 <th>Rimuovi</th>
             </tr>
         </thead>
         <tbody id="table_body">
             <tr *ngFor="let row of data">
-                <td>{{ row.date | date: 'MM/dd/yyyy HH:mm' }}</td>
+                <td>{{ row.start | date:'dd/MM/YYYY, hh:mm' }}</td>
+                <td>{{ row.end | date:'dd/MM/YYYY, hh:mm' }}</td>
                 <td>{{ row.code }}</td>
-                <td>{{ row.beginning }}</td>
-                <td>{{ row.end }}</td>
                 <td>{{ row.chief }}</td>
                 <td>{{ row.drivers }}</td>
                 <td>{{ row.crew }}</td>
-                <td>{{ row.place }}</td>
+                <td>
+                    <img class="cursor-pointer" src="./api/place_image?lat={{ row.lat }}&lng={{ row.lng }}" (click)="openPlaceDetails(row.lat, row.lng)">
+                    <br>
+                    {{ row.place_name }}
+                </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
-                <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td hidden><i class="fa fa-edit"></i></td>
+                <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
@@ -100,8 +100,8 @@
                 <th>Altre persone</th>
                 <th>Luogo</th>
                 <th>Note</th>
-                <th>Modifica</th>
-                <th>Rimuovi</th>
+                <th hidden>Modifica</th>
+                <th hidden>Rimuovi</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -114,8 +114,8 @@
                 <td>{{ row.crew }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td hidden><i class="fa fa-edit"></i></td>
+                <td hidden><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>

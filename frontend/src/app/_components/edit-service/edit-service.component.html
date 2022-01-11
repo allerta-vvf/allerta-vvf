@@ -1,89 +1,107 @@
-  <form method="post">
-    <div class="container">
-      <div class="form-group">
-        <label for="date-picker">Giorno</label>
-        <input id="date-picker" type="text" placeholder="Premi per selezionare una data" class="form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }">
+<back-btn></back-btn>
+<br>
+<form method="post" [formGroup]="serviceForm" (ngSubmit)="formSubmit()">
+  <div class="container">
+    <div class="form-group has-validation">
+      <label for="date-picker">Inizio</label>
+      <input formControlName="start" [class.is-invalid]="!isFieldValid('start')" type="text"
+        placeholder="Premi per selezionare data e ora" class="form-control" bsDatepicker
+        [bsConfig]="{ adaptivePosition: true, withTimepicker: true, dateInputFormat: 'DD/MM/YYYY, hh:mm' }">
+      <div class="invalid-feedback" *ngIf="start.errors?.['required']">
+        Seleziona data e ora di inizio dell'intervento
       </div>
-      <div class="form-group">
-        <label for="progressivo">Progressivo</label>
-        <input id="progressivo" class="form-control" type="text" placeholder="1234/5" required>
-      </div>
-      <div class="form-group">
-        <label for="timePicker1">Ora inizio</label>
-        <input id="timePicker1" class="form-control" type="time" required>
-      </div>
-      <div class="form-group">
-        <label for="timePicker2">Ora fine</label>
-        <input id="timePicker2" class="form-control" type="time" required>
-      </div>
-      <div class="form-group">
-        <label>Caposquadra</label>
-        <br>
-        <ng-container *ngFor="let user of users">
-            <div class="form-check" *ngIf="user.chief">
-                <input class="form-check-input chief-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
-                <label class="form-check-label" for="chief-{{ user.id }}">
-                  {{ user.name }}
-                </label>
-            </div>
-        </ng-container>
-      </div>
-      <div class="form-group">
-        <label>Autisti</label>
-        <br>
-        <ng-container *ngFor="let user of users">
-            <div class="form-check" *ngIf="user.driver">
-                <input class="form-check-input driver-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
-                <label class="form-check-label" for="driver-{{ user.id }}">
-                  {{ user.name }}
-                </label>
-            </div>
-        </ng-container>
-      </div>
-      <div class="form-group">
-        <label>Altri membri della squadra</label>
-        <br>
-        <ng-container *ngFor="let user of users">
-            <div class="form-check" *ngIf="!user.chief && !user.driver">
-                <input class="form-check-input crew-{{ user.id }}" type="checkbox" value='{{ user.id }}'>
-                <label class="form-check-label" for="crew-{{ user.id }}">
-                  {{ user.name }}
-                </label>
-            </div>
-        </ng-container>
-      </div>
-      <label>Luogo dell'intervento</label>
-      <div id="map" style="height: 300px;" leaflet [leafletOptions]="options" (leafletMapReady)="mapReady($event)"></div> 
-      <div id="search" class="mt-2">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Luogo">
-          <button class="btn btn-outline-secondary" type="button">Cerca</button>
-        </div>
-        <div id="results"></div>
-      </div>
-      <div class="form-group">
-        <label for="notes">Note (es. altre informazioni)</label><br>
-        <textarea class="form-control" id="notes"></textarea>
-      </div>
-      <br>
-      <div class="form-group">
-        <label>Tipologia</label>
-        <br>
-        <div class="input-group">
-          <select class="form-control mr-2">
-            <option selected disabled>Seleziona tipologia..</option>
-            <option *ngFor="let type of types" value="{{ type.id }}">{{ type.name }}</option>
-          </select>
-          <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
-            Aggiungi
-          </button>
-        </div>
-        <div class="input-group mb-2 mt-2" *ngIf="addingType">
-          <input type="text" class="form-control" placeholder="Nome della tipologia" [(ngModel)]="newType" [ngModelOptions]="{standalone: true}">
-          <button class="btn btn-secondary" type="button" (click)="addType()">Invia</button>
-        </div>
-      </div>
-      <br>
-      <button id="submit_button" type="submit" class="btn btn-primary">Invia</button>
     </div>
-  </form>
+    <div class="form-group has-validation">
+      <label for="date-picker">Fine</label>
+      <input formControlName="end" [class.is-invalid]="!isFieldValid('end')" type="text"
+        placeholder="Premi per selezionare data e ora" class="form-control" bsDatepicker
+        [bsConfig]="{ adaptivePosition: true, withTimepicker: true, dateInputFormat: 'DD/MM/YYYY, hh:mm' }">
+      <div class="invalid-feedback" *ngIf="end.errors?.['required']">
+        Seleziona data e ora di fine dell'intervento
+      </div>
+    </div>
+    <div class="form-group has-validation">
+      <label for="progressivo">Progressivo</label>
+      <input formControlName="code" [class.is-invalid]="!isFieldValid('code')" id="progressivo" class="form-control"
+        type="text" placeholder="1234/5">
+      <div class="invalid-feedback" *ngIf="code.errors?.['required']">
+        Inserisci il progressivo dell'intervento
+      </div>
+    </div>
+    <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('chief')">
+      <label>Caposquadra</label>
+      <br>
+      <ng-container *ngFor="let user of users">
+        <div class="form-check" *ngIf="user.chief">
+          <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
+            class="form-check-input chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
+          <label class="form-check-label" for="chief-{{ user.id }}">
+            {{ user.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('drivers')">
+      <label>Autisti</label>
+      <br>
+      <ng-container *ngFor="let user of users">
+        <div class="form-check" *ngIf="user.driver">
+          <input class="form-check-input driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
+            (change)="onDriversCheckboxChange($event)" [checked]="isDriverSelected(user.id)" type="checkbox" value='{{ user.id }}'>
+          <label class="form-check-label" for="driver-{{ user.id }}">
+            {{ user.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('crew')">
+      <label>Altri membri della squadra</label>
+      <br>
+      <ng-container *ngFor="let user of users">
+        <div class="form-check" *ngIf="!user.chief && !user.driver">
+          <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
+            (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
+          <label class="form-check-label" for="crew-{{ user.id }}">
+            {{ user.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+    <div [class.is-invalid-div]="!isFieldValid('place')" class="mb-2">
+      <label>Luogo dell'intervento</label>
+      <map-picker (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
+    </div>
+    <div class="form-group">
+      <label for="notes">Note (es. altre informazioni)</label><br>
+      <textarea formControlName="notes" class="form-control" id="notes"></textarea>
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Tipologia</label>
+      <br>
+      <div class="input-group has-validation">
+        <select formControlName="type" [class.is-invalid]="!isFieldValid('type')" class="form-control mr-2">
+          <option selected disabled>Seleziona tipologia..</option>
+          <option *ngFor="let service_type of types" value="{{ service_type.id }}">{{ service_type.name }}</option>
+        </select>
+        <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
+          Aggiungi
+        </button>
+        <div class="invalid-feedback" *ngIf="type.errors?.['required']">
+          Seleziona una tipologia di intervento
+        </div>
+      </div>
+      <div class="input-group mb-2 mt-2" *ngIf="addingType">
+        <input type="text" class="form-control" placeholder="Nome della tipologia" [(ngModel)]="newType"
+          [ngModelOptions]="{standalone: true}">
+        <button class="btn btn-secondary" type="button" (click)="addType()">Invia</button>
+      </div>
+    </div>
+    <br>
+    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">Invia</button>
+    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">Reset</button>
+    <div class="d-flex justify-content-center mt-2 pt-2 mb-3" *ngIf="submittingForm">
+      <div class="spinner spinner-border"></div>
+    </div>
+  </div>
+</form>

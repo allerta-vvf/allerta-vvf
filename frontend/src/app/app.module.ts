@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,7 +21,6 @@ import { LoginComponent } from './_components/login/login.component';
 import { ListComponent } from './_components/list/list.component';
 import { LogsComponent } from './_components/logs/logs.component';
 import { ServicesComponent } from './_components/services/services.component';
-//import { EditServiceComponent } from './_components/edit-service/edit-service.component';
 import { TrainingsComponent } from './_components/trainings/trainings.component';
 
 import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.provider';
@@ -41,7 +38,6 @@ import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.p
     ListComponent,
     LogsComponent,
     ServicesComponent,
-    //EditServiceComponent,
     TrainingsComponent
   ],
   imports: [
@@ -58,8 +54,6 @@ import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.p
     }),
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    //LeafletModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable
