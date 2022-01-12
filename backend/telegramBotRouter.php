@@ -61,7 +61,7 @@ function sendTelegramNotification($message)
     $chats = $db->select("SELECT * FROM `".DB_PREFIX."_bot_telegram_notifications`");
     if(!is_null($chats)) {
         foreach ($chats as $chat) {
-            if($chat['last_notification'] === $message) continue;
+            if(urldecode($chat['last_notification']) === $message) continue;
             $chat = $chat['chat_id'];
             $Bot->sendMessage([
                 "chat_id" => $chat,
@@ -69,7 +69,7 @@ function sendTelegramNotification($message)
             ]);
             $db->update(
                 DB_PREFIX."_bot_telegram_notifications",
-                ["last_notification" => $message],
+                ["last_notification" => urlencode($message)],
                 ["chat_id" => $chat]
             );
         }
