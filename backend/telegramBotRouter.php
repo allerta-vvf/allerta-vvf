@@ -68,9 +68,9 @@ function sendTelegramNotification($message)
                 "text" => $message
             ]);
             $db->update(
-                "`".DB_PREFIX."_bot_telegram_notifications`",
+                DB_PREFIX."_bot_telegram_notifications",
                 ["last_notification" => $message],
-                ["id" => $chat["id"]]
+                ["chat_id" => $chat]
             );
         }
     }
