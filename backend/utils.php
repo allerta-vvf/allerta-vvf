@@ -361,7 +361,7 @@ class Services {
 
     public function increment_counter($increment)
     {
-        $increment = str_replace(";", ",", $increment);
+        $increment = implode(",", array_unique(explode(",", str_replace(";", ",", $increment))));
         $this->db->exec(
             "UPDATE `".DB_PREFIX."_profiles` SET `services`= services + 1 WHERE id IN ($increment)"
         );
@@ -369,7 +369,7 @@ class Services {
 
     public function decrement_counter($decrement)
     {
-        $decrement = str_replace(";", ",", $decrement);
+        $decrement = implode(",", array_unique(explode(",", str_replace(";", ",", $decrement))));
         $this->db->exec(
             "UPDATE `".DB_PREFIX."_profiles` SET `services`= services - 1 WHERE id IN ($decrement)"
         );
@@ -392,7 +392,7 @@ class Services {
         );
         $serviceId = $this->db->getLastInsertId();
 
-        $this->increment_counter($chief.";".$drivers.";".$crew);
+        $this->increment_counter($chief.",".$drivers.",".$crew);
         logger("Service added");
 
         return $serviceId;
