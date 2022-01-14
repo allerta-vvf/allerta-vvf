@@ -58,7 +58,7 @@
       <label>Altri membri della squadra</label>
       <br>
       <ng-container *ngFor="let user of users">
-        <div class="form-check" *ngIf="!user.chief && !user.driver">
+        <div class="form-check" *ngIf="!user.chief">
           <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
             (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">

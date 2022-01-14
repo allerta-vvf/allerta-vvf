@@ -97,9 +97,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin() || accessDenied();
             $users->online_time_update();
             if($users->hasRole(Role::FULL_VIEWER)) {
-                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC WHERE `hidden` = 0");
+                $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             } else {
-                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC WHERE `hidden` = 0");
+                $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             }
             apiResponse(
                 !is_null($response) ? $response : []
