@@ -153,6 +153,7 @@ export class EditServiceComponent implements OnInit {
   }
 
   formSubmit() {
+    console.log("form values", this.serviceForm.value);
     this.formSubmitAttempt = true;
     if(this.serviceForm.valid) {
       this.submittingForm = true;
