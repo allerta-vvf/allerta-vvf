@@ -28,7 +28,7 @@
       <label>Caposquadra</label>
       <br>
       <ng-container *ngFor="let user of users">
-        <div class="form-check" *ngIf="user.chief">
+        <div class="form-check">
           <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
             class="form-check-input chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
           <label class="form-check-label" for="chief-{{ user.id }}">
@@ -54,7 +54,7 @@
       <label>Altri membri della squadra</label>
       <br>
       <ng-container *ngFor="let user of users">
-        <div class="form-check" *ngIf="!user.chief">
+        <div class="form-check">
           <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
             (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">
