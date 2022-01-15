@@ -4,18 +4,14 @@
   <div class="container">
     <div class="form-group has-validation">
       <label for="date-picker">Inizio</label>
-      <input formControlName="start" [class.is-invalid]="!isFieldValid('start')" type="text"
-        placeholder="Premi per selezionare data e ora" class="form-control" bsDatepicker
-        [bsConfig]="{ adaptivePosition: true, withTimepicker: true, dateInputFormat: 'DD/MM/YYYY, hh:mm' }">
+      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')"></datetime-picker>
       <div class="invalid-feedback" *ngIf="start.errors?.['required']">
         Seleziona data e ora di inizio dell'intervento
       </div>
     </div>
     <div class="form-group has-validation">
       <label for="date-picker">Fine</label>
-      <input formControlName="end" [class.is-invalid]="!isFieldValid('end')" type="text"
-        placeholder="Premi per selezionare data e ora" class="form-control" bsDatepicker
-        [bsConfig]="{ adaptivePosition: true, withTimepicker: true, dateInputFormat: 'DD/MM/YYYY, hh:mm' }">
+      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')"></datetime-picker>
       <div class="invalid-feedback" *ngIf="end.errors?.['required']">
         Seleziona data e ora di fine dell'intervento
       </div>
