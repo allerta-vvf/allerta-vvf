@@ -136,6 +136,17 @@ function requireLogin()
     $token = getBearerToken();
     if($users->auth->isTokenValid($token)) {
         $users->auth->authenticateWithToken($token);
+        if(SENTRY_LOADED) {
+            \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($users): void {
+                $scope->setUser([
+                    'id' => $users->auth->getUserId(),
+                    'username' => $users->auth->getUserName(),
+                    'name' => $users->getName(),
+                    'email' => $users->auth->getEmail(),
+                    'ip_address' => get_ip()
+                ]);
+            });
+        }
         return true;
     }
     return false;
@@ -172,18 +183,27 @@ if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
     exit();
 }
 
-switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        notFoundErrorHandler();
-        break;
-    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-        $allowedMethods = $routeInfo[1];
-        http_response_code(405);
-        apiResponse(["status" => "error", "message" => "Method not allowed", "usedMethod" => $_SERVER['REQUEST_METHOD']]);
-        break;
-    case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars = $routeInfo[2];
-        $handler($vars);
-        break;
+try {
+    if(SENTRY_LOADED) {
+        \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($uri): void {
+            $scope->setTag('page.route', $uri);
+        });
+    }
+    switch ($routeInfo[0]) {
+        case FastRoute\Dispatcher::NOT_FOUND:
+            notFoundErrorHandler();
+            break;
+        case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+            $allowedMethods = $routeInfo[1];
+            http_response_code(405);
+            apiResponse(["status" => "error", "message" => "Method not allowed", "usedMethod" => $_SERVER['REQUEST_METHOD']]);
+            break;
+        case FastRoute\Dispatcher::FOUND:
+            $handler = $routeInfo[1];
+            $vars = $routeInfo[2];
+            $handler($vars);
+            break;
+    }    
+} catch (\Throwable $exception) {
+    \Sentry\captureException($exception);
 }
