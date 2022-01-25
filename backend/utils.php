@@ -7,6 +7,19 @@ use Phpfastcache\Config\ConfigurationOption;
 
 require_once("vendor/autoload.php");
 require("config.php");
+if(!defined('SENTRY_LOADED')) {
+    if(!defined(SENTRY_ENABLED)) define(SENTRY_ENABLED, false);
+    if(SENTRY_ENABLED) {
+        \Sentry\init([
+            'dsn' => SENTRY_DSN,
+            'environment' => SENTRY_ENV,
+            'integrations' => [
+                new \Sentry\Integration\ModulesIntegration(),
+            ]
+        ]);
+        define('SENTRY_LOADED', true);
+    }
+}
 
 $db = \Delight\Db\PdoDatabase::fromDsn(
         new \Delight\Db\PdoDsn(
