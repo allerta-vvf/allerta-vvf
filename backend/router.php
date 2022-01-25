@@ -136,7 +136,7 @@ function requireLogin()
     $token = getBearerToken();
     if($users->auth->isTokenValid($token)) {
         $users->auth->authenticateWithToken($token);
-        if(SENTRY_LOADED) {
+        if(defined('SENTRY_LOADED')) {
             \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($users): void {
                 $scope->setUser([
                     'id' => $users->auth->getUserId(),
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
 }
 
 try {
-    if(SENTRY_LOADED) {
+    if(defined('SENTRY_LOADED')) {
         \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($uri): void {
             $scope->setTag('page.route', $uri);
         });
