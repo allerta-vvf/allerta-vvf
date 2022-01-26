@@ -5,22 +5,31 @@ $executed_actions = [];
 
 function job_reset_availability() {
     global $db, $executed_actions;
-    $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles`");
-    if(!is_null($profiles) && count($profiles) > 0) {
-        $list = [];
-        foreach($profiles as $profile){
-            $list[] = [$profile["id"] => $profile["availability_minutes"]];
+    if(
+        (int) date("j") === 1 &&
+        (int) date("H") === 0 &&
+        (int) date("i") - 5 < 0
+    ) {
+        $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles`");
+        if(!is_null($profiles) && count($profiles) > 0) {
+            $list = [];
+            foreach($profiles as $profile){
+                $list[] = [$profile["id"] => $profile["availability_minutes"]];
+            }
+            $db->insert(
+                DB_PREFIX."_minutes",
+                ["month" => date("m"), "year" => date("Y"), "list"=> json_encode($list)]
+            );
+            $db->exec("UPDATE `".DB_PREFIX."_profiles` SET `availability_minutes` = 0");
+            $output = $list;
+            $output_status = "ok";
+        } else {
+            $output = ["profiles array empty"];
+            $output_status = "error";
         }
-        $db->insert(
-            DB_PREFIX."_minutes",
-            ["month" => date("m"), "year" => date("Y"), "list"=> json_encode($list)]
-        );
-        $db->exec("UPDATE `".DB_PREFIX."_profiles` SET `availability_minutes` = 0");
-        $output = $list;
-        $output_status = "ok";
     } else {
-        $output = ["profiles array empty"];
-        $output_status = "error";
+        $output = ["not time to reset"];
+        $output_status = "ok";
     }
     $executed_actions[] = [
         "title" => "Reset availability minutes",
