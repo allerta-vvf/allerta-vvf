@@ -29,6 +29,10 @@ export class AuthService {
             }
             this.profile = decoded.user_info;
 
+            this.profile.hasRole = (role: string) => {
+                return Object.keys(this.profile.roles).includes(role);
+            }
+
             console.log(this.profile);
             return true;
         } catch(e) {

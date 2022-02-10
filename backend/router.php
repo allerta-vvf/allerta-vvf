@@ -136,6 +136,13 @@ function requireLogin()
     $token = getBearerToken();
     if($users->auth->isTokenValid($token)) {
         $users->auth->authenticateWithToken($token);
+        if($users->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $users->auth->admin()->removeRoleForUserById($users->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $users->auth->admin()->addRoleForUserById($users->auth->getUserId(), Role::SUPER_EDITOR);
+
+            $users->auth->authenticateWithToken($token);
+        }
         if(defined('SENTRY_LOADED')) {
             \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($users): void {
                 $scope->setUser([

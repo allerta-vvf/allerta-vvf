@@ -5,7 +5,7 @@
                 <th>Nome</th>
                 <th>Disponibile</th>
                 <th>Autista</th>
-                <ng-container *ngIf="auth.profile.full_viewer">
+                <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
                 <th>Chiama</th>
                 </ng-container>
                 <th>Interventi</th>
@@ -27,7 +27,7 @@
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td *ngIf="auth.profile.full_viewer">
+                <td *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
                 </td>
                 <td>{{ row.services }}</td>

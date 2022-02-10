@@ -74,15 +74,14 @@ $auth = new \Delight\Auth\Auth($db, $JWTconfig, get_ip(), DB_PREFIX."_");
 
 final class Role
 {
-    //https://github.com/delight-im/PHP-Auth/blob/master/src/Role.php
-    const GUEST = \Delight\Auth\Role::AUTHOR;
-    const BASIC_VIEWER = \Delight\Auth\Role::COLLABORATOR;
-    const FULL_VIEWER = \Delight\Auth\Role::CONSULTANT;
-    const EDITOR = \Delight\Auth\Role::CONSUMER;
-    const SUPER_EDITOR = \Delight\Auth\Role::CONTRIBUTOR;
+    const EDITOR = \Delight\Auth\Role::EDITOR;
+    const SUPER_EDITOR = \Delight\Auth\Role::SUPER_EDITOR;
+
     const DEVELOPER = \Delight\Auth\Role::DEVELOPER;
-    const TESTER = \Delight\Auth\Role::CREATOR;
+
+    const GUEST = \Delight\Auth\Role::SUBSCRIBER;
     const EXTERNAL_VIEWER = \Delight\Auth\Role::REVIEWER;
+
     const ADMIN = \Delight\Auth\Role::ADMIN;
     const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
 
@@ -191,7 +190,7 @@ class Users
                 ["hidden" => $hidden, "disabled" => $disabled, "name" => $name, "phone_number" => $phone_number, "chief" => $chief, "driver" => $driver]
             );
             if($chief == 1) {
-                $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
+                $this->auth->admin()->addRoleForUserById($userId, Role::SUPER_EDITOR);
             }
             logger("User added", $userId, $inserted_by);
             return $userId;
@@ -236,9 +235,19 @@ class Users
     public function loginAndReturnToken($username, $password)
     {
         $this->auth->loginWithUsername($username, $password);
+
+        if($this->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $this->auth->admin()->removeRoleForUserById($this->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $this->auth->admin()->addRoleForUserById($this->auth->getUserId(), Role::SUPER_EDITOR);
+            
+            $this->auth->loginWithUsername($username, $password);
+        }
+
         $token = $this->auth->generateJWTtoken([
-            "full_viewer" => $this->hasRole(Role::FULL_VIEWER),
+            "roles" => $this->auth->getRoles(),
             "name" => $this->getName(),
+            "v" => "2"
         ]);
         return $token;
     }

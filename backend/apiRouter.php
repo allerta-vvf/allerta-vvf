@@ -96,7 +96,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $db, $users;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            if($users->hasRole(Role::FULL_VIEWER)) {
+            if($users->hasRole(Role::SUPER_EDITOR)) {
                 $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             } else {
                 $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
@@ -211,7 +211,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             apiResponse(["userId" => $users->add_user($_POST["email"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"], $_POST["chief"], $_POST["driver"], $_POST["hidden"], $_POST["disabled"], "unknown")]);
@@ -223,7 +223,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             apiResponse($users->get_user($vars["userId"]));
@@ -235,7 +235,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             $users->remove_user($vars["userId"], "unknown");
@@ -267,7 +267,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users, $availability;
             requireLogin() || accessDenied();
             $users->online_time_update();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();

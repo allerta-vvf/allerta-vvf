@@ -61,7 +61,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   onChangeAvailability(user: number, newState: 0|1) {
-    if(this.auth.profile.full_viewer) {
+    if(this.auth.profile.hasRole('SUPER_EDITOR')) {
       this.changeAvailability.emit({user, newState});
     }
   }
