@@ -23,7 +23,7 @@ import { LogsComponent } from './_components/logs/logs.component';
 import { ServicesComponent } from './_components/services/services.component';
 import { TrainingsComponent } from './_components/trainings/trainings.component';
 
-import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.provider';
+import { AuthInterceptor } from './_providers/auth-interceptor.provider';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { UnauthorizedInterceptor } from './_providers/unauthorized-interceptor.p
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, 
-    useClass: UnauthorizedInterceptor,
+    useClass: AuthInterceptor,
     multi: true
   }],
   bootstrap: [AppComponent]

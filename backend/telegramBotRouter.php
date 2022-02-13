@@ -40,6 +40,8 @@ function getUserIdByMessage(Message $message)
 
 function requireBotLogin(Message $message)
 {
+    global $users;
+
     $userId = getUserIdByMessage($message);
     if ($userId === null) {
         $message->reply(
@@ -47,6 +49,12 @@ function requireBotLogin(Message $message)
             "\nPer farlo, premere su <strong>\"Collega l'account al bot Telegram\"</strong>."
         );
         exit();
+    } else {
+        if($users->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $users->auth->admin()->removeRoleForUserById($users->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $users->auth->admin()->addRoleForUserById($users->auth->getUserId(), Role::SUPER_EDITOR);
+        }
     }
 }
 
