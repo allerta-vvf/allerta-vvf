@@ -55,7 +55,7 @@ export class ApiClientService {
     });
   }
 
-  public post(endpoint: string, data: any) {
+  public post(endpoint: string, data: any = {}) {
     return new Promise<any>((resolve, reject) => {
       this.http.post(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);
@@ -65,7 +65,7 @@ export class ApiClientService {
     });
   }
 
-  public put(endpoint: string, data: any) {
+  public put(endpoint: string, data: any = {}) {
     return new Promise<any>((resolve, reject) => {
       this.http.put(this.apiEndpoint(endpoint), this.dataToParams(data), this.requestOptions).subscribe((data: any) => {
         resolve(data);

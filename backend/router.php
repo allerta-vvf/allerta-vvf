@@ -130,7 +130,7 @@ function getBearerToken() {
     return null;
 }
 
-function requireLogin()
+function requireLogin($validate_token_version=true)
 {
     global $users;
     $token = getBearerToken();
@@ -143,6 +143,20 @@ function requireLogin()
 
             $users->auth->authenticateWithToken($token);
         }
+
+        if($validate_token_version) {
+            if(!isset($users->auth->user_info["v"])) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "JWT client version is not supported", "type" => "jwt_update_required"]);
+                exit();
+            }
+            if((int) $users->auth->user_info["v"] !== 2) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "JWT client version ".$users->auth->user_info["v"]." is not supported", "type" => "jwt_update_required"]);
+                exit();
+            }
+        }
+
         if(defined('SENTRY_LOADED')) {
             \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($users): void {
                 $scope->setUser([
@@ -154,15 +168,11 @@ function requireLogin()
                 ]);
             });
         }
-        return true;
-    }
-    return false;
-}
 
-function accessDenied()
-{
+        return;
+    }
     statusCode(401);
-    apiResponse(["error" => "Access denied"]);
+    apiResponse(["status" => "error", "message" => "Access denied"]);
     exit();
 }
 

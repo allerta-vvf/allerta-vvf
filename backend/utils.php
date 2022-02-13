@@ -232,6 +232,16 @@ class Users
         );
     }
 
+    public function generateToken()
+    {
+        $token = $this->auth->generateJWTtoken([
+            "roles" => $this->auth->getRoles(),
+            "name" => $this->getName(),
+            "v" => 2
+        ]);
+        return $token;
+    }
+
     public function loginAndReturnToken($username, $password)
     {
         $this->auth->loginWithUsername($username, $password);
@@ -244,12 +254,7 @@ class Users
             $this->auth->loginWithUsername($username, $password);
         }
 
-        $token = $this->auth->generateJWTtoken([
-            "roles" => $this->auth->getRoles(),
-            "name" => $this->getName(),
-            "v" => "2"
-        ]);
-        return $token;
+        return $this->generateToken();
     }
 
     public function isHidden($id=null)

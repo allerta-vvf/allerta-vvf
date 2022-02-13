@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
+import { Observable } from "rxjs";
 import jwt_decode from 'jwt-decode';
 
 export interface LoginResponse {
@@ -13,13 +14,14 @@ export interface LoginResponse {
 })
 export class AuthService {
     public profile: any = undefined;
-    private access_token = '';
+    private access_token: string | undefined = undefined;
 
     public loadProfile() {
         try{
             console.log("Loading profile", this.access_token);
             let now = Date.now().valueOf() / 1000;
             (window as any).jwt_decode = jwt_decode;
+            if(typeof(this.access_token) !== "string") return;
             let decoded: any = jwt_decode(this.access_token);
             if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
                 return false;
@@ -46,19 +48,22 @@ export class AuthService {
     constructor(private api: ApiClientService, private router: Router) {
         if(localStorage.getItem("access_token") !== null) {
             this.access_token = localStorage.getItem("access_token") as string;
-            this.api.setToken(this.access_token);
             this.loadProfile();
         }
     }
 
-    private setToken(value: string) {
+    public setToken(value: string) {
         localStorage.setItem("access_token", value);
         this.access_token = value;
-        this.api.setToken(this.access_token);
         this.loadProfile();
     }
 
+    public getToken(): string | undefined {
+        return this.access_token;
+    }
+
     private removeToken() {
+        this.access_token = '';
         localStorage.removeItem("access_token");
     }
 
@@ -108,5 +113,17 @@ export class AuthService {
             routerDestination = ["login", "list"];
         }
         this.router.navigate(routerDestination);
+    }
+
+    public refreshToken() {
+        return new Observable<string>((observer) => {
+            this.api.post("refreshToken").then((data: any) => {
+                this.setToken(data.token);
+                observer.next(data.token);
+                observer.complete();
+            }).catch((err) => {
+                observer.error(err);
+            });
+        });
     }
 }
