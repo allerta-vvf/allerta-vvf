@@ -4,34 +4,34 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9193956804bd765f7fe3f29d0c61472e",
+    "content-hash": "e757f460b505a5b23599ce4866a7a957",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
-            "version": "2.4.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azuyalabs/yasumi.git",
-                "reference": "083a0d0579fee17e68d688d463bc01098ac2691f"
+                "reference": "5fd99815e8bf480fd0e6b76527d5413767e98930"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azuyalabs/yasumi/zipball/083a0d0579fee17e68d688d463bc01098ac2691f",
-                "reference": "083a0d0579fee17e68d688d463bc01098ac2691f",
+                "url": "https://api.github.com/repos/azuyalabs/yasumi/zipball/5fd99815e8bf480fd0e6b76527d5413767e98930",
+                "reference": "5fd99815e8bf480fd0e6b76527d5413767e98930",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.3"
+                "php": ">=7.4"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "infection/infection": "^0.17 | ^0.22",
+                "friendsofphp/php-cs-fixer": "v2.19 | v3.5",
+                "infection/infection": "^0.17 | ^0.26",
                 "mikey179/vfsstream": "^1.6",
-                "phan/phan": "^4.0",
-                "phpstan/phpstan": "^0.12.66",
-                "phpunit/phpunit": "^8.5 | ^9.4",
-                "vimeo/psalm": "^4"
+                "phan/phan": "^5.2",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^8.5 | ^9.5",
+                "vimeo/psalm": "^4.9"
             },
             "suggest": {
                 "ext-calendar": "For calculating the date of Easter"
@@ -77,7 +77,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-05-09T09:03:34+00:00"
+            "time": "2022-01-30T07:43:17+00:00"
         },
         {
             "name": "brick/phonenumber",
@@ -2424,16 +2424,16 @@
         },
         {
             "name": "spatie/array-to-xml",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/array-to-xml.git",
-                "reference": "3090918cb441ad707660dd8bccc6dc46beb34380"
+                "reference": "18d474f5d53d3ff8d98e7ca00781d84c9c98d286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/3090918cb441ad707660dd8bccc6dc46beb34380",
-                "reference": "3090918cb441ad707660dd8bccc6dc46beb34380",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/18d474f5d53d3ff8d98e7ca00781d84c9c98d286",
+                "reference": "18d474f5d53d3ff8d98e7ca00781d84c9c98d286",
                 "shasum": ""
             },
             "require": {
@@ -2472,7 +2472,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/array-to-xml/issues",
-                "source": "https://github.com/spatie/array-to-xml/tree/3.1.0"
+                "source": "https://github.com/spatie/array-to-xml/tree/3.1.1"
             },
             "funding": [
                 {
@@ -2484,7 +2484,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-12T17:08:24+00:00"
+            "time": "2021-11-22T19:44:12+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3272,5 +3272,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
