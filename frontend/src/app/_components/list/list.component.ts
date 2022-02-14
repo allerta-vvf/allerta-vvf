@@ -38,6 +38,9 @@ export class ListComponent implements OnInit {
   }
 
   changeAvailibility(available: 0|1, id?: number|undefined) {
+    if(typeof id === 'undefined') {
+      id = this.auth.profile.auth_user_id;
+    }
     this.api.post("availability", {
       id: id,
       available: available
@@ -57,6 +60,10 @@ export class ListComponent implements OnInit {
       this.toastr.success("Modalità manuale aggiornata con successo.");
       this.loadAvailability();
     });
+  }
+
+  userImpersonate(user_id: number) {
+    this.loadAvailability();
   }
 
   openScheduleModal() {

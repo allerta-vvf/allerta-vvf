@@ -16,6 +16,7 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input() refreshInterval?: number;
 
   @Output() changeAvailability: EventEmitter<{user: number, newState: 0|1}> = new EventEmitter<{user: number, newState: 0|1}>();
+  @Output() userImpersonate: EventEmitter<number> = new EventEmitter<number>();
 
   public data: any = [];
 
@@ -63,6 +64,15 @@ export class TableComponent implements OnInit, OnDestroy {
   onChangeAvailability(user: number, newState: 0|1) {
     if(this.auth.profile.hasRole('SUPER_EDITOR')) {
       this.changeAvailability.emit({user, newState});
+    }
+  }
+
+  onUserImpersonate(user: number) {
+    if(this.auth.profile.hasRole('SUPER_ADMIN')) {
+      this.auth.impersonate(user).then((user_id) => {
+        this.loadTableData();
+        this.userImpersonate.emit(user_id);
+      });
     }
   }
 

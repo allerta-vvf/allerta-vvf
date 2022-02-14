@@ -257,6 +257,23 @@ class Users
         return $this->generateToken();
     }
 
+    public function loginAsUserIdAndReturnToken($userId)
+    {
+        $this->auth->logOut();
+        $this->auth->admin()->logInAsUserById($userId);
+
+        if($this->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $this->auth->admin()->removeRoleForUserById($this->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $this->auth->admin()->addRoleForUserById($this->auth->getUserId(), Role::SUPER_EDITOR);
+            
+            $this->auth->admin()->logInAsUserById($userId);
+        }
+
+        return $this->generateToken();
+    }
+
+
     public function isHidden($id=null)
     {
         if(is_null($id)) $id = $this->auth->getUserId();

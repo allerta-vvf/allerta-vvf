@@ -32,7 +32,7 @@ export class AuthService {
             this.profile = decoded.user_info;
 
             this.profile.hasRole = (role: string) => {
-                return Object.keys(this.profile.roles).includes(role);
+                return Object.values(this.profile.roles).includes(role);
             }
 
             console.log(this.profile);
@@ -104,6 +104,20 @@ export class AuthService {
                 });
             });
         })
+    }
+
+    public impersonate(user_id: number): Promise<number> {
+        return new Promise((resolve, reject) => {
+            console.log("final", user_id);
+            this.api.post("impersonate", {
+                user_id: user_id
+            }).then((response) => {
+                this.setToken(response.access_token);
+                resolve(user_id);
+            }).catch((err) => {
+                reject();
+            });
+        });
     }
 
     public logout(routerDestination?: string[] | undefined) {
