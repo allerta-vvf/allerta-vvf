@@ -33,11 +33,13 @@ export class ListComponent implements OnInit {
     this.api.get("availability").then((response) => {
       this.available = response.available;
       this.manual_mode = response.manual_mode;
-      console.log(this.available, this.manual_mode);
     });
   }
 
   changeAvailibility(available: 0|1, id?: number|undefined) {
+    if(typeof id === 'undefined') {
+      id = this.auth.profile.auth_user_id;
+    }
     this.api.post("availability", {
       id: id,
       available: available
@@ -68,6 +70,9 @@ export class ListComponent implements OnInit {
       console.log("Refreshing availability...");
       this.loadAvailability();
     }, 10000);
+    this.auth.authChanged.subscribe({
+      next: () => this.loadAvailability()
+    });
   }
 
   ngOnDestroy(): void {

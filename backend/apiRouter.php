@@ -267,8 +267,10 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users, $availability;
             requireLogin();
             $users->online_time_update();
-            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
-                exit;
+            if(!$users->hasRole(Role::SUPER_EDITOR) && (int) $_POST["id"] !== $users->auth->getUserId()){
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "You don't have permission to change other users availability", "t" => $users->auth->getUserId()]);
+                return;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
             apiResponse([
@@ -402,6 +404,52 @@ function apiRouter (FastRoute\RouteCollector $r) {
             catch (Exception $e) {
                 statusCode(401);
                 apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
+            }
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/impersonate',
+        function ($vars) {
+            global $users;
+            requireLogin();
+
+            if(!$users->hasRole(Role::SUPER_ADMIN)) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "You don't have permission to impersonate"]);
+                return;
+            }
+
+            try {
+                $token = $users->loginAsUserIdAndReturnToken($_POST["user_id"]);
+                apiResponse(["status" => "success", "access_token" => $token]);
+            }
+            catch (\Delight\Auth\UnknownIdException $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Wrong user ID"]);
+            }
+            catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Email not verified"]);
+            }
+            catch (Exception $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
+            }
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/stop_impersonating',
+        function ($vars) {
+            global $users;
+            requireLogin();
+
+            if(array_key_exists("impersonating_user", $users->auth->user_info) && array_key_exists("precedent_user_id", $users->auth->user_info)) {
+                $precedent_user_id = $users->auth->user_info["precedent_user_id"];
+                $users->auth->logOut();
+                $token = $users->loginAsUserIdAndReturnToken($precedent_user_id);
+                apiResponse(["status" => "success", "access_token" => $token, "user_id" => $users->auth->getUserId()]);
             }
         }
     );
