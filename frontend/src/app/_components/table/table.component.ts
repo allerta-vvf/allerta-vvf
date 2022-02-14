@@ -53,6 +53,9 @@ export class TableComponent implements OnInit, OnDestroy {
       console.log("Refreshing data...");
       this.loadTableData();
     }, this.refreshInterval || 10000);
+    this.auth.authChanged.subscribe({
+      next: () => this.loadTableData()
+    });
   }
 
   ngOnDestroy(): void {

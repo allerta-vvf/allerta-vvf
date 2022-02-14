@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import jwt_decode from 'jwt-decode';
 
 export interface LoginResponse {
@@ -15,6 +15,7 @@ export interface LoginResponse {
 export class AuthService {
     public profile: any = undefined;
     private access_token: string | undefined = undefined;
+    public authChanged = new Subject<void>();
 
     public loadProfile() {
         try{
@@ -36,6 +37,7 @@ export class AuthService {
             }
 
             console.log(this.profile);
+            this.authChanged.next();
             return true;
         } catch(e) {
             console.error(e);
@@ -120,13 +122,29 @@ export class AuthService {
         });
     }
 
+    public stop_impersonating(): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.api.post("stop_impersonating").then((response) => {
+                this.setToken(response.access_token);
+                resolve(response.user_id);
+            }).catch((err) => {
+                reject();
+            });
+        });
+    }
+
     public logout(routerDestination?: string[] | undefined) {
-        this.removeToken();
-        this.profile = undefined;
-        if(routerDestination === undefined) {
-            routerDestination = ["login", "list"];
+        if(this.profile.impersonating_user) {
+            this.stop_impersonating().then((user_id) => {
+            });
+        } else {
+            this.removeToken();
+            this.profile = undefined;
+            if(routerDestination === undefined) {
+                routerDestination = ["login", "list"];
+            }
+            this.router.navigate(routerDestination);
         }
-        this.router.navigate(routerDestination);
     }
 
     public refreshToken() {

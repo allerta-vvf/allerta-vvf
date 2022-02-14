@@ -439,6 +439,21 @@ function apiRouter (FastRoute\RouteCollector $r) {
         }
     );
     $r->addRoute(
+        ['POST'],
+        '/stop_impersonating',
+        function ($vars) {
+            global $users;
+            requireLogin();
+
+            if(array_key_exists("impersonating_user", $users->auth->user_info) && array_key_exists("precedent_user_id", $users->auth->user_info)) {
+                $precedent_user_id = $users->auth->user_info["precedent_user_id"];
+                $users->auth->logOut();
+                $token = $users->loginAsUserIdAndReturnToken($precedent_user_id);
+                apiResponse(["status" => "success", "access_token" => $token, "user_id" => $users->auth->getUserId()]);
+            }
+        }
+    );
+    $r->addRoute(
         ['GET', 'POST'],
         '/refreshToken',
         function ($vars) {

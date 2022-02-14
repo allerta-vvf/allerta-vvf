@@ -33,7 +33,6 @@ export class ListComponent implements OnInit {
     this.api.get("availability").then((response) => {
       this.available = response.available;
       this.manual_mode = response.manual_mode;
-      console.log(this.available, this.manual_mode);
     });
   }
 
@@ -62,10 +61,6 @@ export class ListComponent implements OnInit {
     });
   }
 
-  userImpersonate(user_id: number) {
-    this.loadAvailability();
-  }
-
   openScheduleModal() {
     this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
   }
@@ -75,6 +70,9 @@ export class ListComponent implements OnInit {
       console.log("Refreshing availability...");
       this.loadAvailability();
     }, 10000);
+    this.auth.authChanged.subscribe({
+      next: () => this.loadAvailability()
+    });
   }
 
   ngOnDestroy(): void {

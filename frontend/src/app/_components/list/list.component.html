@@ -18,7 +18,7 @@
     </button>
 </div>
 <owner-image></owner-image>
-<app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" (userImpersonate)="userImpersonate($event)" #table></app-table>
+<app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" #table></app-table>
 <div class="text-center">
     <button (click)="requestTelegramToken()" class="btn btn-md btn-success mt-3">Collega l'account al bot Telegram</button>
 </div>

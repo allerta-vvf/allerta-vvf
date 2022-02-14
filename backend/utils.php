@@ -232,13 +232,18 @@ class Users
         );
     }
 
-    public function generateToken()
+    public function generateToken($precedent_user_id = null)
     {
-        $token = $this->auth->generateJWTtoken([
+        $token_params = [
             "roles" => $this->auth->getRoles(),
             "name" => $this->getName(),
             "v" => 2
-        ]);
+        ];
+        if(!is_null($precedent_user_id)) {
+            $token_params["impersonating_user"] = true;
+            $token_params["precedent_user_id"] = $precedent_user_id;
+        }
+        $token = $this->auth->generateJWTtoken($token_params);
         return $token;
     }
 
@@ -259,7 +264,15 @@ class Users
 
     public function loginAsUserIdAndReturnToken($userId)
     {
-        $this->auth->logOut();
+        $precedent_user_id = null;
+        if(!is_null($this->auth->getUserId())) {
+            if((int) $userId === (int) $this->auth->getUserId()) {
+                return $this->generateToken();
+            }
+            $precedent_user_id = $this->auth->getUserId();
+            $this->auth->logOut();
+        }
+
         $this->auth->admin()->logInAsUserById($userId);
 
         if($this->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
@@ -270,7 +283,7 @@ class Users
             $this->auth->admin()->logInAsUserById($userId);
         }
 
-        return $this->generateToken();
+        return $this->generateToken($precedent_user_id);
     }
 
 

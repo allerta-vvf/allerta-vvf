@@ -145,7 +145,7 @@ function requireLogin($validate_token_version=true)
         }
 
         if($validate_token_version) {
-            if(!isset($users->auth->user_info["v"])) {
+            if(!array_key_exists("v", $users->auth->user_info)) {
                 statusCode(400);
                 apiResponse(["status" => "error", "message" => "JWT client version is not supported", "type" => "jwt_update_required"]);
                 exit();
