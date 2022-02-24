@@ -2,14 +2,14 @@
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Disponibile</th>
-                <th>Autista</th>
+                <th>{{ 'name'|translate|titlecase }}</th>
+                <th>{{ 'available'|translate|titlecase }}</th>
+                <th>{{ 'driver'|translate|titlecase }}</th>
                 <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
-                <th>Chiama</th>
+                <th>{{ 'call'|translate|titlecase }}</th>
                 </ng-container>
-                <th>Interventi</th>
-                <th>Minuti disponibilità</th>
+                <th>{{ 'services'|translate|titlecase }}</th>
+                <th>{{ 'availability_minutes'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">

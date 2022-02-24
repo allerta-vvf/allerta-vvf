@@ -1,0 +1,28 @@
+{
+    "menu": {
+        "list": "Lista disponibilità",
+        "services": "Interventi",
+        "trainings": "Esercitazioni",
+        "logs": "Logs",
+        "logout": "Logout"
+    },
+    "list": {
+        "your_availability_is": "Attualmente sei:",
+        "enable_schedules": "Abilita programmazione oraria",
+        "disable_schedules": "Disattiva programmazione oraria",
+        "update_schedules": "Modifica orari disponibilità",
+        "connect_telegram_bot": "Collega l'account al bot Telegram"
+    },
+    "programmed": "programmed",
+    "available": "disponibile",
+    "unavailable": "non disponibile",
+    "set_available": "attiva",
+    "set_unavailable": "disattiva",
+    "name": "nome",
+    "driver": "autista",
+    "call": "chiama",
+    "services": "interventi",
+    "availability_minutes": "minuti di disponibilità",
+    "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
+    "revision": "revisione"
+}

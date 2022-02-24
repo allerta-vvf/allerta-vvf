@@ -3,6 +3,7 @@ import { AuthService } from './_services/auth.service';
 import { LocationBackService } from 'src/app/_services/locationBack.service';
 import { versions } from 'src/environments/versions';
 import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,12 @@ export class AppComponent {
   constructor(
     public auth: AuthService,
     private locationBackService: LocationBackService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    this.translate.setDefaultLang('en');
+    this.translate.use("it");
   }
 
   ngOnInit () {

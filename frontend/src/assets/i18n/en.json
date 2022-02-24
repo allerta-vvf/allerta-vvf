@@ -1,0 +1,28 @@
+{
+    "menu": {
+        "list": "List",
+        "services": "Services",
+        "trainings": "Trainings",
+        "logs": "Logs",
+        "logout": "Logout"
+    },
+    "list": {
+        "your_availability_is": "You are:",
+        "enable_schedules": "Enable hour schedules",
+        "disable_schedules": "Disable hour schedules",
+        "update_schedules": "Update availability schedules",
+        "connect_telegram_bot": "Connect your account to the Telegram bot"
+    },
+    "programmed": "programmed",
+    "available": "available",
+    "unavailable": "unavailable",
+    "set_available": "available",
+    "set_unavailable": "unavailable",
+    "name": "name",
+    "driver": "driver",
+    "call": "call",
+    "services": "services",
+    "availability_minutes": "availability_minutes",
+    "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
+    "revision": "revision"
+}
