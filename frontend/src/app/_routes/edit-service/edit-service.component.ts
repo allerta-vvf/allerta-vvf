@@ -23,6 +23,8 @@ export class EditServiceComponent implements OnInit {
     notes: '',
     type: ''
   };
+  loadedServiceLat = "";
+  loadedServiceLng = "";
 
   users: any[] = [];
   types: any[] = [];
@@ -73,6 +75,8 @@ export class EditServiceComponent implements OnInit {
       } else {
         this.api.get(`services/${this.serviceId}`).then((service) => {
           this.loadedService = service;
+          this.loadedServiceLat = service.lat;
+          this.loadedServiceLng = service.lng;
 
           let patch = Object.assign({}, service);
           patch.start = new Date(parseInt(patch.start));

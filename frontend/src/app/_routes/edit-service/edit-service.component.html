@@ -65,7 +65,8 @@
     </div>
     <div [class.is-invalid-div]="!isFieldValid('place')" class="mb-2">
       <label>Luogo dell'intervento</label>
-      <map-picker (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
+      <map-picker *ngIf="addingService" (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
+      <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (onMarkerSet)="setPlace($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
     </div>
     <div class="form-group">
       <label for="notes">Note (es. altre informazioni)</label><br>

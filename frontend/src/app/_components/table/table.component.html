@@ -67,7 +67,7 @@
                 <th>Luogo</th>
                 <th>Note</th>
                 <th>Tipo</th>
-                <th hidden>Modifica</th>
+                <th>Modifica</th>
                 <th>Rimuovi</th>
             </tr>
         </thead>
@@ -86,7 +86,7 @@
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
-                <td hidden><i class="fa fa-edit"></i></td>
+                <td (click)="editService(row.id)"><i class="fa fa-edit"></i></td>
                 <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>

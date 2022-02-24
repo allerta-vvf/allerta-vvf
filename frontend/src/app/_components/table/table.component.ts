@@ -83,6 +83,10 @@ export class TableComponent implements OnInit, OnDestroy {
     this.router.navigate(['/place-details', lat, lng]);
   }
 
+  editService(id: number) {
+    this.router.navigate(['/services', id]); 
+  }
+
   deleteService(id: number) {
     console.log(id);
     Swal.fire({

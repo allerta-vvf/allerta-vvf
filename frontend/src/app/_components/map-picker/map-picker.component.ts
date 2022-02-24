@@ -10,8 +10,11 @@ import "leaflet.locatecontrol";
   styleUrls: ['./map-picker.component.scss']
 })
 export class MapPickerComponent implements OnInit {
-  @Input() lat = 45.88283872530;
-  @Input() lng = 10.18226623535;
+  lat = 45.88283872530;
+  lng = 10.18226623535;
+
+  @Input() selectLat = "";
+  @Input() selectLng = "";
 
   @Output() onMarkerSet = new EventEmitter<any>();
 
@@ -36,7 +39,12 @@ export class MapPickerComponent implements OnInit {
     this.map = undefined as unknown as Map;
   }
 
-  ngOnInit(): void { }
+  ngOnInit() {
+    if(this.selectLat !== "" && this.selectLng !== "") {
+      console.log(this.selectLat, this.selectLng);
+      this.setMarker(latLng(parseFloat(this.selectLat), parseFloat(this.selectLng)));
+    }
+  }
 
   setMarker(latLng: LatLng) {
     this.onMarkerSet.emit({
