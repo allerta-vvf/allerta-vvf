@@ -57,6 +57,7 @@
     <table *ngIf="sourceType === 'services'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Inizio</th>
                 <th>Fine</th>
                 <th>Codice</th>
@@ -71,14 +72,18 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data">
+            <tr *ngFor="let row of data; index as i">
+                <td>{{ data.length - i }}</td>
                 <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.code }}</td>
                 <td>{{ row.chief }}</td>
                 <td>{{ row.drivers }}</td>
                 <td>{{ row.crew }}</td>
-                <td>{{ row.place_name }}</td>
+                <td>
+                    {{ row.place_name }}<br>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">Altre informazioni</a>
+                </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
                 <td hidden><i class="fa fa-edit"></i></td>
@@ -89,6 +94,7 @@
     <table *ngIf="sourceType === 'trainings'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
+                <td>#</td>
                 <th>Data</th>
                 <th>Nome</th>
                 <th>Tempo inizio</th>
@@ -102,7 +108,8 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data">
+            <tr *ngFor="let row of data; index as i">
+                <td>{{ data.length - i }}</td>
                 <td>{{ row.date | date: 'MM/dd/yyyy HH:mm' }}</td>
                 <td>{{ row.name }}</td>
                 <td>{{ row.beginning }}</td>
