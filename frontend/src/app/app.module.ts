@@ -16,12 +16,12 @@ import { TableComponent } from './_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from './_components/modal-availability-schedule/modal-availability-schedule.component';
 import { OwnerImageComponent } from './_components/owner-image/owner-image.component';
 
-import { LoginComponent } from './_components/login/login.component';
+import { LoginComponent } from './_routes/login/login.component';
 
-import { ListComponent } from './_components/list/list.component';
-import { LogsComponent } from './_components/logs/logs.component';
-import { ServicesComponent } from './_components/services/services.component';
-import { TrainingsComponent } from './_components/trainings/trainings.component';
+import { ListComponent } from './_routes/list/list.component';
+import { LogsComponent } from './_routes/logs/logs.component';
+import { ServicesComponent } from './_routes/services/services.component';
+import { TrainingsComponent } from './_routes/trainings/trainings.component';
 
 import { AuthInterceptor } from './_providers/auth-interceptor.provider';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { TableComponent } from '../table/table.component';
-import { ModalAvailabilityScheduleComponent } from '../modal-availability-schedule/modal-availability-schedule.component';
+import { TableComponent } from '../../_components/table/table.component';
+import { ModalAvailabilityScheduleComponent } from '../../_components/modal-availability-schedule/modal-availability-schedule.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';

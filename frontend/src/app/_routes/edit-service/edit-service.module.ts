@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { MapPickerModule } from '../map-picker/map-picker.module';
-import { DatetimePickerModule } from '../datetime-picker/datetime-picker.module';
-import { BackBtnModule } from '../back-btn/back-btn.module';
+import { MapPickerModule } from '../../_components/map-picker/map-picker.module';
+import { DatetimePickerModule } from '../../_components/datetime-picker/datetime-picker.module';
+import { BackBtnModule } from '../../_components/back-btn/back-btn.module';
 
 import { EditServiceRoutingModule } from './edit-service-routing.module';
 import { EditServiceComponent } from './edit-service.component';
