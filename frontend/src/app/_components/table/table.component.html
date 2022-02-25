@@ -39,10 +39,10 @@
     <table *ngIf="sourceType === 'logs'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Azione</th>
-                <th>Interessato</th>
-                <th>Fatto da</th>
-                <th>Data e ora</th>
+                <th>{{ 'action'|translate|titlecase }}</th>
+                <th>{{ 'changed'|translate|titlecase }}</th>
+                <th>{{ 'editor'|translate|titlecase }}</th>
+                <th>{{ 'datetime'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -58,17 +58,17 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Inizio</th>
-                <th>Fine</th>
-                <th>Codice</th>
-                <th>Caposquadra</th>
-                <th>Autisti</th>
-                <th>Altre persone</th>
-                <th>Luogo</th>
-                <th>Note</th>
-                <th>Tipo</th>
-                <th>Modifica</th>
-                <th>Rimuovi</th>
+                <th>{{ 'start'|translate|titlecase }}</th>
+                <th>{{ 'end'|translate|titlecase }}</th>
+                <th>{{ 'code'|translate|titlecase }}</th>
+                <th>{{ 'chief'|translate|titlecase }}</th>
+                <th>{{ 'drivers'|translate|titlecase }}</th>
+                <th>{{ 'crew'|translate|titlecase }}</th>
+                <th>{{ 'place'|translate|titlecase }}</th>
+                <th>{{ 'notes'|translate|titlecase }}</th>
+                <th>{{ 'type'|translate|titlecase }}</th>
+                <th>{{ 'update'|translate|titlecase }}</th>
+                <th>{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -82,7 +82,7 @@
                 <td>{{ row.crew }}</td>
                 <td>
                     {{ row.place_name }}<br>
-                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">Altre informazioni</a>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">{{ 'more details'|translate|titlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
@@ -95,22 +95,20 @@
         <thead>
             <tr>
                 <td>#</td>
-                <th>Data</th>
-                <th>Nome</th>
-                <th>Tempo inizio</th>
-                <th>Tempo fine</th>
-                <th>Caposquadra</th>
-                <th>Altre persone</th>
-                <th>Luogo</th>
-                <th>Note</th>
-                <th hidden>Modifica</th>
-                <th hidden>Rimuovi</th>
+                <th>{{ 'name'|translate|titlecase }}</th>
+                <th>{{ 'start'|translate|titlecase }}</th>
+                <th>{{ 'end'|translate|titlecase }}</th>
+                <th>{{ 'chief'|translate|titlecase }}</th>
+                <th>{{ 'crew'|translate|titlecase }}</th>
+                <th>{{ 'place'|translate|titlecase }}</th>
+                <th>{{ 'notes'|translate|titlecase }}</th>
+                <th>{{ 'update'|translate|titlecase }}</th>
+                <th>{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
             <tr *ngFor="let row of data; index as i">
                 <td>{{ data.length - i }}</td>
-                <td>{{ row.date | date: 'MM/dd/yyyy HH:mm' }}</td>
                 <td>{{ row.name }}</td>
                 <td>{{ row.beginning }}</td>
                 <td>{{ row.end }}</td>
@@ -118,8 +116,8 @@
                 <td>{{ row.crew }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td hidden><i class="fa fa-edit"></i></td>
-                <td hidden><i class="fa fa-trash"></i></td>
+                <td><i class="fa fa-edit"></i></td>
+                <td><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>

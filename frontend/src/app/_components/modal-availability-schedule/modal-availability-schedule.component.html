@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title pull-left">Modifica orari disponibilità</h4>
+    <h4 class="modal-title pull-left">{{ 'update_availability_schedule'|translate }}</h4>
     <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
@@ -11,7 +11,7 @@
                 <td style="background-color: white;"></td>
                 <ng-container *ngIf="orientation === 'portrait'">
                     <ng-container *ngFor="let day of days; let i = index">
-                        <td class="day" (click)="selectDay(i)">{{ day.short }}</td>
+                        <td class="day" (click)="selectDay(i)">{{ day.short|translate }}</td>
                     </ng-container>
                 </ng-container>
                 <ng-container *ngIf="orientation === 'landscape'">
@@ -34,7 +34,7 @@
         <tbody id="scheduler_body" *ngIf="orientation === 'landscape'">
             <ng-container *ngFor="let day of days; let i = index">
                 <tr>
-                    <td class="day" (click)="selectDay(i)">{{ day.short }}</td>
+                    <td class="day" (click)="selectDay(i)">{{ day.short|translate }}</td>
                     <ng-container *ngFor="let hour of hours">
                         <td class="hour-cell" [class.highlighted] = "isCellSelected(i, hour)" (mousedown)="mouseDownCell(i, hour)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, hour)"></td>
                     </ng-container>
@@ -44,6 +44,6 @@
     </table>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="saveChanges()">Salva le modifiche</button>
-    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Chiudi</button>
+    <button type="button" class="btn btn-primary" (click)="saveChanges()">{{ 'save_changes'|translate }}</button>
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">{{ 'close'|translate }}</button>
 </div>
