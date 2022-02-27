@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TranslationModule } from '../../translation.module';
 
 import { DatetimePickerComponent } from './datetime-picker.component';
 
@@ -13,7 +14,8 @@ import { DatetimePickerComponent } from './datetime-picker.component';
   imports: [
     CommonModule,
     FormsModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    TranslationModule
   ],
   exports: [
     DatetimePickerComponent

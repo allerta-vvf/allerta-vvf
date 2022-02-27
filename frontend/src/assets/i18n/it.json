@@ -12,7 +12,8 @@
         "enable_schedules": "Abilita programmazione oraria",
         "disable_schedules": "Disattiva programmazione oraria",
         "update_schedules": "Modifica orari disponibilità",
-        "connect_telegram_bot": "Collega l'account al bot Telegram"
+        "connect_telegram_bot": "Collega l'account al bot Telegram",
+        "tooltip_change_availability": "Cambia la tua disponibilità in {{state}}"
     },
     "login": {
         "username": "username",
@@ -28,6 +29,14 @@
         "postcode": "CAP",
         "hamlet": "frazione",
         "municipality": "raggruppamento del comune"
+    },
+    "edit_service": {
+        "select_start_datetime": "Seleziona data e ora di inizio dell'intervento",
+        "select_end_datetime": "Seleziona data e ora di fine dell'intervento",
+        "insert_code": "Inserisci il progressivo dell'intervento",
+        "other_crew_members": "Altri membri della squadra",
+        "select_type": "Seleziona una tipologia",
+        "select_service_type": "Seleziona una tipologia di intervento"
     },
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
     "save_changes": "Salva modifiche",
@@ -78,6 +87,11 @@
     "update": "modifica",
     "remove": "rimuovi",
     "more details": "altri dettagli",
+    "search": "cerca",
+    "submit": "invia",
+    "reset": "reset",
+    "go_back": "torna indietro",
+    "press_to_select_a_date": "premi per selezionare una data",
     "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
     "revision": "revisione"
 }

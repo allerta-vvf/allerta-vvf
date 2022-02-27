@@ -12,7 +12,8 @@
         "enable_schedules": "Enable hour schedules",
         "disable_schedules": "Disable hour schedules",
         "update_schedules": "Update availability schedules",
-        "connect_telegram_bot": "Connect your account to the Telegram bot"
+        "connect_telegram_bot": "Connect your account to the Telegram bot",
+        "tooltip_change_availability": "Change your availability to {{state}}"
     },
     "login": {
         "username": "username",
@@ -20,14 +21,22 @@
         "submit_btn": "Login"
     },
     "place_details": {
-        "open_in_google_maps": "Apri il luogo in Google Maps",
-        "place_name": "Nome del luogo",
-        "house_number": "numero civico",
-        "road": "strada",
-        "village": "comune",
-        "postcode": "CAP",
-        "hamlet": "frazione",
-        "municipality": "raggruppamento del comune"
+        "open_in_google_maps": "Open in Google Maps",
+        "place_name": "Place name",
+        "house_number": "house number",
+        "road": "road",
+        "village": "village",
+        "postcode": "postcode",
+        "hamlet": "hamlet",
+        "municipality": "municipality"
+    },
+    "edit_service": {
+        "select_start_datetime": "Select start date and time for the service",
+        "select_end_datetime": "Select end date and time for the service",
+        "insert_code": "Insert service code",
+        "other_crew_members": "Other crew members",
+        "select_type": "Select a type",
+        "select_service_type": "Select a service type"
     },
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",
@@ -78,6 +87,11 @@
     "update": "update",
     "remove": "remove",
     "more details": "more details",
+    "search": "search",
+    "submit": "invia",
+    "reset": "reset",
+    "go_back": "go back",
+    "press_to_select_a_date": "press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision"
 }

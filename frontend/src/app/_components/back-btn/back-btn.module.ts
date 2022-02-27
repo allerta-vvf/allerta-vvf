@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslationModule } from '../../translation.module';
 
 import { BackBtnComponent } from './back-btn.component';
 
@@ -8,7 +9,8 @@ import { BackBtnComponent } from './back-btn.component';
     BackBtnComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    TranslationModule
   ],
   exports: [
     BackBtnComponent

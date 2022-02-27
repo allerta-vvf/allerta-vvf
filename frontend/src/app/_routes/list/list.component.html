@@ -1,8 +1,8 @@
 <div class="text-center">
     <h3 *ngIf="available !== undefined">{{ 'list.your_availability_is'|translate }} <b>{{ available ? ("available"|translate|uppercase) : ("unavailable"|translate|uppercase) }}{{ manual_mode ? "" : " ("+('programmed'|translate)+")" }}</b></h3>
     <div id="availability-btn-group">
-        <button (click)="changeAvailibility(1)" type="button" [delay]="1000" tooltip="Cambia la tua disponibilità in 'attivo'" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|titlecase }}</button>
-        <button (click)="changeAvailibility(0)" type="button" [delay]="1000" tooltip="Cambia la tua disponibilità in 'non attivo'" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|titlecase }}</button>
+        <button (click)="changeAvailibility(1)" type="button" [delay]="1000" [tooltip]="'tooltip_change_availability'|translate:{state: 'available'|translate}" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|titlecase }}</button>
+        <button (click)="changeAvailibility(0)" type="button" [delay]="1000" [tooltip]="'tooltip_change_availability'|translate:{state: 'unavailable'|translate}" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|titlecase }}</button>
     </div>
     <ng-container *ngIf="manual_mode !== undefined">
         <button type="button" class="btn btn-secondary" *ngIf="manual_mode" (click)="updateManualMode(0)">

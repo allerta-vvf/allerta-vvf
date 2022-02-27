@@ -1,5 +1,5 @@
 <div class="input-group">
-    <input type="text" [disabled]="disabled" placeholder="Premi per selezionare data" class="form-control date-picker"
+    <input type="text" [disabled]="disabled" [placeholder]="'press_to_select_a_date'|translate|titlecase" class="form-control date-picker"
     bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [(ngModel)]="date" (ngModelChange)=updateValue()>
     <input type="time" [disabled]="disabled" class="form-control" [(ngModel)]="time" (change)=updateValue()>
 </div>
