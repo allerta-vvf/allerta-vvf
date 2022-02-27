@@ -9,8 +9,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   ]
 })
 export class TranslationModule {
-    constructor(private translate: TranslateService) {
-        this.translate.setDefaultLang('en');
-        this.translate.use("it");
-    }
+  constructor(private translate: TranslateService) {
+    this.translate.setDefaultLang('en');
+    this.translate.use(window.navigator.language.split("-")[0]);
+  }
 }
