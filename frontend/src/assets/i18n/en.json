@@ -7,13 +7,22 @@
         "logout": "Logout",
         "hi": "hi"
     },
+    "table": {
+        "yes_remove": "Yes, remove",
+        "cancel": "Cancel",
+        "remove_service_confirm": "Are you sure you want to remove this service?",
+        "remove_service_confirm_text": "This action cannot be undone.",
+        "service_deleted_successfully": "Service deleted successfully",
+        "service_deleted_error": "Service could not be deleted. Please try again."
+    },
     "list": {
         "your_availability_is": "You are:",
         "enable_schedules": "Enable hour schedules",
         "disable_schedules": "Disable hour schedules",
         "update_schedules": "Update availability schedules",
         "connect_telegram_bot": "Connect your account to the Telegram bot",
-        "tooltip_change_availability": "Change your availability to {{state}}"
+        "tooltip_change_availability": "Change your availability to {{state}}",
+        "manual_mode_updated_successfully": "Manual mode updated successfully"
     },
     "login": {
         "username": "username",
@@ -30,13 +39,22 @@
         "hamlet": "hamlet",
         "municipality": "municipality"
     },
+    "map_picker": {
+        "place_min_length": "Place name must be at least 3 characters long",
+        "loading_error": "Error loading search results. Please try again later"
+    },
     "edit_service": {
         "select_start_datetime": "Select start date and time for the service",
         "select_end_datetime": "Select end date and time for the service",
         "insert_code": "Insert service code",
         "other_crew_members": "Other crew members",
         "select_type": "Select a type",
-        "select_service_type": "Select a service type"
+        "select_service_type": "Select a service type",
+        "type_must_be_two_characters_long": "Type must be at least 2 characters long",
+        "type_already_exists": "Type already exists",
+        "type_added_successfully": "Type added successfully",
+        "service_added_successfully": "Service added successfully",
+        "service_add_error": "Service could not be added. Please try again"
     },
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",

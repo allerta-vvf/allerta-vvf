@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from '../../_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -26,7 +27,8 @@ export class TableComponent implements OnInit, OnDestroy {
     private api: ApiClientService,
     public auth: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   getTime() {
@@ -89,24 +91,31 @@ export class TableComponent implements OnInit, OnDestroy {
 
   deleteService(id: number) {
     console.log(id);
-    Swal.fire({
-      title: 'Sei del tutto sicuro di voler rimuovere l\'intervento?',
-      text: "Gli interventi eliminati non si possono recuperare.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, rimuovilo',
-      cancelButtonText: 'Annulla'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.api.delete(`services/${id}`).then((response) => {
-          this.toastr.success('Intervento rimosso con successo.');
-          this.loadTableData();
-        }).catch((e) => {
-          this.toastr.error('Errore durante la rimozione dell\'intervento.');
-        });
-      }
-    })
+    this.translate.get(['table.yes_remove', 'table.cancel', 'table.remove_service_confirm', 'table.remove_service_text']).subscribe((res: { [key: string]: string; }) => {
+      console.log(res);
+      Swal.fire({
+        title: res['table.remove_service_confirm'],
+        text: res['table.remove_service_confirm_text'],
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: res['table.yes_remove'],
+        cancelButtonText: res['table.cancel']
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete(`services/${id}`).then((response) => {
+            this.translate.get('table.service_deleted_successfully').subscribe((res: string) => {
+              this.toastr.success(res);
+            });
+            this.loadTableData();
+          }).catch((e) => {
+            this.translate.get('table.service_deleted_error').subscribe((res: string) => {
+              this.toastr.error(res);
+            });
+          });
+        }
+      });
+    });
   }
 }

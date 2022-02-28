@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-service',
@@ -66,7 +67,8 @@ export class EditServiceComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ApiClientService,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translate: TranslateService
   ) {
     this.route.paramMap.subscribe(params => {
       this.serviceId = params.get('id') || undefined;
@@ -104,11 +106,15 @@ export class EditServiceComponent implements OnInit {
 
   addType() {
     if(this.newType.length < 2) {
-      this.toastr.error("Il nome della tipologia deve essere lungo almeno 2 caratteri");
+      this.translate.get('edit_service.type_must_be_two_characters_long').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
       return;
     }
     if(this.types.find(t => t.name == this.newType)) {
-      this.toastr.error("Il nome della tipologia è già in uso");
+      this.translate.get('edit_service.type_already_exists').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
       return;
     }
     this.api.post("service_types", {
@@ -117,8 +123,12 @@ export class EditServiceComponent implements OnInit {
       this.addingType = false;
       this.newType = "";
       console.log(type);
-      if(type === 1) this.toastr.success("Tipologia di servizio aggiunta con successo.");
-      this.loadTypes();
+      if(type == 1) {
+        this.translate.get('edit_service.type_added_successfully').subscribe((res: string) => {
+          this.toastr.success(res);        
+        });
+        this.loadTypes();
+      }
     });
   }
 
@@ -169,11 +179,15 @@ export class EditServiceComponent implements OnInit {
       console.log(values);
       this.api.post("services", values).then((res) => {
         console.log(res);
-        this.toastr.success("Intervento aggiunto con successo.");
+        this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
+          this.toastr.success(res);
+        });
         this.submittingForm = false;
       }).catch((err) => {
         console.error(err);
-        this.toastr.error("Errore durante l'aggiunta dell'intervento");
+        this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
+          this.toastr.error(res);
+        });
         this.submittingForm = false;
       });
     }

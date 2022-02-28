@@ -4,6 +4,7 @@ import { ModalAvailabilityScheduleComponent } from '../../_components/modal-avai
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
@@ -24,7 +25,8 @@ export class ListComponent implements OnInit {
     private api: ApiClientService,
     private auth: AuthService,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private translate: TranslateService
   ) {
     this.loadAvailability();
   }
@@ -56,7 +58,9 @@ export class ListComponent implements OnInit {
     this.api.post("manual_mode", {
       manual_mode: manual_mode
     }).then((response) => {
-      this.toastr.success("Modalità manuale aggiornata con successo.");
+      this.translate.get('list.manual_mode_updated_successfully').subscribe((res: string) => {
+        this.toastr.success(res);
+      });
       this.loadAvailability();
     });
   }
