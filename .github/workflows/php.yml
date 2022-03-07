@@ -21,7 +21,7 @@ jobs:
     name: Testing ${{ matrix.php-versions }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Dump GitHub context
       env:
@@ -37,7 +37,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '14'
 
@@ -60,7 +60,7 @@ jobs:
     name: Deploy to staging
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -71,7 +71,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '14'
 
@@ -86,13 +86,13 @@ jobs:
         php -r 'require("deployment_remotes.php");'
         cat deployment.log | grep "After-jobs:" ; exit $?
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: deploy_php_log_${{ github.run_id }}
         path: /tmp/php.log
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: deploy_log_${{ github.run_id }}
@@ -106,7 +106,7 @@ jobs:
     name: Deploy to production
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -117,7 +117,7 @@ jobs:
         coverage: xdebug, pcov
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '14'
 
@@ -132,13 +132,13 @@ jobs:
         php -r 'require("deployment_remotes.php");'
         cat deployment.log | grep "After-jobs:" ; exit $?
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: deploy_php_log_${{ github.run_id }}
         path: /tmp/php.log
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: deploy_log_${{ github.run_id }}

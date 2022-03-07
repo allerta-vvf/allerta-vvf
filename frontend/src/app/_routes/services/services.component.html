@@ -1,0 +1,5 @@
+<owner-image></owner-image>
+<div class="text-center mb-4">
+    <button type="button" class="btn btn-primary" (click)="addService()">{{ 'add'|translate|titlecase }} {{ 'service'|translate }}</button>
+</div>
+<app-table [sourceType]="'services'" [refreshInterval]="1200000"></app-table>

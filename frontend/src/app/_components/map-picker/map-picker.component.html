@@ -3,8 +3,8 @@
 </div>
 <div id="search" class="mt-2 mb-3">
   <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Luogo" [(ngModel)]="placeName" (keyup.enter)="searchPlace()">
-    <button class="btn btn-outline-secondary" type="button" (click)="searchPlace()">Cerca</button>
+    <input type="text" class="form-control" [placeholder]="'place'|translate|titlecase" [(ngModel)]="placeName" (keyup.enter)="searchPlace()">
+    <button class="btn btn-outline-secondary" type="button" (click)="searchPlace()">{{ 'search'|translate|titlecase }}</button>
   </div>
   <div id="results" *ngIf="isPlaceSearchResultsOpen">
     <li *ngFor="let result of placeSearchResults" (click)="selectPlace(result)">{{ result.display_name }}</li>

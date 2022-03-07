@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { LatLng, latLng, tileLayer, Marker, Map } from 'leaflet';
 import "leaflet.locatecontrol";
@@ -10,8 +11,11 @@ import "leaflet.locatecontrol";
   styleUrls: ['./map-picker.component.scss']
 })
 export class MapPickerComponent implements OnInit {
-  @Input() lat = 45.88283872530;
-  @Input() lng = 10.18226623535;
+  lat = 45.88283872530;
+  lng = 10.18226623535;
+
+  @Input() selectLat = "";
+  @Input() selectLng = "";
 
   @Output() onMarkerSet = new EventEmitter<any>();
 
@@ -31,12 +35,17 @@ export class MapPickerComponent implements OnInit {
   isPlaceSearchResultsOpen = false;
   placeSearchResults: any[] = [];
 
-  constructor(private toastr: ToastrService, private api: ApiClientService) {
+  constructor(private toastr: ToastrService, private api: ApiClientService, private translate: TranslateService) {
     this.marker = (window as any).L.marker(latLng(0,0));
     this.map = undefined as unknown as Map;
   }
 
-  ngOnInit(): void { }
+  ngOnInit() {
+    if(this.selectLat !== "" && this.selectLng !== "") {
+      console.log(this.selectLat, this.selectLng);
+      this.setMarker(latLng(parseFloat(this.selectLat), parseFloat(this.selectLng)));
+    }
+  }
 
   setMarker(latLng: LatLng) {
     this.onMarkerSet.emit({
@@ -87,7 +96,9 @@ export class MapPickerComponent implements OnInit {
 
   searchPlace() {
     if(this.placeName.length < 3) {
-      this.toastr.error("Il nome della località deve essere di almeno 3 caratteri");
+      this.translate.get('map_picker.place_min_length').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
       return;
     }
     this.api.get("places/search", {
@@ -97,7 +108,9 @@ export class MapPickerComponent implements OnInit {
       this.placeSearchResults = places;
     }).catch((err) => {
       console.error(err);
-      this.toastr.error("Errore di caricamento dei risultati della ricerca. Riprovare più tardi");
+      this.translate.get('map_picker.loading_error').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
     });
   }
 
