@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TableComponent } from '../../_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from '../../_components/modal-availability-schedule/modal-availability-schedule.component';
+import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/_services/auth.service';
 
@@ -14,6 +15,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class ListComponent implements OnInit {
   scheduleModalRef?: BsModalRef;
+  alertModalRef?: BsModalRef;
   @ViewChild('table') table!: TableComponent;
 
   public loadAvailabilityInterval: NodeJS.Timer | undefined = undefined;
@@ -67,6 +69,32 @@ export class ListComponent implements OnInit {
 
   openScheduleModal() {
     this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
+  }
+
+  addAlertFull() {
+    this.api.post("alert", {
+      alert_type: "full"
+    }).then((response) => {
+      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          type: "full",
+          id: response.id
+        }
+      });
+    });
+  }
+
+  addAlertSupport() {
+    this.api.post("alert", {
+      alert_type: "support"
+    }).then((response) => {
+      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          type: "support",
+          id: response.id
+        }
+      });
+    });
   }
 
   ngOnInit(): void {

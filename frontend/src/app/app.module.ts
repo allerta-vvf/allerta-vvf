@@ -9,6 +9,7 @@ import { TranslationModule } from './translation.module';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { environment } from '../environments/environment';
 
 import { TableComponent } from './_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from './_components/modal-availability-schedule/modal-availability-schedule.component';
+import { ModalAlertComponent } from './_components/modal-alert/modal-alert.component';
 import { OwnerImageComponent } from './_components/owner-image/owner-image.component';
 
 import { LoginComponent } from './_routes/login/login.component';
@@ -34,6 +36,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     //
     TableComponent,
     ModalAvailabilityScheduleComponent,
+    ModalAlertComponent,
     OwnerImageComponent,
     //
     LoginComponent,
@@ -57,6 +60,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     }),
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
+    CollapseModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable
