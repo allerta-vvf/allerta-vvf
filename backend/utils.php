@@ -91,6 +91,10 @@ final class Role
 
 }
 
+function get_timestamp() {
+    return round(microtime(true) * 1000);
+}
+
 function logger($action, $changed=null, $editor=null, $timestamp=null, $source_type="api")
 {
     global $db, $users;

@@ -4,7 +4,7 @@ import { ModalAvailabilityScheduleComponent } from '../../_components/modal-avai
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
-import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/_services/auth.service';
 
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/_services/auth.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   scheduleModalRef?: BsModalRef;
   alertModalRef?: BsModalRef;
   @ViewChild('table') table!: TableComponent;
@@ -72,28 +72,28 @@ export class ListComponent implements OnInit {
   }
 
   addAlertFull() {
-    this.api.post("alert", {
-      alert_type: "full"
+    this.api.post("alerts", {
+      type: "full"
     }).then((response) => {
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
-          type: "full",
           id: response.id
         }
       });
+      this.api.alertsChanged.next();
     });
   }
 
   addAlertSupport() {
-    this.api.post("alert", {
-      alert_type: "support"
+    this.api.post("alerts", {
+      type: "support"
     }).then((response) => {
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
-          type: "support",
           id: response.id
         }
       });
+      this.api.alertsChanged.next();
     });
   }
 

@@ -10,23 +10,9 @@ import Swal from 'sweetalert2';
   styleUrls: ['./modal-alert.component.scss']
 })
 export class ModalAlertComponent implements OnInit, OnDestroy {
-  type = "full";
   id = 0;
 
-  users = [
-    {
-      name: "Nome1",
-      response: "waiting"
-    },
-    {
-      name: "Nome2",
-      response: true
-    },
-    {
-      name: "Nome3",
-      response: false
-    },
-  ];
+  users: { name: string, response: string|boolean }[] = [];
 
   isAdvancedCollapsed = true;
   loadDataInterval: NodeJS.Timer | undefined = undefined;
@@ -36,9 +22,12 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   constructor(public bsModalRef: BsModalRef, private api: ApiClientService, private toastr: ToastrService) { }
 
   loadResponsesData() {
-    this.api.get(`alert/${this.id}`).then((response) => {
+    this.api.get(`alerts/${this.id}`).then((response) => {
       console.log(response);
-      this.users = response.users;
+      this.users = response.crew;
+      if (response.notes !== "" && response.notes !== null) {
+        this.notes = response.notes;
+      }
     });
   }
 
@@ -61,7 +50,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   saveAlertSettings() {
-    this.api.post(`alert/${this.id}/settings`, {
+    this.api.post(`alerts/${this.id}/settings`, {
       notes: this.notes
     }).then((response) => {
       this.toastr.success("Impostazioni salvate con successo");
@@ -80,9 +69,10 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
       cancelButtonText: "Annulla"
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.api.delete(`alert/${this.id}`).then((response) => {
+        this.api.delete(`alerts/${this.id}`).then((response) => {
           console.log(response);
           this.bsModalRef.hide();
+          this.api.alertsChanged.next();
         /*
           this.translate.get('table.service_deleted_successfully').subscribe((res: string) => {
             this.toastr.success(res);

@@ -10,6 +10,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -61,6 +62,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
+    AlertModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable

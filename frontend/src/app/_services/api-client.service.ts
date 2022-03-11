@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiClientService {
   private apiRoot = 'api/';
+  public alertsChanged = new Subject<void>();
 
   constructor(private http: HttpClient) { }
 
