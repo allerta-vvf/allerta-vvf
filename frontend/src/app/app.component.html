@@ -7,11 +7,28 @@
   <a class="icon" id="menuButton" (click)="menuButtonClicked = !menuButtonClicked">☰</a>
 </div>
 
-<div class="d-flex justify-content-center mt-4 pt-4 mb-3" *ngIf="loadingRoute">
-  <div class="spinner spinner-border"></div>
-</div>
+<div class="container">
+  <div class="d-flex justify-content-center mt-4 pt-4 mb-3" *ngIf="loadingRoute">
+    <div class="spinner spinner-border"></div>
+  </div>
 
-<router-outlet></router-outlet>
+  <alert type="danger" *ngIf="alerts.length > 0">
+    <strong>Attenzione!</strong> Allertamento in corso.<br>
+    <ng-container *ngIf="alerts.length == 1">
+      Emergenza attuale: <a (click)="openAlert(alerts[0]['id'])"><b>{{ alerts[0]["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> (premere per ulteriori informazioni)</a>
+    </ng-container>
+    <ng-container *ngIf="alerts.length > 1">
+      Emergenze attuali:
+      <ul>
+        <li *ngFor="let alert of alerts">
+          <a (click)="openAlert(alert['id'])"><b>{{ alert["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> (premere per ulteriori informazioni)</a>
+        </li>
+      </ul>
+    </ng-container>
+  </alert>
+
+  <router-outlet></router-outlet>
+</div>
 
 <div id="footer" class="footer text-center p-3">
   {{ 'footer_text' | translate }}<br>

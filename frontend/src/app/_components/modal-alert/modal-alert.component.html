@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Stato dell'allerta</h4>
+    <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|titlecase" (click)="bsModalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="id == 0">
+    <div class="d-flex justify-content-center mt-2 pt-2 mb-3">
+        <div class="spinner spinner-border"></div>
+    </div>
+</div>
+<div class="modal-body" *ngIf="id !== 0">
+    <table class="table table-border table-striped w-100">
+        <thead>
+            <tr>
+                <td>Nome</td>
+                <td colspan="2">Stato risposta</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ user.name }}</td>
+                <ng-container *ngIf="user.response == 'waiting'">
+                    <td style="width: 1px;"><i class="fas fa-spinner fa-spin"></i></td>
+                    <td>In attesa di risposta</td>
+                </ng-container>
+                <ng-container *ngIf="user.response == true">
+                    <td style="width: 1px;"><i class="fa fa-check" style="color:green"></i></td>
+                    <td>Presente</td>
+                </ng-container>
+                <ng-container *ngIf="user.response == false">
+                    <td style="width: 1px;"><i class="fa fa-times" style="color:red"></i></td>
+                    <td>Non presente</td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </table>
+    <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+        <button type="button" class="btn btn-primary mb-2" (click)="isAdvancedCollapsed = !isAdvancedCollapsed"
+        [attr.aria-expanded]="!isAdvancedCollapsed" aria-controls="collapseBasic">
+            <ng-container *ngIf="isAdvancedCollapsed">Mostra impostazioni avanzate</ng-container>
+            <ng-container *ngIf="!isAdvancedCollapsed">Nascondi impostazioni avanzate</ng-container>
+        </button>
+        <div [collapse]="isAdvancedCollapsed" [isAnimated]="true">
+            <div class="well well-lg card card-block card-header">
+                <label for="details" class="form-label">Dettagli allerta</label>
+                <textarea class="form-control" id="details" rows="3" [(ngModel)]="notes"></textarea>
+                <button class="btn btn-secondary mt-2" (click)="saveAlertSettings()" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">Salva</button>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!auth.profile.hasRole('SUPER_EDITOR') && notes !== ''">
+        <div class="well well-lg card card-block card-header">
+            <h5>Dettagli allerta</h5>
+            <h2>{{ notes }}</h2>
+        </div>
+    </ng-container>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">{{ 'close'|translate }}</button>
+</div>

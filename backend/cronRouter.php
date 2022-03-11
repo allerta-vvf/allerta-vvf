@@ -173,7 +173,7 @@ function job_send_notification_if_manual_mode() {
         $profiles = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `manual_mode` = 1");
         $notified_users = [];
         foreach ($profiles as $profile) {
-            $notified_users[] = $profiles["id"];
+            $notified_users[] = $profile["id"];
             $stato = $profile["available"] ? "disponibile" : "non disponibile";
             sendTelegramNotificationToUser("⚠️ Attenzione! La tua disponibilità <b>non segue la programmazione oraria</b>.\nAttualmente sei <b>{$stato}</b>.\nScrivi \"/programma\" se vuoi ripristinare la programmazione.", $profile["id"]);
         }

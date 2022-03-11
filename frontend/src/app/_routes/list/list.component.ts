@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TableComponent } from '../../_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from '../../_components/modal-availability-schedule/modal-availability-schedule.component';
+import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -12,8 +13,9 @@ import { AuthService } from 'src/app/_services/auth.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   scheduleModalRef?: BsModalRef;
+  alertModalRef?: BsModalRef;
   @ViewChild('table') table!: TableComponent;
 
   public loadAvailabilityInterval: NodeJS.Timer | undefined = undefined;
@@ -23,7 +25,7 @@ export class ListComponent implements OnInit {
 
   constructor(
     private api: ApiClientService,
-    private auth: AuthService,
+    public auth: AuthService,
     private toastr: ToastrService,
     private modalService: BsModalService,
     private translate: TranslateService
@@ -67,6 +69,34 @@ export class ListComponent implements OnInit {
 
   openScheduleModal() {
     this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
+  }
+
+  addAlertFull() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    this.api.post("alerts", {
+      type: "full"
+    }).then((response) => {
+      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          id: response.id
+        }
+      });
+      this.api.alertsChanged.next();
+    });
+  }
+
+  addAlertSupport() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    this.api.post("alerts", {
+      type: "support"
+    }).then((response) => {
+      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          id: response.id
+        }
+      });
+      this.api.alertsChanged.next();
+    });
   }
 
   ngOnInit(): void {

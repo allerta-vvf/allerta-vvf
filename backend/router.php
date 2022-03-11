@@ -212,7 +212,7 @@ try {
             break;
         case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
             $allowedMethods = $routeInfo[1];
-            http_response_code(405);
+            statusCode(405);
             apiResponse(["status" => "error", "message" => "Method not allowed", "usedMethod" => $_SERVER['REQUEST_METHOD']]);
             break;
         case FastRoute\Dispatcher::FOUND:
