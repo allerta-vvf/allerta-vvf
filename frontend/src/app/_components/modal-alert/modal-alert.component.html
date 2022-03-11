@@ -49,7 +49,7 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="!auth.profile.hasRole('SUPER_EDITOR')">
+    <ng-container *ngIf="!auth.profile.hasRole('SUPER_EDITOR') && notes !== ''">
         <div class="well well-lg card card-block card-header">
             <h5>Dettagli allerta</h5>
             <h2>{{ notes }}</h2>
