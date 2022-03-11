@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { AuthService } from 'src/app/_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
@@ -19,7 +20,12 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   notes = "";
 
-  constructor(public bsModalRef: BsModalRef, private api: ApiClientService, private toastr: ToastrService) { }
+  constructor(
+    public bsModalRef: BsModalRef,
+    private api: ApiClientService,
+    public auth: AuthService,
+    private toastr: ToastrService
+  ) { }
 
   loadResponsesData() {
     this.api.get(`alerts/${this.id}`).then((response) => {
@@ -50,6 +56,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   saveAlertSettings() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     this.api.post(`alerts/${this.id}/settings`, {
       notes: this.notes
     }).then((response) => {
@@ -58,6 +65,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   deleteAlert() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     Swal.fire({
       title: "Sei sicuro di voler ritirare l'allarme?",
       text: "I vigili verranno avvisati dell'azione",

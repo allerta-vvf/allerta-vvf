@@ -7,6 +7,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         '',
         function ($vars) {
             global $db;
+            requireLogin();
             $alerts = $db->select("SELECT * FROM `".DB_PREFIX."_alerts`");
             if(is_null($alerts)) $alerts = [];
             foreach($alerts as &$alert) {
@@ -27,7 +28,13 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         'POST',
         '',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin();
+            $users->online_time_update();
+            if(!$users->hasRole(Role::SUPER_EDITOR)) {
+                apiResponse(["error" => "access denied"]);
+                return;
+            }
             $crew = [
                 [
                     "name" => "Nome1",
@@ -62,6 +69,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         '/{id:\d+}',
         function ($vars) {
             global $db;
+            requireLogin();
             $alert = $db->selectRow("SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = :id", [":id" => $vars["id"]]);
             if(is_null($alert)) {
                 apiResponse(["error" => "alert not found"]);
@@ -76,7 +84,13 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         'POST',
         '/{id:\d+}/settings',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin();
+            $users->online_time_update();
+            if(!$users->hasRole(Role::SUPER_EDITOR)) {
+                apiResponse(["error" => "access denied"]);
+                return;
+            }
             $db->update(
                 DB_PREFIX."_alerts",
                 [
@@ -93,7 +107,13 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         'DELETE',
         '/{id:\d+}',
         function ($vars) {
-            global $db;
+            global $db, $users;
+            requireLogin();
+            $users->online_time_update();
+            if(!$users->hasRole(Role::SUPER_EDITOR)) {
+                apiResponse(["error" => "access denied"]);
+                return;
+            }
             $db->delete(
                 DB_PREFIX."_alerts",
                 [

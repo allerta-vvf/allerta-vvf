@@ -18,7 +18,7 @@
     </button>
 </div>
 <owner-image></owner-image>
-<div class="text-center">
+<div class="text-center" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-danger" (click)="addAlertFull()">
             🚒 Richiedi squadra completa

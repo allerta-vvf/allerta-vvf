@@ -25,7 +25,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiClientService,
-    private auth: AuthService,
+    public auth: AuthService,
     private toastr: ToastrService,
     private modalService: BsModalService,
     private translate: TranslateService
@@ -72,6 +72,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   addAlertFull() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     this.api.post("alerts", {
       type: "full"
     }).then((response) => {
@@ -85,6 +86,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   addAlertSupport() {
+    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     this.api.post("alerts", {
       type: "support"
     }).then((response) => {
