@@ -32,7 +32,9 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
       console.log(response);
       this.users = response.crew;
       if (response.notes !== "" && response.notes !== null) {
-        this.notes = response.notes;
+        if(this.notes !== response.notes) {
+          this.notes = response.notes;
+        }
       }
     });
   }
