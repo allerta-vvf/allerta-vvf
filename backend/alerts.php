@@ -10,7 +10,7 @@ function callsList($type) {
     $crew = [];
     if ($type == 'full') {
     } else if ($type == 'support') {
-        if($db->selectValue("SELECT COUNT(id) FROM `allerta01_profiles` WHERE `available` = 1") < 2) {
+        if($db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1") < 2) {
             throw new NotEnoughAvailableUsersException();
             return;
         }
