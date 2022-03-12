@@ -231,7 +231,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
-            apiResponse($users->get_user($vars["userId"]));
+            apiResponse($users->getUserById($vars["userId"]));
         }
     );
     $r->addRoute(

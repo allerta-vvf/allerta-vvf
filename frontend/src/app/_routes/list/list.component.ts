@@ -24,7 +24,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public manual_mode: boolean | undefined = undefined;
 
   constructor(
-    private api: ApiClientService,
+    public api: ApiClientService,
     public auth: AuthService,
     private toastr: ToastrService,
     private modalService: BsModalService,
@@ -76,6 +76,12 @@ export class ListComponent implements OnInit, OnDestroy {
     this.api.post("alerts", {
       type: "full"
     }).then((response) => {
+      if(response?.status === "error") {
+        this.toastr.error(response.message, undefined, {
+          timeOut: 5000
+        });
+        return;
+      }
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
           id: response.id
@@ -90,6 +96,12 @@ export class ListComponent implements OnInit, OnDestroy {
     this.api.post("alerts", {
       type: "support"
     }).then((response) => {
+      if(response?.status === "error") {
+        this.toastr.error(response.message, undefined, {
+          timeOut: 5000
+        });
+        return;
+      }
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
           id: response.id

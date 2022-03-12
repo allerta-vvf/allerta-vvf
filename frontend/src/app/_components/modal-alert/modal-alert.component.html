@@ -19,7 +19,12 @@
         </thead>
         <tbody>
             <tr *ngFor="let user of users">
-                <td>{{ user.name }}</td>
+                <td>
+                    <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief">
+                    <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief">
+                    {{ user.name }}
+                    <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="user.driver">
+                </td>
                 <ng-container *ngIf="user.response == 'waiting'">
                     <td style="width: 1px;"><i class="fas fa-spinner fa-spin"></i></td>
                     <td>In attesa di risposta</td>

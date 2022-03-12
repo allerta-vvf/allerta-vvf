@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 export class ModalAlertComponent implements OnInit, OnDestroy {
   id = 0;
 
-  users: { name: string, response: string|boolean }[] = [];
+  users: any[] = [];
 
   isAdvancedCollapsed = true;
   loadDataInterval: NodeJS.Timer | undefined = undefined;
