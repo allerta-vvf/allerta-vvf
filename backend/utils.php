@@ -208,7 +208,7 @@ class Users
         return $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0");
     }
     
-    public function get_user($id)
+    public function getUserById($id)
     {
         return $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
     }

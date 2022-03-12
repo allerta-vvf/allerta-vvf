@@ -7,7 +7,9 @@ import { Subject } from "rxjs";
 })
 export class ApiClientService {
   private apiRoot = 'api/';
+
   public alertsChanged = new Subject<void>();
+  public availableUsers: undefined | number = undefined;
 
   constructor(private http: HttpClient) { }
 

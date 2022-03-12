@@ -36,12 +36,13 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   loadTableData() {
-    this.api.get(this.sourceType || "list").then((data: any) => {
+    if(!this.sourceType) this.sourceType = "list";
+    this.api.get(this.sourceType).then((data: any) => {
       console.log(data);
-      this.data = data.filter((row: any) => {
-        if(typeof row.hidden !== 'undefined') return !row.hidden;
-        return true;
-      });
+      this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
+      if(this.sourceType === 'list') {
+        this.api.availableUsers = this.data.filter((row: any) => row.available).length;
+      }
     });
   }
 

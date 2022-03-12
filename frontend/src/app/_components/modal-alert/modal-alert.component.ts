@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
+const isEqual = (...objects: any[]) => objects.every(obj => JSON.stringify(obj) === JSON.stringify(objects[0]));
+
 @Component({
   selector: 'modal-alert',
   templateUrl: './modal-alert.component.html',
@@ -13,7 +15,7 @@ import Swal from 'sweetalert2';
 export class ModalAlertComponent implements OnInit, OnDestroy {
   id = 0;
 
-  users: { name: string, response: string|boolean }[] = [];
+  users: any[] = [];
 
   isAdvancedCollapsed = true;
   loadDataInterval: NodeJS.Timer | undefined = undefined;
@@ -29,12 +31,10 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   loadResponsesData() {
     this.api.get(`alerts/${this.id}`).then((response) => {
-      console.log(response);
-      this.users = response.crew;
+      console.log(this.users !== response.crew, this.users, response.crew);
+      if(!isEqual(this.users, response.crew)) this.users = response.crew;
       if (response.notes !== "" && response.notes !== null) {
-        if(this.notes !== response.notes) {
-          this.notes = response.notes;
-        }
+        if(!isEqual(this.notes, response.notes)) this.notes = response.notes;
       }
     });
   }
