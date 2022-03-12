@@ -88,7 +88,7 @@ function sendTelegramNotification($message, $do_not_send_if_same=true)
                 ["last_notification" => urlencode($message)],
                 ["chat_id" => $chat]
             );
-            $sentMessages[] = [$sendMessage->message_id, $chat];
+            $sentMessages[$chat] = $sendMessage->message_id;
         }
     }
     return $sentMessages;
@@ -117,25 +117,19 @@ function generateAlertReportMessage($alertType, $crew) {
       "<b><i><u>Allertamento in corso:</u></i></b> ".
       ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n").
       "Squadra:\n";
-    
+
     foreach($crew as $member) {
         $user = $users->getUserById($member['id']);
         $message .= "<i>".$user["name"]."</i> ";
         if($user["chief"]) $message .= "CS";
         if($user["driver"]) $message .= "🚒";
         $message .= "- ";
-        switch ($member["response"]) {
-            case "waiting":
-                $message .= "In attesa 🟡";
-                break;
-            case true:
-                $message .= "Presente 🟢";
-                break;
-            case false:
-                $message .= "Non presente 🔴";
-                break;
-            default:
-                break;
+        if($member["response"] === "waiting") {
+            $message .= "In attesa 🟡";
+        } else if($member["response"] === true) {
+            $message .= "Presente 🟢";
+        } else if($member["response"] === false) {
+            $message .= "Assente 🔴";
         }
         $message .= "\n";
     }
@@ -145,7 +139,7 @@ function generateAlertReportMessage($alertType, $crew) {
 
 function generateAlertRequestMessage($alertType, $live=true) {
     $message = 
-      "<b><i><u>". ($live ? "Allertamento in corso" : "Notifica di allertamento ricevuta") ."</u></i></b> ".
+      "<b><i><u>". ($live ? "Allertamento in corso" : "Notifica di allertamento ricevuta") .":</u></i></b> ".
       ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n");
     
     return $message;

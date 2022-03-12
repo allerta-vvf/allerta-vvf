@@ -49,13 +49,12 @@ function loadCrewMemberData($input) {
 function setAlertResponse($response, $userId, $alertId) {
     global $db, $Bot;
     $alert = $db->selectRow(
-        "SELECT crew FROM `".DB_PREFIX."_alerts` WHERE `id` = ?", [$alertId]
+        "SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = ?", [$alertId]
     );
     $crew = json_decode($alert["crew"], true);
     $messageText = $response ? "🟢 Partecipazione accettata." : "🔴 Partecipazione rifiutata.";
 
     foreach($crew as &$member) {
-        var_dump($member, $userId);
         if($member["id"] == $userId) {
             $message_id = $member["telegram_message_id"];
             $chat_id = $member["telegram_chat_id"];
@@ -65,7 +64,7 @@ function setAlertResponse($response, $userId, $alertId) {
                 "text" => $messageText,
                 "reply_to_message_id" => $message_id
             ]);
-        
+
             $Bot->editMessageReplyMarkup([
                 "chat_id" => $chat_id,
                 "message_id" => $message_id,
@@ -89,6 +88,16 @@ function setAlertResponse($response, $userId, $alertId) {
             "id" => $alertId
         ]
     );
+
+    $notification_messages = json_decode($alert["notification_messages"], true);
+    $notification_text = generateAlertReportMessage($alert["type"], $crew);
+    foreach($notification_messages as $chat_id => $message_id) {
+        $Bot->editMessageText([
+            "chat_id" => $chat_id,
+            "message_id" => $message_id,
+            "text" => $notification_text
+        ]);
+    }
 }
 
 function alertsRouter (FastRoute\RouteCollector $r) {
@@ -96,9 +105,9 @@ function alertsRouter (FastRoute\RouteCollector $r) {
         'GET',
         '',
         function ($vars) {
-            global $db;
+            global $db, $users;
             requireLogin();
-            $alerts = $db->select("SELECT * FROM `".DB_PREFIX."_alerts`");
+            $alerts = $db->select("SELECT * FROM `".DB_PREFIX."_alerts` WHERE `enabled` = 1");
             if(is_null($alerts)) $alerts = [];
             foreach($alerts as &$alert) {
                 if(isset($_GET["load_less"])) {
@@ -150,14 +159,16 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                 ];
             }
 
-            sendAlertReportMessage($_POST["type"], $crew);
+            $notifications = sendAlertReportMessage($_POST["type"], $crew);
 
             $db->insert(
                 DB_PREFIX."_alerts",
                 [
                     "crew" => json_encode($crew),
                     "type" => $_POST["type"],
-                    "created_at" => get_timestamp()
+                    "created_at" => get_timestamp(),
+                    "created_by" => $users->auth->getUserId(),
+                    "notification_messages" => json_encode($notifications)
                 ]
             );
             $alertId = $db->getLastInsertId();
@@ -236,8 +247,11 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                 apiResponse(["status" => "error", "message" => "Access denied"]);
                 return;
             }
-            $db->delete(
+            $db->update(
                 DB_PREFIX."_alerts",
+                [
+                    "enabled" => 0
+                ],
                 [
                     "id" => $vars["id"]
                 ]
