@@ -62,15 +62,17 @@ function loadCrewMemberData($input) {
     return array_merge($input, $result);
 }
 
-function updateAlertMessages($alert, $crew=null) {
+function updateAlertMessages($alert, $crew=null, $alertDeleted = false) {
     global $Bot, $users, $db;
+
+    if(is_null($Bot)) initializeBot(NONE);
 
     if(is_null($crew)) {
         $crew = json_decode($alert["crew"], true);
     }
 
     $notification_messages = json_decode($alert["notification_messages"], true);
-    $notification_text = generateAlertReportMessage($alert["type"], $crew, $alert["enabled"], $alert["notes"], $alert["created_by"]);
+    $notification_text = generateAlertReportMessage($alert["type"], $crew, $alert["enabled"], $alert["notes"], $alert["created_by"], $alertDeleted);
     foreach($notification_messages as $chat_id => $message_id) {
         try {
             $Bot->editMessageText([
@@ -81,6 +83,35 @@ function updateAlertMessages($alert, $crew=null) {
         } catch(skrtdev\Telegram\BadRequestException) {
             //
         }
+    }
+
+    if($alertDeleted) {
+        foreach($crew as &$member) {
+            $message_id = $member["telegram_message_id"];
+            $chat_id = $member["telegram_chat_id"];
+
+            if(!is_null($message_id) && !is_null($chat_id)) {
+                $Bot->sendMessage([
+                    "chat_id" => $chat_id,
+                    "text" => "Allerta rimossa.\nPartecipazione non più richiesta.",
+                    "reply_to_message_id" => $message_id
+                ]);
+                try {
+                    $Bot->editMessageReplyMarkup([
+                        "chat_id" => $chat_id,
+                        "message_id" => $message_id,
+                        "reply_markup" => [
+                            'inline_keyboard' => [
+                            ]
+                        ]
+                    ]);
+                } catch(skrtdev\Telegram\BadRequestException) {
+                    //
+                }
+            }
+        }
+
+        return;
     }
 
     $available_users_count = 0;
@@ -109,7 +140,7 @@ function updateAlertMessages($alert, $crew=null) {
             ]
         );
 
-        $notification_text = generateAlertReportMessage($alert["type"], $crew, false, $alert["notes"], $alert["created_by"]);
+        $notification_text = generateAlertReportMessage($alert["type"], $crew, false, $alert["notes"], $alert["created_by"], $alertDeleted);
         foreach($notification_messages as $chat_id => $message_id) {
             try {
                 $Bot->editMessageText([
@@ -348,6 +379,14 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                     "id" => $vars["id"]
                 ]
             );
+
+            $alert = $db->selectRow(
+                "SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = :id",
+                [
+                    ":id" => $vars["id"]
+                ]
+            );
+            updateAlertMessages($alert);
         }
     );
 
@@ -371,6 +410,14 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                     "id" => $vars["id"]
                 ]
             );
+
+            $alert = $db->selectRow(
+                "SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = :id",
+                [
+                    ":id" => $vars["id"]
+                ]
+            );
+            updateAlertMessages($alert, null, true);
         }
     );
 }

@@ -110,11 +110,11 @@ function sendTelegramNotificationToUser($message, $userId, $options = [])
     }
 }
 
-function generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy) {
+function generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted=false) {
     global $users;
 
     $message = 
-      "<b><i><u>".($alertEnabled ? "Allertamento in corso" : "Allertamento completato").":</u></i></b> ".
+      "<b><i><u>".($alertEnabled ? "Allertamento in corso" : ($alertDeleted ? "Allertamento completato" : "Allerta rimossa")).":</u></i></b> ".
       ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n");
     
     if(!is_null($alertNotes) && $alertNotes !== "") {
@@ -127,14 +127,14 @@ function generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCrea
     return $message;
 }
 
-function generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy) {
+function generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted=false) {
     global $users;
 
     $message = generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy);
     $message .= "\nSquadra:\n";
 
     foreach($crew as $member) {
-        if(!$alertEnabled && $member["response"] === "waiting") continue;
+        if((!$alertEnabled || $alertDeleted) && $member["response"] === "waiting") continue;
         $user = $users->getUserById($member['id']);
         $message .= "<i>".$user["name"]."</i> ";
         if($user["chief"]) $message .= "CS";
@@ -153,18 +153,14 @@ function generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNote
     return $message;
 }
 
-function sendAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy) {
-    global $Bot;
-
-    $message = generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy);
+function sendAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted = false) {
+    $message = generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted);
 
     return sendTelegramNotification($message, false);
 }
 
-function sendAlertRequestMessage($alertType, $userId, $alertId, $alertNotes, $alertCreatedBy) {
-    global $Bot;
-
-    return sendTelegramNotificationToUser(generateAlertMessage($alertType, true, $alertNotes, $alertCreatedBy), $userId, [
+function sendAlertRequestMessage($alertType, $userId, $alertId, $alertNotes, $alertCreatedBy, $alertDeleted = false) {
+    return sendTelegramNotificationToUser(generateAlertMessage($alertType, true, $alertNotes, $alertCreatedBy, $alertDeleted), $userId, [
         'reply_markup' => [
             'inline_keyboard' => [
                 [
