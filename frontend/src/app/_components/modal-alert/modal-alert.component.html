@@ -18,7 +18,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users">
+            <ng-container *ngFor="let user of users">
+            <tr *ngIf="alertEnabled || user.response !== 'waiting'">
                 <td>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief">
@@ -38,9 +39,10 @@
                     <td>Non presente</td>
                 </ng-container>
             </tr>
+            </ng-container>
         </tbody>
     </table>
-    <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+    <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR') && alertEnabled">
         <button type="button" class="btn btn-primary mb-2" (click)="isAdvancedCollapsed = !isAdvancedCollapsed"
         [attr.aria-expanded]="!isAdvancedCollapsed" aria-controls="collapseBasic">
             <ng-container *ngIf="isAdvancedCollapsed">Mostra impostazioni avanzate</ng-container>
@@ -50,11 +52,11 @@
             <div class="well well-lg card card-block card-header">
                 <label for="details" class="form-label">Dettagli allerta</label>
                 <textarea class="form-control" id="details" rows="3" [(ngModel)]="notes"></textarea>
-                <button class="btn btn-secondary mt-2" (click)="saveAlertSettings()" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">Salva</button>
+                <button class="btn btn-secondary mt-2" (click)="saveAlertSettings()">Salva</button>
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="!auth.profile.hasRole('SUPER_EDITOR') && notes !== ''">
+    <ng-container *ngIf="(!auth.profile.hasRole('SUPER_EDITOR') && notes !== '') || !alertEnabled">
         <div class="well well-lg card card-block card-header">
             <h5>Dettagli allerta</h5>
             <h2>{{ notes }}</h2>
@@ -62,6 +64,6 @@
     </ng-container>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
+    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.hasRole('SUPER_EDITOR') && alertEnabled">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
     <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">{{ 'close'|translate }}</button>
 </div>

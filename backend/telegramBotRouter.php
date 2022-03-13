@@ -110,15 +110,31 @@ function sendTelegramNotificationToUser($message, $userId, $options = [])
     }
 }
 
-function generateAlertReportMessage($alertType, $crew) {
+function generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy) {
     global $users;
 
     $message = 
-      "<b><i><u>Allertamento in corso:</u></i></b> ".
-      ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n").
-      "Squadra:\n";
+      "<b><i><u>".($alertEnabled ? "Allertamento in corso" : "Allertamento completato").":</u></i></b> ".
+      ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n");
+    
+    if(!is_null($alertNotes) && $alertNotes !== "") {
+        $message .= "Note:\n<b>".$alertNotes."</b>\n";
+    }
+    if(!is_null($alertCreatedBy)) {
+        $message .= "Lanciata da: <b>".$users->getName($alertCreatedBy)."</b>\n";
+    }
+    
+    return $message;
+}
+
+function generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy) {
+    global $users;
+
+    $message = generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy);
+    $message .= "\nSquadra:\n";
 
     foreach($crew as $member) {
+        if(!$alertEnabled && $member["response"] === "waiting") continue;
         $user = $users->getUserById($member['id']);
         $message .= "<i>".$user["name"]."</i> ";
         if($user["chief"]) $message .= "CS";
@@ -133,40 +149,32 @@ function generateAlertReportMessage($alertType, $crew) {
         }
         $message .= "\n";
     }
-    
+
     return $message;
 }
 
-function generateAlertRequestMessage($alertType, $live=true) {
-    $message = 
-      "<b><i><u>". ($live ? "Allertamento in corso" : "Notifica di allertamento ricevuta") .":</u></i></b> ".
-      ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n");
-    
-    return $message;
-}
-
-function sendAlertReportMessage($alertType, $crew) {
+function sendAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy) {
     global $Bot;
 
-    $message = generateAlertReportMessage($alertType, $crew);
+    $message = generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy);
 
     return sendTelegramNotification($message, false);
 }
 
-function sendAlertRequestMessage($alertType, $userId, $alertId) {
+function sendAlertRequestMessage($alertType, $userId, $alertId, $alertNotes, $alertCreatedBy) {
     global $Bot;
 
-    return sendTelegramNotificationToUser(generateAlertRequestMessage($alertType), $userId, [
+    return sendTelegramNotificationToUser(generateAlertMessage($alertType, true, $alertNotes, $alertCreatedBy), $userId, [
         'reply_markup' => [
             'inline_keyboard' => [
                 [
                     [
                         'text' => '✅ Partecipo',
-                        'callback_data' => "alert_yes_".$alertType."_".$alertId
+                        'callback_data' => "alert_yes_".$alertId
                     ],
                     [
                         'text' => 'Non partecipo ❌',
-                        'callback_data' => "alert_no_".$alertType."_".$alertId
+                        'callback_data' => "alert_no_".$alertId
                     ]
                 ]
             ]
@@ -331,20 +339,9 @@ function telegramBotRouter() {
 
         if(strpos($callback_query->data, 'alert_') === 0) {
             $data = explode("_", str_replace("alert_", "", $callback_query->data));
-            $alert_type = $data[1];
-            $alert_id = $data[2];
+            $alert_id = $data[1];
 
             setAlertResponse($data[0] === "yes", getUserIdByFrom($user->id), $alert_id);
-/*
-            if($data[0] === "yes") {
-                $callback_query->answer("ℹ Partecipazione registrata con successo.");
-                $message->reply("🟢 Partecipazione accettata.");
-            } else if($data[0] === "no") {
-                $callback_query->answer("ℹ Rifiuto alla partecipazione registrato con successo.");
-                $message->reply("🔴 Partecipazione rifiutata.");
-            }
-            $message->editReplyMarkup([]);
-*/
             return;
         }
     });

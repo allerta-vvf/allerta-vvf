@@ -8,31 +8,47 @@ final class NotEnoughAvailableUsersException extends Exception {}
 function callsList($type) {
     global $db;
     $crew = [];
-    if ($type == 'full') {
-    } else if ($type == 'support') {
-        if($db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1") < 2) {
-            throw new NotEnoughAvailableUsersException();
-            return;
-        }
 
-        $chief_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `chief` = 1 ORDER BY services ASC, trainings DESC, availability_minutes ASC, name ASC LIMIT 1");
-        if(is_null($chief_result)) {
-            throw new NoChiefAvailableException();
+    if($db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1") < 2) {
+        throw new NotEnoughAvailableUsersException();
+        return;
+    }
+
+    $chief_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `chief` = 1 ORDER BY services ASC, trainings DESC, availability_minutes ASC, name ASC LIMIT 1");
+    if(is_null($chief_result)) {
+        throw new NoChiefAvailableException();
+        return;
+    }
+    $crew[] = $chief_result;
+    if($chief_result["driver"]) {
+        $result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+        foreach ($result as $row) {
+            if(!in_array($row["id"], array_column($crew, 'id'))) {
+                $crew[] = $row;
+            }
+        }
+    } else {
+        $driver_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `driver` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+        if(is_null($driver_result)) {
+            throw new NoDriverAvailableException();
             return;
         }
-        $crew[] = $chief_result;
-        if($chief_result["driver"]) {
-            $result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
-            $crew = array_merge($crew, $result);
-        } else {
-            $driver_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `driver` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
-            if(is_null($driver_result)) {
-                throw new NoDriverAvailableException();
-                return;
+        foreach ($driver_result as $row) {
+            if(!in_array($row["id"], array_column($crew, 'id'))) {
+                $crew[] = $row;
             }
-            $crew = array_merge($crew, $driver_result);
         }
     }
+    
+    if ($type == 'full') {
+        $result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+        foreach ($result as $row) {
+            if(!in_array($row["id"], array_column($crew, 'id'))) {
+                $crew[] = $row;
+            }
+        }
+    }
+
     return $crew;
 }
 
@@ -46,37 +62,136 @@ function loadCrewMemberData($input) {
     return array_merge($input, $result);
 }
 
+function updateAlertMessages($alert, $crew=null) {
+    global $Bot, $users, $db;
+
+    if(is_null($crew)) {
+        $crew = json_decode($alert["crew"], true);
+    }
+
+    $notification_messages = json_decode($alert["notification_messages"], true);
+    $notification_text = generateAlertReportMessage($alert["type"], $crew, $alert["enabled"], $alert["notes"], $alert["created_by"]);
+    foreach($notification_messages as $chat_id => $message_id) {
+        try {
+            $Bot->editMessageText([
+                "chat_id" => $chat_id,
+                "message_id" => $message_id,
+                "text" => $notification_text
+            ]);
+        } catch(skrtdev\Telegram\BadRequestException) {
+            //
+        }
+    }
+
+    $available_users_count = 0;
+    $drivers_count = 0;
+    $chiefs_count = 0;
+    foreach($crew as &$member) {
+        if($member["response"] === true) {
+            $user = $users->getUserById($member["id"]);
+            $available_users_count++;
+            if($user["driver"]) $drivers_count++;
+            if($user["chief"]) $chiefs_count++;
+        }
+    }
+
+    if(
+        ($alert["type"] === "support" && $available_users_count >= 2 && $chiefs_count >= 1 && $drivers_count >= 1) ||
+        ($alert["type"] === "full" && $available_users_count >= 5 && $chiefs_count >= 1 && $drivers_count >= 1)
+    ) {
+        $db->update(
+            DB_PREFIX."_alerts",
+            [
+                "enabled" => 0
+            ],
+            [
+                "id" => $alert["id"]
+            ]
+        );
+
+        $notification_text = generateAlertReportMessage($alert["type"], $crew, false, $alert["notes"], $alert["created_by"]);
+        foreach($notification_messages as $chat_id => $message_id) {
+            try {
+                $Bot->editMessageText([
+                    "chat_id" => $chat_id,
+                    "message_id" => $message_id,
+                    "text" => $notification_text
+                ]);
+            } catch(skrtdev\Telegram\BadRequestException) {
+                //
+            }
+        }
+
+        foreach($crew as &$member) {
+            $message_id = $member["telegram_message_id"];
+            $chat_id = $member["telegram_chat_id"];
+
+            if((!is_null($message_id) || !is_null($chat_id)) && $member["response"] === "waiting") {
+                $Bot->sendMessage([
+                    "chat_id" => $chat_id,
+                    "text" => "Numero minimo vigili richiesti raggiunto.\nPartecipazione non più richiesta.",
+                    "reply_to_message_id" => $message_id
+                ]);
+                try {
+                    $Bot->editMessageReplyMarkup([
+                        "chat_id" => $chat_id,
+                        "message_id" => $message_id,
+                        "reply_markup" => [
+                            'inline_keyboard' => [
+                            ]
+                        ]
+                    ]);
+                } catch(skrtdev\Telegram\BadRequestException) {
+                    //
+                }
+            }
+        }
+    }
+}
+
 function setAlertResponse($response, $userId, $alertId) {
     global $db, $users, $Bot;
+
+    if(is_null($Bot)) initializeBot(NONE);
+
     $alert = $db->selectRow(
         "SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = ?", [$alertId]
     );
+
+    if(!$alert["enabled"]) return;
+
     $crew = json_decode($alert["crew"], true);
     $messageText = $response ? "🟢 Partecipazione accettata." : "🔴 Partecipazione rifiutata.";
 
     foreach($crew as &$member) {
         if($member["id"] == $userId) {
+            if($member["response"] === $response) return;
+
             $message_id = $member["telegram_message_id"];
             $chat_id = $member["telegram_chat_id"];
 
-            $Bot->sendMessage([
-                "chat_id" => $chat_id,
-                "text" => $messageText,
-                "reply_to_message_id" => $message_id
-            ]);
-
-            $Bot->editMessageReplyMarkup([
-                "chat_id" => $chat_id,
-                "message_id" => $message_id,
-                "reply_markup" => [
-                    'inline_keyboard' => [
-                    ]
-                ]
-            ]);
+            if(!is_null($message_id) || !is_null($chat_id)) {
+                $Bot->sendMessage([
+                    "chat_id" => $chat_id,
+                    "text" => $messageText,
+                    "reply_to_message_id" => $message_id
+                ]);
+                try {
+                    $Bot->editMessageReplyMarkup([
+                        "chat_id" => $chat_id,
+                        "message_id" => $message_id,
+                        "reply_markup" => [
+                            'inline_keyboard' => [
+                            ]
+                        ]
+                    ]);
+                } catch(skrtdev\Telegram\BadRequestException) {
+                    //
+                }
+            }
 
             $member["response"] = $response;
             $member["response_time"] = get_timestamp();
-            break;
         }
     }
     $db->update(
@@ -89,37 +204,7 @@ function setAlertResponse($response, $userId, $alertId) {
         ]
     );
 
-    $notification_messages = json_decode($alert["notification_messages"], true);
-    $notification_text = generateAlertReportMessage($alert["type"], $crew);
-    foreach($notification_messages as $chat_id => $message_id) {
-        $Bot->editMessageText([
-            "chat_id" => $chat_id,
-            "message_id" => $message_id,
-            "text" => $notification_text
-        ]);
-    }
-
-    $available_users_count = 0;
-    $drivers_count = 0;
-    $chiefs_count = 0;
-    foreach($crew as $member) {
-        $user = $users->getUserById($member["id"]);
-        if($member["response"] === true) $available_users_count++;
-        if($user["driver"]) $drivers_count++;
-        if($user["chief"]) $chiefs_count++;
-    }
-
-    if($alert["type"] === "support" && $available_users_count >= 2 && $chiefs_count >= 1 && $drivers_count >= 1) {
-        $db->update(
-            DB_PREFIX."_alerts",
-            [
-                "enabled" => 0
-            ],
-            [
-                "id" => $alert["id"]
-            ]
-        );
-    }
+    updateAlertMessages($alert, $crew);
 }
 
 function alertsRouter (FastRoute\RouteCollector $r) {
@@ -181,7 +266,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                 ];
             }
 
-            $notifications = sendAlertReportMessage($_POST["type"], $crew);
+            $notifications = sendAlertReportMessage($_POST["type"], $crew, true, "", $users->auth->getUserId());
 
             $db->insert(
                 DB_PREFIX."_alerts",
@@ -196,7 +281,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
             $alertId = $db->getLastInsertId();
 
             foreach($crew as &$member) {
-                list($member["telegram_message_id"], $member["telegram_chat_id"]) = sendAlertRequestMessage($_POST["type"], $member["id"], $alertId);
+                [$member["telegram_message_id"], $member["telegram_chat_id"]] = sendAlertRequestMessage($_POST["type"], $member["id"], $alertId, "", $users->auth->getUserId());
             }
 
             $db->update(
@@ -232,6 +317,14 @@ function alertsRouter (FastRoute\RouteCollector $r) {
                 return loadCrewMemberData($crew_member);
             }, $alert["crew"]);
             apiResponse($alert);
+        }
+    );
+
+    $r->addRoute(
+        'GET',
+        '/{id:\d+}/debug',
+        function ($vars) {
+            setAlertResponse(true, $_GET["user"], $vars["id"]);
         }
     );
 
