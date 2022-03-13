@@ -20,10 +20,10 @@
 <owner-image></owner-image>
 <div class="text-center" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-danger" (click)="addAlertFull()" [disabled]="!api?.availableUsers || api.availableUsers! < 5">
+        <button type="button" class="btn btn-danger" (click)="addAlertFull()" [disabled]="!api?.availableUsers || api.availableUsers! < 5 || alertLoading">
             🚒 Richiedi squadra completa
         </button>
-        <button type="button" class="btn btn-warning" (click)="addAlertSupport()" [disabled]="!api?.availableUsers || api.availableUsers! < 2">
+        <button type="button" class="btn btn-warning" (click)="addAlertSupport()" [disabled]="!api?.availableUsers || api.availableUsers! < 2 || alertLoading">
             Richiedi squadra di supporto 🧯
         </button>
     </div>

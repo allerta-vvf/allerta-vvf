@@ -22,6 +22,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   notes = "";
 
+  alertEnabled = true;
+
   constructor(
     public bsModalRef: BsModalRef,
     private api: ApiClientService,
@@ -31,9 +33,9 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   loadResponsesData() {
     this.api.get(`alerts/${this.id}`).then((response) => {
-      console.log(this.users !== response.crew, this.users, response.crew);
+      if(this.alertEnabled !== response.enabled) this.alertEnabled = response.enabled;
       if(!isEqual(this.users, response.crew)) this.users = response.crew;
-      if (response.notes !== "" && response.notes !== null) {
+      if (this.notes === "" || this.notes === null) {
         if(!isEqual(this.notes, response.notes)) this.notes = response.notes;
       }
     });

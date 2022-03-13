@@ -23,6 +23,8 @@ export class ListComponent implements OnInit, OnDestroy {
   public available: boolean | undefined = undefined;
   public manual_mode: boolean | undefined = undefined;
 
+  public alertLoading = false;
+
   constructor(
     public api: ApiClientService,
     public auth: AuthService,
@@ -72,10 +74,12 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   addAlertFull() {
+    this.alertLoading = true;
     if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     this.api.post("alerts", {
       type: "full"
     }).then((response) => {
+      this.alertLoading = false;
       if(response?.status === "error") {
         this.toastr.error(response.message, undefined, {
           timeOut: 5000
@@ -92,10 +96,12 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   addAlertSupport() {
+    this.alertLoading = true;
     if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
     this.api.post("alerts", {
       type: "support"
     }).then((response) => {
+      this.alertLoading = false;
       if(response?.status === "error") {
         this.toastr.error(response.message, undefined, {
           timeOut: 5000
