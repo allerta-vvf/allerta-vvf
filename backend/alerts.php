@@ -352,14 +352,6 @@ function alertsRouter (FastRoute\RouteCollector $r) {
     );
 
     $r->addRoute(
-        'GET',
-        '/{id:\d+}/debug',
-        function ($vars) {
-            setAlertResponse(true, $_GET["user"], $vars["id"]);
-        }
-    );
-
-    $r->addRoute(
         'POST',
         '/{id:\d+}/settings',
         function ($vars) {
