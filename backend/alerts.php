@@ -22,15 +22,15 @@ function callsList($type) {
         }
         $crew[] = $chief_result;
         if($chief_result["driver"]) {
-            $result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC LIMIT 1");
-            $crew[] = $result;
+            $result = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
+            $crew = array_merge($crew, $result);
         } else {
-            $driver_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `driver` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC LIMIT 1");
+            $driver_result = $db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 AND `available` = 1 AND `driver` = 1 ORDER BY chief ASC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             if(is_null($driver_result)) {
                 throw new NoDriverAvailableException();
                 return;
             }
-            $crew[] = $driver_result;
+            $crew = array_merge($crew, $driver_result);
         }
     }
     return $crew;
@@ -47,7 +47,7 @@ function loadCrewMemberData($input) {
 }
 
 function setAlertResponse($response, $userId, $alertId) {
-    global $db, $Bot;
+    global $db, $users, $Bot;
     $alert = $db->selectRow(
         "SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = ?", [$alertId]
     );
@@ -97,6 +97,28 @@ function setAlertResponse($response, $userId, $alertId) {
             "message_id" => $message_id,
             "text" => $notification_text
         ]);
+    }
+
+    $available_users_count = 0;
+    $drivers_count = 0;
+    $chiefs_count = 0;
+    foreach($crew as $member) {
+        $user = $users->getUserById($member["id"]);
+        if($member["response"] === true) $available_users_count++;
+        if($user["driver"]) $drivers_count++;
+        if($user["chief"]) $chiefs_count++;
+    }
+
+    if($alert["type"] === "support" && $available_users_count >= 2 && $chiefs_count >= 1 && $drivers_count >= 1) {
+        $db->update(
+            DB_PREFIX."_alerts",
+            [
+                "enabled" => 0
+            ],
+            [
+                "id" => $alert["id"]
+            ]
+        );
     }
 }
 
