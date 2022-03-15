@@ -183,6 +183,19 @@ function yesOrNo($value)
     return ($value === 1 || $value) ? '<b>SI</b>' : '<b>NO</b>';
 }
 
+function sendLongMessage($text, $userId) {
+    global $Bot;
+    if(strlen($text) > 4096) {
+        $message_json = wordwrap($text, 4096, "<@MESSAGE_SEPARATOR@>", true);
+        $message_json = explode("<@MESSAGE_SEPARATOR@>", $message_json);
+        foreach($message_json as $segment) {
+            sendLongMessage($segment, $userId);
+        }
+    } else {
+        $Bot->sendMessage($userId, $text);
+    }
+}
+
 function telegramBotRouter() {
     global $Bot;
 
@@ -266,10 +279,11 @@ function telegramBotRouter() {
         }
         $message->reply($messageText);
 
-        if(defined("BOT_TELEGRAM_DEBUG_USER")){
+        if(defined("BOT_TELEGRAM_DEBUG_USER") && BOT_TELEGRAM_DEBUG_USER !== $message->from->id){
             $messageText .= "\n\n🔎 JSON del messaggio:";
             $Bot->sendMessage(BOT_TELEGRAM_DEBUG_USER, $messageText);
-            $Bot->sendMessage(json_encode($message, JSON_PRETTY_PRINT));
+            $message_json = json_encode($message, JSON_PRETTY_PRINT);
+            sendLongMessage($message_json, BOT_TELEGRAM_DEBUG_USER);
         }
     });
     
