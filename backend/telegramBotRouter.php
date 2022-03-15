@@ -267,8 +267,9 @@ function telegramBotRouter() {
         $message->reply($messageText);
 
         if(defined("BOT_TELEGRAM_DEBUG_USER")){
-            $messageText .= "\n\n🔎 JSON del messaggio: <b>".json_encode($message)."</b>";
+            $messageText .= "\n\n🔎 JSON del messaggio:";
             $Bot->sendMessage(BOT_TELEGRAM_DEBUG_USER, $messageText);
+            $Bot->sendMessage(json_encode($message, JSON_PRETTY_PRINT));
         }
     });
     
