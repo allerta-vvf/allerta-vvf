@@ -246,6 +246,8 @@ function telegramBotRouter() {
     });
     
     $Bot->onCommand('debug_userid', function (Message $message) {
+        global $Bot;
+
         $messageText = "🔎 ID utente Telegram: <b>".$message->from->id."</b>";
         if(isset($message->from->username)) {
             $messageText .= "\n💬 Username: <b>".$message->from->username."</b>";
@@ -263,6 +265,11 @@ function telegramBotRouter() {
             $messageText .= "\n🤖 Bot: <b>".yesOrNo($message->from->is_bot)."</b>";
         }
         $message->reply($messageText);
+
+        if(defined("BOT_TELEGRAM_DEBUG_USER")){
+            $messageText .= "\n\n🔎 JSON del messaggio: <b>".json_encode($message)."</b>";
+            $Bot->sendMessage(BOT_TELEGRAM_DEBUG_USER, $messageText);
+        }
     });
     
     $Bot->onCommand('info', function (Message $message) {
