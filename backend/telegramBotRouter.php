@@ -245,6 +245,26 @@ function telegramBotRouter() {
         );
     });
     
+    $Bot->onCommand('debug_userid', function (Message $message) {
+        $messageText = "🔎 ID utente Telegram: <b>".$message->from->id."</b>";
+        if(isset($message->from->username)) {
+            $messageText .= "\n💬 Username: <b>".$message->from->username."</b>";
+        }
+        if(isset($message->from->first_name)) {
+            $messageText .= "\n🔎 Nome: <b>".$message->from->first_name."</b>";
+        }
+        if(isset($message->from->last_name)) {
+            $messageText .= "\n🔎 Cognome: <b>".$message->from->last_name."</b>";
+        }
+        if(isset($message->from->language_code)) {
+            $messageText .= "\n🌐 Lingua: <b>".$message->from->language_code."</b>";
+        }
+        if(isset($message->from->is_bot)) {
+            $messageText .= "\n🤖 Bot: <b>".yesOrNo($message->from->is_bot)."</b>";
+        }
+        $message->reply($messageText);
+    });
+    
     $Bot->onCommand('info', function (Message $message) {
         global $users;
         $user_id = getUserIdByMessage($message);
