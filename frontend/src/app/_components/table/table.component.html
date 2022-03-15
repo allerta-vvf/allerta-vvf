@@ -2,19 +2,20 @@
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Disponibile</th>
-                <th>Autista</th>
-                <ng-container *ngIf="auth.profile.full_viewer">
-                <th>Chiama</th>
+                <th>{{ 'name'|translate|titlecase }}</th>
+                <th>{{ 'available'|translate|titlecase }}</th>
+                <th>{{ 'driver'|translate|titlecase }}</th>
+                <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+                <th>{{ 'call'|translate|titlecase }}</th>
                 </ng-container>
-                <th>Interventi</th>
-                <th>Minuti disponibilità</th>
+                <th>{{ 'services'|translate|titlecase }}</th>
+                <th>{{ 'availability_minutes'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
             <tr *ngFor="let row of data">
                 <td>
+                    <i *ngIf="auth.profile.hasRole('SUPER_ADMIN') && row.id !== auth.profile.auth_user_id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
                     <ng-container *ngIf="(getTime() - row.online_time) < 30"><u>{{ row.name }}</u></ng-container>
@@ -27,7 +28,7 @@
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td *ngIf="auth.profile.full_viewer">
+                <td *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
                     <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
                 </td>
                 <td>{{ row.services }}</td>
@@ -38,10 +39,10 @@
     <table *ngIf="sourceType === 'logs'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Azione</th>
-                <th>Interessato</th>
-                <th>Fatto da</th>
-                <th>Data e ora</th>
+                <th>{{ 'action'|translate|titlecase }}</th>
+                <th>{{ 'changed'|translate|titlecase }}</th>
+                <th>{{ 'editor'|translate|titlecase }}</th>
+                <th>{{ 'datetime'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -56,31 +57,36 @@
     <table *ngIf="sourceType === 'services'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Inizio</th>
-                <th>Fine</th>
-                <th>Codice</th>
-                <th>Caposquadra</th>
-                <th>Autisti</th>
-                <th>Altre persone</th>
-                <th>Luogo</th>
-                <th>Note</th>
-                <th>Tipo</th>
-                <th hidden>Modifica</th>
-                <th>Rimuovi</th>
+                <th>#</th>
+                <th>{{ 'start'|translate|titlecase }}</th>
+                <th>{{ 'end'|translate|titlecase }}</th>
+                <th>{{ 'code'|translate|titlecase }}</th>
+                <th>{{ 'chief'|translate|titlecase }}</th>
+                <th>{{ 'drivers'|translate|titlecase }}</th>
+                <th>{{ 'crew'|translate|titlecase }}</th>
+                <th>{{ 'place'|translate|titlecase }}</th>
+                <th>{{ 'notes'|translate|titlecase }}</th>
+                <th>{{ 'type'|translate|titlecase }}</th>
+                <th>{{ 'update'|translate|titlecase }}</th>
+                <th>{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data">
+            <tr *ngFor="let row of data; index as i">
+                <td>{{ data.length - i }}</td>
                 <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.code }}</td>
                 <td>{{ row.chief }}</td>
                 <td>{{ row.drivers }}</td>
                 <td>{{ row.crew }}</td>
-                <td>{{ row.place_name }}</td>
+                <td>
+                    {{ row.place_name }}<br>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">{{ 'more details'|translate|titlecase }}</a>
+                </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
-                <td hidden><i class="fa fa-edit"></i></td>
+                <td (click)="editService(row.id)"><i class="fa fa-edit"></i></td>
                 <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
@@ -88,21 +94,21 @@
     <table *ngIf="sourceType === 'trainings'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>Data</th>
-                <th>Nome</th>
-                <th>Tempo inizio</th>
-                <th>Tempo fine</th>
-                <th>Caposquadra</th>
-                <th>Altre persone</th>
-                <th>Luogo</th>
-                <th>Note</th>
-                <th hidden>Modifica</th>
-                <th hidden>Rimuovi</th>
+                <td>#</td>
+                <th>{{ 'name'|translate|titlecase }}</th>
+                <th>{{ 'start'|translate|titlecase }}</th>
+                <th>{{ 'end'|translate|titlecase }}</th>
+                <th>{{ 'chief'|translate|titlecase }}</th>
+                <th>{{ 'crew'|translate|titlecase }}</th>
+                <th>{{ 'place'|translate|titlecase }}</th>
+                <th>{{ 'notes'|translate|titlecase }}</th>
+                <th>{{ 'update'|translate|titlecase }}</th>
+                <th>{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data">
-                <td>{{ row.date | date: 'MM/dd/yyyy HH:mm' }}</td>
+            <tr *ngFor="let row of data; index as i">
+                <td>{{ data.length - i }}</td>
                 <td>{{ row.name }}</td>
                 <td>{{ row.beginning }}</td>
                 <td>{{ row.end }}</td>
@@ -110,8 +116,8 @@
                 <td>{{ row.crew }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td hidden><i class="fa fa-edit"></i></td>
-                <td hidden><i class="fa fa-trash"></i></td>
+                <td><i class="fa fa-edit"></i></td>
+                <td><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>

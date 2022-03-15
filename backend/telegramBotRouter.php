@@ -1,6 +1,7 @@
 <?php
 use skrtdev\NovaGram\Bot;
 use skrtdev\Telegram\Message;
+use skrtdev\Telegram\CallbackQuery;
 
 require_once 'utils.php';
 
@@ -32,14 +33,21 @@ function initializeBot($mode = WEBHOOK) {
     }
 }
 
-function getUserIdByMessage(Message $message)
+function getUserIdByFrom($from_id)
 {
     global $db;
-    return $db->selectValue("SELECT user FROM `".DB_PREFIX."_bot_telegram` WHERE `chat_id` = ?", [$message->from->id]);
+    return $db->selectValue("SELECT user FROM `".DB_PREFIX."_bot_telegram` WHERE `chat_id` = ?", [$from_id]);
+}
+
+function getUserIdByMessage(Message $message)
+{
+    return getUserIdByFrom($message->from->id);
 }
 
 function requireBotLogin(Message $message)
 {
+    global $users;
+
     $userId = getUserIdByMessage($message);
     if ($userId === null) {
         $message->reply(
@@ -47,23 +55,31 @@ function requireBotLogin(Message $message)
             "\nPer farlo, premere su <strong>\"Collega l'account al bot Telegram\"</strong>."
         );
         exit();
+    } else {
+        if($users->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $users->auth->admin()->removeRoleForUserById($users->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $users->auth->admin()->addRoleForUserById($users->auth->getUserId(), Role::SUPER_EDITOR);
+        }
     }
 }
 
-function sendTelegramNotification($message)
+function sendTelegramNotification($message, $do_not_send_if_same=true)
 {
     global $Bot, $db;
 
     if(is_null($Bot)) initializeBot(NONE);
+
+    $sentMessages = [];
 
     //TODO: implement different types of notifications
     //TODO: add command for subscribing to notifications
     $chats = $db->select("SELECT * FROM `".DB_PREFIX."_bot_telegram_notifications`");
     if(!is_null($chats)) {
         foreach ($chats as $chat) {
-            if(urldecode($chat['last_notification']) === $message) continue;
+            if($do_not_send_if_same && urldecode($chat['last_notification']) === $message) continue;
             $chat = $chat['chat_id'];
-            $Bot->sendMessage([
+            $sendMessage = $Bot->sendMessage([
                 "chat_id" => $chat,
                 "text" => $message
             ]);
@@ -72,11 +88,13 @@ function sendTelegramNotification($message)
                 ["last_notification" => urlencode($message)],
                 ["chat_id" => $chat]
             );
+            $sentMessages[$chat] = $sendMessage->message_id;
         }
     }
+    return $sentMessages;
 }
 
-function sendTelegramNotificationToUser($message, $userId)
+function sendTelegramNotificationToUser($message, $userId, $options = [])
 {
     global $Bot, $db;
 
@@ -84,16 +102,98 @@ function sendTelegramNotificationToUser($message, $userId)
 
     $chat = $db->selectValue("SELECT `chat_id` FROM `".DB_PREFIX."_bot_telegram` WHERE `user` = ?", [$userId]);
     if(!is_null($chat)) {
-        $Bot->sendMessage([
+        $message_response = $Bot->sendMessage(array_merge([
             "chat_id" => $chat,
             "text" => $message
-        ]);
+        ], $options));
+        return [$message_response->message_id, $chat];
     }
+}
+
+function generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted=false) {
+    global $users;
+
+    $message = 
+      "<b><i><u>".($alertEnabled ? "Allertamento in corso" : ($alertDeleted ? "Allertamento completato" : "Allerta rimossa")).":</u></i></b> ".
+      ($alertType === "full" ? "Richiesta <b>squadra completa 🚒</b>" : "<b>Supporto 🧯</b>\n");
+    
+    if(!is_null($alertNotes) && $alertNotes !== "") {
+        $message .= "Note:\n<b>".$alertNotes."</b>\n";
+    }
+    if(!is_null($alertCreatedBy)) {
+        $message .= "Lanciata da: <b>".$users->getName($alertCreatedBy)."</b>\n";
+    }
+    
+    return $message;
+}
+
+function generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted=false) {
+    global $users;
+
+    $message = generateAlertMessage($alertType, $alertEnabled, $alertNotes, $alertCreatedBy);
+    $message .= "\nSquadra:\n";
+
+    foreach($crew as $member) {
+        if((!$alertEnabled || $alertDeleted) && $member["response"] === "waiting") continue;
+        $user = $users->getUserById($member['id']);
+        $message .= "<i>".$user["name"]."</i> ";
+        if($user["chief"]) $message .= "CS";
+        if($user["driver"]) $message .= "🚒";
+        $message .= "- ";
+        if($member["response"] === "waiting") {
+            $message .= "In attesa 🟡";
+        } else if($member["response"] === true) {
+            $message .= "Presente 🟢";
+        } else if($member["response"] === false) {
+            $message .= "Assente 🔴";
+        }
+        $message .= "\n";
+    }
+
+    return $message;
+}
+
+function sendAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted = false) {
+    $message = generateAlertReportMessage($alertType, $crew, $alertEnabled, $alertNotes, $alertCreatedBy, $alertDeleted);
+
+    return sendTelegramNotification($message, false);
+}
+
+function sendAlertRequestMessage($alertType, $userId, $alertId, $alertNotes, $alertCreatedBy, $alertDeleted = false) {
+    return sendTelegramNotificationToUser(generateAlertMessage($alertType, true, $alertNotes, $alertCreatedBy, $alertDeleted), $userId, [
+        'reply_markup' => [
+            'inline_keyboard' => [
+                [
+                    [
+                        'text' => '✅ Partecipo',
+                        'callback_data' => "alert_yes_".$alertId
+                    ],
+                    [
+                        'text' => 'Non partecipo ❌',
+                        'callback_data' => "alert_no_".$alertId
+                    ]
+                ]
+            ]
+        ]
+    ]);
 }
 
 function yesOrNo($value)
 {
     return ($value === 1 || $value) ? '<b>SI</b>' : '<b>NO</b>';
+}
+
+function sendLongMessage($text, $userId) {
+    global $Bot;
+    if(strlen($text) > 4096) {
+        $message_json = wordwrap($text, 4096, "<@MESSAGE_SEPARATOR@>", true);
+        $message_json = explode("<@MESSAGE_SEPARATOR@>", $message_json);
+        foreach($message_json as $segment) {
+            sendLongMessage($segment, $userId);
+        }
+    } else {
+        $Bot->sendMessage($userId, $text);
+    }
 }
 
 function telegramBotRouter() {
@@ -158,13 +258,42 @@ function telegramBotRouter() {
         );
     });
     
+    $Bot->onCommand('debug_userid', function (Message $message) {
+        global $Bot;
+
+        $messageText = "🔎 ID utente Telegram: <b>".$message->from->id."</b>";
+        if(isset($message->from->username)) {
+            $messageText .= "\n💬 Username: <b>".$message->from->username."</b>";
+        }
+        if(isset($message->from->first_name)) {
+            $messageText .= "\n🔎 Nome: <b>".$message->from->first_name."</b>";
+        }
+        if(isset($message->from->last_name)) {
+            $messageText .= "\n🔎 Cognome: <b>".$message->from->last_name."</b>";
+        }
+        if(isset($message->from->language_code)) {
+            $messageText .= "\n🌐 Lingua: <b>".$message->from->language_code."</b>";
+        }
+        if(isset($message->from->is_bot)) {
+            $messageText .= "\n🤖 Bot: <b>".yesOrNo($message->from->is_bot)."</b>";
+        }
+        $message->reply($messageText);
+
+        if(defined("BOT_TELEGRAM_DEBUG_USER") && BOT_TELEGRAM_DEBUG_USER !== $message->from->id){
+            $messageText .= "\n\n🔎 JSON del messaggio:";
+            $Bot->sendMessage(BOT_TELEGRAM_DEBUG_USER, $messageText);
+            $message_json = json_encode($message, JSON_PRETTY_PRINT);
+            sendLongMessage($message_json, BOT_TELEGRAM_DEBUG_USER);
+        }
+    });
+    
     $Bot->onCommand('info', function (Message $message) {
         global $users;
         $user_id = getUserIdByMessage($message);
         if(is_null($user_id)) {
             $message->chat->sendMessage('⚠️ Questo account Telegram non è associato a nessun utente di Allerta.');
         } else {
-            $user = $users->get_user($user_id);
+            $user = $users->getUserById($user_id);
             $message->chat->sendMessage(
                 "ℹ️ Informazioni sul profilo:".
                 "\n<i>Nome:</i> <b>".$user["name"]."</b>".
@@ -239,6 +368,20 @@ function telegramBotRouter() {
             $msg = "⚠️ Nessun vigile disponibile.";
         }
         $message->reply($msg);
+    });
+
+    $Bot->onCallbackQuery(function (CallbackQuery $callback_query) use ($Bot) {
+        $user = $callback_query->from;
+        $message = $callback_query->message;
+        $chat = $message->chat;
+
+        if(strpos($callback_query->data, 'alert_') === 0) {
+            $data = explode("_", str_replace("alert_", "", $callback_query->data));
+            $alert_id = $data[1];
+
+            setAlertResponse($data[0] === "yes", getUserIdByFrom($user->id), $alert_id);
+            return;
+        }
     });
     
     $Bot->start();

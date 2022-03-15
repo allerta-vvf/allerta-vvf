@@ -13,32 +13,32 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
 
   public days = [
     {
-      name: 'Lunedì',
-      short: 'Lun'
+      name: 'monday',
+      short: 'monday_short'
     },
     {
-      name: 'Martedì',
-      short: 'Mar'
+      name: 'tuesday',
+      short: 'tuesday_short'
     },
     {
-      name: 'Mercoledì',
-      short: 'Mer'
+      name: 'wednesday',
+      short: 'wednesday_short'
     },
     {
-      name: 'Giovedì',
-      short: 'Gio'
+      name: 'thursday',
+      short: 'thursday_short'
     },
     {
-      name: 'Venerdì',
-      short: 'Ven'
+      name: 'friday',
+      short: 'friday_short'
     },
     {
-      name: 'Sabato',
-      short: 'Sab'
+      name: 'saturday',
+      short: 'saturday_short'
     },
     {
-      name: 'Domenica',
-      short: 'Dom'
+      name: 'sunday',
+      short: 'sunday_short'
     }
   ];
   public hours = [

@@ -2,10 +2,15 @@
 require_once 'utils.php';
 require_once 'telegramBotRouter.php';
 require_once 'cronRouter.php';
+require_once 'alerts.php';
 
 function apiRouter (FastRoute\RouteCollector $r) {
     $r->addGroup('/cron', function (FastRoute\RouteCollector $r) {
         cronRouter($r);
+    });
+
+    $r->addGroup('/alerts', function (FastRoute\RouteCollector $r) {
+        alertsRouter($r);
     });
 
     $r->addRoute(
@@ -94,9 +99,9 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/list',
         function ($vars) {
             global $db, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
-            if($users->hasRole(Role::FULL_VIEWER)) {
+            if($users->hasRole(Role::SUPER_EDITOR)) {
                 $response = $db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
             } else {
                 $response = $db->select("SELECT `id`, `chief`, `online_time`, `available`, `availability_minutes`, `name`, `driver`, `services` FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0 ORDER BY available DESC, chief DESC, services ASC, trainings DESC, availability_minutes ASC, name ASC");
@@ -112,7 +117,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/logs',
         function ($vars) {
             global $db, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_log` ORDER BY `timestamp` DESC");
             if(!is_null($response)) {
@@ -132,7 +137,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/services',
         function ($vars) {
             global $services, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse($services->list());
         }
@@ -142,7 +147,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/services',
         function ($vars) {
             global $services, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse(["response" => $services->add($_POST["start"], $_POST["end"], $_POST["code"], $_POST["chief"], $_POST["drivers"], $_POST["crew"], $_POST["place"], $_POST["notes"], $_POST["type"], $users->auth->getUserId())]);
         }
@@ -153,7 +158,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/services/{id}',
         function ($vars) {
             global $services, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse($services->get($vars['id']));
         }
@@ -163,7 +168,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/services/{id}',
         function ($vars) {
             global $services, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse(["response" => $services->delete($vars["id"])]);
         }
@@ -174,7 +179,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/place_details',
         function ($vars) {
             global $db, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $response = $db->selectRow("SELECT * FROM `".DB_PREFIX."_places_info` WHERE `lat` = ? and `lng` = ? LIMIT 0,1;", [$_GET["lat"], $_GET["lng"]]);
             apiResponse(!is_null($response) ? $response : []);
@@ -186,7 +191,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/trainings',
         function ($vars) {
             global $db, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_trainings` ORDER BY date DESC, beginning desc");
             apiResponse(
@@ -200,7 +205,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users',
         function ($vars) {
             global $users, $users;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse($users->get_users());
         }
@@ -210,8 +215,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users',
         function ($vars) {
             global $users;
-            requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            requireLogin();
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             apiResponse(["userId" => $users->add_user($_POST["email"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"], $_POST["chief"], $_POST["driver"], $_POST["hidden"], $_POST["disabled"], "unknown")]);
@@ -222,11 +227,11 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users/{userId}',
         function ($vars) {
             global $users;
-            requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            requireLogin();
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
-            apiResponse($users->get_user($vars["userId"]));
+            apiResponse($users->getUserById($vars["userId"]));
         }
     );
     $r->addRoute(
@@ -234,8 +239,8 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/users/{userId}',
         function ($vars) {
             global $users;
-            requireLogin() || accessDenied();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
+            requireLogin();
+            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
                 exit;
             }
             $users->remove_user($vars["userId"], "unknown");
@@ -248,7 +253,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/availability',
         function ($vars) {
             global $users, $db;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $row = $db->selectRow(
                 "SELECT `available`, `manual_mode` FROM `".DB_PREFIX."_profiles` WHERE `id` = ?",
@@ -265,10 +270,12 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/availability',
         function ($vars) {
             global $users, $availability;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
-            if(!$users->hasRole(Role::FULL_VIEWER) && $_POST["id"] !== $users->auth->getUserId()){
-                exit;
+            if(!$users->hasRole(Role::SUPER_EDITOR) && (int) $_POST["id"] !== $users->auth->getUserId()){
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "You don't have permission to change other users availability", "t" => $users->auth->getUserId()]);
+                return;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
             apiResponse([
@@ -283,7 +290,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         "/manual_mode",
         function ($vars) {
             global $users, $availability;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $availability->change_manual_mode($_POST["manual_mode"]);
             apiResponse(["status" => "success"]);
@@ -295,7 +302,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/schedules',
         function ($vars) {
             global $users, $schedules;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             apiResponse($schedules->get());
         }
@@ -305,7 +312,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/schedules',
         function ($vars) {
             global $users, $schedules;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $new_schedules = !is_string($_POST["schedules"]) ? json_encode($_POST["schedules"]) : $_POST["schedules"];
             apiResponse([
@@ -319,7 +326,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/service_types',
         function ($vars) {
             global $users, $db;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $response = $db->select("SELECT * FROM `".DB_PREFIX."_type`");
             apiResponse(is_null($response) ? [] : $response);
@@ -330,7 +337,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/service_types',
         function ($vars) {
             global $users, $db;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $response = $db->insert(DB_PREFIX."_type", ["name" => $_POST["name"]]);
             apiResponse($response);
@@ -342,7 +349,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/places/search',
         function ($vars) {
             global $places;
-            requireLogin() || accessDenied();
+            requireLogin();
             apiResponse($places->search($_GET["q"]));
         }
     );
@@ -352,7 +359,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         '/telegram_login_token',
         function ($vars) {
             global $users, $db;
-            requireLogin() || accessDenied();
+            requireLogin();
             $users->online_time_update();
             $token = bin2hex(random_bytes(16));
             apiResponse([
@@ -403,6 +410,64 @@ function apiRouter (FastRoute\RouteCollector $r) {
                 statusCode(401);
                 apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
             }
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/impersonate',
+        function ($vars) {
+            global $users;
+            requireLogin();
+
+            if(!$users->hasRole(Role::SUPER_ADMIN)) {
+                statusCode(401);
+                apiResponse(["status" => "error", "message" => "You don't have permission to impersonate"]);
+                return;
+            }
+
+            try {
+                $token = $users->loginAsUserIdAndReturnToken($_POST["user_id"]);
+                apiResponse(["status" => "success", "access_token" => $token]);
+            }
+            catch (\Delight\Auth\UnknownIdException $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Wrong user ID"]);
+            }
+            catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Email not verified"]);
+            }
+            catch (Exception $e) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
+            }
+        }
+    );
+    $r->addRoute(
+        ['POST'],
+        '/stop_impersonating',
+        function ($vars) {
+            global $users;
+            requireLogin();
+
+            if(array_key_exists("impersonating_user", $users->auth->user_info) && array_key_exists("precedent_user_id", $users->auth->user_info)) {
+                $precedent_user_id = $users->auth->user_info["precedent_user_id"];
+                $users->auth->logOut();
+                $token = $users->loginAsUserIdAndReturnToken($precedent_user_id);
+                apiResponse(["status" => "success", "access_token" => $token, "user_id" => $users->auth->getUserId()]);
+            }
+        }
+    );
+    $r->addRoute(
+        ['GET', 'POST'],
+        '/refreshToken',
+        function ($vars) {
+            global $users;
+            requireLogin(false);
+
+            apiResponse([
+                "token" => $users->generateToken()
+            ]);
         }
     );
     $r->addRoute(

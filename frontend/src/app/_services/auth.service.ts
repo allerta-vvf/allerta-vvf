@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
+import { Observable, Subject } from "rxjs";
 import jwt_decode from 'jwt-decode';
 
 export interface LoginResponse {
@@ -13,13 +14,15 @@ export interface LoginResponse {
 })
 export class AuthService {
     public profile: any = undefined;
-    private access_token = '';
+    private access_token: string | undefined = undefined;
+    public authChanged = new Subject<void>();
 
     public loadProfile() {
         try{
             console.log("Loading profile", this.access_token);
             let now = Date.now().valueOf() / 1000;
             (window as any).jwt_decode = jwt_decode;
+            if(typeof(this.access_token) !== "string") return;
             let decoded: any = jwt_decode(this.access_token);
             if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
                 return false;
@@ -29,7 +32,12 @@ export class AuthService {
             }
             this.profile = decoded.user_info;
 
+            this.profile.hasRole = (role: string) => {
+                return Object.values(this.profile.roles).includes(role);
+            }
+
             console.log(this.profile);
+            this.authChanged.next();
             return true;
         } catch(e) {
             console.error(e);
@@ -42,19 +50,22 @@ export class AuthService {
     constructor(private api: ApiClientService, private router: Router) {
         if(localStorage.getItem("access_token") !== null) {
             this.access_token = localStorage.getItem("access_token") as string;
-            this.api.setToken(this.access_token);
             this.loadProfile();
         }
     }
 
-    private setToken(value: string) {
+    public setToken(value: string) {
         localStorage.setItem("access_token", value);
         this.access_token = value;
-        this.api.setToken(this.access_token);
         this.loadProfile();
     }
 
+    public getToken(): string | undefined {
+        return this.access_token;
+    }
+
     private removeToken() {
+        this.access_token = '';
         localStorage.removeItem("access_token");
     }
 
@@ -97,12 +108,54 @@ export class AuthService {
         })
     }
 
+    public impersonate(user_id: number): Promise<number> {
+        return new Promise((resolve, reject) => {
+            console.log("final", user_id);
+            this.api.post("impersonate", {
+                user_id: user_id
+            }).then((response) => {
+                this.setToken(response.access_token);
+                resolve(user_id);
+            }).catch((err) => {
+                reject();
+            });
+        });
+    }
+
+    public stop_impersonating(): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.api.post("stop_impersonating").then((response) => {
+                this.setToken(response.access_token);
+                resolve(response.user_id);
+            }).catch((err) => {
+                reject();
+            });
+        });
+    }
+
     public logout(routerDestination?: string[] | undefined) {
-        this.removeToken();
-        this.profile = undefined;
-        if(routerDestination === undefined) {
-            routerDestination = ["login", "list"];
+        if(this.profile.impersonating_user) {
+            this.stop_impersonating().then((user_id) => {
+            });
+        } else {
+            this.removeToken();
+            this.profile = undefined;
+            if(routerDestination === undefined) {
+                routerDestination = ["login", "list"];
+            }
+            this.router.navigate(routerDestination);
         }
-        this.router.navigate(routerDestination);
+    }
+
+    public refreshToken() {
+        return new Observable<string>((observer) => {
+            this.api.post("refreshToken").then((data: any) => {
+                this.setToken(data.token);
+                observer.next(data.token);
+                observer.complete();
+            }).catch((err) => {
+                observer.error(err);
+            });
+        });
     }
 }

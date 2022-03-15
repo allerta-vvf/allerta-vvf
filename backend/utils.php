@@ -74,15 +74,14 @@ $auth = new \Delight\Auth\Auth($db, $JWTconfig, get_ip(), DB_PREFIX."_");
 
 final class Role
 {
-    //https://github.com/delight-im/PHP-Auth/blob/master/src/Role.php
-    const GUEST = \Delight\Auth\Role::AUTHOR;
-    const BASIC_VIEWER = \Delight\Auth\Role::COLLABORATOR;
-    const FULL_VIEWER = \Delight\Auth\Role::CONSULTANT;
-    const EDITOR = \Delight\Auth\Role::CONSUMER;
-    const SUPER_EDITOR = \Delight\Auth\Role::CONTRIBUTOR;
+    const EDITOR = \Delight\Auth\Role::EDITOR;
+    const SUPER_EDITOR = \Delight\Auth\Role::SUPER_EDITOR;
+
     const DEVELOPER = \Delight\Auth\Role::DEVELOPER;
-    const TESTER = \Delight\Auth\Role::CREATOR;
+
+    const GUEST = \Delight\Auth\Role::SUBSCRIBER;
     const EXTERNAL_VIEWER = \Delight\Auth\Role::REVIEWER;
+
     const ADMIN = \Delight\Auth\Role::ADMIN;
     const SUPER_ADMIN = \Delight\Auth\Role::SUPER_ADMIN;
 
@@ -90,6 +89,10 @@ final class Role
     {
     }
 
+}
+
+function get_timestamp() {
+    return round(microtime(true) * 1000);
 }
 
 function logger($action, $changed=null, $editor=null, $timestamp=null, $source_type="api")
@@ -191,7 +194,7 @@ class Users
                 ["hidden" => $hidden, "disabled" => $disabled, "name" => $name, "phone_number" => $phone_number, "chief" => $chief, "driver" => $driver]
             );
             if($chief == 1) {
-                $this->auth->admin()->addRoleForUserById($userId, Role::FULL_VIEWER);
+                $this->auth->admin()->addRoleForUserById($userId, Role::SUPER_EDITOR);
             }
             logger("User added", $userId, $inserted_by);
             return $userId;
@@ -205,7 +208,7 @@ class Users
         return $this->db->select("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `hidden` = 0");
     }
     
-    public function get_user($id)
+    public function getUserById($id)
     {
         return $this->db->selectRow("SELECT * FROM `".DB_PREFIX."_profiles` WHERE `id` = ?", [$id]);
     }
@@ -233,15 +236,60 @@ class Users
         );
     }
 
+    public function generateToken($precedent_user_id = null)
+    {
+        $token_params = [
+            "roles" => $this->auth->getRoles(),
+            "name" => $this->getName(),
+            "v" => 2
+        ];
+        if(!is_null($precedent_user_id)) {
+            $token_params["impersonating_user"] = true;
+            $token_params["precedent_user_id"] = $precedent_user_id;
+        }
+        $token = $this->auth->generateJWTtoken($token_params);
+        return $token;
+    }
+
     public function loginAndReturnToken($username, $password)
     {
         $this->auth->loginWithUsername($username, $password);
-        $token = $this->auth->generateJWTtoken([
-            "full_viewer" => $this->hasRole(Role::FULL_VIEWER),
-            "name" => $this->getName(),
-        ]);
-        return $token;
+
+        if($this->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $this->auth->admin()->removeRoleForUserById($this->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $this->auth->admin()->addRoleForUserById($this->auth->getUserId(), Role::SUPER_EDITOR);
+            
+            $this->auth->loginWithUsername($username, $password);
+        }
+
+        return $this->generateToken();
     }
+
+    public function loginAsUserIdAndReturnToken($userId)
+    {
+        $precedent_user_id = null;
+        if(!is_null($this->auth->getUserId())) {
+            if((int) $userId === (int) $this->auth->getUserId()) {
+                return $this->generateToken();
+            }
+            $precedent_user_id = $this->auth->getUserId();
+            $this->auth->logOut();
+        }
+
+        $this->auth->admin()->logInAsUserById($userId);
+
+        if($this->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $this->auth->admin()->removeRoleForUserById($this->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $this->auth->admin()->addRoleForUserById($this->auth->getUserId(), Role::SUPER_EDITOR);
+            
+            $this->auth->admin()->logInAsUserById($userId);
+        }
+
+        return $this->generateToken($precedent_user_id);
+    }
+
 
     public function isHidden($id=null)
     {
@@ -303,10 +351,10 @@ class Availability {
             $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
             if($available_users_count === 5) {
                 sendTelegramNotification("🚒 Distaccamento operativo con squadra completa");
-            } else if($available_users_count === 2) {
-                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
-            } else if($available_users_count === 1 && !$availability) {
+            } else if($available_users_count < 2) {
                 sendTelegramNotification("⚠️ Distaccamento non operativo");
+            } else if($available_users_count < 5) {
+                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
             }
         }
 

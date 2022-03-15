@@ -27,7 +27,7 @@ export class DatetimePickerComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit(): void {
-    this.localeService.use('it');
+    this.localeService.use(window.navigator.language.split("-")[0]);
   }
 
   get value(): Date {

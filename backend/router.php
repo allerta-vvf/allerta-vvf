@@ -130,12 +130,33 @@ function getBearerToken() {
     return null;
 }
 
-function requireLogin()
+function requireLogin($validate_token_version=true)
 {
     global $users;
     $token = getBearerToken();
     if($users->auth->isTokenValid($token)) {
         $users->auth->authenticateWithToken($token);
+        if($users->auth->hasRole(\Delight\Auth\Role::CONSULTANT)) {
+            //Migrate to new user roles
+            $users->auth->admin()->removeRoleForUserById($users->auth->getUserId(), \Delight\Auth\Role::CONSULTANT);
+            $users->auth->admin()->addRoleForUserById($users->auth->getUserId(), Role::SUPER_EDITOR);
+
+            $users->auth->authenticateWithToken($token);
+        }
+
+        if($validate_token_version) {
+            if(!array_key_exists("v", $users->auth->user_info)) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "JWT client version is not supported", "type" => "jwt_update_required"]);
+                exit();
+            }
+            if((int) $users->auth->user_info["v"] !== 2) {
+                statusCode(400);
+                apiResponse(["status" => "error", "message" => "JWT client version ".$users->auth->user_info["v"]." is not supported", "type" => "jwt_update_required"]);
+                exit();
+            }
+        }
+
         if(defined('SENTRY_LOADED')) {
             \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($users): void {
                 $scope->setUser([
@@ -147,15 +168,11 @@ function requireLogin()
                 ]);
             });
         }
-        return true;
-    }
-    return false;
-}
 
-function accessDenied()
-{
+        return;
+    }
     statusCode(401);
-    apiResponse(["error" => "Access denied"]);
+    apiResponse(["status" => "error", "message" => "Access denied"]);
     exit();
 }
 
@@ -195,7 +212,7 @@ try {
             break;
         case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
             $allowedMethods = $routeInfo[1];
-            http_response_code(405);
+            statusCode(405);
             apiResponse(["status" => "error", "message" => "Method not allowed", "usedMethod" => $_SERVER['REQUEST_METHOD']]);
             break;
         case FastRoute\Dispatcher::FOUND:

@@ -1,1 +1,1 @@
-<button (click)="locationBackService.goBack()" id="backBtn" title="Go back"><i class="fas fa-arrow-left"></i> Torna indietro</button>
+<button (click)="locationBackService.goBack()" id="backBtn" [title]="'go_back'|translate|titlecase"><i class="fas fa-arrow-left"></i> {{ 'go_back'|translate|titlecase }}</button>

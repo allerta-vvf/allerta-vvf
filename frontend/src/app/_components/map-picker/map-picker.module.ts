@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { TranslationModule } from '../../translation.module';
 
 import { MapPickerComponent } from './map-picker.component';
 
@@ -13,7 +14,8 @@ import { MapPickerComponent } from './map-picker.component';
   imports: [
     CommonModule,
     FormsModule,
-    LeafletModule
+    LeafletModule,
+    TranslationModule
   ],
   exports: [
     MapPickerComponent
