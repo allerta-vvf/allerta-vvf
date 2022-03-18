@@ -196,7 +196,7 @@ class Users
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::SUPER_EDITOR);
             }
-            logger("User added", $userId, $inserted_by);
+            logger(__("log_messages.user_created"), $userId, $inserted_by);
             return $userId;
         } else {
             return false;
@@ -223,7 +223,7 @@ class Users
             DB_PREFIX."_profiles",
             ["id" => $id]
         );
-        logger("User removed", null, $removed_by);
+        logger(__("log_messages.user_removed"), null, $removed_by);
     }
     
     public function online_time_update($id=null){
@@ -336,7 +336,7 @@ class Availability {
 
     public function change($availability, $user_id, $is_manual_mode=true)
     {
-        if($is_manual_mode) logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
+        if($is_manual_mode) logger(sprintf(__("availability_changed_to"), __($availability ? 'available' : 'not_available')), $user_id, $this->users->auth->getUserId());
         
         $change_values = ["available" => $availability];
         if($is_manual_mode) $change_values["manual_mode"] = 1;
@@ -350,11 +350,11 @@ class Availability {
         if(!$this->users->isHidden($user_id)) {
             $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
             if($available_users_count === 5) {
-                sendTelegramNotification("🚒 Distaccamento operativo con squadra completa");
+                sendTelegramNotification(__("telegram_bot.available_full"));
             } else if($available_users_count < 2) {
-                sendTelegramNotification("⚠️ Distaccamento non operativo");
+                sendTelegramNotification(__("telegram_bot.not_available"));
             } else if($available_users_count < 5) {
-                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
+                sendTelegramNotification(__("telegram_bot.available_support"));
             }
         }
 
@@ -454,7 +454,7 @@ class Services {
         $serviceId = $this->db->getLastInsertId();
 
         $this->increment_counter($chief.",".$drivers.",".$crew);
-        logger("Service added");
+        logger(__("log_messages.service_added"));
 
         return $serviceId;
     }
@@ -471,7 +471,7 @@ class Services {
             DB_PREFIX."_services",
             ["id" => $id]
         );
-        logger("Intervento eliminato");
+        logger(__("log_messages.service_deleted"));
 
         return true;
     }
@@ -610,7 +610,7 @@ class Schedules {
     public function update($schedules, $profile="default") {
         //TODO implement multiple profiles
         //TODO implement holidays
-        logger("Aggiornata programmazione orari disponibilità");
+        logger(__("log_messages.availability_schedules_updated"));
         if(empty($this->get($profile))) {
             return $this->db->insert(
                 DB_PREFIX."_schedules",
@@ -626,8 +626,94 @@ class Schedules {
     }
 }
 
+class Translations
+{
+    public $loaded_languages = ["en", "it"];
+    public $default_language = "en";
+    public $language = null;
+    public $client_languages = ["en"];
+    public $loaded_translations = [];
+    public $filename = "";
+
+    public function client_languages()
+    {
+        if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        } else {
+            $client_languages = "en-US;q=0.5,en;q=0.3";
+        }
+        if(strpos($client_languages, ';') == false) {
+            if(strpos($client_languages, '-') !== false) {
+                return [substr($client_languages, 0, 5)];
+            } else {
+                return [substr($client_languages, 0, 2)];
+            }
+        } else {
+            $client_languages = explode(",", $client_languages);
+            $tmp_languages = [];
+            foreach($client_languages as $language){
+                if(strpos($language, ';') == false) {
+                    $tmp_languages[$language] = 1;
+                } else {
+                    $tmp_languages[explode(";q=", $language)[0]] = (float) explode(";q=", $language)[1];
+                }
+            }
+            arsort($tmp_languages);
+            return array_keys($tmp_languages);
+        }
+    }
+
+    public function __construct($force_language = false)
+    {
+        $this->client_languages = $this->client_languages();
+        if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->loaded_languages)){
+            $this->language = $_COOKIE["forceLanguage"];
+        } else if($force_language && in_array($force_language, $this->loaded_languages)){
+            $this->language = $force_language;
+        } else {
+            foreach($this->client_languages as $language){
+                if(in_array($language, $this->loaded_languages) && $this->language == null) {
+                    $this->language = $language;
+                }
+            }
+            if($this->language == null) {
+                $this->language = "en";
+            }
+        }
+        $this->filename = "translations/".$this->language.".php";
+        if (file_exists($this->filename)) {
+            $this->loaded_translations = require($this->filename);
+        } else {
+            throw new Exception("Language file not found");
+        }
+    }
+
+    public function translate($string)
+    {
+        if(strpos($string, ".") !== false) {
+            $string = explode(".", $string);
+            if (!array_key_exists($string[1], $this->loaded_translations[$string[0]])) {
+                throw new Exception('string does not exist');
+            }
+            return $this->loaded_translations[$string[0]][$string[1]];
+        } else {
+            if (!array_key_exists($string, $this->loaded_translations)) {
+                throw new Exception('string does not exist');
+            }
+            return $this->loaded_translations[$string];
+        }
+    }
+}
+
 $users = new Users($db, $auth);
 $availability = new Availability($db, $users);
 $places = new Places($cache, $users, $db);
 $services = new Services($db, $users, $places);
 $schedules = new Schedules($db, $users);
+$translations = new Translations();
+
+function __(string $string)
+{
+    global $translations;
+    return $translations->translate($string);
+}
