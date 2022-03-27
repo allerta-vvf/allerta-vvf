@@ -315,7 +315,11 @@ function telegramBotRouter() {
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
         $availability->change(1, $user_id, true);
-        $Bot->sendMessage($message->from->id, "Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
+        $Bot->sendMessage([
+            "chat_id" => $message->from->id,
+            "text" => "Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.",
+            "disable_notification" => true
+        ]);
     });
 
     $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|disattivo|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
@@ -324,7 +328,11 @@ function telegramBotRouter() {
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
         $availability->change(0, $user_id, true);
-        $Bot->sendMessage($message->from->id, "Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
+        $Bot->sendMessage([
+            "chat_id" => $message->from->id,
+            "text" => "Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.",
+            "disable_notification" => true
+        ]);
     });
 
     $Bot->onText("/\/?(Abilita( |_)|abilita( |_)|Attiva( |_)|attiva( |_))?(Programma|Programmazione|programmazione|Programmazione( |_)oraria|programma|programmazione( |_)oraria)/", function (Message $message, $matches = []) {
