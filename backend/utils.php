@@ -680,27 +680,32 @@ class Translations
                 $this->language = "en";
             }
         }
-        $this->filename = "translations/".$this->language.".php";
-        if (file_exists($this->filename)) {
-            $this->loaded_translations = require($this->filename);
-        } else {
-            throw new Exception("Language file not found");
+        foreach($this->loaded_languages as $language) {
+            $this->filename = "translations/".$this->language.".php";
+            if (file_exists($this->filename)) {
+                $this->loaded_translations[$language] = require($this->filename);
+            } else {
+                throw new Exception("Language file not found");
+            }
         }
     }
 
-    public function translate($string)
+    public function translate($string, $language=null)
     {
+        if(is_null($language)) {
+            $language = $this->language;
+        }
         if(strpos($string, ".") !== false) {
             $string = explode(".", $string);
-            if (!array_key_exists($string[1], $this->loaded_translations[$string[0]])) {
+            if (!array_key_exists($string[1], $this->loaded_translations[$language][$string[0]])) {
                 throw new Exception('string does not exist');
             }
-            return $this->loaded_translations[$string[0]][$string[1]];
+            return $this->loaded_translations[$language][$string[0]][$string[1]];
         } else {
-            if (!array_key_exists($string, $this->loaded_translations)) {
+            if (!array_key_exists($string, $this->loaded_translations[$language])) {
                 throw new Exception('string does not exist');
             }
-            return $this->loaded_translations[$string];
+            return $this->loaded_translations[$language][$string];
         }
     }
 }
@@ -712,8 +717,8 @@ $services = new Services($db, $users, $places);
 $schedules = new Schedules($db, $users);
 $translations = new Translations();
 
-function __(string $string)
+function __(string $string, $language=null)
 {
     global $translations;
-    return $translations->translate($string);
+    return $translations->translate($string, $language);
 }
