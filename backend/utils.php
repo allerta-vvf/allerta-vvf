@@ -695,6 +695,12 @@ class Translations
         if(is_null($language)) {
             $language = $this->language;
         }
+        if(get_option("force_language", false)) {
+            $language = get_option("force_language", false);
+            if(!in_array($language, $this->loaded_languages)) {
+                $language = $this->default_language;
+            }
+        }
         if(strpos($string, ".") !== false) {
             $string = explode(".", $string);
             if (!array_key_exists($string[1], $this->loaded_translations[$language][$string[0]])) {
