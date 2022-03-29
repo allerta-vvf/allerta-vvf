@@ -38,7 +38,6 @@ return [
         "added_by" => "Added by: "
     ],
     "telegram_bot" => [
-    //TODO: select Telegram bot language from user's language
         "available_support" => "🧯 Available for support",
         "available_full" => "🚒 Available with full team",
         "not_available" => "⚠️ Not available",
