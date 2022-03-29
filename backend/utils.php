@@ -714,6 +714,13 @@ class Translations
             return $this->loaded_translations[$language][$string];
         }
     }
+
+    public function setLanguage($language)
+    {
+        if(in_array($language, $this->loaded_languages)) {
+            $this->language = $language;
+        }
+    }
 }
 
 $users = new Users($db, $auth);

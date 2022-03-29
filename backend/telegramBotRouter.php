@@ -33,6 +33,15 @@ function initializeBot($mode = WEBHOOK) {
     }
 }
 
+function getLanguageFromTelegramMessage(Message $message) {
+    global $translations;
+    $language = $translations->default_language;
+    if ($message->from->language_code !== null) {
+        $language = explode("-", $message->from->language_code)[0];
+    }
+    return $language;
+}
+
 function getUserIdByFrom($from_id)
 {
     global $db;
@@ -206,7 +215,9 @@ function telegramBotRouter() {
     });
     
     $Bot->onCommand('start', function (Message $message, array $args = []) {
-        global $db;
+        global $db, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         if(isset($args[0])) {
             $registered_chats = $db->select("SELECT * FROM `".DB_PREFIX."_bot_telegram` WHERE `chat_id` = ?", [$message->from->id]);
             if(!is_null($registered_chats) && count($registered_chats) > 1) {
@@ -230,11 +241,15 @@ function telegramBotRouter() {
     });
 
     $Bot->onCommand('help', function (Message $message, array $args = []) {
+        global $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         $message->chat->sendMessage(__("telegram_bot.help_command"));
     });
     
     $Bot->onCommand('debug_userid', function (Message $message) {
-        global $Bot;
+        global $Bot, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
 
         $messageText = sprintf(__("telegram_bot.debug_telegram_user_id"), $message->from->id);
         $messageText .= "\n".sprintf(__("telegram_bot.debug_chat_id"), $message->chat->id);
@@ -264,7 +279,9 @@ function telegramBotRouter() {
     });
     
     $Bot->onCommand('info', function (Message $message) {
-        global $users;
+        global $users, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         $user_id = getUserIdByMessage($message);
         if(is_null($user_id)) {
             $message->chat->sendMessage(__("telegram_bot.account_not_linked"));
@@ -286,7 +303,9 @@ function telegramBotRouter() {
     //Too difficult and "spaghetti to explain it here in comments, please use https://regexr.com/
     //Jokes apart, checks if text contains something like "Attiva", "attiva", "Disponibile", "disponibile" but not "Non ", "non ", "Non_", "non_", "Dis" or "dis"
     $Bot->onText("/\/?(Sono |sono |Io sono |Io sono )?(?<!non( |_))(?<!dis)(?<!Non( |_))(?<!Dis)(Attiva|Attivami|Attivo|Disponibile|Operativo|attiva|attivami|attivo|disponibile|operativo)/", function (Message $message, $matches = []) {
-        global $Bot, $availability;
+        global $Bot, $availability, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
         $user_id = getUserIdByMessage($message);
@@ -299,7 +318,9 @@ function telegramBotRouter() {
     });
 
     $Bot->onText("/\/?(Io |Io sono )?(Disattiva|Disattivo|Disattivami|Non( |_)attivo|Non( |_)(Sono |sono )?disponibile|Non( |_)(Sono |sono )?operativo|disattiva|disattivo|sisattivami|non( |_)(Sono |sono )?attivo|non( |_)(Sono |sono )?disponibile|non( |_)(Sono |sono )?operativo)/", function (Message $message, $matches = []) {
-        global $Bot, $availability;
+        global $Bot, $availability, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 4) return;
         $user_id = getUserIdByMessage($message);
@@ -312,7 +333,9 @@ function telegramBotRouter() {
     });
 
     $Bot->onText("/\/?(Abilita( |_)|abilita( |_)|Attiva( |_)|attiva( |_))?(Programma|Programmazione|programmazione|Programmazione( |_)oraria|programma|programmazione( |_)oraria)/", function (Message $message, $matches = []) {
-        global $Bot, $availability;
+        global $Bot, $availability, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 3) return;
         $userId = getUserIdByMessage($message);
@@ -321,7 +344,9 @@ function telegramBotRouter() {
     });
 
     $Bot->onText("/\/?(Stato|stato)( |_)?(Distaccamento|distaccamento)?/", function (Message $message, $matches = []) {
-        global $db;
+        global $db, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;
         $available_users_count = $db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
@@ -335,7 +360,9 @@ function telegramBotRouter() {
     });
 
     $Bot->onText("/\/?(Elenco|elenco|Elenca|elenca)?(_| )?(Disponibili|disponibili)/", function (Message $message, $matches = []) {
-        global $db, $users;
+        global $db, $translations;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));
+
         requireBotLogin($message);
         if(count(explode(" ", $message->text)) > 2) return;
         $result = $db->select("SELECT `chief`, `driver`, `available`, `name` FROM `".DB_PREFIX."_profiles` WHERE available = 1 and hidden = 0 ORDER BY chief DESC, services ASC, trainings DESC, availability_minutes DESC, name ASC");
@@ -355,9 +382,11 @@ function telegramBotRouter() {
     });
 
     $Bot->onCallbackQuery(function (CallbackQuery $callback_query) use ($Bot) {
+        global $translations;
         $user = $callback_query->from;
         $message = $callback_query->message;
         $chat = $message->chat;
+        $translations->setLanguage(getLanguageFromTelegramMessage($message));      
 
         if(strpos($callback_query->data, 'alert_') === 0) {
             $data = explode("_", str_replace("alert_", "", $callback_query->data));
