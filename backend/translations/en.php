@@ -1,8 +1,6 @@
 <?php
 return [
-    "log_messages" => [ 
-        //TODO: save logs as translation string in DB, then translate it when serving them
-        //(and return empty string if translation is not found)
+    "log_messages" => [
         "new_login" => "New login",
         "availability_schedules_updated" => "Availability schedules updated",
         "user_added" => "User added",
@@ -14,8 +12,9 @@ return [
         "training_added" => "Training added",
         "training_updated" => "Training updated",
         "training_removed" => "Training removed",
-        "availability_changed_to" => "Availability changed to \"%s\"",
-        "telegram_account_linked" => "Telegram account linked (%s)"
+        "available" => "Availability changed to \"available\"",
+        "not_available" => "Availability changed to \"not available\"",
+        "telegram_account_linked" => "Telegram account linked"
     ],
     "login" => [
         "wrong_email" => "Wrong email",

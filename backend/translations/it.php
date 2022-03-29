@@ -12,8 +12,9 @@ return [
         "training_added" => "Esercitazione aggiunta",
         "training_updated" => "Esercitazione aggiornata",
         "training_removed" => "Esercitazione rimossa",
-        "availability_changed_to" => "Disponibilità cambiata a \"%s\"",
-        "telegram_account_linked" => "Account Telegram collegato (%s)"
+        "available" => "Disponibilità cambiata in \"reperibile\"",
+        "not_available" => "Disponibilità cambiata in \"non reperibile\"",
+        "telegram_account_linked" => "Account Telegram collegato"
     ],
     "login" => [
         "wrong_email" => "Email errata",

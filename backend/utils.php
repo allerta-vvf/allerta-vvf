@@ -196,7 +196,7 @@ class Users
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::SUPER_EDITOR);
             }
-            logger(__("log_messages.user_created"), $userId, $inserted_by);
+            logger("log_messages.user_created", $userId, $inserted_by);
             return $userId;
         } else {
             return false;
@@ -223,7 +223,7 @@ class Users
             DB_PREFIX."_profiles",
             ["id" => $id]
         );
-        logger(__("log_messages.user_removed"), null, $removed_by);
+        logger("log_messages.user_removed", null, $removed_by);
     }
     
     public function online_time_update($id=null){
@@ -336,7 +336,7 @@ class Availability {
 
     public function change($availability, $user_id, $is_manual_mode=true)
     {
-        if($is_manual_mode) logger(sprintf(__("availability_changed_to"), __($availability ? 'available' : 'not_available')), $user_id, $this->users->auth->getUserId());
+        if($is_manual_mode) logger($availability ? 'log_messages.available' : 'log_messages.not_available', $user_id, $this->users->auth->getUserId());
         
         $change_values = ["available" => $availability];
         if($is_manual_mode) $change_values["manual_mode"] = 1;
@@ -454,7 +454,7 @@ class Services {
         $serviceId = $this->db->getLastInsertId();
 
         $this->increment_counter($chief.",".$drivers.",".$crew);
-        logger(__("log_messages.service_added"));
+        logger("log_messages.service_added");
 
         return $serviceId;
     }
@@ -471,7 +471,7 @@ class Services {
             DB_PREFIX."_services",
             ["id" => $id]
         );
-        logger(__("log_messages.service_deleted"));
+        logger("log_messages.service_deleted");
 
         return true;
     }
@@ -610,7 +610,7 @@ class Schedules {
     public function update($schedules, $profile="default") {
         //TODO implement multiple profiles
         //TODO implement holidays
-        logger(__("log_messages.availability_schedules_updated"));
+        logger("log_messages.availability_schedules_updated");
         if(empty($this->get($profile))) {
             return $this->db->insert(
                 DB_PREFIX."_schedules",
@@ -690,7 +690,7 @@ class Translations
         }
     }
 
-    public function translate($string, $language=null)
+    public function translate($string, $language=null, $returnStringIfNotFound=false)
     {
         if(is_null($language)) {
             $language = $this->language;
@@ -698,11 +698,17 @@ class Translations
         if(strpos($string, ".") !== false) {
             $string = explode(".", $string);
             if (!array_key_exists($string[1], $this->loaded_translations[$language][$string[0]])) {
+                if($returnStringIfNotFound) {
+                    return $string;
+                }
                 throw new Exception('string does not exist');
             }
             return $this->loaded_translations[$language][$string[0]][$string[1]];
         } else {
             if (!array_key_exists($string, $this->loaded_translations[$language])) {
+                if($returnStringIfNotFound) {
+                    return $string;
+                }
                 throw new Exception('string does not exist');
             }
             return $this->loaded_translations[$language][$string];
@@ -717,8 +723,8 @@ $services = new Services($db, $users, $places);
 $schedules = new Schedules($db, $users);
 $translations = new Translations();
 
-function __(string $string, $language=null)
+function __(string $string, $language=null, $returnStringIfNotFound=false)
 {
     global $translations;
-    return $translations->translate($string, $language);
+    return $translations->translate($string, $language, $returnStringIfNotFound);
 }

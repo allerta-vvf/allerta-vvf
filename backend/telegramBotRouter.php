@@ -219,7 +219,7 @@ function telegramBotRouter() {
                 ['tmp_login_token' => $args[0]]
             );
             if($response === 1) {
-                logger(sprintf(__("log_messages.telegram_account_linked"), $message->from->id));
+                logger("log_messages.telegram_account_linked");
                 $message->chat->sendMessage(__("telegram_bot.login_successful"));
             } else {
                 $message->chat->sendMessage(__("telegram_bot.login_failed"));

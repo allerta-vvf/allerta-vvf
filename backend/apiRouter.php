@@ -124,6 +124,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
                 foreach($response as &$row) {
                     $row['changed'] = $users->getName($row['changed']);
                     $row['editor'] = $users->getName($row['editor']);
+                    $row['action'] = __($row['action'], null, true);
                 }
             } else {
                 $response = [];
@@ -383,7 +384,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users;
             try {
                 $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
-                logger(__("log_messages.new_login"));
+                logger("log_messages.new_login");
                 apiResponse(["status" => "success", "access_token" => $token]);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {
