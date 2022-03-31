@@ -174,8 +174,7 @@ function job_send_notification_if_manual_mode() {
         $notified_users = [];
         foreach ($profiles as $profile) {
             $notified_users[] = $profile["id"];
-            $stato = $profile["available"] ? "disponibile" : "non disponibile";
-            sendTelegramNotificationToUser("⚠️ Attenzione! La tua disponibilità <b>non segue la programmazione oraria</b>.\nAttualmente sei <b>{$stato}</b>.\nScrivi \"/programma\" se vuoi ripristinare la programmazione.", $profile["id"]);
+            sendTelegramNotificationToUser(sprintf(__("telegram_bot.schedule_disabled_warning"), __($profile["available"] ? 'available' : 'not_available')), $profile["id"]);
         }
         $output = $notified_users;
         $output_status = "ok";
@@ -196,7 +195,7 @@ function cronRouter (FastRoute\RouteCollector $r) {
         'POST',
         '/execute',
         function ($vars) {
-            global $db, $executed_actions;
+            global $executed_actions;
             $cron_job_allowed = get_option("cron_job_enabled", false) && ((isset($_POST['cron']) && $_POST['cron'] == "cron_job-".get_option("cron_job_code")) || (isset($_SERVER['HTTP_CRON']) && $_SERVER['HTTP_CRON'] == "cron_job-".get_option("cron_job_code")));
 
             if(!$cron_job_allowed) {

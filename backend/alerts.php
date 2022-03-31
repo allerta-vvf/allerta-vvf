@@ -93,7 +93,7 @@ function updateAlertMessages($alert, $crew=null, $alertDeleted = false) {
             if(!is_null($message_id) && !is_null($chat_id)) {
                 $Bot->sendMessage([
                     "chat_id" => $chat_id,
-                    "text" => "Allerta rimossa.\nPartecipazione non più richiesta.",
+                    "text" => __("alerts.alert_removed"),
                     "reply_to_message_id" => $message_id
                 ]);
                 try {
@@ -160,7 +160,7 @@ function updateAlertMessages($alert, $crew=null, $alertDeleted = false) {
             if((!is_null($message_id) || !is_null($chat_id)) && $member["response"] === "waiting") {
                 $Bot->sendMessage([
                     "chat_id" => $chat_id,
-                    "text" => "Numero minimo vigili richiesti raggiunto.\nPartecipazione non più richiesta.",
+                    "text" => __("alerts.alert_completed"),
                     "reply_to_message_id" => $message_id
                 ]);
                 try {
@@ -192,7 +192,7 @@ function setAlertResponse($response, $userId, $alertId) {
     if(!$alert["enabled"]) return;
 
     $crew = json_decode($alert["crew"], true);
-    $messageText = $response ? "🟢 Partecipazione accettata." : "🔴 Partecipazione rifiutata.";
+    $messageText = $response ? __("alerts.accepted") : __("alerts.rejected");
 
     foreach($crew as &$member) {
         if($member["id"] == $userId) {
@@ -272,20 +272,20 @@ function alertsRouter (FastRoute\RouteCollector $r) {
             requireLogin();
             $users->online_time_update();
             if(!$users->hasRole(Role::SUPER_EDITOR)) {
-                apiResponse(["status" => "error", "message" => "Access denied"]);
+                apiResponse(["status" => "error", "message" => __("access_denied")]);
                 return;
             }
 
             try {
                 $crew_members = callsList($_POST["type"]);
             } catch (NoChiefAvailableException) {
-                apiResponse(["status" => "error", "message" => "Nessun caposquadra disponibile. Contattare i vigili manualmente."]);
+                apiResponse(["status" => "error", "message" => __("alerts.no_chief_available")]);
                 return;
             } catch (NoDriverAvailableException) {
-                apiResponse(["status" => "error", "message" => "Nessun autista disponibile. Contattare i vigili manualmente."]);
+                apiResponse(["status" => "error", "message" => __("alerts.no_drivers_available")]);
                 return;
             } catch (NotEnoughAvailableUsersException) {
-                apiResponse(["status" => "error", "message" => "Nessun utente disponibile. Distaccamento non operativo."]);
+                apiResponse(["status" => "error", "message" => __("alerts.not_enough_available_users")]);
                 return;
             }
             
@@ -340,7 +340,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
             requireLogin();
             $alert = $db->selectRow("SELECT * FROM `".DB_PREFIX."_alerts` WHERE `id` = :id", [":id" => $vars["id"]]);
             if(is_null($alert)) {
-                apiResponse(["error" => "alert not found"]);
+                apiResponse(["error" => __("alerts.alert_not_found")]);
                 return;
             }
             $alert["crew"] = json_decode($alert["crew"], true);
@@ -359,7 +359,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
             requireLogin();
             $users->online_time_update();
             if(!$users->hasRole(Role::SUPER_EDITOR)) {
-                apiResponse(["status" => "error", "message" => "Access denied"]);
+                apiResponse(["status" => "error", "message" => __("access_denied")]);
                 return;
             }
             $db->update(
@@ -390,7 +390,7 @@ function alertsRouter (FastRoute\RouteCollector $r) {
             requireLogin();
             $users->online_time_update();
             if(!$users->hasRole(Role::SUPER_EDITOR)) {
-                apiResponse(["status" => "error", "message" => "Access denied"]);
+                apiResponse(["status" => "error", "message" => __("access_denied")]);
                 return;
             }
             $db->update(
