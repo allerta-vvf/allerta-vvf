@@ -12,8 +12,8 @@
         "cancel": "Annulla",
         "remove_service_confirm": "Sei sicuro di voler rimuovere questo intervento?",
         "remove_service_confirm_text": "Questa operazione non può essere annullata.",
-        "service_deleted_successfully": "Intervento rimosso con successo",
-        "service_deleted_error": "Errore durante la rimozione dell'intervento. Riprova più tardi"
+        "service_removed_successfully": "Intervento rimosso con successo",
+        "service_removed_error": "Errore durante la rimozione dell'intervento. Riprova più tardi"
     },
     "list": {
         "your_availability_is": "Attualmente sei:",
@@ -54,7 +54,9 @@
         "type_already_exists": "La tipologia è già presente",
         "type_added_successfully": "Tipologia aggiunta con successo",
         "service_added_successfully": "Intervento aggiunto con successo",
-        "service_add_error": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi"
+        "service_add_error": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi",
+        "service_updated_successfully": "Intervento modificato con successo",
+        "service_update_error": "Errore durante la modifica dell'intervento. Riprovare più tardi"
     },
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
     "save_changes": "Salva modifiche",
