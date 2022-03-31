@@ -12,8 +12,8 @@
         "cancel": "Cancel",
         "remove_service_confirm": "Are you sure you want to remove this service?",
         "remove_service_confirm_text": "This action cannot be undone.",
-        "service_deleted_successfully": "Service deleted successfully",
-        "service_deleted_error": "Service could not be deleted. Please try again."
+        "service_removed_successfully": "Service deleted successfully",
+        "service_removed_error": "Service could not be deleted. Please try again."
     },
     "list": {
         "your_availability_is": "You are:",
@@ -54,7 +54,9 @@
         "type_already_exists": "Type already exists",
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
-        "service_add_error": "Service could not be added. Please try again"
+        "service_add_error": "Service could not be added. Please try again",
+        "service_updated_successfully": "Service updated successfully",
+        "service_update_error": "Service could not be updated. Please try again"
     },
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",

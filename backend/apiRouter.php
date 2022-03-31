@@ -165,6 +165,16 @@ function apiRouter (FastRoute\RouteCollector $r) {
         }
     );
     $r->addRoute(
+        ['POST'],
+        '/services/{id}',
+        function ($vars) {
+            global $services, $users;
+            requireLogin();
+            $users->online_time_update();
+            apiResponse($services->update($vars['id'], $_POST["start"], $_POST["end"], $_POST["code"], $_POST["chief"], $_POST["drivers"], $_POST["crew"], $_POST["place"], $_POST["notes"], $_POST["type"], $users->auth->getUserId()));
+        }
+    );
+    $r->addRoute(
         ['DELETE'],
         '/services/{id}',
         function ($vars) {

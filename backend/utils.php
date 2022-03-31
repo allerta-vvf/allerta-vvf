@@ -459,6 +459,26 @@ class Services {
         return $serviceId;
     }
 
+    public function update($id, $start, $end, $code, $chief, $drivers, $crew, $place, $notes, $type, $inserted_by)
+    {
+        $service = $this->db->selectRow(
+            "SELECT `chief`, `drivers`, `crew` FROM `".DB_PREFIX."_services` WHERE `id` = :id",
+            ["id" => $id]
+        );
+        $this->decrement_counter($service["chief"].";".$service["drivers"].";".$service["crew"]);
+
+        $this->db->update(
+            DB_PREFIX."_services",
+            ["start" => $start, "end" => $end, "code" => $code, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->places->save_place_reverse(explode(";", $place)[0], explode(";", $place)[1]), "notes" => $notes, "type" => $type, "inserted_by" => $inserted_by],
+            ["id" => $id]
+        );
+
+        $this->increment_counter($chief.",".$drivers.",".$crew);
+        logger("log_messages.service_updated");
+
+        return $id;
+    }
+
     public function delete($id)
     {
         $service = $this->db->selectRow(
@@ -471,7 +491,7 @@ class Services {
             DB_PREFIX."_services",
             ["id" => $id]
         );
-        logger("log_messages.service_deleted");
+        logger("log_messages.service_removed");
 
         return true;
     }
