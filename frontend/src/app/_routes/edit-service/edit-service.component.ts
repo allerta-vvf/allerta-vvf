@@ -177,19 +177,15 @@ export class EditServiceComponent implements OnInit {
       values.drivers = values.drivers.join(";");
       values.crew = values.crew.join(";");
       console.log(values);
-      let submit_url = "services";
-      if(!this.addingService) {
-        submit_url = `services/${this.serviceId}`;
-      }
-      this.api.post(submit_url, values).then((res) => {
+      this.api.post("services", values).then((res) => {
         console.log(res);
-        this.translate.get(this.addingService ? 'edit_service.service_added_successfully' : 'edit_service.service_updated_successfully').subscribe((res: string) => {
+        this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
           this.toastr.success(res);
         });
         this.submittingForm = false;
       }).catch((err) => {
         console.error(err);
-        this.translate.get(this.addingService ? 'edit_service.service_add_failed' : 'edit_service.service_update_failed').subscribe((res: string) => {
+        this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
           this.toastr.error(res);
         });
         this.submittingForm = false;

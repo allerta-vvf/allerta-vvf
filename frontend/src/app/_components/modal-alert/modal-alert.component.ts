@@ -86,12 +86,12 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
           this.bsModalRef.hide();
           this.api.alertsChanged.next();
         /*
-          this.translate.get('table.service_removed_successfully').subscribe((res: string) => {
+          this.translate.get('table.service_deleted_successfully').subscribe((res: string) => {
             this.toastr.success(res);
           });
           this.loadTableData();
         }).catch((e) => {
-          this.translate.get('table.service_removed_error').subscribe((res: string) => {
+          this.translate.get('table.service_deleted_error').subscribe((res: string) => {
             this.toastr.error(res);
         */
         });
