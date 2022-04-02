@@ -7,7 +7,6 @@ $baseConfig = [
 		.github
 		.vscode
         *.json
-		!dist-frontend/assets/i18n/*
 		config.old.php
 		config.php
 		keys
