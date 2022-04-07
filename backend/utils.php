@@ -653,7 +653,6 @@ class Translations
     public $language = null;
     public $client_languages = ["en"];
     public $loaded_translations = [];
-    public $filename = "";
 
     public function client_languages()
     {
@@ -701,9 +700,9 @@ class Translations
             }
         }
         foreach($this->loaded_languages as $language) {
-            $this->filename = "translations/".$this->language.".php";
+            $filename = "translations/".$language.".php";
             if (file_exists($this->filename)) {
-                $this->loaded_translations[$language] = require($this->filename);
+                $this->loaded_translations[$language] = require($filename);
             } else {
                 throw new Exception("Language file not found");
             }
