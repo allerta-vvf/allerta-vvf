@@ -626,6 +626,108 @@ class Schedules {
     }
 }
 
+class Translations
+{
+    public $loaded_languages = ["en", "it"];
+    public $default_language = "en";
+    public $language = null;
+    public $client_languages = ["en"];
+    public $loaded_translations = [];
+
+    public function client_languages()
+    {
+        if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $client_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        } else {
+            $client_languages = "en-US;q=0.5,en;q=0.3";
+        }
+        if(strpos($client_languages, ';') == false) {
+            if(strpos($client_languages, '-') !== false) {
+                return [substr($client_languages, 0, 5)];
+            } else {
+                return [substr($client_languages, 0, 2)];
+            }
+        } else {
+            $client_languages = explode(",", $client_languages);
+            $tmp_languages = [];
+            foreach($client_languages as $language){
+                if(strpos($language, ';') == false) {
+                    $tmp_languages[$language] = 1;
+                } else {
+                    $tmp_languages[explode(";q=", $language)[0]] = (float) explode(";q=", $language)[1];
+                }
+            }
+            arsort($tmp_languages);
+            return array_keys($tmp_languages);
+        }
+    }
+
+    public function __construct($force_language = false)
+    {
+        $this->client_languages = $this->client_languages();
+        if(isset($_COOKIE["forceLanguage"]) && in_array($_COOKIE["forceLanguage"], $this->loaded_languages)){
+            $this->language = $_COOKIE["forceLanguage"];
+        } else if($force_language && in_array($force_language, $this->loaded_languages)){
+            $this->language = $force_language;
+        } else {
+            foreach($this->client_languages as $language){
+                if(in_array($language, $this->loaded_languages) && $this->language == null) {
+                    $this->language = $language;
+                }
+            }
+            if($this->language == null) {
+                $this->language = "en";
+            }
+        }
+        foreach($this->loaded_languages as $language) {
+            $filename = "translations/".$language.".php";
+            if (file_exists($filename)) {
+                $this->loaded_translations[$language] = require($filename);
+            } else {
+                throw new Exception("Language file not found");
+            }
+        }
+    }
+
+    public function translate($string, $language=null, $returnStringIfNotFound=false)
+    {
+        if(is_null($language)) {
+            $language = $this->language;
+        }
+        if(get_option("force_language", false)) {
+            $language = get_option("force_language", false);
+            if(!in_array($language, $this->loaded_languages)) {
+                $language = $this->default_language;
+            }
+        }
+        if(strpos($string, ".") !== false) {
+            $string = explode(".", $string);
+            if (!array_key_exists($string[1], $this->loaded_translations[$language][$string[0]])) {
+                if($returnStringIfNotFound) {
+                    return $string;
+                }
+                throw new Exception('string does not exist');
+            }
+            return $this->loaded_translations[$language][$string[0]][$string[1]];
+        } else {
+            if (!array_key_exists($string, $this->loaded_translations[$language])) {
+                if($returnStringIfNotFound) {
+                    return $string;
+                }
+                throw new Exception('string does not exist');
+            }
+            return $this->loaded_translations[$language][$string];
+        }
+    }
+
+    public function setLanguage($language)
+    {
+        if(in_array($language, $this->loaded_languages)) {
+            $this->language = $language;
+        }
+    }
+}
+
 $users = new Users($db, $auth);
 $availability = new Availability($db, $users);
 $places = new Places($cache, $users, $db);
