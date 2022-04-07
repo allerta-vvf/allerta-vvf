@@ -701,7 +701,7 @@ class Translations
         }
         foreach($this->loaded_languages as $language) {
             $filename = "translations/".$language.".php";
-            if (file_exists($this->filename)) {
+            if (file_exists($filename)) {
                 $this->loaded_translations[$language] = require($filename);
             } else {
                 throw new Exception("Language file not found");
