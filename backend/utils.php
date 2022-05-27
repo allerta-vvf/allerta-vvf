@@ -196,7 +196,7 @@ class Users
             if($chief == 1) {
                 $this->auth->admin()->addRoleForUserById($userId, Role::SUPER_EDITOR);
             }
-            logger("log_messages.user_created", $userId, $inserted_by);
+            logger("User added", $userId, $inserted_by);
             return $userId;
         } else {
             return false;
@@ -223,7 +223,7 @@ class Users
             DB_PREFIX."_profiles",
             ["id" => $id]
         );
-        logger("log_messages.user_removed", null, $removed_by);
+        logger("User removed", null, $removed_by);
     }
     
     public function online_time_update($id=null){
@@ -336,7 +336,7 @@ class Availability {
 
     public function change($availability, $user_id, $is_manual_mode=true)
     {
-        if($is_manual_mode) logger($availability ? 'log_messages.available' : 'log_messages.not_available', $user_id, $this->users->auth->getUserId());
+        if($is_manual_mode) logger("Disponibilità cambiata in ".($availability ? '"disponibile"' : '"non disponibile"'), $user_id, $this->users->auth->getUserId());
         
         $change_values = ["available" => $availability];
         if($is_manual_mode) $change_values["manual_mode"] = 1;
@@ -350,11 +350,11 @@ class Availability {
         if(!$this->users->isHidden($user_id)) {
             $available_users_count = $this->db->selectValue("SELECT COUNT(id) FROM `".DB_PREFIX."_profiles` WHERE `available` = 1 AND `hidden` = 0");
             if($available_users_count === 5) {
-                sendTelegramNotification(__("telegram_bot.available_full"));
+                sendTelegramNotification("🚒 Distaccamento operativo con squadra completa");
             } else if($available_users_count < 2) {
-                sendTelegramNotification(__("telegram_bot.not_available"));
+                sendTelegramNotification("⚠️ Distaccamento non operativo");
             } else if($available_users_count < 5) {
-                sendTelegramNotification(__("telegram_bot.available_support"));
+                sendTelegramNotification("🧯 Distaccamento operativo per supporto");
             }
         }
 
@@ -454,29 +454,9 @@ class Services {
         $serviceId = $this->db->getLastInsertId();
 
         $this->increment_counter($chief.",".$drivers.",".$crew);
-        logger("log_messages.service_added");
+        logger("Service added");
 
         return $serviceId;
-    }
-
-    public function update($id, $start, $end, $code, $chief, $drivers, $crew, $place, $notes, $type, $inserted_by)
-    {
-        $service = $this->db->selectRow(
-            "SELECT `chief`, `drivers`, `crew` FROM `".DB_PREFIX."_services` WHERE `id` = :id",
-            ["id" => $id]
-        );
-        $this->decrement_counter($service["chief"].";".$service["drivers"].";".$service["crew"]);
-
-        $this->db->update(
-            DB_PREFIX."_services",
-            ["start" => $start, "end" => $end, "code" => $code, "chief" => $chief, "drivers" => $drivers, "crew" => $crew, "place" => $place, "place_reverse" => $this->places->save_place_reverse(explode(";", $place)[0], explode(";", $place)[1]), "notes" => $notes, "type" => $type, "inserted_by" => $inserted_by],
-            ["id" => $id]
-        );
-
-        $this->increment_counter($chief.",".$drivers.",".$crew);
-        logger("log_messages.service_updated");
-
-        return $id;
     }
 
     public function delete($id)
@@ -491,7 +471,7 @@ class Services {
             DB_PREFIX."_services",
             ["id" => $id]
         );
-        logger("log_messages.service_removed");
+        logger("Intervento eliminato");
 
         return true;
     }
@@ -630,7 +610,7 @@ class Schedules {
     public function update($schedules, $profile="default") {
         //TODO implement multiple profiles
         //TODO implement holidays
-        logger("log_messages.availability_schedules_updated");
+        logger("Aggiornata programmazione orari disponibilità");
         if(empty($this->get($profile))) {
             return $this->db->insert(
                 DB_PREFIX."_schedules",
@@ -753,10 +733,3 @@ $availability = new Availability($db, $users);
 $places = new Places($cache, $users, $db);
 $services = new Services($db, $users, $places);
 $schedules = new Schedules($db, $users);
-$translations = new Translations();
-
-function __(string $string, $language=null, $returnStringIfNotFound=false)
-{
-    global $translations;
-    return $translations->translate($string, $language, $returnStringIfNotFound);
-}

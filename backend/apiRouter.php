@@ -124,7 +124,6 @@ function apiRouter (FastRoute\RouteCollector $r) {
                 foreach($response as &$row) {
                     $row['changed'] = $users->getName($row['changed']);
                     $row['editor'] = $users->getName($row['editor']);
-                    $row['action'] = __($row['action'], null, true);
                 }
             } else {
                 $response = [];
@@ -162,16 +161,6 @@ function apiRouter (FastRoute\RouteCollector $r) {
             requireLogin();
             $users->online_time_update();
             apiResponse($services->get($vars['id']));
-        }
-    );
-    $r->addRoute(
-        ['POST'],
-        '/services/{id}',
-        function ($vars) {
-            global $services, $users;
-            requireLogin();
-            $users->online_time_update();
-            apiResponse($services->update($vars['id'], $_POST["start"], $_POST["end"], $_POST["code"], $_POST["chief"], $_POST["drivers"], $_POST["crew"], $_POST["place"], $_POST["notes"], $_POST["type"], $users->auth->getUserId()));
         }
     );
     $r->addRoute(
@@ -285,7 +274,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
             $users->online_time_update();
             if(!$users->hasRole(Role::SUPER_EDITOR) && (int) $_POST["id"] !== $users->auth->getUserId()){
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("other_user_availability_change_forbidden"), "t" => $users->auth->getUserId()]);
+                apiResponse(["status" => "error", "message" => "You don't have permission to change other users availability", "t" => $users->auth->getUserId()]);
                 return;
             }
             $user_id = is_numeric($_POST["id"]) ? $_POST["id"] : $users->auth->getUserId();
@@ -394,32 +383,32 @@ function apiRouter (FastRoute\RouteCollector $r) {
             global $users;
             try {
                 $token = $users->loginAndReturnToken($_POST["username"], $_POST["password"]);
-                logger("log_messages.new_login");
+                logger("Login effettuato");
                 apiResponse(["status" => "success", "access_token" => $token]);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("login.wrong_email")]);
+                apiResponse(["status" => "error", "message" => "Wrong email address"]);
             }
             catch (\Delight\Auth\InvalidPasswordException $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("login.wrong_password")]);
+                apiResponse(["status" => "error", "message" => "Wrong password"]);
             }
             catch (\Delight\Auth\EmailNotVerifiedException $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("login.email_not_confirmed")]);
+                apiResponse(["status" => "error", "message" => "Email not verified"]);
             }
             catch (\Delight\Auth\UnknownUsernameException $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("login.wrong_username")]);
+                apiResponse(["status" => "error", "message" => "Wrong username"]);
             }
             catch (\Delight\Auth\TooManyRequestsException $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("too_many_requests")]);
+                apiResponse(["status" => "error", "message" => "Too many requests"]);
             }
             catch (Exception $e) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("unknown_error"), "error" => $e]);
+                apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
             }
         }
     );
@@ -432,7 +421,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
 
             if(!$users->hasRole(Role::SUPER_ADMIN)) {
                 statusCode(401);
-                apiResponse(["status" => "error", "message" => __("impersonate_user_forbidden")]);
+                apiResponse(["status" => "error", "message" => "You don't have permission to impersonate"]);
                 return;
             }
 
@@ -442,15 +431,15 @@ function apiRouter (FastRoute\RouteCollector $r) {
             }
             catch (\Delight\Auth\UnknownIdException $e) {
                 statusCode(400);
-                apiResponse(["status" => "error", "message" => __("login.wrong_userid")]);
+                apiResponse(["status" => "error", "message" => "Wrong user ID"]);
             }
             catch (\Delight\Auth\EmailNotVerifiedException $e) {
                 statusCode(400);
-                apiResponse(["status" => "error", "message" => __("login.email_not_confirmed")]);
+                apiResponse(["status" => "error", "message" => "Email not verified"]);
             }
             catch (Exception $e) {
                 statusCode(400);
-                apiResponse(["status" => "error", "message" => __("unknown_error"), "error" => $e]);
+                apiResponse(["status" => "error", "message" => "Unknown error", "error" => $e]);
             }
         }
     );
