@@ -136,7 +136,10 @@ export class ListComponent implements OnInit, OnDestroy {
   requestTelegramToken() {
     this.api.post("telegram_login_token", {}).then((response) => {
       console.log(response);
-      window.open(response.start_link, "_blank");
+      const a = document.createElement("a");
+      a.setAttribute('href', response.start_link);
+      a.setAttribute('target', '_blank');
+      a.click();
     });
   }
 
