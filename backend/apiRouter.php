@@ -227,7 +227,7 @@ function apiRouter (FastRoute\RouteCollector $r) {
         function ($vars) {
             global $users;
             requireLogin();
-            if(!$users->hasRole(Role::SUPER_EDITOR) && $_POST["id"] !== $users->auth->getUserId()){
+            if(!$users->hasRole(Role::SUPER_EDITOR)){
                 exit;
             }
             apiResponse(["userId" => $users->add_user($_POST["email"], $_POST["name"], $_POST["username"], $_POST["password"], $_POST["phone_number"], $_POST["birthday"], $_POST["chief"], $_POST["driver"], $_POST["hidden"], $_POST["disabled"], "unknown")]);
