@@ -1,38 +1,66 @@
 {
-    "name": "allerta-vvf/allerta-vvf",
-    "description": "Un software di allertamento per i vvf",
+    "name": "laravel/laravel",
     "type": "project",
-    "repositories": [
-        {
-            "type": "vcs",
-            "no-api": true,
-            "url": "https://github.com/allerta-vvf/PHP-Auth-JWT"
-        }
-    ],
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
     "require": {
-        "delight-im/auth": "dev-master",
-        "ulrichsg/getopt-php": "4.0.1",
-        "nikic/fast-route": "^2.0@dev",
-        "spatie/array-to-xml": "3.1.1",
-        "ezyang/htmlpurifier": "4.14.0",
-        "brick/phonenumber": "0.4.0",
-        "sentry/sdk": "3.1.1",
-        "azuyalabs/yasumi": "2.5.0",
-        "ministryofweb/php-osm-tiles": "2.0.0",
-        "delight-im/db": "1.3.1",
-        "phpfastcache/phpfastcache": "9.0.1",
-        "skrtdev/novagram": "1.10",
-        "league/mime-type-detection": "1.9.0"
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^10.0",
+        "laravel/sanctum": "^3.2",
+        "laravel/tinker": "^2.8"
     },
-    "license": "GPL-3.0-or-later",
-    "authors": [
-        {
-            "name": "Matteo Gheza",
-            "email": "me@matteogheza.it"
-        }
-    ],
-    "minimum-stability": "stable",
     "require-dev": {
-        "pheromone/phpcs-security-audit": "2.0.1"
-    }
+        "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.0",
+        "laravel/sail": "^1.18",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^7.0",
+        "phpunit/phpunit": "^10.0",
+        "spatie/laravel-ignition": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

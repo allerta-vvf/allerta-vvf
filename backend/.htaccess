@@ -1,15 +1,36 @@
-RewriteEngine on
+# Go to https://gist.github.com/MatteoGheza/17a63a6b27e1b1d37aa62cdba7d7f2b1 for more information
+# This is the .htaccess used in production where you can't use a custom root folder
+<IfModule mod_rewrite.c>
 
-#https://stackoverflow.com/a/26791450
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+    <IfModule mod_negotiation.c>
 
-#Thanks u/IZEN_R!
-RewriteCond %{REQUEST_URI} !^(.*)dist-frontend/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ dist-frontend/$1
-RewriteRule ^(.*)api/(.*) router.php [L]
+        Options -MultiViews -Indexes
+
+    </IfModule>
+
+    RewriteEngine On
+
+    # Send Requests To Front Controller...
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Redirect everything that isn't not an existing file or directory to:
+    #  - dist-frontend (try to serve the file from it)
+    #  - using index.php if the requests contains api/*
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ dist-frontend/$1
+    RewriteRule ^(.*)api/(.*) index.php [L]
+
+    # Redirect anything else to index.php, so files like .env or cache files aren't served
+    RewriteRule (.*) index.php [L]
+
+</IfModule>
 
 DirectoryIndex dist-frontend/index.html
-ErrorDocument 404 router.php
