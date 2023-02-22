@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
-import { Observable, Subject } from "rxjs";
-import jwt_decode from 'jwt-decode';
+import { Subject } from "rxjs";
 
 export interface LoginResponse {
   loginOk: boolean;
@@ -14,59 +13,37 @@ export interface LoginResponse {
 })
 export class AuthService {
     public profile: any = undefined;
-    private access_token: string | undefined = undefined;
     public authChanged = new Subject<void>();
+    public authLoaded = false;
 
     public loadProfile() {
-        try{
-            console.log("Loading profile", this.access_token);
-            let now = Date.now().valueOf() / 1000;
-            (window as any).jwt_decode = jwt_decode;
-            if(typeof(this.access_token) !== "string") return;
-            let decoded: any = jwt_decode(this.access_token);
-            if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
-                return false;
-            }
-            if (typeof decoded.nbf !== 'undefined' && decoded.nbf > now) {
-                return false;
-            }
-            this.profile = decoded.user_info;
-
-            this.profile.hasRole = (role: string) => {
-                return Object.values(this.profile.roles).includes(role);
-            }
-
-            console.log(this.profile);
-            this.authChanged.next();
-            return true;
-        } catch(e) {
-            console.error(e);
-            this.removeToken();
-            this.profile = undefined;
-            return false;
-        }
+        console.log("Loading profile data...");
+        return new Promise<void>((resolve, reject) => {
+            this.api.post("me").then((data: any) => {
+                this.profile = data;
+    
+                this.profile.hasRole = (role: string) => {
+                    return true;
+                }
+    
+                this.authChanged.next();
+                resolve();
+            }).catch((e) => {
+                console.error(e);
+                this.profile = undefined;
+                reject();
+            });
+        });
     }
 
     constructor(private api: ApiClientService, private router: Router) {
-        if(localStorage.getItem("access_token") !== null) {
-            this.access_token = localStorage.getItem("access_token") as string;
-            this.loadProfile();
-        }
-    }
-
-    public setToken(value: string) {
-        localStorage.setItem("access_token", value);
-        this.access_token = value;
-        this.loadProfile();
-    }
-
-    public getToken(): string | undefined {
-        return this.access_token;
-    }
-
-    private removeToken() {
-        this.access_token = '';
-        localStorage.removeItem("access_token");
+        this.loadProfile().then(() => {
+            console.log("User is authenticated");
+        }).catch(() => {
+            console.log("User is not logged in");
+        }).finally(() => {
+            this.authLoaded = true;
+        });
     }
 
     public isAuthenticated() {
@@ -75,34 +52,40 @@ export class AuthService {
 
     public login(username: string, password: string) {
         return new Promise<LoginResponse>((resolve) => {
-            this.api.post("login", {
-                username: username,
-                password: password
-            }).then((data: any) => {
-                console.log(data);
-                this.setToken(data.access_token);
-                console.log("Access token", data);
-                resolve({
-                    loginOk: true,
-                    message: data.message
-                });
-            }).catch((err) => {
-                let error_message = "";
-                if(err.status === 401) {
-                    error_message = err.error.message;
-                } else if (err.status === 400) {
-                    let error_messages = err.error.errors;
-                    error_message = error_messages.map((val: any) => {
-                        return `${val.msg} in ${val.param}`;
-                    }).join(" & ");
-                } else if (err.status === 500) {
-                    error_message = "Server error";
-                } else {
-                    error_message = "Unknown error";
-                }
-                resolve({
-                    loginOk: false,
-                    message: error_message
+            this.api.get("csrf-cookie").then((data: any) => {
+                this.api.post("login", {
+                    username: username,
+                    password: password
+                }).then((data: any) => {
+                    this.loadProfile().then(() => {
+                        resolve({
+                            loginOk: true,
+                            message: data.message
+                        });
+                    }).catch(() => {
+                        resolve({
+                            loginOk: false,
+                            message: "Unknown error"
+                        });
+                    });
+                }).catch((err) => {
+                    let error_message = "";
+                    if(err.status === 401) {
+                        error_message = err.error.message;
+                    } else if (err.status === 400) {
+                        let error_messages = err.error.errors;
+                        error_message = error_messages.map((val: any) => {
+                            return `${val.msg} in ${val.param}`;
+                        }).join(" & ");
+                    } else if (err.status === 500) {
+                        error_message = "Server error";
+                    } else {
+                        error_message = "Unknown error";
+                    }
+                    resolve({
+                        loginOk: false,
+                        message: error_message
+                    });
                 });
             });
         })
@@ -110,52 +93,29 @@ export class AuthService {
 
     public impersonate(user_id: number): Promise<number> {
         return new Promise((resolve, reject) => {
-            console.log("final", user_id);
-            this.api.post("impersonate", {
-                user_id: user_id
-            }).then((response) => {
-                this.setToken(response.access_token);
-                resolve(user_id);
-            }).catch((err) => {
-                reject();
-            });
-        });
-    }
-
-    public stop_impersonating(): Promise<number> {
-        return new Promise((resolve, reject) => {
-            this.api.post("stop_impersonating").then((response) => {
-                this.setToken(response.access_token);
-                resolve(response.user_id);
-            }).catch((err) => {
-                reject();
-            });
+            resolve(0);
         });
     }
 
     public logout(routerDestination?: string[] | undefined) {
+        this.api.post("logout").then((data: any) => {
+            this.profile = undefined;
+            if(routerDestination === undefined) {
+                routerDestination = ["login", "list"];
+            }
+            this.router.navigate(routerDestination);
+        });
+        /*
         if(this.profile.impersonating_user) {
             this.stop_impersonating().then((user_id) => {
             });
         } else {
-            this.removeToken();
             this.profile = undefined;
             if(routerDestination === undefined) {
                 routerDestination = ["login", "list"];
             }
             this.router.navigate(routerDestination);
         }
-    }
-
-    public refreshToken() {
-        return new Observable<string>((observer) => {
-            this.api.post("refreshToken").then((data: any) => {
-                this.setToken(data.token);
-                observer.next(data.token);
-                observer.complete();
-            }).catch((err) => {
-                observer.error(err);
-            });
-        });
+        */
     }
 }

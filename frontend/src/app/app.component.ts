@@ -47,6 +47,7 @@ export class AppComponent {
       }
     });
 
+    /*
     this.loadAlertsInterval = setInterval(() => {
       console.log("Refreshing alerts...");
       this.loadAlerts();
@@ -56,6 +57,7 @@ export class AppComponent {
     this.api.alertsChanged.subscribe(() => {
       this.loadAlerts();
     });
+    */
   }
 
   openAlert(id: number) {

@@ -32,7 +32,6 @@ export class ListComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private translate: TranslateService
   ) {
-    this.loadAvailability();
   }
 
   loadAvailability() {
@@ -118,13 +117,18 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    /*
     this.loadAvailabilityInterval = setInterval(() => {
       console.log("Refreshing availability...");
       this.loadAvailability();
     }, 10000);
     this.auth.authChanged.subscribe({
-      next: () => this.loadAvailability()
+      next: () => {
+        this.loadAvailability();
+        this.loadAvailability();
+      }
     });
+    */
   }
 
   ngOnDestroy(): void {
