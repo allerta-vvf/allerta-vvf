@@ -36,6 +36,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        //TODO: https://stackoverflow.com/a/73980629
         if (!Auth::attempt($request->only('username', 'password'))) {
             return response()->json([
                 'message' => 'Invalid login details'
@@ -50,6 +51,13 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        //TODO: https://stackoverflow.com/a/73980629
+        auth('web')->logout();
+        return;
     }
 
     public function me(Request $request)
