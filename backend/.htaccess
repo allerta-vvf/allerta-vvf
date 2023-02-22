@@ -28,9 +28,11 @@
     RewriteRule ^(.*)$ dist-frontend/$1
     RewriteRule ^(.*)api/(.*) index.php [L]
 
-    # Redirect anything else to index.php, so files like .env or cache files aren't served
-    RewriteRule (.*) index.php [L]
-
+    <FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+    </FilesMatch>
+    RedirectMatch permanent ^(.*)(app|bootstrap|config|database|dist-frontend|public|resources|routes|storage|tests|vendor)/(.*) https://www.youtube.com/watch?v=RfiQYRn7fBg
 </IfModule>
 
 DirectoryIndex dist-frontend/index.html
