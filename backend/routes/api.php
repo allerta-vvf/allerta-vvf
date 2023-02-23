@@ -31,6 +31,14 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
 
+    Route::get('/owner_image', function() {
+        return response()
+          ->file(
+            resource_path('images') . DIRECTORY_SEPARATOR . config("features.owner_image"),
+            ['Cache-control' => 'max-age=2678400']
+        );
+    });
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
