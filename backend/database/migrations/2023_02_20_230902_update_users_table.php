@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('phone_number')->nullable(); //https://github.com/googlei18n/libphonenumber/blob/master/FALSEHOODS.md
             $table->boolean('available')->default(false);
+            $table->boolean('availability_manual_mode')->default(false);
+            $table->int('availability_minutes')->default(0);
             $table->boolean('chief')->default(false);
             $table->boolean('driver')->default(false);
             $table->integer('services')->default(0);

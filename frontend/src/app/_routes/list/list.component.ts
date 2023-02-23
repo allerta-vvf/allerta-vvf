@@ -117,18 +117,12 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    /*
     this.loadAvailabilityInterval = setInterval(() => {
-      console.log("Refreshing availability...");
       this.loadAvailability();
-    }, 10000);
+    }, 30000);
     this.auth.authChanged.subscribe({
-      next: () => {
-        this.loadAvailability();
-        this.loadAvailability();
-      }
+      next: () => this.loadAvailability()
     });
-    */
   }
 
   ngOnDestroy(): void {

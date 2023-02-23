@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'available',
+        'availability_manual_mode',
+        'availability_minutes',
         'chief',
         'driver',
         'services',
