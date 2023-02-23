@@ -25,13 +25,14 @@ export class AuthService {
                 this.profile.hasRole = (role: string) => {
                     return true;
                 }
-    
-                this.authChanged.next();
+
                 resolve();
             }).catch((e) => {
                 console.error(e);
                 this.profile = undefined;
                 reject();
+            }).finally(() => {
+                this.authChanged.next();
             });
         });
     }
