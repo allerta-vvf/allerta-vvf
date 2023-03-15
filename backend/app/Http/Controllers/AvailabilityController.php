@@ -24,6 +24,7 @@ class AvailabilityController extends Controller
         }
 
         $user->available = $request->input("available", false);
+        $user->availability_manual_mode = true;
         $user->save();
 
         return [
