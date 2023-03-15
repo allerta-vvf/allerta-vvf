@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -26,6 +27,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/me', [AuthController::class, 'me']);
 
     Route::get('/list', [UserController::class, 'index']);
+
+    Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
+    Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
 
     Route::get('/availability', [AvailabilityController::class, 'get']);
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
