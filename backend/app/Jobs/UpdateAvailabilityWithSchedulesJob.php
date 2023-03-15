@@ -44,5 +44,12 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
                 ["availability_manual_mode", "=", 0]
             ])
             ->update(['available' => 1]);
+
+        User::whereNotIn("id", $scheduled_users)
+            ->where([
+                ["banned", "=", 0],
+                ["availability_manual_mode", "=", 0]
+            ])
+            ->update(['available' => 0]);
     }
 }
