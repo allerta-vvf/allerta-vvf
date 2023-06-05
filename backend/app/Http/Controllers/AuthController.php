@@ -62,6 +62,11 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return $request->user();
+        return [
+            ...$request->user()->toArray(),
+            "permissions" => array_map(function($p) {
+                return $p["name"];
+            }, $request->user()->allPermissions()->toArray()),
+        ];
     }
 }
