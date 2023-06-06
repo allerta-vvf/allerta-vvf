@@ -7,6 +7,8 @@ use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Telegram\Bot\Laravel\Http\Middleware\ValidateWebhook;
+use Telegram\Bot\Laravel\Http\Controllers\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,4 +58,9 @@ Route::post('/cron/execute', function(Request $request) {
     } else {
         return response('Access Denied', 403);
     }
+});
+
+//TODO: remove this and open issue on https://github.com/telegram-bot-sdk/laravel since named route not working
+Route::group(['middleware' => ValidateWebhook::class], function (): void {
+    Route::post('/telegram/{bot}/webhook', Telegram\Bot\Laravel\Http\Controllers\WebhookController::class)->name('telegram.bot.webhook');
 });
