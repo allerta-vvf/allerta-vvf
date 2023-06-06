@@ -42,7 +42,7 @@
             </ng-container>
         </tbody>
     </table>
-    <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR') && alertEnabled">
+    <ng-container *ngIf="auth.profile.can('users-read') && alertEnabled">
         <button type="button" class="btn btn-primary mb-2" (click)="isAdvancedCollapsed = !isAdvancedCollapsed"
         [attr.aria-expanded]="!isAdvancedCollapsed" aria-controls="collapseBasic">
             <ng-container *ngIf="isAdvancedCollapsed">Mostra impostazioni avanzate</ng-container>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="(!auth.profile.hasRole('SUPER_EDITOR') && notes !== '') || !alertEnabled">
+    <ng-container *ngIf="(!auth.profile.can('users-read') && notes !== '') || !alertEnabled">
         <div class="well well-lg card card-block card-header">
             <h5>Dettagli allerta</h5>
             <h2>{{ notes }}</h2>
@@ -64,6 +64,6 @@
     </ng-container>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.hasRole('SUPER_EDITOR') && alertEnabled">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
+    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.can('users-read') && alertEnabled">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
     <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">{{ 'close'|translate }}</button>
 </div>

@@ -12,7 +12,9 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-    public profile: any = undefined;
+    public profile: any = {
+        can: (permission: string) => false
+    };
     public authChanged = new Subject<void>();
     public authLoaded = false;
 
@@ -22,8 +24,8 @@ export class AuthService {
             this.api.post("me").then((data: any) => {
                 this.profile = data;
     
-                this.profile.hasRole = (role: string) => {
-                    return true;
+                this.profile.can = (permission: string) => {
+                    return this.profile.permissions.includes(permission);
                 }
 
                 resolve();

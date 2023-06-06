@@ -11,9 +11,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $requestedCols = ['id', 'chief', 'last_access', 'name', 'available', 'driver', 'services', 'availability_minutes'];
+        if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
+
         return User::where('hidden', 0)
+            ->select($requestedCols)
             ->orderBy('available', 'desc')
             ->orderBy('chief', 'desc')
             ->orderBy('services', 'asc')

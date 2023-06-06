@@ -74,7 +74,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   addAlertFull() {
     this.alertLoading = true;
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    if(!this.auth.profile.can('users-read')) return;
     this.api.post("alerts", {
       type: "full"
     }).then((response) => {
@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   addAlertSupport() {
     this.alertLoading = true;
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    if(!this.auth.profile.can('users-read')) return;
     this.api.post("alerts", {
       type: "support"
     }).then((response) => {

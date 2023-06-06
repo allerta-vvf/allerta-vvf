@@ -5,7 +5,7 @@
                 <th>{{ 'name'|translate|titlecase }}</th>
                 <th>{{ 'available'|translate|titlecase }}</th>
                 <th>{{ 'driver'|translate|titlecase }}</th>
-                <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+                <ng-container *ngIf="auth.profile.can('users-read')">
                 <th>{{ 'call'|translate|titlecase }}</th>
                 </ng-container>
                 <th>{{ 'services'|translate|titlecase }}</th>
@@ -16,7 +16,7 @@
             <tr *ngFor="let row of data">
                 <td>
                     <!-- TODO: implement user impersonation -->
-                    <i *ngIf="false && auth.profile.hasRole('SUPER_ADMIN') && row.id !== auth.profile.auth_user_id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
+                    <i *ngIf="false && auth.profile.can('users-read') && row.id !== auth.profile.auth_user_id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
                     <ng-container *ngIf="(getTime() - row.last_access) < 30"><u>{{ row.name }}</u></ng-container>
@@ -29,8 +29,10 @@
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
-                    <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
+                <td *ngIf="auth.profile.can('users-read')">
+                    <ng-container *ngIf="row.phone_number">
+                        <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
+                    </ng-container>
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>

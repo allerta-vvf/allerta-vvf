@@ -60,7 +60,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   saveAlertSettings() {
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    if(!this.auth.profile.can('users-read')) return;
     this.api.post(`alerts/${this.id}/settings`, {
       notes: this.notes
     }).then((response) => {
@@ -69,7 +69,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   deleteAlert() {
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    if(!this.auth.profile.can('users-read')) return;
     Swal.fire({
       title: "Sei sicuro di voler ritirare l'allarme?",
       text: "I vigili verranno avvisati dell'azione",
