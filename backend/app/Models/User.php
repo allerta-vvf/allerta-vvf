@@ -8,10 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
+    use Impersonate;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -55,4 +57,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_access' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function canImpersonate()
+    {
+        return $this->hasPermission("users-impersonate");
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeImpersonated()
+    {
+        return !$this->hasPermission("users-impersonate");
+    }
 }

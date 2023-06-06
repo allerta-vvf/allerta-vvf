@@ -13,7 +13,7 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'users' => 'c,r,u,d',
+            'users' => 'c,r,u,d,i',
         ],
         'admin' => [
             'users' => 'c,r,u'
@@ -31,6 +31,7 @@ return [
         'lr' => 'limitedRead',
         'r' => 'read',
         'u' => 'update',
-        'd' => 'delete'
+        'd' => 'delete',
+        'i' => 'impersonate'
     ]
 ];

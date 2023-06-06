@@ -12,9 +12,12 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-    public profile: any = {
+    private defaultPlaceholderProfile: any = {
+        id: undefined,
+        impersonating: false,
         can: (permission: string) => false
     };
+    public profile: any = this.defaultPlaceholderProfile;
     public authChanged = new Subject<void>();
     public authLoaded = false;
 
@@ -31,7 +34,7 @@ export class AuthService {
                 resolve();
             }).catch((e) => {
                 console.error(e);
-                this.profile = undefined;
+                this.profile = this.defaultPlaceholderProfile;
                 reject();
             }).finally(() => {
                 this.authChanged.next();
@@ -50,7 +53,7 @@ export class AuthService {
     }
 
     public isAuthenticated() {
-        return this.profile !== undefined;
+        return this.profile.id !== undefined;
     }
 
     public login(username: string, password: string) {
@@ -94,31 +97,48 @@ export class AuthService {
         })
     }
 
-    public impersonate(user_id: number): Promise<number> {
+    public impersonate(user_id: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            resolve(0);
+            this.api.post(`impersonate/${user_id}`).then(() => {
+                this.loadProfile().then(() => {
+                    resolve();
+                }).catch((err) => {
+                    console.error(err);
+                    this.logout();
+                    this.profile.impersonating_user = false;
+                    this.logout();
+                });
+            }).catch((err) => {
+                console.error(err);
+                reject();
+            });
+        });
+    }
+
+    public stop_impersonating(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.api.post("stop_impersonating").then(() => {
+                resolve();
+            }).catch((err) => {
+                console.error(err);
+                reject();
+            });
         });
     }
 
     public logout(routerDestination?: string[] | undefined) {
-        this.api.post("logout").then((data: any) => {
-            this.profile = undefined;
-            if(routerDestination === undefined) {
-                routerDestination = ["login", "list"];
-            }
-            this.router.navigate(routerDestination);
-        });
-        /*
         if(this.profile.impersonating_user) {
-            this.stop_impersonating().then((user_id) => {
+            this.stop_impersonating().then(() => {
+                this.loadProfile();
             });
         } else {
-            this.profile = undefined;
-            if(routerDestination === undefined) {
-                routerDestination = ["login", "list"];
-            }
-            this.router.navigate(routerDestination);
+            this.api.post("logout").then((data: any) => {
+                this.profile = this.defaultPlaceholderProfile;
+                if(routerDestination === undefined) {
+                    routerDestination = ["login", "list"];
+                }
+                this.router.navigate(routerDestination);
+            });
         }
-        */
     }
 }

@@ -22,9 +22,12 @@ use Illuminate\Support\Facades\Artisan;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group( function () {
+Route::middleware('auth:web')->group( function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/me', [AuthController::class, 'me']);
+    
+    Route::post('/impersonate/{user}', [AuthController::class, 'impersonate']);
+    Route::post('/stop_impersonating', [AuthController::class, 'stopImpersonating']);
 
     Route::get('/list', [UserController::class, 'index']);
 

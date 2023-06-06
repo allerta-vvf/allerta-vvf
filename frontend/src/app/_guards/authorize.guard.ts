@@ -15,7 +15,7 @@ export class AuthorizeGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     console.log(this.authService, route, state);
-    if(this.authService.profile === undefined) {
+    if(this.authService.profile.id === undefined) {
       console.log("not logged in");
       this.router.navigate(['login', state.url.replace('/', '')]);
       return false;

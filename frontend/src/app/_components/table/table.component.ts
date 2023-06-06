@@ -74,10 +74,10 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   onUserImpersonate(user: number) {
-    if(this.auth.profile.hasRole('SUPER_ADMIN')) {
-      this.auth.impersonate(user).then((user_id) => {
+    if(this.auth.profile.can('users-impersonate')) {
+      this.auth.impersonate(user).then(() => {
         this.loadTableData();
-        this.userImpersonate.emit(user_id);
+        this.userImpersonate.emit(1);
       });
     }
   }

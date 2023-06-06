@@ -25,7 +25,18 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Event::listen(
+            \Lab404\Impersonate\Events\TakeImpersonation::class,
+            function (\Lab404\Impersonate\Events\TakeImpersonation $event) {
+                session()->put('password_hash_sanctum', $event->impersonated->getAuthPassword());
+            }
+        );
+        Event::listen(
+            \Lab404\Impersonate\Events\LeaveImpersonation::class,
+            function (\Lab404\Impersonate\Events\LeaveImpersonation $event) {
+                session()->put('password_hash_sanctum', $event->impersonator->getAuthPassword());
+            }
+        );
     }
 
     /**

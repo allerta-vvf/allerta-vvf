@@ -15,8 +15,7 @@
         <tbody id="table_body">
             <tr *ngFor="let row of data">
                 <td>
-                    <!-- TODO: implement user impersonation -->
-                    <i *ngIf="false && auth.profile.can('users-read') && row.id !== auth.profile.auth_user_id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
+                    <i *ngIf="auth.profile.can('users-impersonate') && row.id !== auth.profile.id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
                     <ng-container *ngIf="(getTime() - row.last_access) < 30"><u>{{ row.name }}</u></ng-container>

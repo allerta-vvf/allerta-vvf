@@ -1,9 +1,9 @@
-<div [className]="menuButtonClicked ? 'topnav responsive' : 'topnav'" id="topNavBar" *ngIf="auth.profile !== undefined">
+<div [className]="menuButtonClicked ? 'topnav responsive' : 'topnav'" id="topNavBar" *ngIf="auth.profile.id !== undefined">
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/list" translate>menu.list</a>
   <a *ngIf="false" routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/services" translate>menu.services</a>
   <a *ngIf="false" routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/trainings" translate>menu.trainings</a>
   <a *ngIf="false" routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/logs" translate>menu.logs</a>
-  <a style="float: right;" id="logout">{{ 'menu.hi'|translate|titlecase }}, {{ auth.profile.name }}. <b id="logout-text" (click)="auth.logout()" translate>menu.logout</b></a>
+  <a style="float: right;" id="logout">{{ 'menu.hi'|translate|titlecase }}, {{ auth.profile.name }}. <b id="logout-text" (click)="auth.logout()" translate *ngIf="!auth.profile.impersonating_user">menu.logout</b><b id="logout-text" (click)="auth.logout()" translate *ngIf="auth.profile.impersonating_user">menu.stop_impersonating</b></a>
   <a class="icon" id="menuButton" (click)="menuButtonClicked = !menuButtonClicked">☰</a>
 </div>
 

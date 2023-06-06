@@ -43,13 +43,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
   changeAvailibility(available: 0|1, id?: number|undefined) {
     if(typeof id === 'undefined') {
-      id = this.auth.profile.auth_user_id;
+      id = this.auth.profile.id;
     }
     this.api.post("availability", {
       id: id,
       available: available
     }).then((response) => {
-      let changed_user_msg = parseInt(response.updated_user) === parseInt(this.auth.profile.auth_user_id) ? "La tua disponibilità" : `La disponibilità di ${response.updated_user_name}`;
+      let changed_user_msg = parseInt(response.updated_user_id) === parseInt(this.auth.profile.id) ? "La tua disponibilità" : `La disponibilità di ${response.updated_user_name}`;
       let msg = available === 1 ? `${changed_user_msg} è stata impostata con successo.` : `${changed_user_msg} è stata rimossa con successo.`;
       this.toastr.success(msg);
       this.loadAvailability();

@@ -62,11 +62,32 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
+        $impersonateManager = app('impersonate');
         return [
             ...$request->user()->toArray(),
             "permissions" => array_map(function($p) {
                 return $p["name"];
             }, $request->user()->allPermissions()->toArray()),
+            "impersonating_user" => $impersonateManager->isImpersonating(),
+            "impersonator_id" => $impersonateManager->getImpersonatorId()
         ];
+    }
+
+    public function impersonate(Request $request, $user)
+    {
+        $impersonatedUser = User::find($user);
+        $request->user()->impersonate($impersonatedUser);
+        $token = $impersonatedUser->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+    }
+    
+    public function stopImpersonating(Request $request)
+    {
+        $request->user()->leaveImpersonation();
+        return;
     }
 }
