@@ -39,6 +39,12 @@ export class LoginComponent {
 
     if(this.authService.isAuthenticated()) {
       this.router.navigate(this.redirectParamsList);
+    } else {
+      this.authService.authChanged.subscribe({
+        next: () => {
+          this.router.navigate(this.redirectParamsList);
+        }
+      });
     }
   }
 

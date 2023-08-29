@@ -6,6 +6,7 @@ import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/route
 import { ApiClientService } from './_services/api-client.service';
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { AuthorizeGuard } from './_guards/authorize.guard';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent {
     private locationBackService: LocationBackService,
     private router: Router,
     private api: ApiClientService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    public guard: AuthorizeGuard
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
   }
