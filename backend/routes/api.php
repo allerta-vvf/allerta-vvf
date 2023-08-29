@@ -5,10 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\TelegramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Telegram\Bot\Laravel\Http\Middleware\ValidateWebhook;
-use Telegram\Bot\Laravel\Http\Controllers\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +39,8 @@ Route::middleware('auth:web')->group( function () {
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
 
+    Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
@@ -58,9 +59,4 @@ Route::post('/cron/execute', function(Request $request) {
     } else {
         return response('Access Denied', 403);
     }
-});
-
-//TODO: remove this and open issue on https://github.com/telegram-bot-sdk/laravel since named route not working
-Route::group(['middleware' => ValidateWebhook::class], function (): void {
-    Route::post('/telegram/{bot}/webhook', Telegram\Bot\Laravel\Http\Controllers\WebhookController::class)->name('telegram.bot.webhook');
 });

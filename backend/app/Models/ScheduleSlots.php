@@ -37,7 +37,7 @@ class ScheduleSlots extends Model
     ];
 
     /**
-     * Get the user that owns the phone.
+     * Get the user that owns the schedule slot.
      */
     public function user(): BelongsTo
     {
