@@ -31,4 +31,7 @@
 <app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" #table></app-table>
 <div class="text-center">
     <button (click)="requestTelegramToken()" class="btn btn-md btn-success mt-3">{{ 'list.connect_telegram_bot'|translate }}</button>
+    <div class="alert alert-primary mt-4" role="alert">
+        I minuti di disponibilità vengono aggiornati al momento della rimozione della disponibilità, per permettere un calcolo più preciso.
+    </div>
 </div>
