@@ -5,6 +5,8 @@ namespace App\Telegram;
 use App\Models\TelegramBotLogins;
 use App\Models\User;
 
+use App\Utils\Availability;
+
 class WebhookController extends
     \DefStudio\Telegraph\Handlers\WebhookHandler
 {
@@ -118,9 +120,8 @@ class WebhookController extends
             $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
-        $user->available = true;
-        $user->availability_manual_mode = true;
-        $user->save();
+        
+        Availability::updateAvailability($user, true);
         $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
     }
 
@@ -130,9 +131,8 @@ class WebhookController extends
             $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
-        $user->available = false;
-        $user->availability_manual_mode = true;
-        $user->save();
+        
+        Availability::updateAvailability($user, false);
         $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
     }
 
@@ -142,8 +142,8 @@ class WebhookController extends
             $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
-        $user->availability_manual_mode = false;
-        $user->save();
+        
+        Availability::updateAvailabilityManualMode($user, false);
         $this->reply("Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
     }
 
