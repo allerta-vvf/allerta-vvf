@@ -10,6 +10,9 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\ScheduleSlots;
 use App\Models\User;
+use App\Models\TelegramBotNotifications;
+
+use DefStudio\Telegraph\Facades\Telegraph;
 
 class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
 {
@@ -38,6 +41,8 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             ["slot", "=", $curr_slot]
         ])->pluck("user");
 
+        $available_users_count_before = User::where('available', true)->where('hidden', false)->count();
+
         User::whereIn("id", $scheduled_users)
             ->where([
                 ["banned", "=", 0],
@@ -51,5 +56,25 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
                 ["availability_manual_mode", "=", 0]
             ])
             ->update(['available' => 0]);
+
+        $available_users_count_after = User::where('available', true)->where('hidden', false)->count();
+
+        $text = null;
+        if($available_users_count_before >= 2 && $available_users_count_after < 2) {
+            $text = "⚠️ Distaccamento non operativo";
+        } else if(($available_users_count_before < 2 || $available_users_count_before >= 5) && $available_users_count_after >= 2 && $available_users_count_after < 5) {
+            $text = "🧯 Distaccamento operativo per supporto";
+        } else if($available_users_count_before < 5 && $available_users_count_after >= 5) {
+            $text = "🚒 Distaccamento operativo con squadra completa";
+        }
+        if(!is_null($text)) {
+            $chat_ids = TelegramBotNotifications::where("type_team_state", true)
+              ->get()->pluck('chat_id')->toArray();
+            
+            foreach ($chat_ids as $chat_id) {
+                $chat = Telegraph::chat($chat_id);
+                $chat->message($text)->send();
+            }
+        }
     }
 }
