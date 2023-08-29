@@ -11,13 +11,13 @@ class WebhookController extends
     \DefStudio\Telegraph\Handlers\WebhookHandler
 {
     private $publicCommandsDict = [
-        "info" => "Ottieni informazioni sul profilo connesso",
-        "help" => "Ottieni informazioni sui comandi",
+        "disponibili" => "Mostra un elenco dei vigili attualmente disponibili",
+        "stato" => "Mostra lo stato della disponibilità della squadra",
         "attiva" => "Modifica la tua disponibilità in \"reperibile\"",
         "disattiva" => "Modifica la tua disponibilità in \"non reperibile\"",
         "programma" => "Abilita programmazione oraria",
-        "disponibili" => "Mostra un elenco dei vigili attualmente disponibili",
-        "stato" => "Mostra lo stato della disponibilità della squadra"
+        "info" => "Ottieni informazioni sul profilo connesso",
+        "help" => "Ottieni informazioni sui comandi",
     ];
 
     private $user = null;
@@ -44,7 +44,19 @@ class WebhookController extends
     public function registerCommands()
     {
         $response = $this->bot->registerCommands($this->publicCommandsDict)->send();
-        $this->reply(json_encode(($response)));
+        if($response->ok()) {
+            $this->reply("✅ Fatto\nElenco comandi aggiornato con successo.");
+        } else {
+            $this->reply(
+                "⚠️ Errore durante l'aggiornamento dell'elenco comandi.".
+                "\nProcedere manualmente, utilizzando @botfather e inviando il seguente elenco:"
+            );
+            $text = "";
+            foreach ($this->publicCommandsDict as $command => $description) {
+                $text .= "$command - $description\n";
+            }
+            $this->reply($text);
+        }
     }
 
     public function start(string $loginCode)
