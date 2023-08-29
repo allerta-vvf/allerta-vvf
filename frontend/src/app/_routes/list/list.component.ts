@@ -123,6 +123,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.auth.authChanged.subscribe({
       next: () => this.loadAvailability()
     });
+    this.loadAvailability();
   }
 
   ngOnDestroy(): void {
