@@ -189,10 +189,25 @@ class WebhookController extends
     }
 
     /**
-     * TODOs:
-     * - Notification when availability changes (send "stato" response again ONLY IF state changes)
-     * - Notification when availability is changed by the system (send "stato" response again)
-     * - At 7:00 AM, send a notification to all users with availability in manual mode, asking them to confirm their availability or dismiss this notification
-     * - Everything related to alerts, ask the client what to do with that since currently unused in prod
+     * Callbacks
      */
+    public function manual_mode_off()
+    {
+        $user = User::find($this->data->get('user_id', null));
+        if(is_null($user)) {
+            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.", true);
+            return;
+        }
+        Availability::updateAvailabilityManualMode($user, false);
+        $this->reply("✅ Programmazione oraria abilitata", true);
+        
+        //Delete the message that triggered the callback
+        $this->chat->deleteMessage($this->messageId)->send();
+    }
+
+    public function delete_notification()
+    {
+        //Delete the message that triggered the callback
+        $this->chat->deleteMessage($this->messageId)->send();
+    }
 }
