@@ -32,6 +32,7 @@ export class AppComponent {
     public guard: AuthorizeGuard
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    this.locationBackService.initialize();
   }
 
   loadAlerts() {
