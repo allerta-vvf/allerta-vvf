@@ -2,10 +2,12 @@
 
 namespace App\Console;
 
-use App\Jobs\NotifyUsersManualModeOn;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
 use App\Jobs\UpdateAvailabilityWithSchedulesJob;
+use App\Jobs\NotifyUsersManualModeOn;
+use App\Jobs\ResetAvailabilityMinutes;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,6 +18,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new UpdateAvailabilityWithSchedulesJob)->everyThirtyMinutes();
         $schedule->job(new NotifyUsersManualModeOn)->dailyAt('7:00');
+        $schedule->job(new ResetAvailabilityMinutes)->monthlyOn(1, '0:00');
     }
 
     /**
