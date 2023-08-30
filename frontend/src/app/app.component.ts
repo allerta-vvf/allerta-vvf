@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import { LocationBackService } from 'src/app/_services/locationBack.service';
+import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.service';
 import { versions } from 'src/environments/versions';
 import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { ApiClientService } from './_services/api-client.service';
@@ -24,6 +25,7 @@ export class AppComponent {
   constructor(
     public auth: AuthService,
     private locationBackService: LocationBackService,
+    public guardLoaderIconService: GuardLoaderIconService,
     private router: Router,
     private api: ApiClientService,
     private modalService: BsModalService,

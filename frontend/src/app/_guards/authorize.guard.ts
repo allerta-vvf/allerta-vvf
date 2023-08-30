@@ -1,24 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { GuardLoaderIconService } from '../_services/guard-loader-icon.service';
 import { AuthService } from '../_services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizeGuard implements CanActivate {
-  //https://stackoverflow.com/a/48848557
-  public loader$ = new Subject<boolean>();
-  public loader = false;
-
-  constructor(private authService: AuthService, private router: Router) {
-    this.loader$.pipe(
-      debounceTime(250)
-    ).subscribe((loader) => {
-      this.loader = loader;
-    });
-  }
+  constructor(
+    private authService: AuthService,
+    private guardLoaderIconService: GuardLoaderIconService,
+    private router: Router
+  ) { }
 
   checkAuthAndRedirect(
     route: ActivatedRouteSnapshot,
@@ -38,17 +32,18 @@ export class AuthorizeGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    console.log(this.router.url, route, state);
     if(this.authService.authLoaded) {
-      this.loader$.next(false);
+      this.guardLoaderIconService.hide();
       console.log("Auth already loaded, checking if profile id exists");
       return this.checkAuthAndRedirect(route, state);
     } else {
-      this.loader$.next(true);
+      this.guardLoaderIconService.show();
       console.log("Auth not loaded, waiting for authChanged");
       return new Observable<boolean>((observer) => {
         this.authService.authChanged.subscribe({
           next: () => {
-            this.loader$.next(false);
+            this.guardLoaderIconService.hide();
             observer.next(this.checkAuthAndRedirect(route, state));
           }
         })

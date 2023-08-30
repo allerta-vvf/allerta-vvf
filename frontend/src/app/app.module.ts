@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -52,6 +52,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientXsrfModule.disable(), //See auth-interceptor.provider.ts
     FormsModule,
     ToastrModule.forRoot({
       progressBar: true,
