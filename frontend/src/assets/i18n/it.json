@@ -38,7 +38,8 @@
         "village": "comune",
         "postcode": "CAP",
         "hamlet": "frazione",
-        "municipality": "raggruppamento del comune"
+        "municipality": "raggruppamento del comune",
+        "country": "nazione/zona"
     },
     "map_picker": {
         "place_min_length": "Il nome della località deve essere di almeno 3 caratteri",

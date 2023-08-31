@@ -38,7 +38,8 @@
         "village": "village",
         "postcode": "postcode",
         "hamlet": "hamlet",
-        "municipality": "municipality"
+        "municipality": "municipality",
+        "country": "country"
     },
     "map_picker": {
         "place_min_length": "Place name must be at least 3 characters long",

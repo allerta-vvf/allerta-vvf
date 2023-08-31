@@ -63,7 +63,7 @@
         </div>
       </ng-container>
     </div>
-    <div [class.is-invalid-div]="!isFieldValid('place')" class="mb-2">
+    <div [class.is-invalid-div]="!isFieldValid('lat')" class="mb-2">
       <label>{{ 'place'|translate|titlecase }}</label>
       <map-picker *ngIf="addingService" (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
       <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (onMarkerSet)="setPlace($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
@@ -91,7 +91,7 @@
       <div class="input-group mb-2 mt-2" *ngIf="addingType">
         <input type="text" class="form-control" [placeholder]="'type'|translate" [(ngModel)]="newType"
           [ngModelOptions]="{standalone: true}">
-        <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'chief'|translate|titlecase }}</button>
+        <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'submit'|translate|titlecase }}</button>
       </div>
     </div>
     <br>

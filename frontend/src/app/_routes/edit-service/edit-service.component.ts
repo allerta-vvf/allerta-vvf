@@ -20,7 +20,8 @@ export class EditServiceComponent implements OnInit {
     chief: '',
     drivers: [],
     crew: [],
-    place: '',
+    lat: 0,
+    lon: 0,
     notes: '',
     type: ''
   };
@@ -29,9 +30,6 @@ export class EditServiceComponent implements OnInit {
 
   users: any[] = [];
   types: any[] = [];
-
-  place_lat: number = 0;
-  place_lng: number = 0;
   
   addingType = false;
   newType = "";
@@ -46,7 +44,8 @@ export class EditServiceComponent implements OnInit {
   get chief() { return this.serviceForm.get('chief'); }
   get drivers() { return this.serviceForm.get('drivers'); }
   get crew() { return this.serviceForm.get('crew'); }
-  get place() { return this.serviceForm.get('place'); }
+  get lat() { return this.serviceForm.get('lat'); }
+  get lon() { return this.serviceForm.get('lon'); }
   get type() { return this.serviceForm.get('type'); }
 
   ngOnInit() {
@@ -57,7 +56,8 @@ export class EditServiceComponent implements OnInit {
       chief: [this.loadedService.chief, [Validators.required]],
       drivers: [this.loadedService.drivers, [Validators.required]],
       crew: [this.loadedService.crew, [Validators.required]],
-      place: [this.loadedService.place, [Validators.required, Validators.minLength(3)]],
+      lat: [this.loadedService.lat, [Validators.required]],
+      lon: [this.loadedService.lon, [Validators.required]],
       notes: [this.loadedService.notes],
       type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
     });
@@ -90,7 +90,7 @@ export class EditServiceComponent implements OnInit {
       }
       console.log(this.serviceId);
     });
-    this.api.get("users").then((users) => {
+    this.api.get("list").then((users) => {
       this.users = users;
       console.log(this.users);
     });
@@ -123,7 +123,7 @@ export class EditServiceComponent implements OnInit {
       this.addingType = false;
       this.newType = "";
       console.log(type);
-      if(type == 1) {
+      if(type.name) {
         this.translate.get('edit_service.type_added_successfully').subscribe((res: string) => {
           this.toastr.success(res);        
         });
@@ -155,9 +155,8 @@ export class EditServiceComponent implements OnInit {
   }
 
   setPlace(lat: number, lng: number) {
-    this.place_lat = lat;
-    this.place_lng = lng;
-    this.place.setValue(lat + ";" + lng);
+    this.lat.setValue(lat);
+    this.lon.setValue(lng);
     console.log("Place selected", lat, lng);
   }
 

@@ -80,11 +80,11 @@
                 <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.code }}</td>
                 <td>{{ row.chief }}</td>
-                <td>{{ row.drivers }}</td>
-                <td>{{ row.crew }}</td>
+                <td>{{ extractNamesFromObject(row.drivers).join(', ') }}</td>
+                <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>
-                    {{ row.place_name }}<br>
-                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">{{ 'more details'|translate|titlecase }}</a>
+                    {{ row.place.display_name }}<br>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|titlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>

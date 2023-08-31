@@ -6,6 +6,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\TelegramController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PlacesController;
+use App\Http\Controllers\ServiceTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
@@ -38,6 +41,14 @@ Route::middleware('auth:web')->group( function () {
     Route::get('/availability', [AvailabilityController::class, 'get']);
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
+
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::post('/services', [ServiceController::class, 'create']);
+
+    Route::get('/service_types', [ServiceTypeController::class, 'index']);
+    Route::post('/service_types', [ServiceTypeController::class, 'create']);
+    Route::get('/places/search', [PlacesController::class, 'search']);
+    Route::get('/places/{id}', [PlacesController::class, 'show']);
 
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
