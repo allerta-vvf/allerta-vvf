@@ -56,7 +56,7 @@ export class EditServiceComponent implements OnInit {
       chief: [this.loadedService.chief, [Validators.required]],
       drivers: [this.loadedService.drivers, [Validators.required]],
       crew: [this.loadedService.crew, [Validators.required]],
-      lat: [this.loadedService.lat, [Validators.required]],
+      lat: [this.loadedService.lat, [Validators.required]], //TODO add validations or in UI you can submit without place
       lon: [this.loadedService.lon, [Validators.required]],
       notes: [this.loadedService.notes],
       type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
