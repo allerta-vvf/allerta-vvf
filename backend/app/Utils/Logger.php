@@ -34,5 +34,7 @@ class Logger {
         $log->editor()->associate($editor);
 
         $log->save();
+
+        User::where('id', $editor->id)->update(['last_access' => now()]);
     }
 }

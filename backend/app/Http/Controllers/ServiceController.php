@@ -14,8 +14,10 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         return response()->json(
             Service::join('users', 'users.id', '=', 'chief_id')
                 ->join('services_types', 'services_types.id', '=', 'type_id')
@@ -31,8 +33,10 @@ class ServiceController extends Controller
     /**
      * Get single Service
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         return response()->json(
             Service::join('users', 'users.id', '=', 'chief_id')
                 ->join('services_types', 'services_types.id', '=', 'type_id')

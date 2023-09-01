@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LogsController extends Controller
@@ -12,6 +13,8 @@ class LogsController extends Controller
      */
     public function index(Request $request)
     {
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         return response()->json(
             Log::join('users as changed_user', 'changed_user.id', '=', 'logs.changed_id')
               ->join('users as editor_user', 'editor_user.id', '=', 'logs.editor_id')

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Place;
+use App\Models\User;
 
 class PlacesController extends Controller
 {
@@ -14,6 +15,8 @@ class PlacesController extends Controller
      */
     public function search(Request $request)
     {
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         $query = $request->input('q', null);
         if(!$query) abort(400);
 
@@ -29,6 +32,8 @@ class PlacesController extends Controller
 
     public function show(Request $request, $id)
     {
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         return response()->json(
             Place::find($id)
         );

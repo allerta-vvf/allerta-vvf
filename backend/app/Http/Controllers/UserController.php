@@ -16,6 +16,8 @@ class UserController extends Controller
         $requestedCols = ['id', 'chief', 'last_access', 'name', 'available', 'driver', 'services', 'availability_minutes'];
         if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
 
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
         return User::where('hidden', 0)
             ->select($requestedCols)
             ->orderBy('available', 'desc')

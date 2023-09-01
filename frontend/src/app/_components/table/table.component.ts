@@ -35,6 +35,10 @@ export class TableComponent implements OnInit, OnDestroy {
     return Math.floor(Date.now() / 1000);
   }
 
+  getTS(date: string) {
+    return Math.floor(new Date(date).getTime() / 1000);
+  }
+
   loadTableData() {
     if(!this.sourceType) this.sourceType = "list";
     this.api.get(this.sourceType).then((data: any) => {
