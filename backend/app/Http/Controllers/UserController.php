@@ -22,9 +22,10 @@ class UserController extends Controller
             ->select($requestedCols)
             ->orderBy('available', 'desc')
             ->orderBy('chief', 'desc')
+            ->orderBy('driver', 'desc')
             ->orderBy('services', 'asc')
             ->orderBy('trainings', 'desc')
-            ->orderBy('availability_minutes', 'asc')
+            ->orderBy('availability_minutes', 'desc')
             ->orderBy('name', 'asc')
             ->get();
     }

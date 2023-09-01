@@ -167,7 +167,15 @@ class WebhookController extends
             return;
         }
         //Get all users with availability true
-        $users = User::where('available', true)->where('hidden', false)->get();
+        $users = User::where('available', true)
+          ->where('hidden', false)
+          ->orderBy('chief', 'desc')
+          ->orderBy('driver', 'desc')
+          ->orderBy('services', 'asc')
+          ->orderBy('trainings', 'desc')
+          ->orderBy('availability_minutes', 'desc')
+          ->orderBy('name', 'asc')
+          ->get();
         if(count($users) == 0) {
             $text = "⚠️ Nessun vigile attualmente disponibile.";
         } else {
