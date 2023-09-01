@@ -50,12 +50,25 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             ])
             ->update(['available' => 1]);
 
-        User::whereNotIn("id", $scheduled_users)
+        $not_available_users = User::whereNotIn("id", $scheduled_users)
             ->where([
                 ["banned", "=", 0],
                 ["availability_manual_mode", "=", 0]
             ])
-            ->update(['available' => 0]);
+            ->get();
+        foreach($not_available_users as $user) {
+            $last_availability_change = $user->last_availability_change;
+            $new_last_availability_change = now();
+
+            if(!is_null($last_availability_change)) {
+                $diff = $new_last_availability_change->diffInMinutes($last_availability_change);
+                if($diff > 0) $user->availability_minutes += $diff;
+            }
+
+            $user->available = 0;
+            $user->last_availability_change = $new_last_availability_change;
+            $user->save();
+        }
 
         $available_users_count_after = User::where('available', true)->where('hidden', false)->count();
 
