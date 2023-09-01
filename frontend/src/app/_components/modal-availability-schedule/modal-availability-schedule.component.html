@@ -22,9 +22,9 @@
             </tr>
         </thead>
         <tbody id="scheduler_body" *ngIf="orientation === 'portrait'">
-            <ng-container *ngFor="let slot of slots">
+            <ng-container *ngFor="let slot of slots; odd as isOdd; even as isEven;">
                 <tr>
-                    <td class="hour" (click)="selectEverySlotWithHour(slot)">{{ slot }}</td>
+                    <td class="hour" (click)="selectEverySlotWithHour(slot)">{{ isEven ? (slot/2) : ((slot-1)/2) }}:{{ isEven ? "00" : "30" }}</td>
                     <ng-container *ngFor="let day of days; let i = index">
                         <td class="hour-cell" [class.highlighted] = "isCellSelected(i, slot)" (mousedown)="mouseDownCell(i, slot)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, slot)"></td>
                     </ng-container>
