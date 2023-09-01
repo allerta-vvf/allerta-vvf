@@ -86,12 +86,10 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   editService(id: number) {
-    return;
     this.router.navigate(['/services', id]); 
   }
 
   deleteService(id: number) {
-    return;
     this.translate.get(['table.yes_remove', 'table.cancel', 'table.remove_service_confirm', 'table.remove_service_text']).subscribe((res: { [key: string]: string; }) => {
       Swal.fire({
         title: res['table.remove_service_confirm'],

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Place;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -21,15 +23,61 @@ class ServiceController extends Controller
                 ->with('drivers:name')
                 ->with('crew:name')
                 ->with('place')
+                ->orderBy('start', 'desc')
                 ->get()
         );
     }
 
     /**
-     * Add a new Service.
+     * Get single Service
      */
-    public function create(Request $request)
+    public function show($id)
     {
+        return response()->json(
+            Service::join('users', 'users.id', '=', 'chief_id')
+                ->join('services_types', 'services_types.id', '=', 'type_id')
+                ->select('services.*', 'users.name as chief', 'services_types.name as type')
+                ->with('drivers:name')
+                ->with('crew:name')
+                ->with('place')
+                ->find($id)
+        );
+    }
+
+    private function extractServiceUsers($service)
+    {
+        $usersList = [$service->chief_id];
+        foreach($service->drivers as $driver) {
+            $usersList[] = $driver->id;
+        }
+        foreach($service->crew as $crew) {
+            $usersList[] = $crew->id;
+        }
+        return array_unique($usersList);
+    }
+
+    /**
+     * Add or update Service.
+     */
+    public function createOrUpdate(Request $request)
+    {
+        DB::connection()->enableQueryLog();
+
+        $adding = !isset($request->id) || is_null($request->id);
+
+        $service = $adding ? new Service() : Service::find($request->id)->with('drivers')->with('crew')->first();
+
+        if(is_null($service)) abort(404);
+
+        if(!$adding) {
+            $usersToDecrement = $this->extractServiceUsers($service);
+            User::whereIn('id', $usersToDecrement)->decrement('services');
+
+            $service->drivers()->detach();
+            $service->crew()->detach();
+            $service->save();
+        }
+
         //Find Place by lat lon
         $place = Place::where('lat', $request->lat)->where('lon', $request->lon)->first();
         if(!$place) {
@@ -64,7 +112,6 @@ class ServiceController extends Controller
             $place->save();
         }
 
-        $service = new Service();
         $service->code = $request->code;
         $service->chief()->associate($request->chief);
         $service->type()->associate($request->type);
@@ -76,40 +123,28 @@ class ServiceController extends Controller
         $service->updatedBy()->associate($request->user());
         $service->save();
 
-        $service->drivers()->attach([3]);
-        $service->crew()->attach([4, 5, 6]);
+        $service->drivers()->attach(array_unique($request->drivers));
+        $service->crew()->attach(array_unique($request->crew));
         $service->save();
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Service $service)
-    {
-        //
-    }
+        $usersToIncrement = array_unique(array_merge(
+            [$request->chief],
+            $request->drivers,
+            $request->crew
+        ));
+        User::whereIn('id', $usersToIncrement)->increment('services');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Service $service)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Service $service)
-    {
-        //
+        return response()->json(DB::getQueryLog());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service)
+    public function destroy($id)
     {
-        //
+        $service = Service::find($id);
+        $usersToDecrement = $this->extractServiceUsers($service);
+        User::whereIn('id', $usersToDecrement)->decrement('services');
+        $service->delete();
     }
 }

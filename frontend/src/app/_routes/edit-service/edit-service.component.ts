@@ -20,8 +20,8 @@ export class EditServiceComponent implements OnInit {
     chief: '',
     drivers: [],
     crew: [],
-    lat: 0,
-    lon: 0,
+    lat: -1,
+    lon: -1,
     notes: '',
     type: ''
   };
@@ -30,7 +30,7 @@ export class EditServiceComponent implements OnInit {
 
   users: any[] = [];
   types: any[] = [];
-  
+
   addingType = false;
   newType = "";
 
@@ -56,8 +56,8 @@ export class EditServiceComponent implements OnInit {
       chief: [this.loadedService.chief, [Validators.required]],
       drivers: [this.loadedService.drivers, [Validators.required]],
       crew: [this.loadedService.crew, [Validators.required]],
-      lat: [this.loadedService.lat, [Validators.required]], //TODO add validations or in UI you can submit without place
-      lon: [this.loadedService.lon, [Validators.required]],
+      lat: [this.loadedService.lat, [Validators.required, Validators.min(0)]], //TODO add validations or in UI you can submit without place
+      lon: [this.loadedService.lon, [Validators.required, Validators.min(0)]],
       notes: [this.loadedService.notes],
       type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
     });
@@ -72,19 +72,25 @@ export class EditServiceComponent implements OnInit {
   ) {
     this.route.paramMap.subscribe(params => {
       this.serviceId = params.get('id') || undefined;
-      if(this.serviceId === "new") {
+      if (this.serviceId === "new") {
         this.addingService = true;
       } else {
         this.api.get(`services/${this.serviceId}`).then((service) => {
           this.loadedService = service;
-          this.loadedServiceLat = service.lat;
-          this.loadedServiceLng = service.lng;
+          this.loadedServiceLat = service.place.lat;
+          this.loadedServiceLng = service.place.lon;
+
+          this.chief.setValue(service.chief_id);
+
+          console.log(service);
 
           let patch = Object.assign({}, service);
-          patch.start = new Date(parseInt(patch.start));
-          patch.end = new Date(parseInt(patch.end));
-          patch.drivers = patch.drivers.split(";");
-          patch.crew = patch.crew.split(";");
+          patch.start = new Date(patch.start);
+          patch.end = new Date(patch.end);
+          patch.chief = patch.chief_id;
+          patch.drivers = patch.drivers.map((e: any) => e.pivot.user_id+"");
+          patch.crew = patch.crew.map((e: any) => e.pivot.user_id+"");
+          patch.type = patch.type_id;
           this.serviceForm.patchValue(patch);
         });
       }
@@ -105,13 +111,13 @@ export class EditServiceComponent implements OnInit {
   }
 
   addType() {
-    if(this.newType.length < 2) {
+    if (this.newType.length < 2) {
       this.translate.get('edit_service.type_must_be_two_characters_long').subscribe((res: string) => {
         this.toastr.error(res);
       });
       return;
     }
-    if(this.types.find(t => t.name == this.newType)) {
+    if (this.types.find(t => t.name == this.newType)) {
       this.translate.get('edit_service.type_already_exists').subscribe((res: string) => {
         this.toastr.error(res);
       });
@@ -123,9 +129,9 @@ export class EditServiceComponent implements OnInit {
       this.addingType = false;
       this.newType = "";
       console.log(type);
-      if(type.name) {
+      if (type.name) {
         this.translate.get('edit_service.type_added_successfully').subscribe((res: string) => {
-          this.toastr.success(res);        
+          this.toastr.success(res);
         });
         this.loadTypes();
       }
@@ -168,27 +174,42 @@ export class EditServiceComponent implements OnInit {
   formSubmit() {
     console.log("form values", this.serviceForm.value);
     this.formSubmitAttempt = true;
-    if(this.serviceForm.valid) {
+    if (this.serviceForm.valid) {
       this.submittingForm = true;
       let values = Object.assign({}, this.serviceForm.value);
       values.start = values.start.getTime();
       values.end = values.end.getTime();
-      values.drivers = values.drivers.join(";");
-      values.crew = values.crew.join(";");
       console.log(values);
-      this.api.post("services", values).then((res) => {
-        console.log(res);
-        this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
-          this.toastr.success(res);
+      if (this.serviceId !== "new") {
+        values.id = this.serviceId;
+        this.api.post("services", values).then((res) => {
+          console.log(res);
+          this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
+            this.toastr.success(res);
+          });
+          this.submittingForm = false;
+        }).catch((err) => {
+          console.error(err);
+          this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
+            this.toastr.error(res);
+          });
+          this.submittingForm = false;
         });
-        this.submittingForm = false;
-      }).catch((err) => {
-        console.error(err);
-        this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
-          this.toastr.error(res);
+      } else {
+        this.api.post("services", values).then((res) => {
+          console.log(res);
+          this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
+            this.toastr.success(res);
+          });
+          this.submittingForm = false;
+        }).catch((err) => {
+          console.error(err);
+          this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
+            this.toastr.error(res);
+          });
+          this.submittingForm = false;
         });
-        this.submittingForm = false;
-      });
+      }
     }
   }
 

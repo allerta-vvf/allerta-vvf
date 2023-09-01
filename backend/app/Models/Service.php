@@ -19,9 +19,7 @@ class Service extends Model
     protected $fillable = [
         'code',
         'chief',
-        //'place', //TODO: replace with a table
-        'notes',
-        //'type' //TODO: add table
+        'notes'
     ];
 
     /**

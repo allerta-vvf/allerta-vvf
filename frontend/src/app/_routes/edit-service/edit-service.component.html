@@ -3,15 +3,15 @@
 <form method="post" [formGroup]="serviceForm" (ngSubmit)="formSubmit()">
   <div class="container">
     <div class="form-group has-validation">
-      <label for="date-picker">{{ 'start'|translate|titlecase }}</label>
-      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')"></datetime-picker>
+      <label for="date-picker-start">{{ 'start'|translate|titlecase }}</label>
+      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')" id="date-picker-start"></datetime-picker>
       <div class="invalid-feedback" *ngIf="start.errors?.['required']" translate>
         edit_service.select_start_datetime
       </div>
     </div>
     <div class="form-group has-validation">
-      <label for="date-picker">{{ 'end'|translate|titlecase }}</label>
-      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')"></datetime-picker>
+      <label for="date-picker-end">{{ 'end'|translate|titlecase }}</label>
+      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')" id="date-picker-end"></datetime-picker>
       <div class="invalid-feedback" *ngIf="end.errors?.['required']" translate>
         edit_service.select_end_datetime
       </div>
@@ -30,7 +30,7 @@
       <ng-container *ngFor="let user of users">
         <div class="form-check">
           <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
-            class="form-check-input chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
+            class="form-check-input" id="chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
           <label class="form-check-label" for="chief-{{ user.id }}">
             {{ user.name }}
           </label>
@@ -42,7 +42,7 @@
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check" *ngIf="user.driver">
-          <input class="form-check-input driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
+          <input class="form-check-input" id="driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
             (change)="onDriversCheckboxChange($event)" [checked]="isDriverSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="driver-{{ user.id }}">
             {{ user.name }}
@@ -55,7 +55,7 @@
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check">
-          <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
+          <input class="form-check-input" id="crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
             (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">
             {{ user.name }}

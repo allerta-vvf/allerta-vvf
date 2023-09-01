@@ -43,7 +43,9 @@ Route::middleware('auth:web')->group( function () {
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
 
     Route::get('/services', [ServiceController::class, 'index']);
-    Route::post('/services', [ServiceController::class, 'create']);
+    Route::post('/services', [ServiceController::class, 'createOrUpdate']);
+    Route::get('/services/{id}', [ServiceController::class, 'show']);
+    Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
 
     Route::get('/service_types', [ServiceTypeController::class, 'index']);
     Route::post('/service_types', [ServiceTypeController::class, 'create']);
