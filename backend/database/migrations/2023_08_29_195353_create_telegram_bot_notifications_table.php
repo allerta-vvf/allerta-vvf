@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('chat_id')->unique();
             $table->boolean('type_team_state')->default(true);
+            $table->varchar('last_message_hash')->nullable();
             $table->timestamps();
         });
     }

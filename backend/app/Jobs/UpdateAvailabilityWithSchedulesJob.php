@@ -81,12 +81,18 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             $text = "🚒 Distaccamento operativo con squadra completa";
         }
         if(!is_null($text)) {
+            //Find message hash
+            $hash = md5($text);
+            
             $chat_ids = TelegramBotNotifications::where("type_team_state", true)
+              ->whereNot("last_message_hash", $hash)
               ->get()->pluck('chat_id')->toArray();
             
             foreach ($chat_ids as $chat_id) {
                 $chat = Telegraph::chat($chat_id);
                 $chat->message($text)->send();
+                TelegramBotNotifications::where("chat_id", $chat_id)
+                  ->update(["last_message_hash" => $hash]);
             }
         }
     }

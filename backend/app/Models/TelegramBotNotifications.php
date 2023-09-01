@@ -16,6 +16,7 @@ class TelegramBotNotifications extends Model
      */
     protected $fillable = [
         'chat_id',
-        'type_team_state'
+        'type_team_state',
+        'last_message_hash'
     ];
 }
