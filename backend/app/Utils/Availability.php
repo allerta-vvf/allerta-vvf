@@ -5,9 +5,10 @@ namespace App\Utils;
 use App\Models\User;
 use App\Models\TelegramBotNotifications;
 use DefStudio\Telegraph\Facades\Telegraph;
+use App\Utils\Logger;
 
 class Availability {
-    public static function updateAvailability(User|int $id, bool $available)
+    public static function updateAvailability(User|int $id, bool $available, bool $fromTelegram = false)
     {
         if(is_int($id)) {
             $user = User::find($id);
@@ -52,13 +53,20 @@ class Availability {
             }
         }
 
+        Logger::log(
+            "Disponibilità cambiata in ".($available ? "disponibile" : "non disponibile"),
+            $user,
+            $fromTelegram ? $user : null,
+            $fromTelegram ? "telegram" : "web"
+        );
+
         return [
             "updated_user_id" => $user->id,
             "updated_user_name" => $user->name
         ];
     }
 
-    public static function updateAvailabilityManualMode(User|int $id, bool $manual_mode)
+    public static function updateAvailabilityManualMode(User|int $id, bool $manual_mode, bool $fromTelegram = false)
     {
         if(is_int($id)) {
             $user = User::find($id);
@@ -67,6 +75,13 @@ class Availability {
         }
         $user->availability_manual_mode = $manual_mode;
         $user->save();
+
+        Logger::log(
+            ($manual_mode ? "Disattivazione" : "Attivazione")." programmazione oraria",
+            $user,
+            $fromTelegram ? $user : null,
+            $fromTelegram ? "telegram" : "web"
+        );
 
         return;
     }

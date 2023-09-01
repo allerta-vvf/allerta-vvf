@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TelegramBotLogins;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Str;
+use App\Utils\Logger;
 
 class TelegramController extends Controller
 {
@@ -20,6 +21,8 @@ class TelegramController extends Controller
         $row->tmp_login_code = $telegramBotStartParameter;
         $row->user = $request->user()->id;
         $row->save();
+
+        Logger::log("Inizio procedura collegamento bot Telegram");
 
         return [
             "start_link" => "https://t.me/$telegramBotUsername?start=$telegramBotStartParameter"

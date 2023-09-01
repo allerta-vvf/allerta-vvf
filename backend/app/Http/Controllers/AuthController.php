@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Utils\Logger;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        Logger::log("Creato utente $user->name ($user->username)", $user);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -47,6 +50,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        Logger::log("Login", $user, $user);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -56,6 +61,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         //TODO: https://stackoverflow.com/a/73980629
+        Logger::log("Logout");
         auth('web')->logout();
         return;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ScheduleSlots;
 use Illuminate\Http\Request;
+use App\Utils\Logger;
 
 class ScheduleSlotsController extends Controller
 {
@@ -28,6 +29,8 @@ class ScheduleSlotsController extends Controller
             $schedule["user"] = auth()->id();
             return $schedule;
         }, $request->input('schedules'));
+
+        Logger::log("Aggiornata disponibilità oraria");
 
         return ScheduleSlots::insert($schedules);
     }

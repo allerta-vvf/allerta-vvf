@@ -7,7 +7,7 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
+use App\Utils\Logger;
 
 class ServiceController extends Controller
 {
@@ -61,8 +61,6 @@ class ServiceController extends Controller
      */
     public function createOrUpdate(Request $request)
     {
-        DB::connection()->enableQueryLog();
-
         $adding = !isset($request->id) || is_null($request->id);
 
         $service = $adding ? new Service() : Service::find($request->id)->with('drivers')->with('crew')->first();
@@ -134,7 +132,7 @@ class ServiceController extends Controller
         ));
         User::whereIn('id', $usersToIncrement)->increment('services');
 
-        return response()->json(DB::getQueryLog());
+        Logger::log($adding ? "Intervento aggiunto" : "Intervento modificato");
     }
 
     /**
@@ -146,5 +144,6 @@ class ServiceController extends Controller
         $usersToDecrement = $this->extractServiceUsers($service);
         User::whereIn('id', $usersToDecrement)->decrement('services');
         $service->delete();
+        Logger::log("Intervento eliminato");
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ServiceType;
 use Illuminate\Http\Request;
+use App\Utils\Logger;
 
 class ServiceTypeController extends Controller
 {
@@ -25,6 +26,8 @@ class ServiceTypeController extends Controller
         $serviceType = new ServiceType();
         $serviceType->name = $request->name;
         $serviceType->save();
+
+        Logger::log("Aggiunto tipo di intervento ($serviceType->name)");
 
         return response()->json(
             $serviceType

@@ -52,7 +52,7 @@
                 <td>{{ row.action }}</td>
                 <td>{{ row.changed }}</td>
                 <td>{{ row.editor }}</td>
-                <td>{{ row.timestamp }}</td>
+                <td>{{ row.created_at | date: 'dd/MM/YYYY HH:mm:ss' }}</td>
             </tr>
         </tbody>
     </table>

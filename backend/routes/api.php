@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PlacesController;
@@ -23,10 +24,11 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:web')->group( function () {
+    //Route::post('/register', [AuthController::class, 'register']); //TODO: replace with admin only route
+
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/me', [AuthController::class, 'me']);
     
@@ -51,6 +53,8 @@ Route::middleware('auth:web')->group( function () {
     Route::post('/service_types', [ServiceTypeController::class, 'create']);
     Route::get('/places/search', [PlacesController::class, 'search']);
     Route::get('/places/{id}', [PlacesController::class, 'show']);
+
+    Route::get('/logs', [LogsController::class, 'index']);
 
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 

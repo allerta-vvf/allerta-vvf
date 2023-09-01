@@ -133,7 +133,7 @@ class WebhookController extends
             return;
         }
         
-        Availability::updateAvailability($user, true);
+        Availability::updateAvailability($user, true, true);
         $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
     }
 
@@ -144,7 +144,7 @@ class WebhookController extends
             return;
         }
         
-        Availability::updateAvailability($user, false);
+        Availability::updateAvailability($user, false, true);
         $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
     }
 
@@ -155,7 +155,7 @@ class WebhookController extends
             return;
         }
         
-        Availability::updateAvailabilityManualMode($user, false);
+        Availability::updateAvailabilityManualMode($user, false, true);
         $this->reply("Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
     }
 
@@ -210,7 +210,7 @@ class WebhookController extends
             $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.", true);
             return;
         }
-        Availability::updateAvailabilityManualMode($user, false);
+        Availability::updateAvailabilityManualMode($user, false, true);
         $this->reply("✅ Programmazione oraria abilitata", true);
         
         //Delete the message that triggered the callback
