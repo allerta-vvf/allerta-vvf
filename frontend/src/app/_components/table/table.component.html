@@ -88,7 +88,8 @@
                 <td>{{ extractNamesFromObject(row.drivers).join(', ') }}</td>
                 <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>
-                    {{ row.place.display_name }}<br>
+                    <ng-container *ngIf="row.place.name"><i>{{ row.place.name }}</i></ng-container><br>
+                    <ng-container *ngIf="row.place.village">{{ row.place.village }}</ng-container><br>
                     <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|titlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
