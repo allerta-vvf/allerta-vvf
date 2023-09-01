@@ -5,6 +5,7 @@ import { AuthService } from '../../_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-table',
@@ -16,12 +17,37 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input() sourceType?: string;
   @Input() refreshInterval?: number;
 
+  enablePaginationTypes: string[] = ['logs', 'services', 'trainings'];
+
+  _maxPaginationSize: number = 10;
+  _rowsPerPage: number = 20;
+  
+  @Input('maxPaginationSize')
+  get maxPaginationSize(): any {
+    return this._maxPaginationSize;
+  }
+  set maxPaginationSize(value: any) {
+    if(!isNaN(value)) this._maxPaginationSize = value;
+  }
+  
+  @Input('rowsPerPage')
+  get rowsPerPage(): any {
+    return this._rowsPerPage;
+  }
+  set rowsPerPage(value: any) {
+    if(!isNaN(value)) this._rowsPerPage = value;
+  }
+
   @Output() changeAvailability: EventEmitter<{user: number, newState: 0|1}> = new EventEmitter<{user: number, newState: 0|1}>();
   @Output() userImpersonate: EventEmitter<number> = new EventEmitter<number>();
 
   public data: any = [];
+  public displayedData: any = [];
 
   public loadDataInterval: NodeJS.Timer | undefined = undefined;
+
+  public currentPage: number = 1;
+  public totalElements: number = 1;
 
   constructor(
     private api: ApiClientService,
@@ -43,10 +69,18 @@ export class TableComponent implements OnInit, OnDestroy {
     if(!this.sourceType) this.sourceType = "list";
     this.api.get(this.sourceType).then((data: any) => {
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
+      this.totalElements = this.data.length;
+      if(this.currentPage == 1) this.displayedData = this.data.slice(0, this.rowsPerPage);
       if(this.sourceType === 'list') {
         this.api.availableUsers = this.data.filter((row: any) => row.available).length;
       }
     });
+  }
+
+  pageChanged(event: PageChangedEvent): void {
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = event.page * event.itemsPerPage;
+    this.displayedData = this.data.slice(startItem, endItem);
   }
 
   ngOnInit(): void {
