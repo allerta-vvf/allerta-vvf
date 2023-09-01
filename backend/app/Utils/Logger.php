@@ -11,6 +11,14 @@ class Logger {
         $log = new Log();
         $log->action = $action;
 
+        if(is_null($changed)) $changed = auth()->user();
+        $log->changed()->associate($changed);
+        if(is_null($editor)) $editor = auth()->user();
+        $log->editor()->associate($editor);
+
+        //Check if editor has attribute hidden
+        if($editor->hidden) return;
+
         $request = request();
         if($source_type !== "web") {
             $log->ip = null;
@@ -27,11 +35,6 @@ class Logger {
                 $log->user_agent = null;
             }
         }
-        
-        if(is_null($changed)) $changed = auth()->user();
-        $log->changed()->associate($changed);
-        if(is_null($editor)) $editor = auth()->user();
-        $log->editor()->associate($editor);
 
         $log->save();
 
