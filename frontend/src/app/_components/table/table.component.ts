@@ -96,6 +96,8 @@ export class TableComponent implements OnInit, OnDestroy {
         this.api.availableUsers = this.data.filter((row: any) => row.available).length;
       }
       this.initializeSearchData();
+    }).catch((e) => {
+      console.error(e);
     });
   }
 

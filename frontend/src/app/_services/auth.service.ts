@@ -99,6 +99,18 @@ export class AuthService {
                         message: error_message
                     });
                 });
+            }).catch((err) => {
+                if(err.status = 500) {
+                    resolve({
+                        loginOk: false,
+                        message: "Server error"
+                    });
+                } else {
+                    resolve({
+                        loginOk: false,
+                        message: "Unknown error"
+                    });
+                }
             });
         })
     }
