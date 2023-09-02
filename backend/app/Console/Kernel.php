@@ -17,14 +17,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new UpdateAvailabilityWithSchedulesJob)
-          ->everyThirtyMinutes()
-          ->sentryMonitor();
+          ->everyThirtyMinutes();
+          //->sentryMonitor();
         $schedule->job(new NotifyUsersManualModeOn)
-          ->dailyAt('7:00')
-          ->sentryMonitor();
+          ->dailyAt('7:00');
+          //->sentryMonitor();
         $schedule->job(new ResetAvailabilityMinutes)
-          ->monthlyOn(1, '0:00')
-          ->sentryMonitor();
+          ->monthlyOn(1, '0:00');
+          //->sentryMonitor();
     }
 
     /**
