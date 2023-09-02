@@ -1,3 +1,11 @@
+<ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
+    <div class="row mt-5">
+        <div class="col-xs-12 col-12">
+            <input type="text" class="form-control" placeholder="{{ 'search'|translate|titlecase }}" [(ngModel)]="searchText" (ngModelChange)="onSearchTextChange($event)">
+        </div>
+    </div>
+</ng-container>
+
 <div id="list" class="table-responsive mt-4">
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>

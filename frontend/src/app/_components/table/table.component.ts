@@ -18,6 +18,22 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input() refreshInterval?: number;
 
   enablePaginationTypes: string[] = ['logs', 'services', 'trainings'];
+  searchPropertiesBlacklist: string[] = [
+    "chief_id",
+    "type_id",
+    "pivot",
+    "place_id",
+    "display_name",
+    "licence",
+    "lat",
+    "lon",
+    "id",
+    "updated_at",
+    "added_by_id",
+    "updated_by_id",
+    "changed_id",
+    "editor_id"
+  ]
 
   _maxPaginationSize: number = 10;
   _rowsPerPage: number = 20;
@@ -43,11 +59,15 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public data: any = [];
   public displayedData: any = [];
+  public originalData: any = [];
 
   public loadDataInterval: NodeJS.Timer | undefined = undefined;
 
   public currentPage: number = 1;
   public totalElements: number = 1;
+
+  public searchText: string = "";
+  public searchData: any = [];
 
   constructor(
     private api: ApiClientService,
@@ -69,11 +89,13 @@ export class TableComponent implements OnInit, OnDestroy {
     if(!this.sourceType) this.sourceType = "list";
     this.api.get(this.sourceType).then((data: any) => {
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
+      this.originalData = this.data;
       this.totalElements = this.data.length;
       if(this.currentPage == 1) this.displayedData = this.data.slice(0, this.rowsPerPage);
       if(this.sourceType === 'list') {
         this.api.availableUsers = this.data.filter((row: any) => row.available).length;
       }
+      this.initializeSearchData();
     });
   }
 
@@ -81,6 +103,42 @@ export class TableComponent implements OnInit, OnDestroy {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.displayedData = this.data.slice(startItem, endItem);
+  }
+
+  initializeSearchData() {
+    const searchPropertiesBlacklist = this.searchPropertiesBlacklist;
+    function flattenObj(obj: any, parent: any, res: any = {}){
+      //Based on https://stackoverflow.com/a/56253298
+      for(let key in obj){
+        if(typeof obj[key] == 'undefined' || obj[key] == null) continue;
+        if(searchPropertiesBlacklist.includes(key)) continue;
+        let propName = parent ? parent + '_' + key : key;
+        if(typeof obj[key] == 'object'){
+          flattenObj(obj[key], propName, res);
+        } else {
+          res[propName] = obj[key];
+        }
+      }
+      return res;
+    }
+
+    this.searchData = this.data.map((row: any) => flattenObj(row, null));
+  }
+
+  onSearchTextChange(search: string) {
+    if(search.length == 0) {
+      this.data = this.originalData;
+      this.displayedData = this.data.slice(0, this.rowsPerPage);
+      this.totalElements = this.data.length;
+      return;
+    }
+    this.data = this.originalData.filter((row: any, index: number) => {
+      return Object.values(this.searchData[index]).some((value: any) => {
+        return value.toString().toLowerCase().includes(search.toLowerCase());
+      });
+    });
+    this.displayedData = this.data.slice(0, this.rowsPerPage);
+    this.totalElements = this.data.length;
   }
 
   ngOnInit(): void {
