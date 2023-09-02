@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
 import { Subject } from "rxjs";
+import * as Sentry from "@sentry/angular-ivy";
 
 export interface LoginResponse {
   loginOk: boolean;
@@ -30,6 +31,11 @@ export class AuthService {
                 this.profile.can = (permission: string) => {
                     return this.profile.permissions.includes(permission);
                 }
+
+                Sentry.setUser({
+                    id: this.profile.id,
+                    name: this.profile.name
+                });
 
                 resolve();
             }).catch((e) => {
@@ -118,6 +124,7 @@ export class AuthService {
     public stop_impersonating(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.api.post("stop_impersonating").then(() => {
+                Sentry.setUser(null);
                 resolve();
             }).catch((err) => {
                 console.error(err);
@@ -137,6 +144,7 @@ export class AuthService {
                 if(routerDestination === undefined) {
                     routerDestination = ["login", "list"];
                 }
+                Sentry.setUser(null);
                 this.router.navigate(routerDestination);
             });
         }
