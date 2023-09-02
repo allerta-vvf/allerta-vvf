@@ -7,6 +7,8 @@ use App\Models\User;
 
 use App\Utils\Availability;
 
+use DefStudio\Telegraph\Facades\Telegraph;
+
 class WebhookController extends
     \DefStudio\Telegraph\Handlers\WebhookHandler
 {
@@ -26,6 +28,11 @@ class WebhookController extends
         if($this->user) return $this->user;
         $this->user = $this->message->from()->storage()->get('user');
         return $this->user;
+    }
+
+    private function replyToUserChat($text) {
+        $chat = Telegraph::chat($this->message->from()->id());
+        $chat->message($text)->send();
     }
 
     /**
@@ -101,7 +108,7 @@ class WebhookController extends
     {
         $this->message->from()->storage()->forget('user');
         TelegramBotLogins::where('chat_id', $this->message->chat()->id())->delete();
-        $this->reply("✅ Il tuo account è stato scollegato con successo.");
+        $this->replyToUserChat("✅ Il tuo account è stato scollegato con successo.");
     }
 
     /**
@@ -111,10 +118,10 @@ class WebhookController extends
     {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
-        $this->reply(
+        $this->replyToUserChat(
             "ℹ️ Informazioni sul profilo:".
             "\n<i>Nome:</i> <b>".$user["name"]."</b>".
             "\n<i>Disponibile:</i> ".($user["available"] ? "<b>SI</b>" : "<b>NO</b>").
@@ -129,41 +136,41 @@ class WebhookController extends
     public function attiva() {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
         
         Availability::updateAvailability($user, true, true);
-        $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
+        $this->replyToUserChat("Disponibilità aggiornata con successo.\nOra sei <b>operativo</b>.");
     }
 
     public function disattiva() {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
         
         Availability::updateAvailability($user, false, true);
-        $this->reply("Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
+        $this->replyToUserChat("Disponibilità aggiornata con successo.\nOra sei <b>non operativo</b>.");
     }
 
     public function programma() {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
         
         Availability::updateAvailabilityManualMode($user, false, true);
-        $this->reply("Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
+        $this->replyToUserChat("Programmazione oraria <b>abilitata</b>.\nPer disabilitarla (e tornare in modalità manuale), cambiare la disponbilità usando i comandi \"/attiva\" e \"/disattiva\"");
     }
 
     public function disponibili()
     {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
         //Get all users with availability true
@@ -193,7 +200,7 @@ class WebhookController extends
     {
         $user = $this->user();
         if(is_null($user)) {
-            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
+            $this->replyToUserChat("⚠️ Il tuo account Allerta non è collegato con Telegram.\nPer favore, eseguire il comando <strong><i>/start</i></strong>.");
             return;
         }
         //Get all users with availability true
