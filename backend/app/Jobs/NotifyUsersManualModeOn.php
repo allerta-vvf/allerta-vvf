@@ -53,4 +53,11 @@ class NotifyUsersManualModeOn implements ShouldQueue
               ->send();
         }
     }
+
+    public function failed(\Exception $exception)
+    {
+        if (app()->bound('sentry')) {
+            app('sentry')->captureException($exception);
+        }
+    }
 }

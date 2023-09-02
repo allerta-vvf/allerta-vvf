@@ -96,4 +96,11 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             }
         }
     }
+
+    public function failed(\Exception $exception)
+    {
+        if (app()->bound('sentry')) {
+            app('sentry')->captureException($exception);
+        }
+    }
 }

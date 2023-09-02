@@ -9,6 +9,8 @@ use App\Utils\Availability;
 
 use DefStudio\Telegraph\Facades\Telegraph;
 
+use Sentry\State\Scope;
+
 class WebhookController extends
     \DefStudio\Telegraph\Handlers\WebhookHandler
 {
@@ -27,6 +29,16 @@ class WebhookController extends
     private function user(): User|null {
         if($this->user) return $this->user;
         $this->user = $this->message->from()->storage()->get('user');
+
+        if(app()->bound('sentry')) {
+            \Sentry\configureScope(function (Scope $scope): void {
+                $scope->setUser([
+                    'id' => $this->user->id,
+                    'name' => $this->user->name,
+                ]);
+            });
+        }
+
         return $this->user;
     }
 
