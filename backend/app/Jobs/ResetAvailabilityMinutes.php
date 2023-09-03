@@ -50,7 +50,7 @@ class ResetAvailabilityMinutes implements ShouldQueue
         }
     }
 
-    public function failed(\Exception $exception)
+    public function failed(\Error|\TypeError $exception = null)
     {
         if (app()->bound('sentry')) {
             app('sentry')->captureException($exception);

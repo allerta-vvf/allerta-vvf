@@ -97,9 +97,9 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
         }
     }
 
-    public function failed(\Exception $exception)
+    public function failed(\Error|\TypeError $exception = null)
     {
-        if (app()->bound('sentry')) {
+        if (app()->bound('sentry') && !is_null($exception)) {
             app('sentry')->captureException($exception);
         }
     }
