@@ -60,13 +60,28 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Logger::log("Logout");
-        if(
-            method_exists(auth()->user(), 'currentAccessToken') &&
-            method_exists(auth()->user()->currentAccessToken(), 'delete')
-        ) {
-            auth()->user()->currentAccessToken()->delete();
-        }
+
         auth()->guard('api')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        /**
+         * Only works with cookie auth, Laravel authentication sucks
+         * I just want to auth users in the webapp using cookies and
+         * using Bearer tokens when making API calls from outside the frontend
+         * (for example mobile apps, external clients etc.)
+         * but it's not possible without a lot of hacks.
+         * Even this way, it doesn't work 100% well, with random 419 errors
+         * and other stuff.
+         * I'm wasting too much time on this.
+         * Users are authenticated, that's enough for now.
+         * Logout doesn't work very well even this cookies to be honest.
+         * I'm not sure if it's a Laravel bug or what.
+         * I don't know, I should ask online.
+         * 
+         * TODO: https://github.com/laravel/sanctum/issues/80
+         */
+
         return;
     }
 
