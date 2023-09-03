@@ -38,6 +38,8 @@ export class ListComponent implements OnInit, OnDestroy {
     this.api.get("availability").then((response) => {
       this.available = response.available;
       this.manual_mode = response.manual_mode;
+    }).catch((err) => {
+      if(err.status === 500) throw err;
     });
   }
 
@@ -54,6 +56,9 @@ export class ListComponent implements OnInit, OnDestroy {
       this.toastr.success(msg);
       this.loadAvailability();
       this.table.loadTableData();
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.toastr.error("Errore nel cambiare la disponibilità. Prova dal bot Telegram.");
     });
   }
 
@@ -65,6 +70,9 @@ export class ListComponent implements OnInit, OnDestroy {
         this.toastr.success(res);
       });
       this.loadAvailability();
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.toastr.error("Errore nel cambiare la modalità manuale. Prova dal bot Telegram.");
     });
   }
 
@@ -139,6 +147,9 @@ export class ListComponent implements OnInit, OnDestroy {
       a.setAttribute('href', response.start_link);
       a.setAttribute('target', '_blank');
       a.click();
+    }).catch((err) => {
+      this.toastr.error("Errore nel richiedere il token di login. Riprova più tardi.");
+      if(err.status === 500) throw err;
     });
   }
 
