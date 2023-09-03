@@ -70,7 +70,7 @@ export class AuthInterceptor implements HttpInterceptor {
         maxRetryAttempts: 3,
         scalingDuration: 1,
         excludedStatusCodes: [400, 404, 419, 500, 503],
-        excludedUrls: ["login", "logout", "me"]
+        excludedUrls: ["login", "logout", "me", "impersonate", "stop_impersonating"]
       })),
       catchError(error => {
         console.log(error);
