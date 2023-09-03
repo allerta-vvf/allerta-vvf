@@ -39,7 +39,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        //TODO: https://stackoverflow.com/a/73980629
         if (!Auth::attempt($request->only('username', 'password'))) {
             return response()->json([
                 'message' => 'Invalid login details'
@@ -60,9 +59,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        //TODO: https://stackoverflow.com/a/73980629
         Logger::log("Logout");
-        auth('web')->logout();
+        if(
+            method_exists(auth()->user(), 'currentAccessToken') &&
+            method_exists(auth()->user()->currentAccessToken(), 'delete')
+        ) {
+            auth()->user()->currentAccessToken()->delete();
+        }
+        auth()->guard('api')->logout();
         return;
     }
 
@@ -81,6 +85,18 @@ class AuthController extends Controller
 
     public function impersonate(Request $request, $user)
     {
+        if(!$request->user()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+        $authUser = User::find($request->user()->id);
+        if(!$authUser->canImpersonate()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $impersonatedUser = User::find($user);
         $request->user()->impersonate($impersonatedUser);
         $token = $impersonatedUser->createToken('auth_token')->plainTextToken;
@@ -93,6 +109,12 @@ class AuthController extends Controller
     
     public function stopImpersonating(Request $request)
     {
+        if(!$request->user()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $request->user()->leaveImpersonation();
         return;
     }

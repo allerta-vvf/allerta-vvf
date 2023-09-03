@@ -25,15 +25,14 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/impersonate/{user}', [AuthController::class, 'impersonate']);
+Route::post('/stop_impersonating', [AuthController::class, 'stopImpersonating']);
 
-Route::middleware('auth:web')->group( function () {
+Route::middleware('auth:sanctum')->group( function () {
     //Route::post('/register', [AuthController::class, 'register']); //TODO: replace with admin only route
 
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/me', [AuthController::class, 'me']);
-    
-    Route::post('/impersonate/{user}', [AuthController::class, 'impersonate']);
-    Route::post('/stop_impersonating', [AuthController::class, 'stopImpersonating']);
 
     Route::get('/list', [UserController::class, 'index']);
 

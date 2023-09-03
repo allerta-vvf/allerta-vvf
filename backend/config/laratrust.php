@@ -299,7 +299,7 @@ return [
         | These middleware will get attached onto each Laratrust panel route.
         |
         */
-        'middleware' => ['web'],
+        'middleware' => ['api'],
 
         /*
         |--------------------------------------------------------------------------
