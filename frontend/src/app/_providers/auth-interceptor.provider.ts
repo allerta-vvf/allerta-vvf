@@ -9,11 +9,13 @@ import { ApiClientService } from '../_services/api-client.service';
 const genericRetryStrategy = ({
   maxRetryAttempts = 3,
   scalingDuration = 1000,
-  excludedStatusCodes = []
+  excludedStatusCodes = [],
+  excludedUrls = []
 }: {
   maxRetryAttempts?: number,
   scalingDuration?: number,
-  excludedStatusCodes?: number[]
+  excludedStatusCodes?: number[],
+  excludedUrls?: string[]
 } = {}) => (attempts: Observable<any>) => {
   return attempts.pipe(
     mergeMap((error, i) => {
@@ -22,7 +24,8 @@ const genericRetryStrategy = ({
       // or response is a status code we don't wish to retry, throw error
       if (
         retryAttempt > maxRetryAttempts ||
-        excludedStatusCodes.find(e => e === error.status)
+        excludedStatusCodes.find(e => e === error.status) ||
+        excludedUrls.find((e: string) => error.url.includes(e))
       ) {
         return throwError(() => error);
       }
@@ -63,7 +66,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
     return next.handle(this.addXsrfToken(req)).pipe(
-      retryWhen(genericRetryStrategy({maxRetryAttempts: 3, scalingDuration: 1})),
+      retryWhen(genericRetryStrategy({
+        maxRetryAttempts: 3,
+        scalingDuration: 1,
+        excludedStatusCodes: [400, 404, 419, 500, 503],
+        excludedUrls: ["login", "logout", "me"]
+      })),
       catchError(error => {
         console.log(error);
         if (error.status === 419) {
