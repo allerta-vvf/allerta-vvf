@@ -34,6 +34,7 @@ class NotifyUsersManualModeOn implements ShouldQueue
         $users = TelegramBotLogins::join("users", "users.id", "=", "telegram_bot_logins.user")
           ->select("users.id", "chat_id", "users.available")
           ->where("users.availability_manual_mode", true)
+          ->whereNotNull("chat_id")
           ->get();
 
         foreach ($users as $user) {
