@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'modal-availability-schedule',
@@ -51,7 +52,11 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
 
   public isSelecting = false;
 
-  constructor(public bsModalRef: BsModalRef, private api: ApiClientService) { }
+  constructor(
+    private toastr: ToastrService,
+    public bsModalRef: BsModalRef,
+    private api: ApiClientService
+  ) { }
 
   loadSchedules(schedules: any) {
     console.log("Loaded schedules", schedules);
@@ -68,6 +73,9 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
     this.orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
     this.api.get("schedules").then((response: any) => {
       this.loadSchedules(response);
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.toastr.error("Errore nel caricare la programmazione oraria. Riprova.");
     });
   }
 
@@ -75,6 +83,9 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
     console.log("Selected cells", this.selectedCells);
     this.api.post("schedules", {
       schedules: this.selectedCells
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.toastr.error("Errore nel salvare la programmazione oraria. Riprova.");      
     });
     this.bsModalRef.hide();
   }

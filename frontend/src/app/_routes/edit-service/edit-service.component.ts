@@ -92,6 +92,8 @@ export class EditServiceComponent implements OnInit {
           patch.crew = patch.crew.map((e: any) => e.pivot.user_id+"");
           patch.type = patch.type_id;
           this.serviceForm.patchValue(patch);
+        }).catch((err) => {
+          this.toastr.error("Errore nel caricare l'intervento. Ricarica la pagina e riprova.");
         });
       }
       console.log(this.serviceId);
@@ -99,6 +101,8 @@ export class EditServiceComponent implements OnInit {
     this.api.get("list").then((users) => {
       this.users = users;
       console.log(this.users);
+    }).catch((err) => {
+      this.toastr.error("Errore nel caricare la lista degli utenti. Ricarica la pagina e riprova.");
     });
     this.loadTypes();
   }
@@ -107,6 +111,8 @@ export class EditServiceComponent implements OnInit {
     this.api.get("service_types").then((types) => {
       console.log(types);
       this.types = types;
+    }).catch((err) => {
+      this.toastr.error("Errore nel caricare le tipologie di intervento. Ricarica la pagina e riprova.");
     });
   }
 
@@ -135,6 +141,8 @@ export class EditServiceComponent implements OnInit {
         });
         this.loadTypes();
       }
+    }).catch((err) => {
+      this.toastr.error("Errore nell'aggiungere tipologia di intervento. Riprova.");
     });
   }
 

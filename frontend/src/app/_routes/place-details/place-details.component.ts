@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { ToastrService } from 'ngx-toastr';
 import { marker, latLng, tileLayer } from 'leaflet';
 
 @Component({
@@ -18,7 +19,11 @@ export class PlaceDetailsComponent implements OnInit {
   options = {};
   layers: any[] = [];
 
-  constructor(private route: ActivatedRoute, private api: ApiClientService) {
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApiClientService,
+    private toastr: ToastrService
+  ) {
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id') || '');
 
@@ -58,6 +63,8 @@ export class PlaceDetailsComponent implements OnInit {
         ];
 
         this.place_loaded = true;
+      }).catch((err) => {
+        this.toastr.error("Errore nel caricare i dati del luogo. Ricarica la pagina e riprova.");
       });
     });
   }
