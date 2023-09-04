@@ -67,7 +67,8 @@ export class AuthService {
             this.api.get("csrf-cookie").then((data: any) => {
                 this.api.post("login", {
                     username: username,
-                    password: password
+                    password: password,
+                    use_sessions: true
                 }).then((data: any) => {
                     this.loadProfile().then(() => {
                         resolve({
@@ -82,7 +83,7 @@ export class AuthService {
                     });
                 }).catch((err) => {
                     let error_message = "";
-                    if(err.status === 401) {
+                    if(err.status === 401 || err.status === 422) {
                         error_message = err.error.message;
                     } else if (err.status === 400) {
                         let error_messages = err.error.errors;

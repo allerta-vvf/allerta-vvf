@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use App\Utils\Logger;
 
@@ -39,21 +40,35 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('username', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
-        }
+        $request->validate([
+			'username' => 'required|string|exists:users,username|max:255',
+			'password' => 'required',
+		]);
+
+		$user = User::where('username', $request->username)->first();
+
+		if (! $user || ! Hash::check($request->password, $user->password)) {
+			throw ValidationException::withMessages([
+				'username' => ['Credenziali inserite non valide.'],
+			]);
+		}
 
         $user = User::where('username', $request['username'])->firstOrFail();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        if($request->input('use_sessions', false)) {
+            $request->session()->regenerate();
+            auth()->guard('api')->login($user);
+            $token = null;
+        } else {
+            $token = $user->createToken('auth_token')->plainTextToken;
+        }
 
         Logger::log("Login", $user, $user);
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'auth_type' => is_null($token) ? 'session' : 'token'
         ]);
     }
 
@@ -61,28 +76,18 @@ class AuthController extends Controller
     {
         Logger::log("Logout");
 
-        auth()->guard('api')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if(
+            method_exists($request->user(), 'currentAccessToken') &&
+            method_exists($request->user()->currentAccessToken(), 'delete')
+        ) {
+            $request->user()->currentAccessToken()->delete();
+        } else {
+            auth()->guard('api')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
-        /**
-         * Only works with cookie auth, Laravel authentication sucks
-         * I just want to auth users in the webapp using cookies and
-         * using Bearer tokens when making API calls from outside the frontend
-         * (for example mobile apps, external clients etc.)
-         * but it's not possible without a lot of hacks.
-         * Even this way, it doesn't work 100% well, with random 419 errors
-         * and other stuff.
-         * I'm wasting too much time on this.
-         * Users are authenticated, that's enough for now.
-         * Logout doesn't work very well even this cookies to be honest.
-         * I'm not sure if it's a Laravel bug or what.
-         * I don't know, I should ask online.
-         * 
-         * TODO: https://github.com/laravel/sanctum/issues/80
-         */
-
-        return;
+		return response()->json(null, 200);
     }
 
     public function me(Request $request)
