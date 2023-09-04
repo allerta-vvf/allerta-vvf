@@ -67,7 +67,7 @@ class ServiceController extends Controller
     {
         $adding = !isset($request->id) || is_null($request->id);
 
-        $service = $adding ? new Service() : Service::find($request->id)->with('drivers')->with('crew')->first();
+        $service = $adding ? new Service() : Service::where("id",$request->id)->with('drivers')->with('crew')->first();
 
         if(is_null($service)) abort(404);
 
