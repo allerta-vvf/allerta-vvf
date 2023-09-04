@@ -21,7 +21,7 @@ jobs:
     name: Testing ${{ matrix.php-versions }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Dump GitHub context
       env:
@@ -60,7 +60,7 @@ jobs:
     name: Deploy to staging
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -106,7 +106,7 @@ jobs:
     name: Deploy to production
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
