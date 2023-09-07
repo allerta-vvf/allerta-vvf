@@ -215,6 +215,38 @@ export class TableComponent implements OnInit, OnDestroy {
     });
   }
 
+  editTraining(id: number) {
+    this.router.navigate(['/trainings', id]); 
+  }
+
+  deleteTraining(id: number) {
+    this.translate.get(['table.yes_remove', 'table.cancel', 'table.remove_training_confirm', 'table.remove_training_text']).subscribe((res: { [key: string]: string; }) => {
+      Swal.fire({
+        title: res['table.remove_training_confirm'],
+        text: res['table.remove_training_confirm_text'],
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: res['table.yes_remove'],
+        cancelButtonText: res['table.cancel']
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.api.delete(`trainings/${id}`).then((response) => {
+            this.translate.get('table.training_deleted_successfully').subscribe((res: string) => {
+              this.toastr.success(res);
+            });
+            this.loadTableData();
+          }).catch((e) => {
+            this.translate.get('table.training_deleted_error').subscribe((res: string) => {
+              this.toastr.error(res);
+            });
+          });
+        }
+      });
+    });
+  }
+
   extractNamesFromObject(obj: any) {
     return obj.flatMap((e: any) => e.name);
   }

@@ -10,6 +10,7 @@ use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PlacesController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\TrainingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
@@ -52,6 +53,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/service_types', [ServiceTypeController::class, 'create']);
     Route::get('/places/search', [PlacesController::class, 'search']);
     Route::get('/places/{id}', [PlacesController::class, 'show']);
+
+    Route::get('/trainings', [TrainingController::class, 'index']);
+    Route::post('/trainings', [TrainingController::class, 'createOrUpdate']);
+    Route::get('/trainings/{id}', [TrainingController::class, 'show']);
+    Route::delete('/trainings/{id}', [TrainingController::class, 'destroy']);
 
     Route::get('/logs', [LogsController::class, 'index']);
 

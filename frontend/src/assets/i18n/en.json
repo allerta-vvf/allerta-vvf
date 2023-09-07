@@ -56,7 +56,16 @@
         "type_already_exists": "Type already exists",
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
-        "service_add_error": "Service could not be added. Please try again"
+        "service_add_failed": "Service could not be added. Please try again"
+    },
+    "edit_training": {
+        "select_start_datetime": "Select start date and time for the training",
+        "select_end_datetime": "Select end date and time for the training",
+        "insert_name": "Insert training name",
+        "name_placeholder": "Training name",
+        "other_crew_members": "Other crew members",
+        "training_added_successfully": "Training added successfully",
+        "training_add_failed": "Training could not be added. Please try again"
     },
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",

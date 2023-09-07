@@ -24,6 +24,11 @@ const routes: Routes = [
     canActivate: [AuthorizeGuard]
   },
   { path: 'trainings', component: TrainingsComponent, canActivate: [AuthorizeGuard] },
+  {
+    path: 'trainings/:id', 
+    loadChildren: () => import('./_routes/edit-training/edit-training.module').then(m => m.EditTrainingModule),
+    canActivate: [AuthorizeGuard]
+  },
   { path: "login/:redirect/:extraParam", component: LoginComponent },
   { path: "login/:redirect", component: LoginComponent },
   //

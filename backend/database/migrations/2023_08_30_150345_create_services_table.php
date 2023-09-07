@@ -51,7 +51,6 @@ return new class extends Migration
             $table->dateTime('end');
             $table->foreignId('added_by_id')->constrained('users');
             $table->foreignId('updated_by_id')->constrained('users');
-            $table->foreignId('deleted_by_id')->nullable()->constrained('users');
             $table->softDeletes();
             $table->unique(['code']);            
             $table->timestamps();

@@ -118,7 +118,7 @@ class ServiceController extends Controller
         $service->chief()->associate($request->chief);
         $service->type()->associate($request->type);
         $service->notes = $request->notes;
-        $service->start = $request->start/1000; //TODO: fix client-side
+        $service->start = $request->start/1000;
         $service->end = $request->end/1000;
         $service->place()->associate($place);
         $service->addedBy()->associate($request->user());

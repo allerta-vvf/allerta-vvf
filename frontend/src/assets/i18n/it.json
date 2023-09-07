@@ -56,7 +56,16 @@
         "type_already_exists": "La tipologia è già presente",
         "type_added_successfully": "Tipologia aggiunta con successo",
         "service_added_successfully": "Intervento aggiunto con successo",
-        "service_add_error": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi"
+        "service_add_failed": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi"
+    },
+    "edit_training": {
+        "select_start_datetime": "Seleziona data e ora di inizio dell'esercitazione",
+        "select_end_datetime": "Seleziona data e ora di fine dell'esercitazione",
+        "insert_name": "Inserisci il nome dell'esercitazione",
+        "name_placeholder": "Esercitazione di gennaio",
+        "other_crew_members": "Altri membri della squadra",
+        "training_added_successfully": "Esercitazione aggiunta con successo",
+        "training_add_failed": "Errore durante l'aggiunta dell'esercitazione. Riprovare più tardi"
     },
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
     "save_changes": "Salva modifiche",

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Service extends Model
+class Training extends Model
 {
     use HasFactory;
 
@@ -17,8 +17,8 @@ class Service extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'code',
-        'chief',
+        'name',
+        'place',
         'notes'
     ];
 
@@ -37,34 +37,14 @@ class Service extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function drivers(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            User::class,
-            'services_drivers',
-            'service_id',
-            'user_id'
-        );
-    }
-
     public function crew(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
-            'services_crew',
-            'service_id',
+            'trainings_crew',
+            'training_id',
             'user_id'
         );
-    }
-
-    public function type(): BelongsTo
-    {
-        return $this->belongsTo(ServiceType::class);
-    }
-
-    public function place(): BelongsTo
-    {
-        return $this->belongsTo(Place::class);
     }
 
     /**

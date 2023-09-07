@@ -129,14 +129,14 @@
             <tr *ngFor="let row of displayedData; index as i">
                 <td>{{ data.length - (rowsPerPage * (currentPage-1) + i) }}</td>
                 <td>{{ row.name }}</td>
-                <td>{{ row.beginning }}</td>
-                <td>{{ row.end }}</td>
+                <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
+                <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.chief }}</td>
-                <td>{{ row.crew }}</td>
+                <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td (click)="editTraining(row.id)"><i class="fa fa-edit"></i></td>
+                <td (click)="deleteTraining(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
