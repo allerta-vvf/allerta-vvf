@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from './api-client.service';
+import { AuthTokenService } from './auth-token.service';
 import { Subject } from "rxjs";
 import * as Sentry from "@sentry/angular-ivy";
 
@@ -48,7 +49,11 @@ export class AuthService {
         });
     }
 
-    constructor(private api: ApiClientService, private router: Router) {
+    constructor(
+        private api: ApiClientService,
+        private authToken: AuthTokenService,
+        private router: Router
+    ) {
         this.loadProfile().then(() => {
             console.log("User is authenticated");
         }).catch(() => {
@@ -68,8 +73,9 @@ export class AuthService {
                 this.api.post("login", {
                     username: username,
                     password: password,
-                    use_sessions: true
+                    // use_sessions: true //Disabled because on cheap hosting it can cause problems
                 }).then((data: any) => {
+                    this.authToken.updateToken(data.access_token);
                     this.loadProfile().then(() => {
                         resolve({
                             loginOk: true,
@@ -118,7 +124,8 @@ export class AuthService {
 
     public impersonate(user_id: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.api.post(`impersonate/${user_id}`).then(() => {
+            this.api.post(`impersonate/${user_id}`).then((data) => {
+                this.authToken.updateToken(data.access_token);
                 this.loadProfile().then(() => {
                     resolve();
                 }).catch((err) => {
@@ -136,7 +143,8 @@ export class AuthService {
 
     public stop_impersonating(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.api.post("stop_impersonating").then(() => {
+            this.api.post("stop_impersonating").then((data) => {
+                this.authToken.updateToken(data.access_token);
                 Sentry.setUser(null);
                 resolve();
             }).catch((err) => {
@@ -157,6 +165,7 @@ export class AuthService {
                 if(routerDestination === undefined) {
                     routerDestination = ["login", "list"];
                 }
+                this.authToken.clearToken();
                 Sentry.setUser(null);
                 this.router.navigate(routerDestination);
             });

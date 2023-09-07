@@ -14,7 +14,7 @@ export class ApiClientService {
   constructor(private http: HttpClient) { }
 
   public apiEndpoint(endpoint: string): string {
-    if(endpoint.startsWith('https')) {
+    if(endpoint.startsWith('http') || endpoint.startsWith('//')) {
       return endpoint;
     }
     return this.apiRoot + endpoint;

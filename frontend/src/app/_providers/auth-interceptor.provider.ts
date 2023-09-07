@@ -4,6 +4,7 @@ import { Observable, throwError, retryWhen, timer } from 'rxjs';
 import { catchError, mergeMap, finalize } from 'rxjs/operators';
 import { Router } from "@angular/router";
 import { ApiClientService } from '../_services/api-client.service';
+import { AuthTokenService } from '../_services/auth-token.service';
 
 //https://stackoverflow.com/a/58394106
 const genericRetryStrategy = ({
@@ -45,7 +46,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private tokenExtractor: HttpXsrfTokenExtractor,
     private router: Router,
-    private api: ApiClientService
+    private api: ApiClientService,
+    private authToken: AuthTokenService
   ) { }
 
   /**
@@ -55,7 +57,6 @@ export class AuthInterceptor implements HttpInterceptor {
    * to an absolute URL. This overwrites the default behavior.
    */
   addXsrfToken(req: HttpRequest<any>): HttpRequest<any> {
-    //TODO: check if URL is external to Allerta, if so, don't add XSRF token
     const cookieheaderName = 'X-XSRF-TOKEN';
     let csrfToken = this.tokenExtractor.getToken() as string;
     if (csrfToken !== null && !req.headers.has(cookieheaderName)) {
@@ -64,8 +65,24 @@ export class AuthInterceptor implements HttpInterceptor {
     return req;
   }
 
+  addBearerToken(req: HttpRequest<any>): HttpRequest<any> {
+    if (this.authToken.getToken() !== null && !req.headers.has('Authorization')) {
+      req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + this.authToken.getToken()) });
+    }
+    return req;
+  }
+
+  updateRequest(req: HttpRequest<any>): HttpRequest<any> {
+    //If request is absolute, don't add XSRF token or Bearer token
+    if (req.url.startsWith('http') || req.url.startsWith('//')) return req;
+
+    req = this.addXsrfToken(req);
+    if(this.authToken.getToken() !== '') req = this.addBearerToken(req);
+    return req;
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
-    return next.handle(this.addXsrfToken(req)).pipe(
+    return next.handle(this.updateRequest(req)).pipe(
       retryWhen(genericRetryStrategy({
         maxRetryAttempts: 3,
         scalingDuration: 1,
@@ -77,7 +94,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 419) {
           return new Observable<HttpEvent<Object>>((observer) => {
             this.api.get("csrf-cookie").then(() => {
-              next.handle(this.addXsrfToken(req).clone()).subscribe(observer);
+              next.handle(this.updateRequest(req).clone()).subscribe(observer);
             });
           });
         }
