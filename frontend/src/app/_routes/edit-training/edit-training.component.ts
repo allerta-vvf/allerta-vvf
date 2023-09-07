@@ -74,7 +74,9 @@ export class EditTrainingComponent implements OnInit {
           patch.crew = patch.crew.map((e: any) => e.pivot.user_id+"");
           this.trainingForm.patchValue(patch);
         }).catch((err) => {
-          this.toastr.error("Errore nel caricare l'esercitazione. Ricarica la pagina e riprova.");
+          this.translate.get('edit_training.training_load_failed').subscribe((res: string) => {
+            this.toastr.error(res);
+          });
         });
       }
       console.log(this.trainingId);
@@ -83,7 +85,9 @@ export class EditTrainingComponent implements OnInit {
       this.users = users;
       console.log(this.users);
     }).catch((err) => {
-      this.toastr.error("Errore nel caricare la lista degli utenti. Ricarica la pagina e riprova.");
+      this.translate.get('edit_training.users_load_failed').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
     });
   }
 

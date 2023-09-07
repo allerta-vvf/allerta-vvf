@@ -23,7 +23,13 @@
         "update_schedules": "Modifica orari disponibilità",
         "connect_telegram_bot": "Collega l'account al bot Telegram",
         "tooltip_change_availability": "Cambia la tua disponibilità in {{state}}",
-        "manual_mode_updated_successfully": "Modalità manuale aggiornata con successo"
+        "manual_mode_updated_successfully": "Modalità manuale aggiornata con successo",
+        "schedule_load_failed": "Errore durante il caricamento della programmazione. Riprova più tardi",
+        "schedule_update_failed": "Errore durante l'aggiornamento della programmazione. Riprova più tardi",
+        "availability_minutes_updated_at_deactivation": "I minuti di disponibilità vengono aggiornati al momento della rimozione della disponibilità, per permettere un calcolo più preciso.",
+        "availability_change_failed": "Errore durante il cambio di disponibilità. Riprova più tardi",
+        "manual_mode_update_failed": "Errore durante l'aggiornamento della modalità manuale. Riprova più tardi",
+        "telegram_bot_token_request_failed": "Errore durante la richiesta del token del bot Telegram. Riprova più tardi"
     },
     "login": {
         "username": "username",
@@ -39,7 +45,8 @@
         "postcode": "CAP",
         "hamlet": "frazione",
         "municipality": "raggruppamento del comune",
-        "country": "nazione/zona"
+        "country": "nazione/zona",
+        "place_load_failed": "Errore durante il caricamento del luogo. Riprova più tardi"
     },
     "map_picker": {
         "place_min_length": "Il nome della località deve essere di almeno 3 caratteri",
@@ -56,7 +63,11 @@
         "type_already_exists": "La tipologia è già presente",
         "type_added_successfully": "Tipologia aggiunta con successo",
         "service_added_successfully": "Intervento aggiunto con successo",
-        "service_add_failed": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi"
+        "service_add_failed": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi",
+        "service_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
+        "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi",
+        "types_load_failed": "Errore durante il caricamento delle tipologie di intervento. Riprovare più tardi",
+        "type_add_failed": "Errore durante l'aggiunta della tipologia. Riprovare più tardi"
     },
     "edit_training": {
         "select_start_datetime": "Seleziona data e ora di inizio dell'esercitazione",
@@ -65,7 +76,9 @@
         "name_placeholder": "Esercitazione di gennaio",
         "other_crew_members": "Altri membri della squadra",
         "training_added_successfully": "Esercitazione aggiunta con successo",
-        "training_add_failed": "Errore durante l'aggiunta dell'esercitazione. Riprovare più tardi"
+        "training_add_failed": "Errore durante l'aggiunta dell'esercitazione. Riprovare più tardi",
+        "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
+        "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
     "save_changes": "Salva modifiche",
@@ -120,6 +133,10 @@
     "submit": "invia",
     "reset": "reset",
     "go_back": "torna indietro",
+    "next": "successiva",
+    "previous": "precedente",
+    "last": "ultima",
+    "first": "prima",
     "press_to_select_a_date": "premi per selezionare una data",
     "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
     "revision": "revisione"

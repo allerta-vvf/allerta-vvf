@@ -84,7 +84,7 @@
         <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
           {{ 'add'|translate|titlecase }}
         </button>
-        <div class="invalid-feedback" *ngIf="type.errors?.['required']">
+        <div class="invalid-feedback" *ngIf="type.errors?.['required']" translate>
           edit_service.select_service_type
         </div>
       </div>
