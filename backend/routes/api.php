@@ -33,6 +33,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/impersonate/{user}', [AuthController::class, 'impersonate']);
     Route::post('/stop_impersonating', [AuthController::class, 'stopImpersonating']);
 
+    Route::post('/refresh_token', [AuthController::class, 'refreshToken']);
+
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/me', [AuthController::class, 'me']);
 

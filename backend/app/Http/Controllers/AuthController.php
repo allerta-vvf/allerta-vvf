@@ -105,16 +105,18 @@ class AuthController extends Controller
 
     public function impersonate(Request $request, $user)
     {
-        if(!$request->user()) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        }
         $authUser = User::find($request->user()->id);
         if(!$authUser->canImpersonate()) {
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
+        }
+
+        if(
+            method_exists($request->user(), 'currentAccessToken') &&
+            method_exists($request->user()->currentAccessToken(), 'delete')
+        ) {
+            $request->user()->currentAccessToken()->delete();
         }
 
         $impersonatedUser = User::find($user);
@@ -129,21 +131,41 @@ class AuthController extends Controller
     
     public function stopImpersonating(Request $request)
     {
-        if(!$request->user()) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+        $manager = app('impersonate');
+
+        $impersonator = User::find($manager->getImpersonatorId());
+
+        $manager->leave();
+
+        if(
+            method_exists($request->user(), 'currentAccessToken') &&
+            method_exists($request->user()->currentAccessToken(), 'delete')
+        ) {
+            $request->user()->currentAccessToken()->delete();
         }
-
-        $request->user()->leaveImpersonation();
-
-        $impersonator = User::find(app('impersonate')->getImpersonatorId());
 
         $token = $impersonator->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+        ]);
+    }
+
+    public function refreshToken(Request $request)
+    {
+        if(
+            !method_exists($request->user(), 'currentAccessToken') ||
+            !method_exists($request->user()->currentAccessToken(), 'delete')
+        ) return;
+
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer'
         ]);
     }
 }

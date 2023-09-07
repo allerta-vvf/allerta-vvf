@@ -145,19 +145,27 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.api.post("stop_impersonating").then((data) => {
                 this.authToken.updateToken(data.access_token);
-                Sentry.setUser(null);
-                resolve();
+                this.api.post("refresh_token").then((data) => {
+                    this.authToken.updateToken(data.access_token);
+                    Sentry.setUser(null);
+                    resolve();
+                }).catch((err) => {
+                    this.logout(undefined, true);
+                    reject();
+                });
             }).catch((err) => {
-                console.error(err);
+                this.logout(undefined, true);
                 reject();
             });
         });
     }
 
-    public logout(routerDestination?: string[] | undefined) {
-        if(this.profile.impersonating_user) {
+    public logout(routerDestination?: string[] | undefined, forceLogout: boolean = false) {
+        if(!forceLogout && this.profile.impersonating_user) {
             this.stop_impersonating().then(() => {
                 this.loadProfile();
+            }).catch((err) => {
+                console.error(err);
             });
         } else {
             this.api.post("logout").then((data: any) => {
