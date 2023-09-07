@@ -136,6 +136,14 @@ class AuthController extends Controller
         }
 
         $request->user()->leaveImpersonation();
-        return;
+
+        $impersonator = User::find(app('impersonate')->getImpersonatorId());
+
+        $token = $impersonator->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 }
