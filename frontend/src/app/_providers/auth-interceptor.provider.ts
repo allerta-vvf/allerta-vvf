@@ -74,7 +74,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
   updateRequest(req: HttpRequest<any>): HttpRequest<any> {
     //If request is absolute, don't add XSRF token or Bearer token
-    if (req.url.startsWith('http') || req.url.startsWith('//')) return req;
+    if (
+      req.url.startsWith('http') ||
+      req.url.startsWith('//') ||
+      req.url.includes('/assets/')
+    ) return req;
 
     req = this.addXsrfToken(req);
     if(this.authToken.getToken() !== '') req = this.addBearerToken(req);
