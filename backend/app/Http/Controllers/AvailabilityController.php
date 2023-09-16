@@ -18,7 +18,7 @@ class AvailabilityController extends Controller
 
     public function updateAvailability(Request $request)
     {
-        if($request->input("id")) {
+        if($request->input("id") && $request->user()->id != $request->input("id")) {
             if(!$request->user()->hasPermission("users-read")) abort(401);
             $user = User::find($request->input("id"));
         } else {
