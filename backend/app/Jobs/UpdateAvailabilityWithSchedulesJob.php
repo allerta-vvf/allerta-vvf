@@ -32,7 +32,7 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
     public function handle(): void
     {
         //Days starts from 0 in frontend
-        $curr_day = now()->dayOfWeek-1;
+        $curr_day = now()->dayOfWeekIso-1;
         //There are 48 slots of 30 minutes, starting from 0 (00:00-00:30) to 47 (23:30-00:00)
         $curr_slot = now()->hour * 2 + (now()->minute >= 30);
 
