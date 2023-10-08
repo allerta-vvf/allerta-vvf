@@ -30,7 +30,7 @@ class WebhookController extends
         if($this->user) return $this->user;
         try {
             $this->user = $this->message->from()->storage()->get('user', null);
-        } catch (\Exception $e) {
+        } catch (\Exception|\Throwable|\Error $e) {
             $this->user = null;
         }
 

@@ -56,6 +56,14 @@ return [
         'http_client_requests' => env('SENTRY_BREADCRUMBS_HTTP_CLIENT_REQUESTS_ENABLED', true),
     ],
 
+    'before_send' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
+        if ($hint !== null && $hint->exception instanceof JsonException) {
+          return null;
+        }
+    
+        return $event;
+    },
+
     // Performance monitoring specific configuration
     'tracing' => [
         // Trace queue jobs as their own transactions (this enables tracing for queue jobs)
