@@ -34,7 +34,7 @@ class WebhookController extends
             $this->user = null;
         }
 
-        if(app()->bound('sentry')) {
+        if($this->user && app()->bound('sentry')) {
             \Sentry\configureScope(function (Scope $scope): void {
                 $scope->setUser([
                     'id' => $this->user->id,
