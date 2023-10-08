@@ -28,7 +28,11 @@ class WebhookController extends
 
     private function user(): User|null {
         if($this->user) return $this->user;
-        $this->user = $this->message->from()->storage()->get('user');
+        try {
+            $this->user = $this->message->from()->storage()->get('user', null);
+        } catch (\Exception $e) {
+            $this->user = null;
+        }
 
         if(app()->bound('sentry')) {
             \Sentry\configureScope(function (Scope $scope): void {
