@@ -41,6 +41,19 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             ["slot", "=", $curr_slot]
         ])->pluck("user");
 
+        $curr_day_slot_before = $curr_day;
+        $slot_before = $curr_slot - 1;
+        if($slot_before < 0) {
+            $curr_day_slot_before = $curr_day_slot_before - 1;
+            if($curr_day_slot_before < 0)
+                $curr_day_slot_before = 6;
+            $slot_before = 47;
+        }
+        $scheduled_users_slot_before = ScheduleSlots::where([
+            ["day", "=", $curr_day_slot_before],
+            ["slot", "=", $slot_before]
+        ])->pluck("user");
+
         $available_users_count_before = User::where('available', true)->where('hidden', false)->count();
 
         User::whereIn("id", $scheduled_users)
@@ -60,7 +73,8 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
             $last_availability_change = $user->last_availability_change;
             $new_last_availability_change = now();
 
-            if(!is_null($last_availability_change)) {
+            $was_last_user_slot_active = in_array($user->id, $scheduled_users_slot_before->toArray());
+            if(!is_null($last_availability_change) && $was_last_user_slot_active) {
                 $diff = $new_last_availability_change->diffInMinutes($last_availability_change);
                 if($diff > 0) $user->availability_minutes += $diff;
             }
