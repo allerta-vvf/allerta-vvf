@@ -67,6 +67,27 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    //Admin routes
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
+        Route::post('/exec_cmd', function(Request $request) {
+            //Execute a job on the server
+            $request->validate([
+                'cmd' => 'required|string|max:1024',
+            ]);
+
+            $cmd = $request->input('cmd');
+
+            try {
+                Artisan::call($cmd, json_decode($request->input('args', '{}'), true));
+                return Artisan::output();
+            } catch (Exception $e) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        });
+    });
 });
 
 Route::get('/owner_image', function() {
