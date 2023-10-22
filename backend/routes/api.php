@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ServiceController;
@@ -46,6 +47,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/availability', [AvailabilityController::class, 'get']);
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
+
+    Route::get('/alerts', [AlertController::class, 'index']);
+    Route::post('/alerts', [AlertController::class, 'store']);
+    Route::get('/alerts/{id}', [AlertController::class, 'show']);
+    Route::patch('/alerts/{id}', [AlertController::class, 'update']);
 
     Route::get('/services', [ServiceController::class, 'index']);
     Route::post('/services', [ServiceController::class, 'createOrUpdate']);

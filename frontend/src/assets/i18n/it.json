@@ -31,6 +31,13 @@
         "manual_mode_update_failed": "Errore durante l'aggiornamento della modalità manuale. Riprova più tardi",
         "telegram_bot_token_request_failed": "Errore durante la richiesta del token del bot Telegram. Riprova più tardi"
     },
+    "alert": {
+        "delete_confirm_title": "Sei sicuro di voler rimuovere questa allerta?",
+        "delete_confirm_text": "I vigili saranno avvisati della rimozione.",
+        "deleted_successfully": "Allerta rimossa con successo",
+        "delete_failed": "L'eliminazione dell'allerta è fallita. Riprova più tardi",
+        "settings_updated_successfully": "Impostazioni aggiornate con successo"
+    },
     "login": {
         "username": "username",
         "password": "password",

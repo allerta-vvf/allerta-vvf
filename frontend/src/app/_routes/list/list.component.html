@@ -18,12 +18,12 @@
     </button>
 </div>
 <owner-image></owner-image>
-<div class="text-center" *ngIf="false && auth.profile.can('users-read')">
+<div class="text-center" *ngIf="auth.profile.can('users-read')">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-danger" (click)="addAlertFull()" [disabled]="!api.availableUsers || api.availableUsers! < 5 || alertLoading">
+        <button type="button" class="btn btn-danger" (click)="addAlert('full')" [disabled]="!api.availableUsers || api.availableUsers! < 5 || alertLoading">
             🚒 Richiedi squadra completa
         </button>
-        <button type="button" class="btn btn-warning" (click)="addAlertSupport()" [disabled]="!api.availableUsers || api.availableUsers! < 2 || alertLoading">
+        <button type="button" class="btn btn-warning" (click)="addAlert('support')" [disabled]="!api.availableUsers || api.availableUsers! < 2 || alertLoading">
             Richiedi squadra di supporto 🧯
         </button>
     </div>

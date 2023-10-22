@@ -31,6 +31,13 @@
         "manual_mode_update_failed": "Manual mode could not be updated. Please try again",
         "telegram_bot_token_request_failed": "Telegram bot token could not be generated. Please try again"
     },
+    "alert": {
+        "delete_confirm_title": "Are you sure you want to remove this alert?",
+        "delete_confirm_text": "This action cannot be undone.",
+        "deleted_successfully": "Alert removed successfully",
+        "delete_failed": "Alert could not be removed. Please try again",
+        "settings_updated_successfully": "Settings updated successfully"
+    },
     "login": {
         "username": "username",
         "password": "password",

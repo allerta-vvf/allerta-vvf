@@ -49,6 +49,15 @@ export class ApiClientService {
     });
   }
 
+  public patch(endpoint: string, data: any = {}) {
+    return new Promise<any>((resolve, reject) => {
+      this.http.patch(this.apiEndpoint(endpoint), data).subscribe({
+        next: (v) => resolve(v),
+        error: (e) => reject(e)
+      });
+    });
+  }
+
   public delete(endpoint: string) {
     return new Promise<any>((resolve, reject) => {
       this.http.delete(this.apiEndpoint(endpoint)).subscribe({

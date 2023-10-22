@@ -84,47 +84,34 @@ export class ListComponent implements OnInit, OnDestroy {
     this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
   }
 
-  addAlertFull() {
+  addAlert(type: string, ignoreWarning = false) {
     this.alertLoading = true;
     if(!this.auth.profile.can('users-read')) return;
     this.api.post("alerts", {
-      type: "full"
+      type,
+      ignoreWarning
     }).then((response) => {
+      console.log(response);
       this.alertLoading = false;
-      if(response?.status === "error") {
-        this.toastr.error(response.message, undefined, {
-          timeOut: 5000
-        });
-        return;
-      }
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
-          id: response.id
+          id: response.alert.id
         }
       });
       this.api.alertsChanged.next();
-    });
-  }
-
-  addAlertSupport() {
-    this.alertLoading = true;
-    if(!this.auth.profile.can('users-read')) return;
-    this.api.post("alerts", {
-      type: "support"
-    }).then((response) => {
+    }).catch((err) => {
+      console.log(err);
       this.alertLoading = false;
-      if(response?.status === "error") {
-        this.toastr.error(response.message, undefined, {
-          timeOut: 5000
-        });
+      if(err.error?.ignorable === true) {
+        if(confirm(err.error.message)) {
+          this.addAlert(type, true);
+        }
         return;
       }
-      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
-        initialState: {
-          id: response.id
-        }
+      if(err.error?.message === undefined) err.error.message = "Errore sconosciuto";
+      this.toastr.error(err.error.message, undefined, {
+        timeOut: 5000
       });
-      this.api.alertsChanged.next();
     });
   }
 
