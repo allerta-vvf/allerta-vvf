@@ -10,9 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\ScheduleSlots;
 use App\Models\User;
-use App\Models\TelegramBotNotifications;
-
-use DefStudio\Telegraph\Facades\Telegraph;
+use App\Utils\TelegramBot;
 
 class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
 {
@@ -94,21 +92,7 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
         } else if($available_users_count_before < 5 && $available_users_count_after >= 5) {
             $text = "🚒 Distaccamento operativo con squadra completa";
         }
-        if(!is_null($text)) {
-            //Find message hash
-            $hash = md5($text);
-            
-            $chat_ids = TelegramBotNotifications::where("type_team_state", true)
-              ->whereNot("last_message_hash", $hash)
-              ->get()->pluck('chat_id')->toArray();
-            
-            foreach ($chat_ids as $chat_id) {
-                $chat = Telegraph::chat($chat_id);
-                $chat->message($text)->send();
-                TelegramBotNotifications::where("chat_id", $chat_id)
-                  ->update(["last_message_hash" => $hash]);
-            }
-        }
+        TelegramBot::sendTeamMessage($text);
     }
 
     public function failed(\Error|\TypeError $exception = null)
