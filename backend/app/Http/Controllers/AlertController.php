@@ -6,6 +6,7 @@ use App\Models\Alert;
 use App\Models\AlertCrew;
 use App\Models\User;
 use App\Utils\Alerts;
+use App\Utils\Logger;
 use App\Exceptions\AlertClosed;
 use App\Exceptions\AlertResponseAlreadySet;
 use Illuminate\Http\Request;
@@ -112,6 +113,13 @@ class AlertController extends Controller
         $alert->crew()->attach($alertCrewIds);
         $alert->save();
 
+        Logger::log(
+            "Nuova allerta aggiunta",
+            auth()->user(),
+            null,
+            "web"
+        );
+
         //Return response
         return response()->json([
             'status' => 'success',
@@ -155,6 +163,13 @@ class AlertController extends Controller
         $alert->closed = $request->input('closed', $alert->closed);
         $alert->updatedBy()->associate(auth()->user());
         $alert->save();
+
+        Logger::log(
+            "Modifica informazioni allerta",
+            auth()->user(),
+            null,
+            "web"
+        );
     }
 
     /**
