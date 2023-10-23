@@ -25,6 +25,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public alertLoading = false;
 
+  private etag = "";
+
   constructor(
     public api: ApiClientService,
     public auth: AuthService,
@@ -35,7 +37,9 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   loadAvailability() {
-    this.api.get("availability").then((response) => {
+    this.api.get("availability", {}, this.etag).then((response) => {
+      if(this.api.isLastSame) return;
+      this.etag = this.api.lastEtag;
       this.available = response.available;
       this.manual_mode = response.manual_mode;
     }).catch((err) => {

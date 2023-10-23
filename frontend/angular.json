@@ -59,7 +59,8 @@
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json",
-            "sourceMap": true
+            "sourceMap": true,
+            "allowedCommonJsDependencies": ["crypto-js"]
           },
           "configurations": {
             "production": {

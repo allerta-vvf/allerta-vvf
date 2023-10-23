@@ -14,6 +14,7 @@ use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\TrainingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use \Matthewbdaly\ETagMiddleware\ETag;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,16 +45,16 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
 
-    Route::get('/availability', [AvailabilityController::class, 'get']);
+    Route::get('/availability', [AvailabilityController::class, 'get'])->middleware(ETag::class);
     Route::post('/availability', [AvailabilityController::class, 'updateAvailability']);
     Route::post('/manual_mode', [AvailabilityController::class, 'updateAvailabilityManualMode']);
 
-    Route::get('/alerts', [AlertController::class, 'index']);
+    Route::get('/alerts', [AlertController::class, 'index'])->middleware(ETag::class);
     Route::post('/alerts', [AlertController::class, 'store']);
-    Route::get('/alerts/{id}', [AlertController::class, 'show']);
+    Route::get('/alerts/{id}', [AlertController::class, 'show'])->middleware(ETag::class);
     Route::patch('/alerts/{id}', [AlertController::class, 'update']);
 
-    Route::get('/services', [ServiceController::class, 'index']);
+    Route::get('/services', [ServiceController::class, 'index'])->middleware(ETag::class);
     Route::post('/services', [ServiceController::class, 'createOrUpdate']);
     Route::get('/services/{id}', [ServiceController::class, 'show']);
     Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
@@ -63,12 +64,12 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/places/search', [PlacesController::class, 'search']);
     Route::get('/places/{id}', [PlacesController::class, 'show']);
 
-    Route::get('/trainings', [TrainingController::class, 'index']);
+    Route::get('/trainings', [TrainingController::class, 'index'])->middleware(ETag::class);
     Route::post('/trainings', [TrainingController::class, 'createOrUpdate']);
     Route::get('/trainings/{id}', [TrainingController::class, 'show']);
     Route::delete('/trainings/{id}', [TrainingController::class, 'destroy']);
 
-    Route::get('/logs', [LogsController::class, 'index']);
+    Route::get('/logs', [LogsController::class, 'index'])->middleware(ETag::class);
 
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 

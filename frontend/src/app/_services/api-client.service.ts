@@ -8,6 +8,9 @@ import { Subject } from "rxjs";
 export class ApiClientService {
   private apiRoot = 'api/';
 
+  public lastEtag = "";
+  public isLastSame = false;
+
   public alertsChanged = new Subject<void>();
   public availableUsers: undefined | number = undefined;
 
@@ -20,12 +23,20 @@ export class ApiClientService {
     return this.apiRoot + endpoint;
   }
 
-  public get(endpoint: string, data: any = {}) {
+  public get(endpoint: string, data: any = {}, etag: string = "") {
     return new Promise<any>((resolve, reject) => {
       this.http.get(this.apiEndpoint(endpoint), {
-        params: new HttpParams({ fromObject: data })
+        params: new HttpParams({ fromObject: data }),
+        observe: 'response',
+        headers: (etag !== "" && etag !== null) ? {
+          'If-None-Match': etag
+        } : {}
       }).subscribe({
-        next: (v) => resolve(v),
+        next: (v: any) => {
+          this.lastEtag = v.headers.get("etag");
+          this.isLastSame = etag === this.lastEtag;
+          resolve(v.body);
+        },
         error: (e) => reject(e)
       });
     });

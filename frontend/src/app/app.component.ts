@@ -21,6 +21,7 @@ export class AppComponent {
   public loadingRoute = false;
   private loadAlertsInterval: NodeJS.Timer | undefined = undefined;
   public alerts = [];
+  private alertsEtag = "";
 
   constructor(
     public auth: AuthService,
@@ -37,8 +38,10 @@ export class AppComponent {
 
   loadAlerts() {
     if(this.auth.profile) {
-      this.api.get("alerts").then((response) => {
+      this.api.get("alerts", {}, this.alertsEtag).then((response) => {
+        if(this.api.isLastSame) return;
         this.alerts = response;
+        this.alertsEtag = this.api.lastEtag;
       });
     }
   }

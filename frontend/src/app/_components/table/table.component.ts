@@ -60,6 +60,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public data: any = [];
   public displayedData: any = [];
   public originalData: any = [];
+  private etag: string = "";
 
   public loadDataInterval: NodeJS.Timer | undefined = undefined;
 
@@ -87,7 +88,9 @@ export class TableComponent implements OnInit, OnDestroy {
 
   loadTableData() {
     if(!this.sourceType) this.sourceType = "list";
-    this.api.get(this.sourceType).then((data: any) => {
+    this.api.get(this.sourceType, {}, this.etag).then((data: any) => {
+      if(this.api.isLastSame) return;
+      this.etag = this.api.lastEtag;
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
       this.originalData = this.data;
       this.totalElements = this.data.length;

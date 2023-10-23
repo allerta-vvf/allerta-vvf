@@ -26,6 +26,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   alertClosed = 0;
 
+  private etag = "";
+
   constructor(
     public bsModalRef: BsModalRef,
     private api: ApiClientService,
@@ -36,7 +38,9 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   loadResponsesData() {
     //TODO: do not update data if not changed. Support for content hash in response header?
-    this.api.get(`alerts/${this.id}`).then((response) => {
+    this.api.get(`alerts/${this.id}`, {}, this.etag).then((response) => {
+      if(this.api.isLastSame) return;
+      this.etag = this.api.lastEtag;
       console.log(response, this.alertClosed, response.closed);
       if(this.alertClosed !== response.closed) this.alertClosed = response.closed;
       if(!isEqual(this.crewUsers, response.crew)) this.crewUsers = response.crew;

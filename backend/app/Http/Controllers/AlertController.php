@@ -16,10 +16,20 @@ class AlertController extends Controller
     public function index()
     {
         return response()->json(
-            Alert::with('crew.user')
-              ->where('closed', false)
-              ->orderBy('created_at', 'desc')
-              ->get()
+            request()->query('full', false) ?
+                Alert::with(['crew.user' => [
+                    "name",
+                    "username",
+                    "chief",
+                    "driver"
+                ]])
+                    ->where('closed', false)
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                :
+                Alert::where('closed', false)
+                    ->orderBy('created_at', 'desc')
+                    ->get()
         );
     }
 
@@ -113,10 +123,15 @@ class AlertController extends Controller
      */
     public function show(Request $request, $id)
     {
-        User::where('id', $request->user()->id)->update(['last_access' => now()]);
-
         return response()->json(
-            Alert::with('crew.user')->find($id)
+            Alert::with(['crew.user' => [
+                "name",
+                "username",
+                "chief",
+                "driver"
+            ]])
+                ->where('id', $id)
+                ->first()
         );
     }
 
