@@ -24,17 +24,18 @@ export class ApiClientService {
   }
 
   public get(endpoint: string, data: any = {}, etag: string = "") {
+    if(etag === null) etag = "";
     return new Promise<any>((resolve, reject) => {
       this.http.get(this.apiEndpoint(endpoint), {
         params: new HttpParams({ fromObject: data }),
         observe: 'response',
-        headers: (etag !== "" && etag !== null) ? {
+        headers: etag !== "" ? {
           'If-None-Match': etag
         } : {}
       }).subscribe({
         next: (v: any) => {
           this.lastEtag = v.headers.get("etag");
-          this.isLastSame = etag === this.lastEtag;
+          this.isLastSame = etag === this.lastEtag && etag !== "";
           resolve(v.body);
         },
         error: (e) => reject(e)
