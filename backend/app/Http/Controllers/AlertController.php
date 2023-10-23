@@ -156,10 +156,30 @@ class AlertController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Set current user response to alert
      */
-    public function destroy(Alert $Alert)
+    public function setResponse(Request $request, $id)
     {
-        //
+        $alert = Alert::find($id);
+        if($alert->closed) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'L\'allertamento è stata chiusa.',
+            ], 400);
+        }
+
+        foreach($alert->crew as $crew) {
+            if($crew->user->id == auth()->user()->id) {
+                if($crew->accepted != null) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Hai già risposto a questo allertamento.',
+                    ], 400);
+                } else {
+                    $crew->accepted = $request->input('response', $crew->accepted);
+                    $crew->save();
+                }
+            }
+        }
     }
 }

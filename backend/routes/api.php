@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/alerts', [AlertController::class, 'store']);
     Route::get('/alerts/{id}', [AlertController::class, 'show'])->middleware(ETag::class);
     Route::patch('/alerts/{id}', [AlertController::class, 'update']);
+    Route::post('/alerts/{id}/response', [AlertController::class, 'setResponse']);
 
     Route::get('/services', [ServiceController::class, 'index'])->middleware(ETag::class);
     Route::post('/services', [ServiceController::class, 'createOrUpdate']);

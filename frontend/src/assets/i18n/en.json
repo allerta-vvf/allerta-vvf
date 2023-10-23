@@ -48,7 +48,8 @@
         "delete_confirm_text": "This action cannot be undone.",
         "deleted_successfully": "Alert removed successfully",
         "delete_failed": "Alert could not be removed. Please try again",
-        "settings_updated_successfully": "Settings updated successfully"
+        "settings_updated_successfully": "Settings updated successfully",
+        "response_updated_successfully": "Response updated successfully"
     },
     "login": {
         "username": "username",

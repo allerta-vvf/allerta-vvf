@@ -13,6 +13,13 @@
     <div class="alert alert-danger" role="alert" *ngIf="alertClosed">
         <i class="fas fa-exclamation-triangle"></i> {{ 'alert.closed'|translate }}
     </div>
+    <div class="alert alert-info" role="alert" *ngIf="!alertClosed && getCurrentUserResponse() == null">
+        <i class="fas fa-info-circle"></i> Sarai presente alla chiamata?
+        <div class="btn-group ms-3" role="group">
+            <button class="btn btn-success" type="button" (click)="setCurrentUserResponse(1)">Si</button>
+            <button class="btn btn-danger" type="button" (click)="setCurrentUserResponse(0)">No</button>
+        </div>
+    </div>
     <table class="table table-border table-striped w-100">
         <thead>
             <tr>

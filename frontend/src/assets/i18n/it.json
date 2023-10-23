@@ -48,7 +48,8 @@
         "delete_confirm_text": "I vigili saranno avvisati della rimozione.",
         "deleted_successfully": "Allerta rimossa con successo",
         "delete_failed": "L'eliminazione dell'allerta è fallita. Riprova più tardi",
-        "settings_updated_successfully": "Impostazioni aggiornate con successo"
+        "settings_updated_successfully": "Impostazioni aggiornate con successo",
+        "response_updated_successfully": "Risposta aggiornata con successo"
     },
     "login": {
         "username": "username",

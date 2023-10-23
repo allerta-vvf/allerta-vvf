@@ -37,13 +37,11 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   ) { }
 
   loadResponsesData() {
-    //TODO: do not update data if not changed. Support for content hash in response header?
     this.api.get(`alerts/${this.id}`, {}, this.etag).then((response) => {
       if(this.api.isLastSame) return;
       this.etag = this.api.lastEtag;
-      console.log(response, this.alertClosed, response.closed);
-      if(this.alertClosed !== response.closed) this.alertClosed = response.closed;
-      if(!isEqual(this.crewUsers, response.crew)) this.crewUsers = response.crew;
+      this.alertClosed = response.closed;
+      this.crewUsers = response.crew;
       if (!this.notesHasUnsavedChanges) {
         if(this.notes !== response.notes) {
           this.notes = response.notes;
@@ -123,6 +121,26 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
           });
         }
       });
+    });
+  }
+
+  getCurrentUserResponse() {
+    const r = this.crewUsers.filter((c) => c.user.id === this.auth.profile.id);
+    if(r.length === 0) return -1;
+    return r[0].accepted;
+  }
+
+  setCurrentUserResponse(response: number) {
+    if(!this.auth.profile.can('users-read')) return;
+    this.api.post(`alerts/${this.id}/response`, {
+      response
+    }).then((response) => {
+      this.translate.get('alert.response_updated_successfully').subscribe((res: string) => {
+        this.toastr.success(res);
+      });
+      this.loadResponsesData();
+    }).catch((e) => {
+      this.toastr.error(e.error.message);
     });
   }
 }
