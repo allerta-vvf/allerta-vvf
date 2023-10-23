@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Alert;
 use App\Models\AlertCrew;
-use Illuminate\Http\Request;
-
 use App\Models\User;
+use App\Utils\Alerts;
+use App\Exceptions\AlertClosed;
+use App\Exceptions\AlertResponseAlreadySet;
+use Illuminate\Http\Request;
 
 class AlertController extends Controller
 {
@@ -160,26 +162,18 @@ class AlertController extends Controller
      */
     public function setResponse(Request $request, $id)
     {
-        $alert = Alert::find($id);
-        if($alert->closed) {
+        try {
+            Alerts::updateAlertResponse($id, $request->input('response'));
+        } catch(AlertClosed $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'L\'allertamento è stata chiusa.',
+                'message' => 'La chiamata è stata chiusa.',
             ], 400);
-        }
-
-        foreach($alert->crew as $crew) {
-            if($crew->user->id == auth()->user()->id) {
-                if($crew->accepted != null) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Hai già risposto a questo allertamento.',
-                    ], 400);
-                } else {
-                    $crew->accepted = $request->input('response', $crew->accepted);
-                    $crew->save();
-                }
-            }
+        } catch(AlertResponseAlreadySet $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hai già risposto a questa chiamata.',
+            ], 400);
         }
     }
 }
