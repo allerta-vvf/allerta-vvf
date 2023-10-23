@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpHandler, HttpRequest, HttpEvent, HttpErrorResponse, HttpXsrfTokenExtractor } from '@angular/common/http';
+import { HttpInterceptor, HttpHandler, HttpRequest, HttpEvent, HttpErrorResponse, HttpXsrfTokenExtractor, HttpResponse } from '@angular/common/http';
 import { Observable, throwError, retryWhen, timer } from 'rxjs';
 import { catchError, mergeMap, finalize } from 'rxjs/operators';
 import { Router } from "@angular/router";
@@ -90,12 +90,24 @@ export class AuthInterceptor implements HttpInterceptor {
       retryWhen(genericRetryStrategy({
         maxRetryAttempts: 3,
         scalingDuration: 1,
-        excludedStatusCodes: [400, 404, 419, 500, 503],
+        excludedStatusCodes: [304, 400, 404, 419, 500, 503],
         excludedUrls: ["login", "logout", "me", "impersonate", "stop_impersonating"]
       })),
       catchError(error => {
         console.log(error);
-        if (error.status === 419) {
+        if (error.status === 304) {
+          //Return current response as successfully
+          return new Observable<HttpEvent<Object>>((observer) => {
+            observer.next(new HttpResponse({
+              body: error.error,
+              headers: error.headers,
+              status: error.status,
+              statusText: error.statusText,
+              url: error.url
+            }));
+            observer.complete();
+          });
+        } else if (error.status === 419) {
           return new Observable<HttpEvent<Object>>((observer) => {
             this.api.get("csrf-cookie").then(() => {
               next.handle(this.updateRequest(req).clone()).subscribe(observer);
