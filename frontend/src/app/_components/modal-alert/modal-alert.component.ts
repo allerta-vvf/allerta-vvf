@@ -60,7 +60,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
       }
       console.log("Refreshing responses data...");
       this.loadResponsesData();
-    }, 2000);
+    }, 15000);
     this.loadResponsesData();
   }
 

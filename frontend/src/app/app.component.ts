@@ -58,7 +58,7 @@ export class AppComponent {
     this.loadAlertsInterval = setInterval(() => {
       console.log("Refreshing alerts...");
       this.loadAlerts();
-    }, 15000);
+    }, 30000);
     this.loadAlerts();
 
     this.api.alertsChanged.subscribe(() => {
