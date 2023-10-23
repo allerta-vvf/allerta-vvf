@@ -17,12 +17,11 @@ class AlertController extends Controller
     {
         return response()->json(
             request()->query('full', false) ?
-                Alert::with(['crew.user' => [
-                    "name",
-                    "username",
-                    "chief",
-                    "driver"
-                ]])
+                Alert::with(['crew.user' => function($query) {
+                    $query->select(['id', 'name', 'username', 'chief', 'driver']);
+                }])
+                    ->with('addedBy:name')
+                    ->with('updatedBy:name')
                     ->where('closed', false)
                     ->orderBy('created_at', 'desc')
                     ->get()
@@ -124,13 +123,12 @@ class AlertController extends Controller
     public function show(Request $request, $id)
     {
         return response()->json(
-            Alert::with(['crew.user' => [
-                "name",
-                "username",
-                "chief",
-                "driver"
-            ]])
-                ->where('id', $id)
+            Alert::where('id', $id)
+                ->with(['crew.user' => function($query) {
+                    $query->select(['id', 'name', 'username', 'chief', 'driver']);
+                }])
+                ->with('addedBy:name')
+                ->with('updatedBy:name')
                 ->first()
         );
     }
