@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title pull-left">Stato dell'allerta</h4>
+    <h4 class="modal-title pull-left" translate>alert.state</h4>
     <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|titlecase" (click)="bsModalRef.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
@@ -11,13 +11,13 @@
 </div>
 <div class="modal-body" *ngIf="id !== 0">
     <div class="alert alert-danger" role="alert" *ngIf="alertClosed">
-        <i class="fas fa-exclamation-triangle"></i> Allerta conclusa
+        <i class="fas fa-exclamation-triangle"></i> {{ 'alert.closed'|translate }}
     </div>
     <table class="table table-border table-striped w-100">
         <thead>
             <tr>
-                <td>Nome</td>
-                <td colspan="2">Stato risposta</td>
+                <td>{{ 'name'|translate|titlecase }}</td>
+                <td colspan="2">{{ 'alert.response_status'|translate }}</td>
             </tr>
         </thead>
         <tbody>
@@ -31,32 +31,32 @@
                 </td>
                 <ng-container *ngIf="crewUser.accepted == null && alertClosed">
                     <td style="width: 1px;"><i class="fa fa-times" style="color:red"></i></td>
-                    <td>Nessuna risposta</td>
+                    <td translate>alert.no_response</td>
                 </ng-container>
                 <ng-container *ngIf="crewUser.accepted == null && !alertClosed">
                     <td style="width: 1px;"><i class="fas fa-spinner fa-spin"></i></td>
-                    <td>In attesa di risposta</td>
+                    <td translate>alert.waiting_for_response</td>
                 </ng-container>
                 <ng-container *ngIf="crewUser.accepted == true">
                     <td style="width: 1px;"><i class="fa fa-check" style="color:green"></i></td>
-                    <td>Presente</td>
+                    <td translate>alert.response_yes</td>
                 </ng-container>
                 <ng-container *ngIf="crewUser.accepted == false">
                     <td style="width: 1px;"><i class="fa fa-times" style="color:red"></i></td>
-                    <td>Non presente</td>
+                    <td translate>alert.response_no</td>
                 </ng-container>
             </tr>
             </ng-container>
         </tbody>
     </table>
     <div class="well well-lg card card-block card-header">
-        <label for="details" class="form-label">Dettagli allerta</label>
+        <label for="details" class="form-label" translate>alert.details</label>
         <textarea class="form-control" id="details" rows="3"
           [(ngModel)]="notes" [disabled]="!auth.profile.can('users-read') || alertClosed==1" (keyup)="notesUpdated()"></textarea>
-        <button class="btn btn-secondary mt-2" (click)="saveAlertSettings()" [disabled]="!auth.profile.can('users-read') || !notesHasUnsavedChanges || alertClosed">Salva</button>
+        <button class="btn btn-secondary mt-2" (click)="saveAlertSettings()" [disabled]="!auth.profile.can('users-read') || !notesHasUnsavedChanges || alertClosed" translate>save_changes</button>
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.can('users-read') && !alertClosed">Rimuovi allerta corrente <i class="fas fa-exclamation-triangle"></i></button>
+    <button type="button" class="btn btn-danger" (click)="deleteAlert()" *ngIf="auth.profile.can('users-read') && !alertClosed">{{ 'alert.delete'|translate }} <i class="fas fa-exclamation-triangle"></i></button>
     <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">{{ 'close'|translate }}</button>
 </div>

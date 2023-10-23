@@ -13,15 +13,15 @@
   </div>
 
   <alert type="danger" *ngIf="alerts.length > 0">
-    <strong>Attenzione!</strong> Allertamento in corso.<br>
+    <strong>{{ 'warning'|translate|titlecase }}!</strong> {{ 'alert.warning_body'|translate }}<br>
     <ng-container *ngIf="alerts.length == 1">
-      Emergenza attuale: <a (click)="openAlert(alerts[0]['id'])"><b>{{ alerts[0]["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> (premere per ulteriori informazioni)</a>
+      {{ 'alert.current_alert'|translate }}: <a (click)="openAlert(alerts[0]['id'])"><b>{{ alerts[0]["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> ({{ 'press_for_more_info'|translate }})</a>
     </ng-container>
     <ng-container *ngIf="alerts.length > 1">
-      Emergenze attuali:
+      {{ 'alert.current_alerts'|translate }}:
       <ul>
         <li *ngFor="let alert of alerts">
-          <a (click)="openAlert(alert['id'])"><b>{{ alert["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> (premere per ulteriori informazioni)</a>
+          <a (click)="openAlert(alert['id'])"><b>{{ alert["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> ({{ 'press_for_more_info'|translate }})</a>
         </li>
       </ul>
     </ng-container>

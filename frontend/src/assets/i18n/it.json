@@ -32,6 +32,18 @@
         "telegram_bot_token_request_failed": "Errore durante la richiesta del token del bot Telegram. Riprova più tardi"
     },
     "alert": {
+        "warning_body": "Allertamento in corso.",
+        "current_alert": "Emergenza in corso",
+        "current_alerts": "Emergenze in corso",
+        "state": "Stato dell'allerta",
+        "closed": "Allerta rientrata",
+        "response_status": "Stato della risposta",
+        "no_response": "Nessuna risposta",
+        "waiting_for_response": "In attesa di risposta",
+        "response_yes": "Presente",
+        "response_no": "Non presente",
+        "details": "Dettagli dell'allerta",
+        "delete": "Ritira allerta",
         "delete_confirm_title": "Sei sicuro di voler rimuovere questa allerta?",
         "delete_confirm_text": "I vigili saranno avvisati della rimozione.",
         "deleted_successfully": "Allerta rimossa con successo",
@@ -87,6 +99,8 @@
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
+    "warning": "attenzione",
+    "press_for_more_info": "premi qui per informazioni",
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
     "save_changes": "Salva modifiche",
     "close": "Chiudi",

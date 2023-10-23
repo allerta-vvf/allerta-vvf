@@ -32,6 +32,18 @@
         "telegram_bot_token_request_failed": "Telegram bot token could not be generated. Please try again"
     },
     "alert": {
+        "warning_body": "Alert in progress.",
+        "current_alert": "Current alert",
+        "current_alerts": "Current alerts",
+        "state": "Alert state",
+        "closed": "Alert closed",
+        "response_status": "Response status",
+        "no_response": "No response",
+        "waiting_for_response": "Waiting for response",
+        "response_yes": "Available",
+        "response_no": "Not available",
+        "details": "Alert details",
+        "delete": "Remove current alert",
         "delete_confirm_title": "Are you sure you want to remove this alert?",
         "delete_confirm_text": "This action cannot be undone.",
         "deleted_successfully": "Alert removed successfully",
@@ -87,6 +99,8 @@
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
+    "warning": "warning",
+    "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",
     "close": "Close",
