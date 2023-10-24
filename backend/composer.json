@@ -13,7 +13,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "matthewbdaly/laravel-etag-middleware": "^1.3",
-        "santigarcor/laratrust": "^7.2",
+        "santigarcor/laratrust": "^8.0",
         "sentry/sentry-laravel": "^3.7"
     },
     "require-dev": {
