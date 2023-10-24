@@ -5,6 +5,7 @@
         "trainings": "Trainings",
         "logs": "Logs",
         "logout": "Logout",
+        "stop_impersonating": "Stop impersonating",
         "hi": "hi"
     },
     "table": {
@@ -22,7 +23,33 @@
         "update_schedules": "Update availability schedules",
         "connect_telegram_bot": "Connect your account to the Telegram bot",
         "tooltip_change_availability": "Change your availability to {{state}}",
-        "manual_mode_updated_successfully": "Manual mode updated successfully"
+        "manual_mode_updated_successfully": "Manual mode updated successfully",
+        "schedule_load_failed": "Schedule could not be loaded. Please try again",
+        "schedule_update_failed": "Schedule could not be updated. Please try again",
+        "availability_minutes_updated_at_deactivation": "Availability minutes are updated when the availability is removed, to allow a more precise calculation.",
+        "availability_change_failed": "Availability could not be changed. Please try again",
+        "manual_mode_update_failed": "Manual mode could not be updated. Please try again",
+        "telegram_bot_token_request_failed": "Telegram bot token could not be generated. Please try again"
+    },
+    "alert": {
+        "warning_body": "Alert in progress.",
+        "current_alert": "Current alert",
+        "current_alerts": "Current alerts",
+        "state": "Alert state",
+        "closed": "Alert closed",
+        "response_status": "Response status",
+        "no_response": "No response",
+        "waiting_for_response": "Waiting for response",
+        "response_yes": "Available",
+        "response_no": "Not available",
+        "details": "Alert details",
+        "delete": "Remove current alert",
+        "delete_confirm_title": "Are you sure you want to remove this alert?",
+        "delete_confirm_text": "This action cannot be undone.",
+        "deleted_successfully": "Alert removed successfully",
+        "delete_failed": "Alert could not be removed. Please try again",
+        "settings_updated_successfully": "Settings updated successfully",
+        "response_updated_successfully": "Response updated successfully"
     },
     "login": {
         "username": "username",
@@ -37,7 +64,9 @@
         "village": "village",
         "postcode": "postcode",
         "hamlet": "hamlet",
-        "municipality": "municipality"
+        "municipality": "municipality",
+        "country": "country",
+        "place_load_failed": "Place could not be loaded. Please try again"
     },
     "map_picker": {
         "place_min_length": "Place name must be at least 3 characters long",
@@ -54,8 +83,25 @@
         "type_already_exists": "Type already exists",
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
-        "service_add_error": "Service could not be added. Please try again"
+        "service_add_failed": "Service could not be added. Please try again",
+        "service_load_failed": "Service could not be loaded. Please try again",
+        "users_load_failed": "Users could not be loaded. Please try again",
+        "types_load_failed": "Types could not be loaded. Please try again",
+        "type_add_failed": "Type could not be added. Please try again"
     },
+    "edit_training": {
+        "select_start_datetime": "Select start date and time for the training",
+        "select_end_datetime": "Select end date and time for the training",
+        "insert_name": "Insert training name",
+        "name_placeholder": "Training name",
+        "other_crew_members": "Other crew members",
+        "training_added_successfully": "Training added successfully",
+        "training_add_failed": "Training could not be added. Please try again",
+        "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
+        "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
+    },
+    "warning": "warning",
+    "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",
     "save_changes": "Save changes",
     "close": "Close",
@@ -109,6 +155,10 @@
     "submit": "invia",
     "reset": "reset",
     "go_back": "go back",
+    "next": "next",
+    "previous": "previous",
+    "last": "last",
+    "first": "first",
     "press_to_select_a_date": "press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision"

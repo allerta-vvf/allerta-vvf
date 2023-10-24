@@ -1,0 +1,73 @@
+<back-btn></back-btn>
+<br>
+<form method="post" [formGroup]="trainingForm" (ngSubmit)="formSubmit()">
+  <div class="container">
+    <div class="form-group has-validation">
+      <label for="date-picker-start">{{ 'start'|translate|titlecase }}</label>
+      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')" id="date-picker-start"></datetime-picker>
+      <div class="invalid-feedback" *ngIf="start.errors?.['required']" translate>
+        edit_training.select_start_datetime
+      </div>
+    </div>
+    <div class="form-group has-validation">
+      <label for="date-picker-end">{{ 'end'|translate|titlecase }}</label>
+      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')" id="date-picker-end"></datetime-picker>
+      <div class="invalid-feedback" *ngIf="end.errors?.['required']" translate>
+        edit_training.select_end_datetime
+      </div>
+    </div>
+    <div class="form-group has-validation">
+      <label for="name">{{ 'name'|translate|titlecase }}</label>
+      <input formControlName="name" [class.is-invalid]="!isFieldValid('name')" id="name" class="form-control"
+        type="text" [placeholder]="'edit_training.name_placeholder'|translate">
+      <div class="invalid-feedback" *ngIf="name.errors?.['required']" translate>
+        edit_training.insert_name
+      </div>
+    </div>
+    <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('chief')">
+      <label>{{ 'chief'|translate|titlecase }}</label>
+      <br>
+      <ng-container *ngFor="let user of users">
+        <div class="form-check">
+          <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
+            class="form-check-input" id="chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
+          <label class="form-check-label" for="chief-{{ user.id }}">
+            {{ user.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('crew')">
+      <label translate>edit_training.other_crew_members</label>
+      <br>
+      <ng-container *ngFor="let user of users">
+        <div class="form-check">
+          <input class="form-check-input" id="crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
+            (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
+          <label class="form-check-label" for="crew-{{ user.id }}">
+            {{ user.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group has-validation">
+      <label for="place">{{ 'place'|translate|titlecase }}</label>
+      <input formControlName="place" [class.is-invalid]="!isFieldValid('place')" id="place" class="form-control"
+        type="text">
+      <div class="invalid-feedback" *ngIf="place.errors?.['required']" translate>
+        edit_training.insert_place
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="notes">{{ 'notes'|translate|titlecase }}</label><br>
+      <textarea formControlName="notes" class="form-control" id="notes"></textarea>
+    </div>
+    <br>
+    <br>
+    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">{{ 'submit'|translate|titlecase }}</button>
+    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">{{ 'reset'|translate|titlecase }}</button>
+    <div class="d-flex justify-content-center mt-2 pt-2 mb-3" *ngIf="submittingForm">
+      <div class="spinner spinner-border"></div>
+    </div>
+  </div>
+</form>

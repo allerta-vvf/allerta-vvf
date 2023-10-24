@@ -25,6 +25,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public alertLoading = false;
 
+  private etag = "";
+
   constructor(
     public api: ApiClientService,
     public auth: AuthService,
@@ -32,29 +34,37 @@ export class ListComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private translate: TranslateService
   ) {
-    this.loadAvailability();
   }
 
   loadAvailability() {
-    this.api.get("availability").then((response) => {
+    this.api.get("availability", {}, this.etag).then((response) => {
+      if(this.api.isLastSame) return;
+      this.etag = this.api.lastEtag;
       this.available = response.available;
       this.manual_mode = response.manual_mode;
+    }).catch((err) => {
+      if(err.status === 500) throw err;
     });
   }
 
   changeAvailibility(available: 0|1, id?: number|undefined) {
     if(typeof id === 'undefined') {
-      id = this.auth.profile.auth_user_id;
+      id = this.auth.profile.id;
     }
     this.api.post("availability", {
       id: id,
       available: available
     }).then((response) => {
-      let changed_user_msg = parseInt(response.updated_user) === parseInt(this.auth.profile.auth_user_id) ? "La tua disponibilità" : `La disponibilità di ${response.updated_user_name}`;
+      let changed_user_msg = parseInt(response.updated_user_id) === parseInt(this.auth.profile.id) ? "La tua disponibilità" : `La disponibilità di ${response.updated_user_name}`;
       let msg = available === 1 ? `${changed_user_msg} è stata impostata con successo.` : `${changed_user_msg} è stata rimossa con successo.`;
       this.toastr.success(msg);
       this.loadAvailability();
       this.table.loadTableData();
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.translate.get('list.availability_change_failed').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
     });
   }
 
@@ -66,6 +76,11 @@ export class ListComponent implements OnInit, OnDestroy {
         this.toastr.success(res);
       });
       this.loadAvailability();
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.translate.get('list.manual_mode_update_failed').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
     });
   }
 
@@ -73,58 +88,45 @@ export class ListComponent implements OnInit, OnDestroy {
     this.scheduleModalRef = this.modalService.show(ModalAvailabilityScheduleComponent, Object.assign({}, { class: 'modal-custom' }));
   }
 
-  addAlertFull() {
+  addAlert(type: string, ignoreWarning = false) {
     this.alertLoading = true;
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
+    if(!this.auth.profile.can('users-read')) return;
     this.api.post("alerts", {
-      type: "full"
+      type,
+      ignoreWarning
     }).then((response) => {
+      console.log(response);
       this.alertLoading = false;
-      if(response?.status === "error") {
-        this.toastr.error(response.message, undefined, {
-          timeOut: 5000
-        });
-        return;
-      }
       this.alertModalRef = this.modalService.show(ModalAlertComponent, {
         initialState: {
-          id: response.id
+          id: response.alert.id
         }
       });
       this.api.alertsChanged.next();
-    });
-  }
-
-  addAlertSupport() {
-    this.alertLoading = true;
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
-    this.api.post("alerts", {
-      type: "support"
-    }).then((response) => {
+    }).catch((err) => {
+      console.log(err);
       this.alertLoading = false;
-      if(response?.status === "error") {
-        this.toastr.error(response.message, undefined, {
-          timeOut: 5000
-        });
+      if(err.error?.ignorable === true) {
+        if(confirm(err.error.message)) {
+          this.addAlert(type, true);
+        }
         return;
       }
-      this.alertModalRef = this.modalService.show(ModalAlertComponent, {
-        initialState: {
-          id: response.id
-        }
+      if(err.error?.message === undefined) err.error.message = "Errore sconosciuto";
+      this.toastr.error(err.error.message, undefined, {
+        timeOut: 5000
       });
-      this.api.alertsChanged.next();
     });
   }
 
   ngOnInit(): void {
     this.loadAvailabilityInterval = setInterval(() => {
-      console.log("Refreshing availability...");
       this.loadAvailability();
-    }, 10000);
+    }, 30000);
     this.auth.authChanged.subscribe({
       next: () => this.loadAvailability()
     });
+    this.loadAvailability();
   }
 
   ngOnDestroy(): void {
@@ -140,6 +142,11 @@ export class ListComponent implements OnInit, OnDestroy {
       a.setAttribute('href', response.start_link);
       a.setAttribute('target', '_blank');
       a.click();
+    }).catch((err) => {
+      if(err.status === 500) throw err;
+      this.translate.get('list.telegram_token_request_failed').subscribe((res: string) => {
+        this.toastr.error(res);
+      });
     });
   }
 

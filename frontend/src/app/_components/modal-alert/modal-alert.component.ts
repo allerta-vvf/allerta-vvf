@@ -3,6 +3,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 const isEqual = (...objects: any[]) => objects.every(obj => JSON.stringify(obj) === JSON.stringify(objects[0]));
@@ -15,28 +16,37 @@ const isEqual = (...objects: any[]) => objects.every(obj => JSON.stringify(obj) 
 export class ModalAlertComponent implements OnInit, OnDestroy {
   id = 0;
 
-  users: any[] = [];
+  crewUsers: any[] = [];
 
-  isAdvancedCollapsed = true;
   loadDataInterval: NodeJS.Timer | undefined = undefined;
 
   notes = "";
+  originalNotes = "";
+  notesHasUnsavedChanges = false;
 
-  alertEnabled = true;
+  alertClosed = 0;
+
+  private etag = "";
 
   constructor(
     public bsModalRef: BsModalRef,
     private api: ApiClientService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   loadResponsesData() {
-    this.api.get(`alerts/${this.id}`).then((response) => {
-      if(this.alertEnabled !== response.enabled) this.alertEnabled = response.enabled;
-      if(!isEqual(this.users, response.crew)) this.users = response.crew;
-      if (this.notes === "" || this.notes === null) {
-        if(!isEqual(this.notes, response.notes)) this.notes = response.notes;
+    this.api.get(`alerts/${this.id}`, {}, this.etag).then((response) => {
+      if(this.api.isLastSame) return;
+      this.etag = this.api.lastEtag;
+      this.alertClosed = response.closed;
+      this.crewUsers = response.crew;
+      if (!this.notesHasUnsavedChanges) {
+        if(this.notes !== response.notes) {
+          this.notes = response.notes;
+          this.originalNotes = response.notes;
+        }
       }
     });
   }
@@ -48,7 +58,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
       }
       console.log("Refreshing responses data...");
       this.loadResponsesData();
-    }, 2000);
+    }, 15000);
     this.loadResponsesData();
   }
 
@@ -59,43 +69,78 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
     }
   }
 
+  notesUpdated() {
+    this.notesHasUnsavedChanges = this.notes !== this.originalNotes;
+  }
+
   saveAlertSettings() {
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
-    this.api.post(`alerts/${this.id}/settings`, {
+    if(!this.auth.profile.can('users-read')) return;
+    this.api.patch(`alerts/${this.id}`, {
       notes: this.notes
     }).then((response) => {
-      this.toastr.success("Impostazioni salvate con successo");
+      this.translate.get('alert.settings_updated_successfully').subscribe((res: string) => {
+        this.toastr.success(res);
+      });
+      this.notesHasUnsavedChanges = false;
+      this.originalNotes = this.notes;
     });
   }
 
   deleteAlert() {
-    if(!this.auth.profile.hasRole('SUPER_EDITOR')) return;
-    Swal.fire({
-      title: "Sei sicuro di voler ritirare l'allarme?",
-      text: "I vigili verranno avvisati dell'azione",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: "Si, rimuovi",
-      cancelButtonText: "Annulla"
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this.api.delete(`alerts/${this.id}`).then((response) => {
-          console.log(response);
-          this.bsModalRef.hide();
-          this.api.alertsChanged.next();
-        /*
-          this.translate.get('table.service_deleted_successfully').subscribe((res: string) => {
-            this.toastr.success(res);
+    if(!this.auth.profile.can('users-read')) return;
+    this.translate.get([
+      'alert.delete_confirm_title',
+      'alert.delete_confirm_text',
+      'table.yes_remove',
+      'table.cancel',
+      'alert.deleted_successfully',
+      'alert.delete_failed'
+    ]).subscribe((res: any) => {
+      console.log(res);
+      Swal.fire({
+        title: res['alert.delete_confirm_title'],
+        text: res['alert.delete_confirm_text'],
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: res['table.yes_remove'],
+        cancelButtonText: res['table.cancel']
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          this.api.patch(`alerts/${this.id}`, {
+            closed: true
+          }).then((response) => {
+            console.log(response);
+            this.bsModalRef.hide();
+            this.api.alertsChanged.next();
+            this.toastr.success(res['alert.deleted_successfully']);
+            this.api.alertsChanged.next();
+          }).catch((e) => {
+            this.toastr.error(res['alert.delete_failed']);
           });
-          this.loadTableData();
-        }).catch((e) => {
-          this.translate.get('table.service_deleted_error').subscribe((res: string) => {
-            this.toastr.error(res);
-        */
-        });
-      }
+        }
+      });
+    });
+  }
+
+  getCurrentUserResponse() {
+    const r = this.crewUsers.filter((c) => c.user.id === this.auth.profile.id);
+    if(r.length === 0) return -1;
+    return r[0].accepted;
+  }
+
+  setCurrentUserResponse(response: number) {
+    if(!this.auth.profile.can('users-read')) return;
+    this.api.post(`alerts/${this.id}/response`, {
+      response
+    }).then((response) => {
+      this.translate.get('alert.response_updated_successfully').subscribe((res: string) => {
+        this.toastr.success(res);
+      });
+      this.loadResponsesData();
+    }).catch((e) => {
+      this.toastr.error(e.error.message);
     });
   }
 }

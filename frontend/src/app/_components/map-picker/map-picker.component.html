@@ -7,6 +7,6 @@
     <button class="btn btn-outline-secondary" type="button" (click)="searchPlace()">{{ 'search'|translate|titlecase }}</button>
   </div>
   <div id="results" *ngIf="isPlaceSearchResultsOpen">
-    <li *ngFor="let result of placeSearchResults" (click)="selectPlace(result)">{{ result.display_name }}</li>
+    <li class="text-decoration-underline" *ngFor="let result of placeSearchResults" (click)="selectPlace(result)">{{ result.display_name }}</li>
   </div>
 </div>

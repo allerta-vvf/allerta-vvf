@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import { LocationBackService } from 'src/app/_services/locationBack.service';
+import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.service';
 import { versions } from 'src/environments/versions';
 import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { ApiClientService } from './_services/api-client.service';
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { AuthorizeGuard } from './_guards/authorize.guard';
 
 @Component({
   selector: 'app-root',
@@ -19,21 +21,27 @@ export class AppComponent {
   public loadingRoute = false;
   private loadAlertsInterval: NodeJS.Timer | undefined = undefined;
   public alerts = [];
+  private alertsEtag = "";
 
   constructor(
     public auth: AuthService,
     private locationBackService: LocationBackService,
+    public guardLoaderIconService: GuardLoaderIconService,
     private router: Router,
     private api: ApiClientService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    public guard: AuthorizeGuard
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    this.locationBackService.initialize();
   }
 
   loadAlerts() {
     if(this.auth.profile) {
-      this.api.get("alerts").then((response) => {
+      this.api.get("alerts", {}, this.alertsEtag).then((response) => {
+        if(this.api.isLastSame) return;
         this.alerts = response;
+        this.alertsEtag = this.api.lastEtag;
       });
     }
   }
@@ -50,7 +58,7 @@ export class AppComponent {
     this.loadAlertsInterval = setInterval(() => {
       console.log("Refreshing alerts...");
       this.loadAlerts();
-    }, 15000);
+    }, 30000);
     this.loadAlerts();
 
     this.api.alertsChanged.subscribe(() => {

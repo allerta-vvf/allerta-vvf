@@ -1,3 +1,11 @@
+<ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
+    <div class="row mt-5">
+        <div class="col-xs-12 col-12">
+            <input type="text" class="form-control" placeholder="{{ 'search'|translate|titlecase }}" [(ngModel)]="searchText" (ngModelChange)="onSearchTextChange($event)">
+        </div>
+    </div>
+</ng-container>
+
 <div id="list" class="table-responsive mt-4">
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
@@ -5,7 +13,7 @@
                 <th>{{ 'name'|translate|titlecase }}</th>
                 <th>{{ 'available'|translate|titlecase }}</th>
                 <th>{{ 'driver'|translate|titlecase }}</th>
-                <ng-container *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+                <ng-container *ngIf="auth.profile.can('users-read')">
                 <th>{{ 'call'|translate|titlecase }}</th>
                 </ng-container>
                 <th>{{ 'services'|translate|titlecase }}</th>
@@ -15,11 +23,11 @@
         <tbody id="table_body">
             <tr *ngFor="let row of data">
                 <td>
-                    <i *ngIf="auth.profile.hasRole('SUPER_ADMIN') && row.id !== auth.profile.auth_user_id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
+                    <i *ngIf="auth.profile.can('users-impersonate') && row.id !== auth.profile.id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
-                    <ng-container *ngIf="(getTime() - row.online_time) < 30"><u>{{ row.name }}</u></ng-container>
-                    <ng-container *ngIf="(getTime() - row.online_time) > 30">{{ row.name }}</ng-container>
+                    <ng-container *ngIf="(getTime() - getTS(row.last_access)) <= 30;else userOffline"><u>{{ row.name }}</u></ng-container>
+                    <ng-template #userOffline>{{ row.name }}</ng-template>
                 </td>
                 <td (click)="onChangeAvailability(row.id, row.available ? 0 : 1)">
                     <i class="fa fa-check" style="color:green" *ngIf="row.available"></i>
@@ -28,15 +36,19 @@
                 <td>
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="row.driver">
                 </td>
-                <td *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
-                    <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
+                <td *ngIf="auth.profile.can('users-read')">
+                    <ng-container *ngIf="row.phone_number">
+                        <a href="tel:{{row.phone_number}}"><i class="fa fa-phone"></i></a>
+                    </ng-container>
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
             </tr>
         </tbody>
     </table>
-    <table *ngIf="sourceType === 'logs'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
+
+    <ng-container *ngIf="sourceType === 'logs'">
+    <table id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
                 <th>{{ 'action'|translate|titlecase }}</th>
@@ -46,14 +58,17 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data">
+            <tr *ngFor="let row of displayedData; index as i">
                 <td>{{ row.action }}</td>
                 <td>{{ row.changed }}</td>
                 <td>{{ row.editor }}</td>
-                <td>{{ row.timestamp }}</td>
+                <td>{{ row.created_at | date: 'dd/MM/YYYY HH:mm:ss' }}</td>
             </tr>
         </tbody>
     </table>
+    </ng-container>
+
+    <ng-container>
     <table *ngIf="sourceType === 'services'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
@@ -72,17 +87,18 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data; index as i">
-                <td>{{ data.length - i }}</td>
+            <tr *ngFor="let row of displayedData; index as i">
+                <td>{{ data.length - (rowsPerPage * (currentPage-1) + i) }}</td>
                 <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.code }}</td>
                 <td>{{ row.chief }}</td>
-                <td>{{ row.drivers }}</td>
-                <td>{{ row.crew }}</td>
+                <td>{{ extractNamesFromObject(row.drivers).join(', ') }}</td>
+                <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>
-                    {{ row.place_name }}<br>
-                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.lat, row.lng)">{{ 'more details'|translate|titlecase }}</a>
+                    <ng-container *ngIf="row.place.name"><i>{{ row.place.name }}</i></ng-container><br>
+                    <ng-container *ngIf="row.place.village">{{ row.place.village }}</ng-container><br>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|titlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
@@ -91,6 +107,9 @@
             </tr>
         </tbody>
     </table>
+    </ng-container>
+
+    <ng-container>
     <table *ngIf="sourceType === 'trainings'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
@@ -107,18 +126,59 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <tr *ngFor="let row of data; index as i">
-                <td>{{ data.length - i }}</td>
+            <tr *ngFor="let row of displayedData; index as i">
+                <td>{{ data.length - (rowsPerPage * (currentPage-1) + i) }}</td>
                 <td>{{ row.name }}</td>
-                <td>{{ row.beginning }}</td>
-                <td>{{ row.end }}</td>
+                <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
+                <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.chief }}</td>
-                <td>{{ row.crew }}</td>
+                <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td><i class="fa fa-edit"></i></td>
-                <td><i class="fa fa-trash"></i></td>
+                <td (click)="editTraining(row.id)"><i class="fa fa-edit"></i></td>
+                <td (click)="deleteTraining(row.id)"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
+    </ng-container>
 </div>
+
+<ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
+    <div class="row mt-5">
+        <div class="col-xs-12 col-12">
+            <pagination
+              [totalItems]="totalElements"
+              [(ngModel)]="currentPage"
+              (pageChanged)="pageChanged($event)"
+              [maxSize]="maxPaginationSize"
+              [itemsPerPage]="rowsPerPage"
+              [boundaryLinks]="totalElements > 100"
+              [customFirstTemplate]="firstTemplate"
+              [customLastTemplate]="lastTemplate"
+              [customPreviousTemplate]="prevTemplate"
+              [customNextTemplate]="nextTemplate"
+              [customPageTemplate]="pageTemplate"
+            ></pagination>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #pageTemplate let-page let-disabled="disabled" let-currentPage="currentPage">
+  {{ page.number }}
+</ng-template>
+ 
+<ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+  {{ 'next'|translate|titlecase }}
+</ng-template>
+ 
+<ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+  {{ 'previous'|translate|titlecase }}
+</ng-template>
+ 
+<ng-template #lastTemplate let-disabled="disabled" let-currentPage="currentPage">
+  {{ 'last'|translate|titlecase }}
+</ng-template>
+ 
+<ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
+  {{ 'first'|translate|titlecase }}
+</ng-template>

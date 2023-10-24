@@ -46,3 +46,5 @@ testem.log
 Thumbs.db
 
 src/environments/versions.ts
+src/environments/environment.prod.ts
+.sentryclirc

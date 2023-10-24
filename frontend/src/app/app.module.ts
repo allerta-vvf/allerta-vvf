@@ -1,16 +1,19 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationModule } from './translation.module';
+import { Router } from "@angular/router";
+import * as Sentry from "@sentry/angular-ivy";
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,6 +55,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientXsrfModule.disable(), //See auth-interceptor.provider.ts
     FormsModule,
     ToastrModule.forRoot({
       progressBar: true,
@@ -63,6 +67,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
+    PaginationModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,
       // Register the ServiceWorker as soon as the app is stable
@@ -78,11 +83,41 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     }),
     TranslationModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS, 
-    useClass: AuthInterceptor,
-    multi: true
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: true,
+        dialogOptions: {
+          title: "E' stato rilevato un errore",
+          subtitle: "Gli sviluppatori sono stati avvisati e stanno lavorando per risolvere il problema.",
+          subtitle2: "Compilare questo modulo può aiutarci a risolvere il problema più velocemente.",
+          labelName: "Nome",
+          labelComments: "Cosa stavi facendo quando si è verificato l'errore?",
+          labelClose: "Chiudi",
+          labelSubmit: "Invia",
+          errorGeneric: "Si è verificato un errore",
+          errorFormEntry: "Compilare tutti i campi obbligatori",
+          successMessage: "Grazie per il tuo aiuto!"
+        }
+      }),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

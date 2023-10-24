@@ -1,8 +1,8 @@
 <div class="text-center">
     <h3 *ngIf="available !== undefined">{{ 'list.your_availability_is'|translate }} <b>{{ available ? ("available"|translate|uppercase) : ("unavailable"|translate|uppercase) }}{{ manual_mode ? "" : " ("+('programmed'|translate)+")" }}</b></h3>
     <div id="availability-btn-group">
-        <button (click)="changeAvailibility(1)" type="button" [delay]="1000" [tooltip]="'tooltip_change_availability'|translate:{state: 'available'|translate}" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|titlecase }}</button>
-        <button (click)="changeAvailibility(0)" type="button" [delay]="1000" [tooltip]="'tooltip_change_availability'|translate:{state: 'unavailable'|translate}" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|titlecase }}</button>
+        <button (click)="changeAvailibility(1)" type="button" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|titlecase }}</button>
+        <button (click)="changeAvailibility(0)" type="button" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|titlecase }}</button>
     </div>
     <ng-container *ngIf="manual_mode !== undefined">
         <button type="button" class="btn btn-secondary" *ngIf="manual_mode" (click)="updateManualMode(0)">
@@ -18,12 +18,12 @@
     </button>
 </div>
 <owner-image></owner-image>
-<div class="text-center" *ngIf="auth.profile.hasRole('SUPER_EDITOR')">
+<div class="text-center" *ngIf="auth.profile.can('users-read')">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-danger" (click)="addAlertFull()" [disabled]="!api?.availableUsers || api.availableUsers! < 5 || alertLoading">
+        <button type="button" class="btn btn-danger" (click)="addAlert('full')" [disabled]="!api.availableUsers || api.availableUsers! < 5 || alertLoading">
             🚒 Richiedi squadra completa
         </button>
-        <button type="button" class="btn btn-warning" (click)="addAlertSupport()" [disabled]="!api?.availableUsers || api.availableUsers! < 2 || alertLoading">
+        <button type="button" class="btn btn-warning" (click)="addAlert('support')" [disabled]="!api.availableUsers || api.availableUsers! < 2 || alertLoading">
             Richiedi squadra di supporto 🧯
         </button>
     </div>
@@ -31,4 +31,7 @@
 <app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" #table></app-table>
 <div class="text-center">
     <button (click)="requestTelegramToken()" class="btn btn-md btn-success mt-3">{{ 'list.connect_telegram_bot'|translate }}</button>
+    <div class="alert alert-primary mt-4" role="alert" translate>
+        list.availability_minutes_updated_at_deactivation
+    </div>
 </div>

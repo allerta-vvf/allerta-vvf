@@ -8,7 +8,9 @@ import { Router, NavigationEnd } from '@angular/router'
 export class LocationBackService {
   private history: string[] = [];
 
-  constructor(private router: Router, private location: Location) {
+  constructor(private router: Router, private location: Location) { }
+
+  initialize() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && !event.urlAfterRedirects.includes('login')) {
         this.history.push(event.urlAfterRedirects);
