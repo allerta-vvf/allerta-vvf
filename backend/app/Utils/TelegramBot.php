@@ -4,10 +4,11 @@ namespace App\Utils;
 
 use App\Models\TelegramBotNotifications;
 use App\Models\TelegramBotLogins;
+use App\Models\TelegramSpecialMessage;
 use DefStudio\Telegraph\Facades\Telegraph;
 
 class TelegramBot {
-    static public function sendMessageToUser($userId, callable|string $message) {
+    static public function sendMessageToUser($userId, callable|string $message, $specialMsgType = null, $resourceId = null, $resourceType = null) {
         $chatRows = TelegramBotLogins::join("users", "users.id", "=", "telegram_bot_logins.user")
           ->select("users.id", "chat_id", "users.available")
           ->where("users.id", $userId)
@@ -18,15 +19,32 @@ class TelegramBot {
             //Get chat by id
             $chat = Telegraph::chat($chatRow["chat_id"]);
 
+            $msgObj = null;
             if(gettype($message) == "string") {
-                $chat->message($message)->send();
+                $msgObj = $chat->message($message);
             } else {
-                $message($chat);
+                $msgObj = $message($chat);
+            }
+
+            if(is_null($msgObj)) continue;
+            $msgResponse = $msgObj->send();
+            $msgId = $msgResponse->telegraphMessageId();
+
+            if(!is_null($specialMsgType) && !is_null($msgId)) {
+                TelegramSpecialMessage::create([
+                    "message_id" => $msgId,
+                    "user_id" => $chatRow["id"],
+                    "chat_id" => $chatRow["chat_id"],
+                    "chat_type" => "private",
+                    "type" => $specialMsgType,
+                    "resource_id" => $resourceId,
+                    "resource_type" => $resourceType
+                ]);
             }
         }
     }
 
-    static public function sendTeamMessage(callable|string|null $message) {
+    static public function sendTeamMessage(callable|string|null $message, $specialMsgType = null, $resourceId = null, $resourceType = null) {
         $msgParamType = gettype($message);
         if($msgParamType == "string") {
             if($message == "") return;
@@ -44,13 +62,34 @@ class TelegramBot {
         foreach ($chat_ids as $chat_id) {
             $chat = Telegraph::chat($chat_id);
 
+            $msgObj = null;
             if(gettype($message) == "string") {
-                $chat->message($message)->send();
+                $msgObj = $chat->message($message);
                 TelegramBotNotifications::where("chat_id", $chat_id)
                     ->update(["last_message_hash" => $hash]);
             } else {
-                $message($chat);
+                $msgObj = $message($chat);
+            }
+
+            if(is_null($msgObj)) continue;
+            $msgResponse = $msgObj->send();
+            $msgId = $msgResponse->telegraphMessageId();
+
+            if(!is_null($specialMsgType) && !is_null($msgId)) {
+                TelegramSpecialMessage::create([
+                    "message_id" => $msgId,
+                    "chat_id" => $chat_id,
+                    "chat_type" => "group",
+                    "type" => $specialMsgType,
+                    "resource_id" => $resourceId,
+                    "resource_type" => $resourceType
+                ]);
             }
         }
+    }
+
+    static public function deleteMessage($chatId, $messageId) {
+        $chat = Telegraph::chat($chatId);
+        $chat->deleteMessage($messageId)->send();
     }
 }

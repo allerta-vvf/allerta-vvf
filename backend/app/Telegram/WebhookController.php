@@ -5,7 +5,11 @@ namespace App\Telegram;
 use App\Models\TelegramBotLogins;
 use App\Models\User;
 
+use App\Utils\Alerts;
 use App\Utils\Availability;
+
+use App\Exceptions\AlertClosed;
+use App\Exceptions\AlertResponseAlreadySet;
 
 use DefStudio\Telegraph\Facades\Telegraph;
 
@@ -252,5 +256,34 @@ class WebhookController extends
     {
         //Delete the message that triggered the callback
         $this->chat->deleteMessage($this->messageId)->send();
+    }
+
+    public function alert_set_response()
+    {
+        $user_id = $this->data->get('user_id', null);
+        $user = User::find($user_id);
+        if(is_null($user)) {
+            $this->reply("⚠️ Il tuo account Allerta non è collegato con Telegram.", true);
+            return;
+        }
+
+        $response = $this->data->get('response', null);
+        if(!in_array($response, [true, false, 1, 0])) {
+            $this->reply("⚠️ Risposta non valida.", true);
+            return;
+        }
+        $alert_id = $this->data->get('alert_id', null);
+        if(is_null($alert_id)) {
+            $this->reply("⚠️ ID allertamento non valido.", true);
+            return;
+        }
+        
+        try {
+            Alerts::updateAlertResponse($alert_id, $response, $user_id, true);
+        } catch(AlertClosed $e) {
+            $this->reply("⚠️ La chiamata è stata chiusa.", true);
+        } catch(AlertResponseAlreadySet $e) {
+            $this->reply("⚠️ La tua risposta è già stata registrata.", true);
+        }
     }
 }

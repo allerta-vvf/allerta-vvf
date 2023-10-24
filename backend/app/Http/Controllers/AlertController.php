@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alert;
-use App\Models\AlertCrew;
-use App\Models\User;
 use App\Utils\Alerts;
 use App\Utils\Logger;
 use App\Exceptions\AlertClosed;
@@ -48,76 +46,9 @@ class AlertController extends Controller
      */
     public function store(Request $request)
     {
-        $type = $request->input('type', 'support');
-        $ignoreWarning = $request->input('ignoreWarning', false);
-
-        //Count users when not hidden and available
-        $count = User::where('hidden', false)->where('available', true)->count();
-
-        if($count == 0) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Nessun utente disponibile.',
-                'ignorable' => false,
-            ], 400);
-        }
-
-        //Check if there is at least one chief available (not hidden)
-        $chiefCount = User::where([
-            ['hidden', '=', false],
-            ['available', '=', true],
-            ['chief', '=', true]
-        ])->count();
-        if($chiefCount == 0 && !$ignoreWarning) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Nessun caposquadra disponibile. Sei sicuro di voler proseguire?',
-                'ignorable' => true,
-            ], 400);
-        }
-
-        //Check if there is at least one driver available (not hidden)
-        $driverCount = User::where([
-            ['hidden', '=', false],
-            ['available', '=', true],
-            ['driver', '=', true]
-        ])->count();
-        if($driverCount == 0 && !$ignoreWarning) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Nessun autista disponibile. Sei sicuro di voler proseguire?',
-                'ignorable' => true,
-            ], 400);
-        }
-
-        //Select call list (everyone not hidden and available)
-        $users = User::where('hidden', false)->where('available', true)->get();
-        if(count($users) < 5 && $type = "full") $type = "support";
-        
-        //Create alert
-        $alert = new Alert;
-        $alert->type = $type;
-        $alert->addedBy()->associate(auth()->user());
-        $alert->updatedBy()->associate(auth()->user());
-        $alert->save();
-
-        //Create alert crew
-        $alertCrewIds = [];
-        foreach($users as $user) {
-            $alertCrew = new AlertCrew();
-            $alertCrew->user_id = $user->id;
-            $alertCrew->save();
-
-            $alertCrewIds[] = $alertCrew->id;
-        }
-        $alert->crew()->attach($alertCrewIds);
-        $alert->save();
-
-        Logger::log(
-            "Nuova allerta aggiunta",
-            auth()->user(),
-            null,
-            "web"
+        $alert = Alerts::addAlert(
+            $request->input('type', 'support'),
+            $request->input('ignoreWarning', false)
         );
 
         //Return response
