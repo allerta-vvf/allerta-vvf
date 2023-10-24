@@ -14,6 +14,20 @@ use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 
 class Alerts {
+    public static function generateAlertTeamMessage($alert) {
+        $msgText = $alert->closed ? "Allerta <b>chiusa</b>" : "Nuovo <b>allertamento</b>";
+        $msgText .= " (<i>";
+        $msgText .= $alert->type == "full" ? "squadra completa" : "supporto";
+        $msgText .= "</i>).\nElenco risposte:";
+        foreach($alert->crew as $crew) {
+            $msgText .= "\n- <b>".$crew->user->name."</b>: ".($crew->accepted ? "✅" : ($crew->accepted == NULL ? "⏳" : "❌"));
+        }
+        $msgText .= "\n\n<b>Note:</b>\n".$alert->notes;
+        $msgText .= "\n\n<b>Aggiunta da:</b> ".$alert->addedBy->name;
+        $msgText .= "\n<b>Ultima modifica alle:</b> ".$alert->updated_at->format("H:i:s");
+        return $msgText;
+    }
+
     public static function addAlert($type, $ignoreWarning, $fromTelegram = false) {
         //Count users when not hidden and available
         $count = User::where('hidden', false)->where('available', true)->count();
@@ -78,11 +92,8 @@ class Alerts {
         $alert->save();
 
         //Send message to Telegram teams
-        $teamMsgText = "Nuovo <b>allertamento</b> (<i>".
-            ($alert->type == "full" ? "squadra completa" : "supporto").
-            "</i>).\nElenco risposte:";
         TelegramBot::sendTeamMessage(
-            $teamMsgText,
+            self::generateAlertTeamMessage($alert),
             "alert",
             $alert->id,
             "alert"
@@ -161,6 +172,13 @@ class Alerts {
             TelegramBot::deleteMessage($msg->chat_id, $msg->message_id);
             $msg->delete();
         }
+
+        TelegramBot::editSpecialMessage(
+            $alert->id,
+            "alert",
+            "alert",
+            self::generateAlertTeamMessage($alert)
+        );
 
         TelegramBot::sendMessageToUser(
             $userId,

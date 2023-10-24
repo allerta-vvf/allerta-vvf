@@ -92,4 +92,27 @@ class TelegramBot {
         $chat = Telegraph::chat($chatId);
         $chat->deleteMessage($messageId)->send();
     }
+
+    static public function editSpecialMessage($resourceId, $resourceType, $specialMsgType, callable|string $message) {
+        $msgs = TelegramSpecialMessage::where("type", $specialMsgType)
+            ->where("resource_id", $resourceId)
+            ->where("resource_type", $resourceType)
+            ->get();
+
+        foreach($msgs as $msg) {
+            $chat = Telegraph::chat($msg->chat_id);
+            $msgObj = null;
+            if(gettype($message) == "string") {
+                $msgObj = $chat->edit($msg->message_id)->message($message);
+            } else {
+                $msgObj = $message($chat->edit($msg->message_id));
+            }
+
+            if(is_null($msgObj)) continue;
+            $msgResponse = $msgObj->send();
+            $msgId = $msgResponse->telegraphMessageId();
+            $msg->message_id = $msgId;
+            $msg->save();
+        }
+    }
 }
