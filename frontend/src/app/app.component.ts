@@ -37,7 +37,7 @@ export class AppComponent {
   }
 
   loadAlerts() {
-    if(this.auth.profile) {
+    if(this.auth.profile.id) {
       this.api.get("alerts", {}, this.alertsEtag).then((response) => {
         if(this.api.isLastSame) return;
         this.alerts = response;
