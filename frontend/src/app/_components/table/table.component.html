@@ -26,7 +26,7 @@
                     <i *ngIf="auth.profile.can('users-impersonate') && row.id !== auth.profile.id" class="fa fa-user me-2" (click)="onUserImpersonate(row.id)"></i>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="row.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!row.chief">
-                    <ng-container *ngIf="(getTime() - getTS(row.last_access)) <= 30;else userOffline"><u>{{ row.name }}</u></ng-container>
+                    <ng-container *ngIf="row.online;else userOffline"><u>{{ row.name }}</u></ng-container>
                     <ng-template #userOffline>{{ row.name }}</ng-template>
                 </td>
                 <td (click)="onChangeAvailability(row.id, row.available ? 0 : 1)">

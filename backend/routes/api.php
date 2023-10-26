@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/me', [AuthController::class, 'me']);
 
-    Route::get('/list', [UserController::class, 'index']);
+    Route::get('/list', [UserController::class, 'index'])->middleware(ETag::class);
 
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);

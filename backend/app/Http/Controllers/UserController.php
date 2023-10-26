@@ -18,7 +18,7 @@ class UserController extends Controller
 
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
-        return User::where('hidden', 0)
+        $list = User::where('hidden', 0)
             ->select($requestedCols)
             ->orderBy('available', 'desc')
             ->orderBy('chief', 'desc')
@@ -28,6 +28,16 @@ class UserController extends Controller
             ->orderBy('availability_minutes', 'desc')
             ->orderBy('name', 'asc')
             ->get();
+        
+        $now = now();
+        foreach($list as $user) {
+            //Add online status
+            $user->online = $user->last_access->diffInSeconds($now) < 30;
+            //Delete last_access
+            unset($user->last_access);
+        }
+
+        return response()->json($list);
     }
 
     /**
