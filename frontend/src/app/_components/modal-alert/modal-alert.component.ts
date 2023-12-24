@@ -48,6 +48,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
           this.originalNotes = response.notes;
         }
       }
+    }).catch((err) => {
+      console.log(err);
     });
   }
 
@@ -83,6 +85,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
       });
       this.notesHasUnsavedChanges = false;
       this.originalNotes = this.notes;
+    }).catch((err) => {
+      console.log(err);
     });
   }
 
