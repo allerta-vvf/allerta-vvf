@@ -31,7 +31,7 @@
     "leaflet": "^1.7.1",
     "leaflet.locatecontrol": "^0.76.0",
     "ngx-bootstrap": "^10.1.0",
-    "ngx-toastr": "^16.0.2",
+    "ngx-toastr": "^18.0.0",
     "rxjs": "~7.4.0",
     "sweetalert2": "^11.3.4",
     "tslib": "^2.3.0",
