@@ -18,7 +18,7 @@ export class ListComponent implements OnInit, OnDestroy {
   alertModalRef?: BsModalRef;
   @ViewChild('table') table!: TableComponent;
 
-  public loadAvailabilityInterval: NodeJS.Timer | undefined = undefined;
+  public loadAvailabilityInterval: any = undefined;
 
   public available: boolean | undefined = undefined;
   public manual_mode: boolean | undefined = undefined;
@@ -131,7 +131,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if(typeof this.loadAvailabilityInterval !== 'undefined') {
-      clearInterval(this.loadAvailabilityInterval);
+      clearInterval(this.loadAvailabilityInterval as number);
     }
   }
 

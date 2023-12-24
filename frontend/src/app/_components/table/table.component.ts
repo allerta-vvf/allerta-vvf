@@ -62,7 +62,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public originalData: any = [];
   private etag: string = "";
 
-  public loadDataInterval: NodeJS.Timer | undefined = undefined;
+  public loadDataInterval: any = undefined;
 
   public currentPage: number = 1;
   public totalElements: number = 1;
@@ -155,7 +155,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if(typeof this.loadDataInterval !== 'undefined') {
-      clearInterval(this.loadDataInterval);
+      clearInterval(this.loadDataInterval as number);
     }
   }
 

@@ -18,7 +18,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
 
   crewUsers: any[] = [];
 
-  loadDataInterval: NodeJS.Timer | undefined = undefined;
+  loadDataInterval: any = undefined;
 
   notes = "";
   originalNotes = "";
