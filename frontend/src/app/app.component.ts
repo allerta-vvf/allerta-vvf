@@ -42,6 +42,8 @@ export class AppComponent {
         if(this.api.isLastSame) return;
         this.alerts = response !== null ? response : [];
         this.alertsEtag = this.api.lastEtag;
+      }).catch((err) => {
+        console.log(err);
       });
     }
   }
