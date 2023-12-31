@@ -32,7 +32,7 @@ class UserController extends Controller
         $now = now();
         foreach($list as $user) {
             //Add online status
-            $user->online = $user->last_access->diffInSeconds($now) < 30;
+            $user->online = !is_null($user->last_access) && $user->last_access->diffInSeconds($now) < 30;
             //Delete last_access
             unset($user->last_access);
         }
