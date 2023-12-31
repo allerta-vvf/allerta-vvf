@@ -1,0 +1,6 @@
+<div class="input-group flex-nowrap">
+    <span class="input-group-text" id="addon-wrapping">Filtra interventi per data</span>
+    <input type="text" [disabled]="disabled" placeholder="Seleziona un intervallo di date" class="form-control" placement="bottom"
+        bsDaterangepicker [bsConfig]="dateRangePickerOptions" [maxDate]="maxDate" [(bsValue)]="range" (bsValueChange)="updateValue($event)">
+    <button class="btn btn-outline-secondary" type="button" (click)="resetRange()">Rimuovi filtri</button>
+</div>

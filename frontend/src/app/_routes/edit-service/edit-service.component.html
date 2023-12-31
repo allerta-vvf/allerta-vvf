@@ -65,8 +65,8 @@
     </div>
     <div [class.is-invalid-div]="!isFieldValid('lat')" class="mb-2">
       <label>{{ 'place'|translate|titlecase }}</label>
-      <map-picker *ngIf="addingService" (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
-      <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (onMarkerSet)="setPlace($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
+      <map-picker *ngIf="addingService" (markerSet)="setPlace($event.lat, $event.lng)"></map-picker>
+      <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (markerSet)="setPlace($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
     </div>
     <div class="form-group">
       <label for="notes">{{ 'notes'|translate|titlecase }}</label><br>

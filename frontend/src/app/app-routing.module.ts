@@ -29,6 +29,11 @@ const routes: Routes = [
     loadChildren: () => import('./_routes/edit-training/edit-training.module').then(m => m.EditTrainingModule),
     canActivate: [AuthorizeGuard]
   },
+  {
+    path: 'stats', 
+    loadChildren: () => import('./_routes/stats/stats.module').then(m => m.StatsModule),
+    canActivate: [AuthorizeGuard]
+  },
   { path: "login/:redirect/:extraParam", component: LoginComponent },
   { path: "login/:redirect", component: LoginComponent },
   //

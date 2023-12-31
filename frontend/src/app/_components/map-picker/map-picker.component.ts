@@ -17,7 +17,7 @@ export class MapPickerComponent implements OnInit {
   @Input() selectLat = "";
   @Input() selectLng = "";
 
-  @Output() onMarkerSet = new EventEmitter<any>();
+  @Output() markerSet = new EventEmitter<any>();
 
   options = {
     layers: [
@@ -48,7 +48,7 @@ export class MapPickerComponent implements OnInit {
   }
 
   setMarker(latLng: LatLng) {
-    this.onMarkerSet.emit({
+    this.markerSet.emit({
       lat: latLng.lat,
       lng: latLng.lng
     });

@@ -9,6 +9,7 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\StatsController;
 use App\Http\Controllers\PlacesController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\TrainingController;
@@ -28,6 +29,8 @@ use \Matthewbdaly\ETagMiddleware\ETag;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/stats/services', [StatsController::class, 'services'])->middleware(ETag::class);
 
 Route::middleware('auth:sanctum')->group( function () {
     //Route::post('/register', [AuthController::class, 'register']); //TODO: replace with admin only route
@@ -71,6 +74,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::delete('/trainings/{id}', [TrainingController::class, 'destroy']);
 
     Route::get('/logs', [LogsController::class, 'index'])->middleware(ETag::class);
+
+    //Route::get('/stats/services', [StatsController::class, 'services'])->middleware(ETag::class);
 
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
