@@ -191,7 +191,11 @@ export class StatsServicesComponent implements OnInit {
       for (let service of this.services) {
         const pos: LatLngTuple = [service.place.lat, service.place.lon];
         serviceMapFitBoundsTuple.push(pos);
-        let marker = new Marker(pos);
+        let marker = new Marker(pos, {
+          title: service.code
+        }).on("click", (e) => {
+          console.log(e);
+        });
         this.servicesMap.addMarker(marker);
       }
       this.servicesMap.setBounds(serviceMapFitBoundsTuple);
@@ -214,9 +218,5 @@ export class StatsServicesComponent implements OnInit {
     }
     if(this.lastRange !== this.range) this.loadServices();
     this.lastRange = this.range;
-  }
-
-  serviceMapClick(e: any) {
-    console.log(e);
   }
 }
