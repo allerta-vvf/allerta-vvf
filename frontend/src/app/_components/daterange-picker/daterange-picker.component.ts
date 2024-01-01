@@ -46,6 +46,7 @@ export class DaterangePickerComponent implements OnInit, ControlValueAccessor {
   range: (Date | undefined)[] | undefined = undefined;
 
   constructor(private localeService: BsLocaleService) {
+    this.range = undefined;
   }
 
   ngOnInit(): void {
@@ -68,8 +69,9 @@ export class DaterangePickerComponent implements OnInit, ControlValueAccessor {
   }
 
   updateValue($event: (Date | undefined)[] | undefined) {
+    if($event === null) $event = undefined;
     this.range = $event;
-    console.log("updateValue", this.range);    
+    console.log("updateValue", this.range);
     this.markAsTouched();
     this.onChange($event);
   }

@@ -1,7 +1,24 @@
 <daterange-picker [(ngModel)]="range" (ngModelChange)="filterDateRangeChanged($event)"></daterange-picker>
 
-<h3>Mappa degli interventi</h3>
+<h2 class="mt-3">Numero di interventi: <b>{{ serviceNumber }}</b></h2>
+
+<h3 class="mt-3 text-center">Mappa degli interventi</h3>
 <map #servicesMap (mapClick)="serviceMapClick($event)"></map>
 
-<h3 class="mt-3">Interventi per vigile</h3>
-<chart type="pie" [data]="data"></chart>
+<h3 class="mt-5 text-center">Interventi per vigile</h3>
+<chart type="pie" [data]="chartServicesByUserData"></chart>
+
+<h3 class="mt-5 text-center">Interventi per caposquadra</h3>
+<chart type="pie" [data]="chartServicesByChiefData"></chart>
+
+<h3 class="mt-5 text-center">Interventi per autista</h3>
+<chart type="pie" [data]="chartServicesByDriverData"></chart>
+
+<h3 class="mt-5 text-center">Interventi per tipologia</h3>
+<chart type="pie" [data]="chartServicesByTypeData"></chart>
+
+<h3 class="mt-5 text-center">Interventi per paese</h3>
+<chart type="pie" [data]="chartServicesByVillageData"></chart>
+
+<h3 class="mt-5 text-center">Interventi per area di competenza</h3>
+<chart type="pie" [data]="chartServicesByMunicipalityData"></chart>

@@ -161,5 +161,6 @@
     "first": "first",
     "press_to_select_a_date": "press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
-    "revision": "revision"
+    "revision": "revision",
+    "unknown": "unknown"
 }

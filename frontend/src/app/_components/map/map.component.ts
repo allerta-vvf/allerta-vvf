@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { LatLngTuple, LatLngBounds, latLng, tileLayer, Marker, Layer } from 'leaflet';
+import { LatLngTuple, LatLngBounds, latLng, tileLayer, Marker, Layer, Icon } from 'leaflet';
 
 export declare class LeafletControlLayersConfig {
   baseLayers: {
@@ -64,6 +64,21 @@ export class MapComponent implements OnInit {
   }
 
   addMarker(marker: Marker) {
+    const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
+    const iconUrl = "./assets/icons/marker-icon.png";
+    const shadowUrl = "./assets/icons/marker-shadow.png";
+    const iconDefault = new Icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
+    marker.setIcon(iconDefault);
+
     this.mapLayers.push(marker);
   }
 

@@ -30,12 +30,26 @@ export class ChartComponent implements OnInit {
         legend: {
           labels: {
             usePointStyle: true,
-            color: textColor
+            color: textColor,
+            generateLabels: (chart: any) => {
+              const datasets = chart.data.datasets;
+              if (!datasets.length) {
+                return [];
+              }
+              return datasets[0].data.map((data: any, i: number) => ({
+                text: `${chart.data.labels[i]} (${data})`,
+                fillStyle: datasets[0].backgroundColor[i],
+                index: i
+              }))
+            }
           }
         },
         colorschemes: {
           scheme: Aspect6
-      }
+        }
+      },
+      animation: {
+        duration: 1000
       }
     };
 

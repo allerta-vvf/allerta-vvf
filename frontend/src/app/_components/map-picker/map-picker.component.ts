@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiClientService } from 'src/app/_services/api-client.service';
-import { LatLng, latLng, tileLayer, Marker, Map } from 'leaflet';
+import { LatLng, latLng, tileLayer, Marker, Map, Icon } from 'leaflet';
 import "leaflet.locatecontrol";
 
 @Component({
@@ -56,7 +56,7 @@ export class MapPickerComponent implements OnInit {
     const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
     const iconUrl = "./assets/icons/marker-icon.png";
     const shadowUrl = "./assets/icons/marker-shadow.png";
-    const iconDefault = new (window as any).L.Icon({
+    const iconDefault = new Icon({
       iconRetinaUrl,
       iconUrl,
       shadowUrl,

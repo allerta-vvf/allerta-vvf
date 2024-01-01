@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
-import { marker, latLng, tileLayer } from 'leaflet';
+import { marker, latLng, tileLayer, Icon } from 'leaflet';
 
 @Component({
   selector: 'place-details',
@@ -48,7 +48,7 @@ export class PlaceDetailsComponent implements OnInit {
         const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
         const iconUrl = "./assets/icons/marker-icon.png";
         const shadowUrl = "./assets/icons/marker-shadow.png";
-        const iconDefault = new (window as any).L.Icon({
+        const iconDefault = new Icon({
           iconRetinaUrl,
           iconUrl,
           shadowUrl,
