@@ -2,4 +2,9 @@
 <div class="text-center mb-4">
     <button type="button" class="btn btn-primary" (click)="addService()">{{ 'add'|translate|titlecase }} {{ 'service'|translate }}</button>
 </div>
+<div class="text-center">
+    <div class="alert alert-primary mt-4" role="alert">
+        Per visualizzare statistiche e mappa degli interventi, <a routerLinkActive="active" routerLink="/stats/services">vai alla sezione "Statistiche > Interventi"</a>.
+    </div>
+</div>
 <app-table [sourceType]="'services'" [refreshInterval]="1200000"></app-table>
