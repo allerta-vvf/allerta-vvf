@@ -35,27 +35,22 @@ export class StatsServicesComponent implements OnInit {
     private toastr: ToastrService,
     private api: ApiClientService,
     private translate: TranslateService
-  ) {
-    this.api.get("list").then((users) => {
-      this.users = users;
-      console.log(this.users);
+  ) { }
+
+  ngOnInit(): void {
+    Promise.all([
+      this.api.get("list"),
+      this.api.get("service_types")
+    ]).then((values: any[]) => {
+      this.users = values[0];
+      this.types = values[1];
+
+      this.loadServices();
     }).catch((err) => {
       this.translate.get('edit_service.users_load_failed').subscribe((res: string) => {
         this.toastr.error(res);
       });
     });
-    this.api.get("service_types").then((types) => {
-      console.log(types);
-      this.types = types;
-    }).catch((err) => {
-      this.translate.get('edit_service.types_load_failed').subscribe((res: string) => {
-        this.toastr.error(res);
-      });
-    });
-  }
-
-  ngOnInit(): void {
-    this.loadServices();
   }
 
   getUserNameById(id: number) {
