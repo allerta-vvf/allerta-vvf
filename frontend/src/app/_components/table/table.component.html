@@ -1,9 +1,12 @@
 <ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
-    <div class="row mt-5">
+    <div class="row mt-5 mb-3">
         <div class="col-xs-12 col-12">
             <input type="text" class="form-control" placeholder="{{ 'search'|translate|titlecase }}" [(ngModel)]="searchText" (ngModelChange)="onSearchTextChange($event)">
         </div>
     </div>
+</ng-container>
+<ng-container *ngIf="sourceType && enableDateRangePickerTypes.includes(sourceType)">
+    <daterange-picker [(ngModel)]="range" (ngModelChange)="filterDateRangeChanged($event)"></daterange-picker>
 </ng-container>
 
 <div id="list" class="table-responsive mt-4">
@@ -88,7 +91,8 @@
         </thead>
         <tbody id="table_body">
             <tr *ngFor="let row of displayedData; index as i">
-                <td>{{ data.length - (rowsPerPage * (currentPage-1) + i) }}</td>
+                <td *ngIf="rangePicked"></td>
+                <td *ngIf="!rangePicked">{{ data.length - (rowsPerPage * (currentPage-1) + i) }}</td>
                 <td>{{ row.start | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.end | date:'dd/MM/YYYY, HH:mm' }}</td>
                 <td>{{ row.code }}</td>

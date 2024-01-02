@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Training;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Utils\Logger;
 
 class TrainingController extends Controller
@@ -16,12 +17,25 @@ class TrainingController extends Controller
     {
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
+        $query = Training::join('users', 'users.id', '=', 'chief_id')
+            ->select('trainings.*', 'users.name as chief')
+            ->with('crew:name')
+            ->orderBy('start', 'desc')
+            ->get();
+        if($request->has('from')) {
+            try {
+                $from = Carbon::parse($request->input('from'));
+                $query->whereDate('start', '>=', $from->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
+        if($request->has('to')) {
+            try {
+                $to = Carbon::parse($request->input('to'));
+                $query->whereDate('start', '<=', $to->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
         return response()->json(
-            Training::join('users', 'users.id', '=', 'chief_id')
-                ->select('trainings.*', 'users.name as chief')
-                ->with('crew:name')
-                ->orderBy('start', 'desc')
-                ->get()
+            $query->get()
         );
     }
 

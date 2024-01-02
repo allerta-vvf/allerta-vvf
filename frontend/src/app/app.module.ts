@@ -25,6 +25,8 @@ import { ModalAvailabilityScheduleComponent } from './_components/modal-availabi
 import { ModalAlertComponent } from './_components/modal-alert/modal-alert.component';
 import { OwnerImageComponent } from './_components/owner-image/owner-image.component';
 
+import { DaterangePickerModule } from './_components/daterange-picker/daterange-picker.module';
+
 import { LoginComponent } from './_routes/login/login.component';
 
 import { ListComponent } from './_routes/list/list.component';
@@ -67,6 +69,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
+    DaterangePickerModule,
     PaginationModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false && environment.production,

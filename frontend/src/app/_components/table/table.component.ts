@@ -33,7 +33,14 @@ export class TableComponent implements OnInit, OnDestroy {
     "updated_by_id",
     "changed_id",
     "editor_id"
-  ]
+  ];
+
+  enableDateRangePickerTypes: string[] = ['services', 'trainings'];
+  range: (Date | undefined)[] | undefined = undefined;
+  lastRange: (Date | undefined)[] | undefined = undefined;
+  rangePicked = false;
+  filterStart: Date | undefined;
+  filterEnd: Date | undefined;
 
   _maxPaginationSize: number = 10;
   _rowsPerPage: number = 20;
@@ -80,7 +87,10 @@ export class TableComponent implements OnInit, OnDestroy {
 
   loadTableData() {
     if(!this.sourceType) this.sourceType = "list";
-    this.api.get(this.sourceType, {}, this.etag).then((data: any) => {
+    this.api.get(this.sourceType, this.rangePicked ? {
+      from: this.filterStart ? this.filterStart.toISOString() : undefined,
+      to: this.filterEnd ? this.filterEnd.toISOString() : undefined
+    } : {}, this.etag).then((data: any) => {
       if(this.api.isLastSame) return;
       this.etag = this.api.lastEtag;
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
@@ -94,6 +104,21 @@ export class TableComponent implements OnInit, OnDestroy {
     }).catch((e) => {
       console.error(e);
     });
+  }
+
+  filterDateRangeChanged($event: Date[]) {
+    console.log($event);
+    if (typeof($event) !== "object" || ($event !== null && $event.length === 0)) {
+      this.filterStart = undefined;
+      this.filterEnd = undefined;
+      this.rangePicked = false;
+    } else {
+      this.filterStart = $event[0];
+      this.filterEnd = $event[1];
+      this.rangePicked = true;
+    }
+    if(this.lastRange !== this.range) this.loadTableData();
+    this.lastRange = this.range;
   }
 
   pageChanged(event: PageChangedEvent): void {

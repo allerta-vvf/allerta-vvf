@@ -6,6 +6,7 @@ use App\Models\Place;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Utils\Logger;
 
@@ -18,15 +19,27 @@ class ServiceController extends Controller
     {
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
+        $query = Service::join('users', 'users.id', '=', 'chief_id')
+            ->join('services_types', 'services_types.id', '=', 'type_id')
+            ->select('services.*', 'users.name as chief', 'services_types.name as type')
+            ->with('drivers:name')
+            ->with('crew:name')
+            ->with('place')
+            ->orderBy('start', 'desc');
+        if($request->has('from')) {
+            try {
+                $from = Carbon::parse($request->input('from'));
+                $query->whereDate('start', '>=', $from->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
+        if($request->has('to')) {
+            try {
+                $to = Carbon::parse($request->input('to'));
+                $query->whereDate('start', '<=', $to->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
         return response()->json(
-            Service::join('users', 'users.id', '=', 'chief_id')
-                ->join('services_types', 'services_types.id', '=', 'type_id')
-                ->select('services.*', 'users.name as chief', 'services_types.name as type')
-                ->with('drivers:name')
-                ->with('crew:name')
-                ->with('place')
-                ->orderBy('start', 'desc')
-                ->get()
+            $query->get()
         );
     }
 
