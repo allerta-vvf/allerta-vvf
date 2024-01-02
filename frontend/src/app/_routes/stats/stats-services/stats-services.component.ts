@@ -122,55 +122,89 @@ export class StatsServicesComponent implements OnInit {
       }
       municipalities[service.place.municipality]++;
     }
-    console.log(people, chiefs, drivers, types);
 
+    console.log(people, chiefs, drivers, types, villages, municipalities);
+
+    let peopleLabels: string[] = [], peopleValues: number[] = [];
+    Object.entries(people).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      peopleLabels.push(this.getUserNameById(parseInt(key)));
+      peopleValues.push(value);
+    });
     this.chartServicesByUserData = {
-      labels: Object.keys(people).map((id) => this.getUserNameById(parseInt(id))),
+      labels: peopleLabels,
       datasets: [
         {
-          data: Object.values(people),
+          data: peopleValues,
         }
       ]
     };
+    
+    let chiefsLabels: string[] = [], chiefsValues: number[] = [];
+    Object.entries(chiefs).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      chiefsLabels.push(this.getUserNameById(parseInt(key)));
+      chiefsValues.push(value);
+    });
     this.chartServicesByChiefData = {
-      labels: Object.keys(chiefs).map((id) => this.getUserNameById(parseInt(id))),
+      labels: chiefsLabels,
       datasets: [
         {
-          data: Object.values(chiefs),
+          data: chiefsValues,
         }
       ]
     };
+    
+    let driversLabels: string[] = [], driversValues: number[] = [];
+    Object.entries(drivers).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      driversLabels.push(this.getUserNameById(parseInt(key)));
+      driversValues.push(value);
+    });
     this.chartServicesByDriverData = {
-      labels: Object.keys(drivers).map((id) => this.getUserNameById(parseInt(id))),
+      labels: driversLabels,
       datasets: [
         {
-          data: Object.values(drivers),
+          data: driversValues,
         }
       ]
     };
-
+    
+    let typesLabels: string[] = [], typesValues: number[] = [];
+    Object.entries(types).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      typesLabels.push(this.getTypeNameById(parseInt(key)));
+      typesValues.push(value);
+    });
     this.chartServicesByTypeData = {
-      labels: Object.keys(types).map((id) => this.getTypeNameById(parseInt(id))),
+      labels: typesLabels,
       datasets: [
         {
-          data: Object.values(types),
+          data: typesValues,
         }
       ]
     };
 
+    let villagesLabels: string[] = [], villagesValues: number[] = [];
+    Object.entries(villages).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      villagesLabels.push(key);
+      villagesValues.push(value);
+    });
     this.chartServicesByVillageData = {
-      labels: Object.keys(villages),
+      labels: villagesLabels,
       datasets: [
         {
-          data: Object.values(villages),
+          data: villagesValues,
         }
       ]
     };
+    
+    let municipalitiesLabels: string[] = [], municipalitiesValues: number[] = [];
+    Object.entries(municipalities).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
+      municipalitiesLabels.push(key);
+      municipalitiesValues.push(value);
+    });
     this.chartServicesByMunicipalityData = {
-      labels: Object.keys(municipalities),
+      labels: municipalitiesLabels,
       datasets: [
         {
-          data: Object.values(municipalities),
+          data: municipalitiesValues,
         }
       ]
     };
