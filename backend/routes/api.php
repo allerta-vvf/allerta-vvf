@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/list', [UserController::class, 'index'])->middleware(ETag::class);
 
+    Route::get('/users/{id}', [UserController::class, 'show']);
+
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
 

@@ -100,6 +100,9 @@
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
+    "user_info_modal": {
+        "title": "User info"
+    },
     "warning": "warning",
     "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",
@@ -162,5 +165,6 @@
     "press_to_select_a_date": "press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "edit": "edit"
 }

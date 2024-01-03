@@ -24,6 +24,7 @@ class User extends Authenticatable implements LaratrustUser
      */
     protected $fillable = [
         'name',
+        'surname',
         'username',
         'email',
         'phone_number',
@@ -37,6 +38,10 @@ class User extends Authenticatable implements LaratrustUser
         'banned',
         'hidden',
         'password',
+        'birthplace',
+        'birthplace_province',
+        'ssn',
+        'address'
     ];
 
     /**
@@ -58,6 +63,8 @@ class User extends Authenticatable implements LaratrustUser
         'email_verified_at' => 'datetime',
         'last_access' => 'datetime',
         'last_availability_change' => 'datetime',
+        'birthday' => 'datetime',
+        'course_date' => 'datetime'
     ];
 
     /**

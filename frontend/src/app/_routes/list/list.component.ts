@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TableComponent } from '../../_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from '../../_components/modal-availability-schedule/modal-availability-schedule.component';
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
+import { ModalUserInfoComponent } from 'src/app/_components/modal-user-info/modal-user-info.component';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -116,6 +117,14 @@ export class ListComponent implements OnInit, OnDestroy {
       this.toastr.error(err.error.message, undefined, {
         timeOut: 5000
       });
+    });
+  }
+
+  openUserInfoPage(id: number) {
+    this.modalService.show(ModalUserInfoComponent, {
+      initialState: {
+        id
+      }
     });
   }
 

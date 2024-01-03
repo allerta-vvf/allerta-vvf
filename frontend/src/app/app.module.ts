@@ -23,6 +23,7 @@ import { environment } from '../environments/environment';
 import { TableComponent } from './_components/table/table.component';
 import { ModalAvailabilityScheduleComponent } from './_components/modal-availability-schedule/modal-availability-schedule.component';
 import { ModalAlertComponent } from './_components/modal-alert/modal-alert.component';
+import { ModalUserInfoComponent } from './_components/modal-user-info/modal-user-info.component';
 import { OwnerImageComponent } from './_components/owner-image/owner-image.component';
 
 import { DaterangePickerModule } from './_components/daterange-picker/daterange-picker.module';
@@ -43,6 +44,7 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
     TableComponent,
     ModalAvailabilityScheduleComponent,
     ModalAlertComponent,
+    ModalUserInfoComponent,
     OwnerImageComponent,
     //
     LoginComponent,

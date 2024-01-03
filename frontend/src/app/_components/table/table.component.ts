@@ -63,6 +63,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   @Output() changeAvailability: EventEmitter<{user: number, newState: 0|1}> = new EventEmitter<{user: number, newState: 0|1}>();
   @Output() userImpersonate: EventEmitter<number> = new EventEmitter<number>();
+  @Output() moreDetails: EventEmitter<{rowId: number}> = new EventEmitter<{rowId: number}>();
 
   public data: any = [];
   public displayedData: any = [];
@@ -197,6 +198,10 @@ export class TableComponent implements OnInit, OnDestroy {
         this.userImpersonate.emit(1);
       });
     }
+  }
+
+  onMoreDetails(rowId: number) {
+    this.moreDetails.emit({rowId});
   }
 
   openPlaceDetails(id: number) {

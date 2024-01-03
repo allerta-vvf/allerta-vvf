@@ -1,0 +1,117 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" translate>user_info_modal.title</h4>
+  <button
+    type="button"
+    class="btn-close close pull-right"
+    [attr.aria-label]="'close' | translate | titlecase"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="id == 0 || loaded == false">
+  <div class="d-flex justify-content-center mt-2 pt-2 mb-3">
+    <div class="spinner spinner-border"></div>
+  </div>
+</div>
+<div class="modal-body" *ngIf="id !== 0 && loaded">
+    <h2 class="text-center">{{ user.surname }} {{ user.name }}</h2>
+  <table class="mx-auto" style="border-collapse: separate; border-spacing: 0px">
+    <th></th>
+    <th></th>
+    <tr *ngIf="user.surname">
+      <td>Cognome</td>
+      <td>{{ user.surname }}</td>
+    </tr>
+    <tr>
+      <td>Nome</td>
+      <td>{{ user.name }}</td>
+    </tr>
+    <tr>
+        <td>Username</td>
+        <td>{{ user.username }}</td>
+    </tr>
+    <tr *ngIf="user.birthday">
+      <td>Data di nascita</td>
+      <td>{{ user.birthday | date:'dd/MM/yyyy' }}</td>
+    </tr>
+    <tr *ngIf="user.birthplace">
+      <td>Luogo di nascita</td>
+      <td>{{ user.birthplace }}<ng-container *ngIf="user.birthplace_province"> ({{ user.birthplace_province }})</ng-container></td>
+    </tr>
+    <tr *ngIf="user.ssn">
+      <td>Codice fiscale</td>
+      <td>{{ user.ssn }}</td>
+    </tr>
+    <tr>
+      <td colspan="2" class="text-center">
+        <br />
+        <h5>RECAPITI</h5>
+      </td>
+    </tr>
+    <tr *ngIf="user.address">
+      <td>Indirizzo</td>
+      <td>
+        <a href="https://maps.google.com/?q={{ user.address }}" target="_blank">
+            {{ user.address }}
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Telefono</td>
+      <td><a href="tel:{{ user.phone_number }}">{{ user.phone_number }}</a></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+    </tr>
+    <!--
+    <tr>
+      <td colspan="2" class="text-center">
+        <br />
+        <h5>DOCUMENTI</h5>
+      </td>
+    </tr>
+    <tr>
+        <td>
+            <a href='./aj/download.php?f=p&d=pat' target='_blank'>Patente</a>
+        </td>
+        <td>
+            <small>Nr:</small> 123456789<br><small>Scad:</small> 11/02/2024
+        </td>
+    </tr>
+    -->
+    <tr>
+      <td colspan="2" class="text-center">
+        <br />
+        <h5>INFORMAZIONI SERVIZIO</h5>
+      </td>
+    </tr>
+    <tr>
+      <td>Autista</td>
+      <td>
+        <i class="fa fa-check" style="color:green" *ngIf="user.driver"></i>
+        <i class="fa fa-times" style="color:red" *ngIf="!user.driver"></i>
+      </td>
+    </tr>
+    <tr>
+      <td>Tipologia</td>
+      <td>
+        <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief">
+        <img alt="black helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief">
+      </td>
+    </tr>
+    <tr *ngIf="user.course_date">
+      <td>Data corso</td>
+      <td>{{ user.course_date }}</td>
+    </tr>
+  </table>
+</div>
+<div class="modal-footer">
+  <button *ngIf="false" type="button" class="btn btn-primary" (click)="goToEditPage()" [disabled]="!canGoToEditPage">
+    {{ "edit" | translate | titlecase }}
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">
+    {{ "close" | translate }}
+  </button>
+</div>

@@ -51,9 +51,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Request $request, $id)
     {
-        //
+        User::where('id', $request->user()->id)->update(['last_access' => now()]);
+
+        return response()->json(User::findOrFail($id));
     }
 
     /**
