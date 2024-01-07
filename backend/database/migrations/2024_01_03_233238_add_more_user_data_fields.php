@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('birthplace_province')->nullable()->after('birthplace');
             $table->string('ssn')->nullable()->after('birthplace_province');
             $table->string('address')->nullable()->after('ssn');
+            $table->string('address_zip_code')->nullable()->after('address');
+            $table->string('suit_size')->nullable()->after('address_zip_code');
+            $table->string('boot_size')->nullable()->after('suit_size');
             $table->timestamp('birthday')->nullable()->after('last_availability_change');
             $table->timestamp('course_date')->nullable()->after('birthday');
         });
@@ -33,6 +36,9 @@ return new class extends Migration
             $table->dropColumn('birthplace_province');
             $table->dropColumn('ssn');
             $table->dropColumn('address');
+            $table->dropColumn('address_zip_code');
+            $table->dropColumn('suit_size');
+            $table->dropColumn('boot_size');
             $table->dropColumn('birthday');
             $table->dropColumn('course_date');
         });

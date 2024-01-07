@@ -21,6 +21,8 @@
                 </ng-container>
                 <th>{{ 'services'|translate|titlecase }}</th>
                 <th>{{ 'availability_minutes'|translate|titlecase }}</th>
+                <th>{{ 'edit'|translate|titlecase }}</th>
+                <!-- TODO: hide if user can't access -->
             </tr>
         </thead>
         <tbody id="table_body">
@@ -48,6 +50,8 @@
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
+                <td (click)="editUser(row.id)"><i class="fa fa-edit"></i></td>
+                <!-- TODO: hide if user can't access -->
             </tr>
         </tbody>
     </table>

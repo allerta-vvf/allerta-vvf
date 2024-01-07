@@ -53,7 +53,7 @@
       <td>Indirizzo</td>
       <td>
         <a href="https://maps.google.com/?q={{ user.address }}" target="_blank">
-            {{ user.address }}
+            {{ user.address }}<ng-container *ngIf="user.address_zip_code"> (CAP <i>{{ user.address_zip_code }}</i>)</ng-container>
         </a>
       </td>
     </tr>
@@ -88,6 +88,7 @@
       </td>
     </tr>
     <tr>
+      <!--TODO: translate -->
       <td>Autista</td>
       <td>
         <i class="fa fa-check" style="color:green" *ngIf="user.driver"></i>
@@ -108,7 +109,7 @@
   </table>
 </div>
 <div class="modal-footer">
-  <button *ngIf="false" type="button" class="btn btn-primary" (click)="goToEditPage()" [disabled]="!canGoToEditPage">
+  <button type="button" class="btn btn-primary" (click)="goToEditPage()" [disabled]="!canGoToEditPage">
     {{ "edit" | translate | titlecase }}
   </button>
   <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'modal-user-info',
@@ -23,8 +21,7 @@ export class ModalUserInfoComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private api: ApiClientService,
     public auth: AuthService,
-    private toastr: ToastrService,
-    private translate: TranslateService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -41,6 +38,6 @@ export class ModalUserInfoComponent implements OnInit {
   goToEditPage() {
     if(!this.canGoToEditPage) return;
     this.bsModalRef.hide();
-
+    this.router.navigate(['/users', this.id]);
   }
 }

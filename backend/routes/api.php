@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScheduleSlotsController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ServiceController;
@@ -45,7 +46,10 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/list', [UserController::class, 'index'])->middleware(ETag::class);
 
-    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+
+    Route::post('/documents/driving_license', [DocumentsController::class, 'uploadDrivingLicenseScan']);
 
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
@@ -82,6 +86,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware('signed')->group( function () {
+    Route::get('/documents/driving_license/{uuid}', [DocumentsController::class, 'serveDrivingLicenseScan'])->name('driving_license_scan_serve');
 });
 
 Route::get('/owner_image', function() {

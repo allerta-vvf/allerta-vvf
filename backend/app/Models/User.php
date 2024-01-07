@@ -41,7 +41,10 @@ class User extends Authenticatable implements LaratrustUser
         'birthplace',
         'birthplace_province',
         'ssn',
-        'address'
+        'address',
+        'address_zip_code',
+        'suit_size',
+        'boot_size'
     ];
 
     /**

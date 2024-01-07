@@ -204,6 +204,10 @@ export class TableComponent implements OnInit, OnDestroy {
     this.moreDetails.emit({rowId});
   }
 
+  editUser(id: number) {
+    this.router.navigate(['/users', id]);
+  }
+
   openPlaceDetails(id: number) {
     this.router.navigate(['/place-details', id]);
   }

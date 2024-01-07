@@ -11,6 +11,11 @@ import { LoginComponent } from './_routes/login/login.component';
 
 const routes: Routes = [
   { path: 'list', component: ListComponent, canActivate: [AuthorizeGuard] },
+  {
+    path: 'users/:id', 
+    loadChildren: () => import('./_routes/edit-user/edit-user.module').then(m => m.EditUserModule),
+    canActivate: [AuthorizeGuard]
+  },
   { path: 'logs', component: LogsComponent, canActivate: [AuthorizeGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [AuthorizeGuard] },
   {
