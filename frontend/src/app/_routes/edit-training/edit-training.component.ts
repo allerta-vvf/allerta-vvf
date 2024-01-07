@@ -120,13 +120,13 @@ export class EditTrainingComponent implements OnInit {
         values.id = this.trainingId;
         this.api.post("trainings", values).then((res) => {
           console.log(res);
-          this.translate.get('edit_training.training_added_successfully').subscribe((res: string) => {
+          this.translate.get('edit_training.training_updated_successfully').subscribe((res: string) => {
             this.toastr.success(res);
           });
           this.submittingForm = false;
         }).catch((err) => {
           console.error(err);
-          this.translate.get('edit_training.training_add_failed').subscribe((res: string) => {
+          this.translate.get('edit_training.training_update_failed').subscribe((res: string) => {
             this.toastr.error(res);
           });
           this.submittingForm = false;

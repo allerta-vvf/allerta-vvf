@@ -206,13 +206,13 @@ export class EditServiceComponent implements OnInit {
         values.id = this.serviceId;
         this.api.post("services", values).then((res) => {
           console.log(res);
-          this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
+          this.translate.get('edit_service.service_updated_successfully').subscribe((res: string) => {
             this.toastr.success(res);
           });
           this.submittingForm = false;
         }).catch((err) => {
           console.error(err);
-          this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
+          this.translate.get('edit_service.service_update_failed').subscribe((res: string) => {
             this.toastr.error(res);
           });
           this.submittingForm = false;

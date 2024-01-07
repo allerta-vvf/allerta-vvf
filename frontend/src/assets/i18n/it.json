@@ -82,6 +82,8 @@
         "type_added_successfully": "Tipologia aggiunta con successo",
         "service_added_successfully": "Intervento aggiunto con successo",
         "service_add_failed": "Errore durante l'aggiunta dell'intervento. Riprovare più tardi",
+        "service_updated_successfully": "Intervento aggiornato con successo",
+        "service_update_failed": "Errore durante l'aggiornamento dell'intervento. Riprovare più tardi",
         "service_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi",
         "types_load_failed": "Errore durante il caricamento delle tipologie di intervento. Riprovare più tardi",
@@ -95,6 +97,8 @@
         "other_crew_members": "Altri membri della squadra",
         "training_added_successfully": "Esercitazione aggiunta con successo",
         "training_add_failed": "Errore durante l'aggiunta dell'esercitazione. Riprovare più tardi",
+        "training_updated_successfully": "Esercitazione aggiornata con successo",
+        "training_update_failed": "Errore durante l'aggiornamento dell'esercitazione. Riprovare più tardi",
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },

@@ -82,6 +82,8 @@
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
         "service_add_failed": "Service could not be added. Please try again",
+        "service_updated_successfully": "Service updated successfully",
+        "service_update_failed": "Service could not be updated. Please try again",
         "service_load_failed": "Service could not be loaded. Please try again",
         "users_load_failed": "Users could not be loaded. Please try again",
         "types_load_failed": "Types could not be loaded. Please try again",
@@ -95,6 +97,8 @@
         "other_crew_members": "Other crew members",
         "training_added_successfully": "Training added successfully",
         "training_add_failed": "Training could not be added. Please try again",
+        "training_updated_successfully": "Training updated successfully",
+        "training_update_failed": "Training could not be updated. Please try again",
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
