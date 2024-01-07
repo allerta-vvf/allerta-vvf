@@ -16,7 +16,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->user()->hasPermission("users-read")) abort(401);
         $requestedCols = ['id', 'chief', 'last_access', 'name', 'available', 'driver', 'services', 'availability_minutes'];
         if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
 
@@ -40,8 +39,6 @@ class UserController extends Controller
             //Delete last_access
             unset($user->last_access);
         }
-
-        //TODO: support for more data selections, follow user permissions, do not share information that should not be shared to that user etc. see notes
 
         return response()->json($list);
     }
