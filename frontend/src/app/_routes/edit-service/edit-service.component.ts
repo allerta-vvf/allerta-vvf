@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
@@ -56,8 +56,14 @@ export class EditServiceComponent implements OnInit {
       chief: [this.loadedService.chief, [Validators.required]],
       drivers: [this.loadedService.drivers, []],
       crew: [this.loadedService.crew, [Validators.required]],
-      lat: [this.loadedService.lat, [Validators.required, Validators.min(0)]], //TODO add validations or in UI you can submit without place
-      lon: [this.loadedService.lon, [Validators.required, Validators.min(0)]],
+      lat: [this.loadedService.lat, [Validators.required, (control: AbstractControl): ValidationErrors | null => {
+        const valid = control.value >= -90 && control.value <= 90;
+        return valid ? null : { 'invalidLatitude': { value: control.value } };
+      }]],
+      lon: [this.loadedService.lon, [Validators.required, (control: AbstractControl): ValidationErrors | null => {
+        const valid = control.value >= -180 && control.value <= 180;
+        return valid ? null : { 'invalidLongitude': { value: control.value } };
+      }]],
       notes: [this.loadedService.notes],
       type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
     });
