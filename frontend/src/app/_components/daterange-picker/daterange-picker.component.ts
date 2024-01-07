@@ -23,6 +23,8 @@ export class DaterangePickerComponent implements OnInit, ControlValueAccessor {
   maxDate: Date = new Date();
 
   dateRangePickerOptions = {
+    adaptivePosition: true,
+    dateInputFormat: 'DD/MM/YYYY',
     ranges: [
       {
         value: [new Date(new Date().setDate(new Date().getDate() - 31)), new Date()],
