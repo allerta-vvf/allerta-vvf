@@ -88,7 +88,7 @@ export class EditUserComponent implements OnInit {
               number: this.user.driving_license ? this.user.driving_license.doc_number : null,
               type: this.user.driving_license ? this.user.driving_license.doc_type : null,
               expiration_date: (this.user.driving_license && this.user.driving_license.expiration_date) ? new Date(this.user.driving_license.expiration_date) : null,
-              scan: this.user.driving_license ? this.user.driving_license.uuid : null
+              scan: this.user.driving_license ? this.user.driving_license.scan_uuid : null
             },
             suit_size: this.user.suit_size,
             boot_size: this.user.boot_size
@@ -104,8 +104,8 @@ export class EditUserComponent implements OnInit {
           this.update_date = convertToItalianDate(this.user.updated_at);
           this.last_access_date = convertToItalianDate(this.user.last_access);
 
-          if(this.user.driving_license && this.user.driving_license.document_file) {
-            this.dlCurrScanUrl = this.api.apiEndpoint(this.user.driving_license.document_file.url);
+          if(this.user.driving_license && this.user.driving_license.scan_uuid) {
+            this.dlCurrScanUrl = this.api.apiEndpoint(this.user.driving_license.scan_url);
           }
         }).catch((err) => {
           console.log(err);

@@ -63,15 +63,19 @@ class UserController extends Controller
 
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
-        //TODO: do not display useless or hidden info to the user about documentFile (like filePath and id) but only the url (see below)
-        $user->driving_license = Document::where('added_by', $user->id)
-            ->where('type', 'driving_license')
-            ->with('documentFile')
-            ->first();
+        $dl_tmp = Document::where('documents.added_by', $user->id)
+            ->where('documents.type', 'driving_license')
+            ->join('document_files', 'document_files.id', '=', 'documents.document_file_id')
+            ->select('documents.doc_type', 'documents.doc_number', 'documents.expiration_date', 'document_files.uuid as scan_uuid')
+            ->get();
+        
+        if($dl_tmp->count() > 0) {
+            $user->driving_license = $dl_tmp[0];
+        }
 
-        if(!is_null($user->driving_license) && !is_null($user->driving_license->documentFile)) {
-            $user->driving_license->documentFile->url = URL::temporarySignedRoute(
-                'driving_license_scan_serve', now()->addMinutes(2), ['uuid' => $user->driving_license->documentFile->uuid]
+        if(!is_null($user->driving_license) && !is_null($user->driving_license->scan_uuid)) {
+            $user->driving_license->scan_url = URL::temporarySignedRoute(
+                'driving_license_scan_serve', now()->addMinutes(2), ['uuid' => $user->driving_license->scan_uuid]
             );
         }
 
