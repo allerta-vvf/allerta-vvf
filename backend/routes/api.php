@@ -34,7 +34,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/stats/services', [StatsController::class, 'services'])->middleware(ETag::class);
 
 Route::middleware('auth:sanctum')->group( function () {
-    //Route::post('/register', [AuthController::class, 'register']); //TODO: replace with admin only route
+    Route::post('/register', [AuthController::class, 'register']);
 
     Route::post('/impersonate/{user}', [AuthController::class, 'impersonate']);
     Route::post('/stop_impersonating', [AuthController::class, 'stopImpersonating']);

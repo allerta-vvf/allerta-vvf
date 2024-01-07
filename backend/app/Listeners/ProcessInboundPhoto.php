@@ -22,7 +22,6 @@ class ProcessInboundPhoto
         $bot = $event->bot;
 
         /*
-        //TODO: update if needed
         // Download the largest image to the storage/app directory.
         $photo = collect($update['message']['photo'])->last();
         $bot->downloadFile($photo, storage_path('app/photos'));
