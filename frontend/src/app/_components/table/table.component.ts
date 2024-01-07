@@ -201,7 +201,9 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   onMoreDetails(rowId: number) {
-    this.moreDetails.emit({rowId});
+    if(this.auth.profile.can('users-update')) {
+      this.moreDetails.emit({rowId});
+    }
   }
 
   editUser(id: number) {

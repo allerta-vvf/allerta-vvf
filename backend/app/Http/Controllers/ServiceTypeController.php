@@ -14,6 +14,7 @@ class ServiceTypeController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$request->user()->hasPermission("services-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         return response()->json(
@@ -26,6 +27,7 @@ class ServiceTypeController extends Controller
      */
     public function create(Request $request)
     {
+        if(!$request->user()->hasPermission("services-create")) abort(401);
         $serviceType = new ServiceType();
         $serviceType->name = $request->name;
         $serviceType->save();

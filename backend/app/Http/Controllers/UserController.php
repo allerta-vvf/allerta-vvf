@@ -16,6 +16,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$request->user()->hasPermission("users-read")) abort(401);
         $requestedCols = ['id', 'chief', 'last_access', 'name', 'available', 'driver', 'services', 'availability_minutes'];
         if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
 
@@ -58,6 +59,8 @@ class UserController extends Controller
      */
     public function show(Request $request, User $user)
     {
+        if($request->user()->id != $user->id && !$request->user()->hasPermission("users-read")) abort(401);
+
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         //TODO: do not display useless or hidden info to the user about documentFile (like filePath and id) but only the url (see below)
@@ -80,6 +83,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if($request->user()->id != $user->id && !$request->user()->hasPermission("users-update")) abort(401);
+        if($request->user()->id == $user->id && !$request->user()->hasPermission("user-update")) abort(401);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'string|max:255',
@@ -106,14 +112,22 @@ class UserController extends Controller
             'boot_size' => 'string|max:255'
         ]);
 
-        /*
-        //TODO: new user permissions
-        if($request->user()->isAbleTo("users-update")) {
-            $user->update($request->all());
-        } else {
-            $user->update($request->except(['chief', 'driver', 'banned', 'hidden']));
-        }
-        */
+        $canSetChief = $request->user()->id == $user->id ?
+            $request->user()->hasPermission("user-set-chief") :
+            $request->user()->hasPermission("users-set-chief");
+        $canSetDriver = $request->user()->id == $user->id ?
+            $request->user()->hasPermission("user-set-driver") :
+            $request->user()->hasPermission("users-set-driver");
+        $canBan = $request->user()->id == $user->id ?
+            $request->user()->hasPermission("user-ban") :
+            $request->user()->hasPermission("users-ban");
+        $canHide = $request->user()->id == $user->id ?
+            $request->user()->hasPermission("user-hide") :
+            $request->user()->hasPermission("users-hide");
+        if(!$canSetChief) $request->request->remove('chief');
+        if(!$canSetDriver) $request->request->remove('driver');
+        if(!$canBan) $request->request->remove('banned');
+        if(!$canHide) $request->request->remove('hidden');
 
         $user->update($request->all());
 

@@ -17,6 +17,7 @@ class AlertController extends Controller
      */
     public function index()
     {
+        if(!request()->user()->hasPermission("alerts-read")) abort(401);
         return response()->json(
             request()->query('full', false) ?
                 Alert::with(['crew.user' => function($query) {
@@ -47,6 +48,7 @@ class AlertController extends Controller
      */
     public function store(Request $request)
     {
+        if(!$request->user()->hasPermission("alerts-create")) abort(401);
         $alert = Alerts::addAlert(
             $request->input('type', 'support'),
             $request->input('ignoreWarning', false)
@@ -64,6 +66,7 @@ class AlertController extends Controller
      */
     public function show(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("alerts-read")) abort(401);
         return response()->json(
             Alert::where('id', $id)
                 ->with(['crew.user' => function($query) {
@@ -88,8 +91,7 @@ class AlertController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //TODO: improve permissions and roles
-        if(!$request->user()->hasPermission("users-read")) abort(401);
+        if(!$request->user()->hasPermission("alerts-update")) abort(401);
         $alert = Alert::find($id);
         $alert->notes = $request->input('notes', $alert->notes);
         $alert->closed = $request->input('closed', $alert->closed);
@@ -116,6 +118,7 @@ class AlertController extends Controller
      */
     public function setResponse(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("alerts-read")) abort(401);
         try {
             Alerts::updateAlertResponse($id, $request->input('response'));
         } catch(AlertClosed $e) {

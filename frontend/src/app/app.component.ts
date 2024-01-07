@@ -57,22 +57,31 @@ export class AppComponent {
       }
     });
 
-    this.loadAlertsInterval = setInterval(() => {
-      console.log("Refreshing alerts...");
+    if(this.auth.profile.can("alerts-read")) {
+      this.loadAlertsInterval = setInterval(() => {
+        console.log("Refreshing alerts...");
+        this.loadAlerts();
+      }, 30000);
       this.loadAlerts();
-    }, 30000);
-    this.loadAlerts();
 
-    this.api.alertsChanged.subscribe(() => {
-      this.loadAlerts();
-    });
+      this.api.alertsChanged.subscribe(() => {
+        this.loadAlerts();
+      });
+    }
   }
 
   openAlert(id: number) {
-    this.modalService.show(ModalAlertComponent, {
-      initialState: {
-        id: id
-      }
-    });
+    if(this.auth.profile.can("alerts-read")) {
+      this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          id: id
+        }
+      });
+    }
+  }
+
+  logout(event: Event) {
+    event.preventDefault();
+    this.auth.logout();
   }
 }

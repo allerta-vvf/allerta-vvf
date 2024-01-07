@@ -76,7 +76,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   saveAlertSettings() {
-    if(!this.auth.profile.can('users-read')) return;
+    if(!this.auth.profile.can('alerts-update')) return;
     this.api.patch(`alerts/${this.id}`, {
       notes: this.notes
     }).then((response) => {
@@ -91,7 +91,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   deleteAlert() {
-    if(!this.auth.profile.can('users-read')) return;
+    if(!this.auth.profile.can('alerts-update')) return;
     this.translate.get([
       'alert.delete_confirm_title',
       'alert.delete_confirm_text',
@@ -135,7 +135,7 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
   }
 
   setCurrentUserResponse(response: number) {
-    if(!this.auth.profile.can('users-read')) return;
+    if(!this.auth.profile.can('alerts-read')) return;
     this.api.post(`alerts/${this.id}/response`, {
       response
     }).then((response) => {

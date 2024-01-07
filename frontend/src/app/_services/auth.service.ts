@@ -33,6 +33,8 @@ export class AuthService {
                     return this.profile.permissions.includes(permission);
                 }
 
+                this.profile.profilePageLink = "/users/" + this.profile.id;
+
                 Sentry.setUser({
                     id: this.profile.id,
                     name: this.profile.name

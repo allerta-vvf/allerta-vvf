@@ -91,7 +91,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   addAlert(type: string, ignoreWarning = false) {
     this.alertLoading = true;
-    if(!this.auth.profile.can('users-read')) return;
+    if(!this.auth.profile.can('alerts-create')) return;
     this.api.post("alerts", {
       type,
       ignoreWarning

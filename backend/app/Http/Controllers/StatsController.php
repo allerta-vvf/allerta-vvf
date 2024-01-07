@@ -14,6 +14,7 @@ class StatsController extends Controller
      */
     public function services(Request $request)
     {
+        if(!$request->user()->hasPermission("services-read")) abort(401);
         $query = Service::select('id','code','chief_id','type_id','place_id','notes','start','end','added_by_id','created_at')
             ->with('place')
             ->with('drivers:id')

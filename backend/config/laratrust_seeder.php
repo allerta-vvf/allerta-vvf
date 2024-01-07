@@ -13,25 +13,45 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'users' => 'c,r,u,d,i',
+            'users' => 'c,r,u,d,i,b,h,sc,sd',
+            'user' => 'u,h,sc,sd',
+            'services' => 'c,r,u,d',
+            'trainings' => 'c,r,u,d',
+            'alerts' => 'c,r,u',
         ],
         'admin' => [
-            'users' => 'c,r,u'
+            'users' => 'c,r,u,d,i,b,h,sc,sd',
+            'user' => 'u,h,sc,sd',
+            'services' => 'c,r,u,d',
+            'trainings' => 'c,r,u,d',
+            'alerts' => 'c,r,u',
         ],
         'chief' => [
-            'users' => 'r'
+            'users' => 'r,u,sc,sd',
+            'user' => 'u',
+            'services' => 'c,r,u,d',
+            'trainings' => 'c,r,u,d',
+            'alerts' => 'c,r,u',
         ],
         'user' => [
-            'users' => 'lr'
+            'users' => 'lr',
+            'user' => 'u',
+            'services' => 'c,r,u,d',
+            'trainings' => 'c,r,u,d',
+            'alerts' => 'r',
         ]
     ],
 
     'permissions_map' => [
         'c' => 'create',
-        'lr' => 'limitedRead',
+        'lr' => 'limited-read',
         'r' => 'read',
         'u' => 'update',
         'd' => 'delete',
-        'i' => 'impersonate'
+        'i' => 'impersonate',
+        'b' => 'ban',
+        'h' => 'hide',
+        'sc' => 'set-chief',
+        'sd' => 'set-driver',
     ]
 ];

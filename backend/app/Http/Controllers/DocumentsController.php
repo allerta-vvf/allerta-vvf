@@ -38,7 +38,6 @@ class DocumentsController extends Controller
 
     public function serveDrivingLicenseScan($uuid)
     {
-        //TODO: check if the user has access to the document
         $document = DocumentFile::where('uuid', $uuid)->firstOrFail();
 
         return response()->file(storage_path('app/public/' . $document->file_path));

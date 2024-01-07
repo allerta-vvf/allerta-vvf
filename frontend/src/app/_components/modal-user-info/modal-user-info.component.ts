@@ -32,7 +32,7 @@ export class ModalUserInfoComponent implements OnInit {
     }).catch((err) => {
       console.log(err);
     });
-    this.canGoToEditPage = this.auth.profile.id === this.id || this.auth.profile.can('users-read');
+    this.canGoToEditPage = this.auth.profile.id === this.id || this.auth.profile.can('users-update');
   }
 
   goToEditPage() {

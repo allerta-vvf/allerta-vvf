@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@a
 import { Observable } from 'rxjs';
 import { GuardLoaderIconService } from '../_services/guard-loader-icon.service';
 import { AuthService } from '../_services/auth.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,20 @@ export class AuthorizeGuard  {
       this.router.navigate(['login', state.url.replace('/', '')]);
       return false;
     } else {
+      console.log(route.data);
+      if(route.data["permissionsRequired"]) {
+        let permissionsRequired = route.data["permissionsRequired"];
+        console.log(permissionsRequired, this.authService.profile.permissions);
+        if(!permissionsRequired.every((permission: string) => this.authService.profile.permissions.includes(permission))) {
+          //TODO: translate
+          Swal.fire({
+            title: "Non hai i permessi necessari per accedere a questa pagina",
+            icon: "error",
+            confirmButtonText: "Ok"
+          });
+          return false;
+        }
+      }
       return true;
     }
   }

@@ -15,6 +15,7 @@ class TrainingController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$request->user()->hasPermission("trainings-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         $query = Training::join('users', 'users.id', '=', 'chief_id')
@@ -44,6 +45,7 @@ class TrainingController extends Controller
      */
     public function show(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("trainings-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         return response()->json(
@@ -69,6 +71,9 @@ class TrainingController extends Controller
     public function createOrUpdate(Request $request)
     {
         $adding = !isset($request->id) || is_null($request->id);
+
+        if(!$adding && !$request->user()->hasPermission("trainings-update")) abort(401);
+        if($adding && !$request->user()->hasPermission("trainings-create")) abort(401);
 
         $training = $adding ? new Training() : Training::where("id",$request->id)->with('crew')->first();
 
@@ -107,8 +112,9 @@ class TrainingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("trainings-delete")) abort(401);
         $training = Training::find($id);
         $usersToDecrement = $this->extractTrainingUsers($training);
         User::whereIn('id', $usersToDecrement)->decrement('trainings');

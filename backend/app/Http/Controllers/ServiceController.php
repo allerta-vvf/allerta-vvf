@@ -17,6 +17,7 @@ class ServiceController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$request->user()->hasPermission("services-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         $query = Service::join('users', 'users.id', '=', 'chief_id')
@@ -48,6 +49,7 @@ class ServiceController extends Controller
      */
     public function show(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("services-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         return response()->json(
@@ -79,6 +81,9 @@ class ServiceController extends Controller
     public function createOrUpdate(Request $request)
     {
         $adding = !isset($request->id) || is_null($request->id);
+
+        if(!$adding && !$request->user()->hasPermission("services-update")) abort(401);
+        if($adding && !$request->user()->hasPermission("services-create")) abort(401);
 
         $service = $adding ? new Service() : Service::where("id",$request->id)->with('drivers')->with('crew')->first();
 
@@ -155,8 +160,9 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if(!$request->user()->hasPermission("services-delete")) abort(401);
         $service = Service::find($id);
         $usersToDecrement = $this->extractServiceUsers($service);
         User::whereIn('id', $usersToDecrement)->decrement('services');

@@ -17,12 +17,13 @@
                 <th>{{ 'available'|translate|titlecase }}</th>
                 <th>{{ 'driver'|translate|titlecase }}</th>
                 <ng-container *ngIf="auth.profile.can('users-read')">
-                <th>{{ 'call'|translate|titlecase }}</th>
+                    <th>{{ 'call'|translate|titlecase }}</th>
                 </ng-container>
                 <th>{{ 'services'|translate|titlecase }}</th>
                 <th>{{ 'availability_minutes'|translate|titlecase }}</th>
-                <th>{{ 'edit'|translate|titlecase }}</th>
-                <!-- TODO: hide if user can't access -->
+                <ng-container *ngIf="auth.profile.can('users-update')">
+                    <th>{{ 'edit'|translate|titlecase }}</th>
+                </ng-container>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -50,8 +51,7 @@
                 </td>
                 <td>{{ row.services }}</td>
                 <td>{{ row.availability_minutes }}</td>
-                <td (click)="editUser(row.id)"><i class="fa fa-edit"></i></td>
-                <!-- TODO: hide if user can't access -->
+                <td *ngIf="auth.profile.can('users-update')" (click)="editUser(row.id)"><i class="fa fa-edit"></i></td>
             </tr>
         </tbody>
     </table>
@@ -91,8 +91,8 @@
                 <th>{{ 'place'|translate|titlecase }}</th>
                 <th>{{ 'notes'|translate|titlecase }}</th>
                 <th>{{ 'type'|translate|titlecase }}</th>
-                <th>{{ 'update'|translate|titlecase }}</th>
-                <th>{{ 'remove'|translate|titlecase }}</th>
+                <th *ngIf="auth.profile.can('services-update')">{{ 'update'|translate|titlecase }}</th>
+                <th *ngIf="auth.profile.can('services-delete')">{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -112,8 +112,8 @@
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
-                <td (click)="editService(row.id)"><i class="fa fa-edit"></i></td>
-                <td (click)="deleteService(row.id)"><i class="fa fa-trash"></i></td>
+                <td (click)="editService(row.id)" *ngIf="auth.profile.can('services-update')"><i class="fa fa-edit"></i></td>
+                <td (click)="deleteService(row.id)" *ngIf="auth.profile.can('services-delete')"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>
@@ -131,8 +131,8 @@
                 <th>{{ 'crew'|translate|titlecase }}</th>
                 <th>{{ 'place'|translate|titlecase }}</th>
                 <th>{{ 'notes'|translate|titlecase }}</th>
-                <th>{{ 'update'|translate|titlecase }}</th>
-                <th>{{ 'remove'|translate|titlecase }}</th>
+                <th *ngIf="auth.profile.can('trainings-update')">{{ 'update'|translate|titlecase }}</th>
+                <th *ngIf="auth.profile.can('trainings-delete')">{{ 'remove'|translate|titlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -145,8 +145,8 @@
                 <td>{{ extractNamesFromObject(row.crew).join(', ') }}</td>
                 <td>{{ row.place }}</td>
                 <td>{{ row.notes }}</td>
-                <td (click)="editTraining(row.id)"><i class="fa fa-edit"></i></td>
-                <td (click)="deleteTraining(row.id)"><i class="fa fa-trash"></i></td>
+                <td (click)="editTraining(row.id)" *ngIf="auth.profile.can('trainings-update')"><i class="fa fa-edit"></i></td>
+                <td (click)="deleteTraining(row.id)" *ngIf="auth.profile.can('trainings-delete')"><i class="fa fa-trash"></i></td>
             </tr>
         </tbody>
     </table>

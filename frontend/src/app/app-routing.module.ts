@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [AuthorizeGuard]
   },
   { path: 'logs', component: LogsComponent, canActivate: [AuthorizeGuard] },
-  { path: 'services', component: ServicesComponent, canActivate: [AuthorizeGuard] },
+  { path: 'services', component: ServicesComponent, canActivate: [AuthorizeGuard], data: {permissionsRequired: ['services-read']} },
   {
     path: 'place-details', 
     loadChildren: () => import('./_routes/place-details/place-details.module').then(m => m.PlaceDetailsModule),
@@ -26,13 +26,15 @@ const routes: Routes = [
   {
     path: 'services/:id', 
     loadChildren: () => import('./_routes/edit-service/edit-service.module').then(m => m.EditServiceModule),
-    canActivate: [AuthorizeGuard]
+    canActivate: [AuthorizeGuard],
+    data: {permissionsRequired: ['services-read', 'services-update']}
   },
-  { path: 'trainings', component: TrainingsComponent, canActivate: [AuthorizeGuard] },
+  { path: 'trainings', component: TrainingsComponent, canActivate: [AuthorizeGuard], data: {permissionsRequired: ['trainings-read']} },
   {
     path: 'trainings/:id', 
     loadChildren: () => import('./_routes/edit-training/edit-training.module').then(m => m.EditTrainingModule),
-    canActivate: [AuthorizeGuard]
+    canActivate: [AuthorizeGuard],
+    data: {permissionsRequired: ['trainings-read', 'trainings-update']}
   },
   {
     path: 'stats', 

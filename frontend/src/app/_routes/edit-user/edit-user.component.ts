@@ -115,12 +115,23 @@ export class EditUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(!this.auth.profile.can('users-ban') || this.id === this.auth.profile.id) {
-      this.profileForm.get('banned')?.disable();
-    }
-    if(!this.auth.profile.can('users-hide') || (!this.auth.profile.can('user-hide') && this.id === this.auth.profile.id)) {
-      this.profileForm.get('hidden')?.disable();
-    }
+    let canSetChief = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-set-chief') :
+      this.auth.profile.can('users-set-chief');
+    let canSetDriver = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-set-driver') :
+      this.auth.profile.can('users-set-driver');
+    let canBan = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-ban') :
+      this.auth.profile.can('users-ban');
+    let canHide = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-hide') :
+      this.auth.profile.can('users-hide');
+    
+    if(!canSetChief) this.profileForm.get('chief')?.disable();
+    if(!canSetDriver) this.profileForm.get('driver')?.disable();
+    if(!canBan) this.profileForm.get('banned')?.disable();
+    if(!canHide) this.profileForm.get('hidden')?.disable();
   }
 
   onDrivingLicenseScanSelected(event: any) {
