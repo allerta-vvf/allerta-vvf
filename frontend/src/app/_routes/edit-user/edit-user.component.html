@@ -1,152 +1,153 @@
 <back-btn></back-btn>
 
 <div class="page-header">
-     <h1 class="text-center">ANAGRAFICA PERSONALE</h1>
+     <h1 class="text-center">{{ 'personal_information'|translate|uppercase }}</h1>
 </div>
 
 <h2 class="text-center mb-3">{{ user.surname }} {{ user.name }}</h2>
 
 <form [formGroup]="profileForm" (ngSubmit)="formSubmit()" class="row g-4 m-3">
     <div class="col-md-6">
-        <label for="name" class="form-label">Nome</label>
+        <label for="name" class="form-label">{{ 'name'|translate|titlecase }}</label>
         <input formControlName="name" autocomplete="name" type="text" class="form-control" id="name">
     </div>
     <div class="col-md-6">
-        <label for="surname" class="form-label">Cognome</label>
+        <label for="surname" class="form-label">{{ 'surname'|translate|titlecase }}</label>
         <input formControlName="surname" autocomplete="additional-name" type="text" class="form-control" id="surname">
     </div>
 
     <div class="col-md-6">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label">{{ 'username'|translate|titlecase }}</label>
         <input formControlName="username" autocomplete="username" type="text" class="form-control" id="username">
     </div>
     <div class="col-md-6">
-        <label for="ssn" class="form-label">Codice fiscale</label>
+        <label for="ssn" class="form-label">{{ 'ssn'|translate|titlecase }}</label>
         <input formControlName="ssn" autocomplete="ssn" type="text" class="form-control" id="ssn">
     </div>
 
     <div class="col-md-6">
-        <label for="birthday" class="form-label">Data di nascita</label>
-        <input formControlName="birthday" autocomplete="bday" type="text" class="form-control" placeholder="Premi per selezionare" id="birthday" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="birthdayMaxDate">
+        <label for="birthday" class="form-label">{{ 'birthday'|translate|titlecase }}</label>
+        <input formControlName="birthday" autocomplete="bday" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|titlecase" id="birthday" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="birthdayMaxDate">
     </div>
     <div class="col-md-6">
-        <label for="birthplace" class="form-label">Luogo di nascita</label>
+        <label for="birthplace" class="form-label">{{ 'birthplace'|translate|titlecase }}</label>
         <div class="input-group" id="birthplace">
-            <input formControlName="birthplace" type="text" class="form-control" placeholder="Luogo">
-            <input formControlName="birthplace_province" type="text" class="form-control" placeholder="Provincia">
+            <input formControlName="birthplace" type="text" class="form-control" [placeholder]="'place'|translate|titlecase">
+            <input formControlName="birthplace_province" type="text" class="form-control" [placeholder]="'province'|translate|titlecase">
         </div>
     </div>
 
-    <h2 class="text-center mt-5"><i class="fas fa-fire-extinguisher"></i> Informazioni di servizio</h2>
+    <h2 class="text-center mt-5"><i class="fas fa-fire-extinguisher"></i> {{ 'service_information'|translate|titlecase }}</h2>
     <div class="col-md-12">
-        <label for="course_date" class="form-label">Data corso</label>
-        <input formControlName="course_date" type="text" class="form-control" placeholder="Premi per selezionare" id="course_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="birthdayMaxDate">
+        <label for="course_date" class="form-label">{{ 'course_date'|translate|titlecase }}</label>
+        <input formControlName="course_date" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|titlecase" id="course_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="birthdayMaxDate">
     </div>
 
     <div class="col-md-6">
-        <label for="driver" class="form-label">Autista</label>
+        <label for="driver" class="form-label">{{ 'driver'|translate|titlecase }}</label>
         <div class="form-check form-switch">
             <input formControlName="driver" class="form-check-input custom-check-input" type="checkbox" role="switch" id="driver">
         </div>
     </div>
     <div class="col-md-6">
-        <label for="chief" class="form-label">Caposquadra</label>
+        <label for="chief" class="form-label">{{ 'chief'|translate|titlecase }}</label>
         <div class="form-check form-switch">
             <input formControlName="chief" class="form-check-input custom-check-input" type="checkbox" role="switch" id="chief">
         </div>
     </div>
 
     <div class="col-md-6">
-        <label for="banned" class="form-label">Bannato (non potrà accedere o interagire)</label>
+        <label for="banned" class="form-label">{{ 'banned'|translate|titlecase }}</label>
         <div class="form-check form-switch">
             <input formControlName="banned" class="form-check-input custom-check-input" type="checkbox" role="switch" id="banned">
         </div>
     </div>
     <div class="col-md-6">
-        <label for="hidden" class="form-label">Nascosto nella lista</label>
+        <label for="hidden" class="form-label">{{ 'hidden'|translate|titlecase }}</label>
         <div class="form-check form-switch">
             <input formControlName="hidden" class="form-check-input custom-check-input" type="checkbox" role="switch" id="hidden">
         </div>
     </div>
 
     <div class="col-md-6">
-        <label for="creation_date" class="form-label">Data aggiunta utente</label>
+        <label for="creation_date" class="form-label">{{ 'edit_user.creation_date'|translate|titlecase }}</label>
         <input type="text" class="form-control" disabled id="creation_date" [value]="creation_date">
     </div>
     <div class="col-md-6">
-        <label for="update_date" class="form-label">Data ultima modifica all'utente</label>
+        <label for="update_date" class="form-label">{{ 'edit_user.last_update'|translate|titlecase }}</label>
         <input type="text" class="form-control" disabled id="update_date" [value]="update_date">
     </div>
     <div class="col-md-12">
-        <label for="last_access_date" class="form-label">Ultimo accesso</label>
+        <label for="last_access_date" class="form-label">{{ 'edit_user.last_access'|translate|titlecase }}</label>
         <input type="text" class="form-control" disabled id="last_access_date" [value]="last_access_date">
     </div>
 
-    <h2 class="text-center mt-5"><i class="fas fa-phone"></i> Recapiti</h2>
+    <h2 class="text-center mt-5"><i class="fas fa-phone"></i> {{ 'contact_information'|translate|titlecase }}</h2>
     <div class="col-md-8">
-        <label for="address" class="form-label">Indirizzo di residenza, civico</label>
-        <input formControlName="address" type="text" class="form-control" id="address" placeholder="Via/Piazza...">
+        <label for="address" class="form-label">{{ 'address'|translate|titlecase }}</label>
+        <input formControlName="address" type="text" class="form-control" id="address">
     </div>
     <div class="col-md-4">
-        <label for="address_zip_code" class="form-label">CAP</label>
-        <input formControlName="address_zip_code" type="number" class="form-control" id="address_zip_code" placeholder="12345" pattern="[0-9]{5}">
+        <label for="address_zip_code" class="form-label">{{ 'zip_code'|translate|titlecase }}</label>
+        <input formControlName="address_zip_code" type="number" class="form-control" id="address_zip_code" placeholder="12345">
     </div>
 
     <div class="col-md-6">
-        <label for="phone_number" class="form-label">Numero di telefono</label>
-        <input formControlName="phone_number" type="number" class="form-control" id="phone_number" placeholder="Fisso o cellulare">
+        <label for="phone_number" class="form-label">{{ 'phone_number'|translate|titlecase }}</label>
+        <input formControlName="phone_number" type="number" class="form-control" id="phone_number">
     </div>
 
     <div class="col-md-6">
-        <label for="email" class="form-label">Indirizzo email</label>
-        <input formControlName="email" type="email" class="form-control" id="email" placeholder="">
+        <label for="email" class="form-label">{{ 'email'|translate|titlecase }}</label>
+        <input formControlName="email" type="email" class="form-control" id="email">
     </div>
 
-    <h2 class="text-center mt-5"><i class="fas fa-id-card"></i> Documenti</h2>
+    <h2 class="text-center mt-5"><i class="fas fa-id-card"></i> {{ 'documents'|translate|titlecase }}</h2>
     <ng-container formGroupName="driving_license">
-        <h3 class="text-center mt-3">Patente <i class="fas fa-car-side"></i></h3>
+        <h3 class="text-center mt-3">{{ 'driving_license'|translate|titlecase }} <i class="fas fa-car-side"></i></h3>
         <div class="col-md-12" *ngIf="dlCurrScanUrl !== null">
             <img [src]="dlCurrScanUrl" class="img-fluid rounded mx-auto d-block w-50">
         </div>
         <div class="col-md-6">
-            <label for="dl_number" class="form-label">Numero patente</label>
+            <label for="dl_number" class="form-label">{{ 'driving_license_number'|translate|titlecase }}</label>
             <input formControlName="number" autocomplete="dl-number" type="text" class="form-control" id="dl_number" placeholder="AB1234567">
         </div>
         <div class="col-md-6">
-            <label for="dl_type" class="form-label">Grado</label>
-            <input formControlName="type" autocomplete="dl-type" type="text" class="form-control" id="dl_type" placeholder="">
+            <label for="dl_type" class="form-label">{{ 'driving_license_type'|translate|titlecase }}</label>
+            <input formControlName="type" autocomplete="dl-type" type="text" class="form-control" id="dl_type">
         </div>
         <div class="col-md-6">
-            <label for="dl_expiration_date" class="form-label">Scadenza patente</label>
-            <input formControlName="expiration_date" autocomplete="dl-expiration-date" type="text" class="form-control" placeholder="Premi per selezionare" id="dl_expiration_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [minDate]="dlExpirationMinDate">
+            <label for="dl_expiration_date" class="form-label">{{ 'driving_license_expiration_date'|translate|titlecase }}</label>
+            <input formControlName="expiration_date" autocomplete="dl-expiration-date" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|titlecase" id="dl_expiration_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [minDate]="dlExpirationMinDate">
         </div>
         <div class="col-md-6">
-            <label for="dl_scan" class="form-label">Scansione patente</label>
+            <label for="dl_scan" class="form-label">{{ 'driving_license_scan'|translate|titlecase }}</label>
             <input class="form-control" type="file" id="dl_scan" (change)="onDrivingLicenseScanSelected($event)" #drivingLicenseFileUpload>
             <div *ngIf="tmpDrivingLicenseImgData !== null">
                 <img [src]="tmpDrivingLicenseImgData" class="img-fluid p-1 w-75">
                 <button type="button" class="btn btn-primary" *ngIf="dlScanNotUploadedYet" (click)="uploadDrivingLicenseScan(drivingLicenseFileUpload)">
-                    <i class="fas fa-upload"></i> Carica scansione
+                    <i class="fas fa-upload"></i> {{ 'upload_scan'|translate|titlecase }}
                 </button>
             </div>
         </div>
     </ng-container>
 
-    <h2 class="text-center mt-5"><i class="fas fa-tshirt"></i> Indumenti</h2>
+    <h2 class="text-center mt-5"><i class="fas fa-tshirt"></i> {{ 'clothings'|translate|titlecase }}</h2>
     <div class="col-md-6">
-        <label for="suit_size" class="form-label">Taglia tuta</label>
+        <label for="suit_size" class="form-label">{{ 'suit_size'|translate|titlecase }}</label>
         <input formControlName="suit_size" type="text" class="form-control" id="suit_size" placeholder="M, L, XL...">
     </div>
     <div class="col-md-6">
-        <label for="boot_size" class="form-label">Taglia scarponi</label>
+        <label for="boot_size" class="form-label">{{ 'boot_size'|translate|titlecase }}</label>
         <input formControlName="boot_size" type="text" class="form-control" id="boot_size" placeholder="41, 42, 43...">
     </div>
 
     <div class="col-12 m-3 mt-4">
-        <button type="submit" class="btn btn-lg btn-primary">Aggiorna</button>
+        <button type="submit" class="btn btn-lg btn-primary">{{ 'update'|translate|titlecase }}</button>
     </div>
 </form>
 
+<ng-component *ngIf="false">
 <hr>
 
 <div class="text-center">
@@ -206,3 +207,4 @@
         </tbody>
     </table>
 </div>
+</ng-component>

@@ -20,90 +20,73 @@
     <th></th>
     <th></th>
     <tr *ngIf="user.surname">
-      <td>Cognome</td>
+      <td>{{ 'surname'|translate|titlecase }}</td>
       <td>{{ user.surname }}</td>
     </tr>
     <tr>
-      <td>Nome</td>
+      <td>{{ 'name'|translate|titlecase }}</td>
       <td>{{ user.name }}</td>
     </tr>
     <tr>
-        <td>Username</td>
+        <td>{{ 'username'|translate|titlecase }}</td>
         <td>{{ user.username }}</td>
     </tr>
     <tr *ngIf="user.birthday">
-      <td>Data di nascita</td>
+      <td>{{ 'birthday'|translate|titlecase }}</td>
       <td>{{ user.birthday | date:'dd/MM/yyyy' }}</td>
     </tr>
     <tr *ngIf="user.birthplace">
-      <td>Luogo di nascita</td>
+      <td>{{ 'birthplace'|translate|titlecase }}</td>
       <td>{{ user.birthplace }}<ng-container *ngIf="user.birthplace_province"> ({{ user.birthplace_province }})</ng-container></td>
     </tr>
     <tr *ngIf="user.ssn">
-      <td>Codice fiscale</td>
+      <td>{{ 'ssn'|translate|titlecase }}</td>
       <td>{{ user.ssn }}</td>
     </tr>
     <tr>
       <td colspan="2" class="text-center">
         <br />
-        <h5>RECAPITI</h5>
+        <h5>{{ 'contact_information'|translate|uppercase }}</h5>
       </td>
     </tr>
     <tr *ngIf="user.address">
-      <td>Indirizzo</td>
+      <td>{{ 'address'|translate|titlecase }}</td>
       <td>
         <a href="https://maps.google.com/?q={{ user.address }}" target="_blank">
-            {{ user.address }}<ng-container *ngIf="user.address_zip_code"> (CAP <i>{{ user.address_zip_code }}</i>)</ng-container>
+            {{ user.address }}<ng-container *ngIf="user.address_zip_code"> ({{ 'zip_code'|translate }} <i>{{ user.address_zip_code }}</i>)</ng-container>
         </a>
       </td>
     </tr>
     <tr>
-      <td>Telefono</td>
+      <td>{{ 'phone_number'|translate|titlecase }}</td>
       <td><a href="tel:{{ user.phone_number }}">{{ user.phone_number }}</a></td>
     </tr>
     <tr>
-      <td>Email</td>
+      <td>{{ 'email'|translate|titlecase }}</td>
       <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
     </tr>
-    <!--
     <tr>
       <td colspan="2" class="text-center">
         <br />
-        <h5>DOCUMENTI</h5>
+        <h5>{{ 'service_information'|translate|uppercase }}</h5>
       </td>
     </tr>
     <tr>
-        <td>
-            <a href='./aj/download.php?f=p&d=pat' target='_blank'>Patente</a>
-        </td>
-        <td>
-            <small>Nr:</small> 123456789<br><small>Scad:</small> 11/02/2024
-        </td>
-    </tr>
-    -->
-    <tr>
-      <td colspan="2" class="text-center">
-        <br />
-        <h5>INFORMAZIONI SERVIZIO</h5>
-      </td>
-    </tr>
-    <tr>
-      <!--TODO: translate -->
-      <td>Autista</td>
+      <td>{{ 'driver'|translate|titlecase }}</td>
       <td>
         <i class="fa fa-check" style="color:green" *ngIf="user.driver"></i>
         <i class="fa fa-times" style="color:red" *ngIf="!user.driver"></i>
       </td>
     </tr>
     <tr>
-      <td>Tipologia</td>
+      <td>{{ 'chief'|translate|titlecase }}</td>
       <td>
-        <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief">
-        <img alt="black helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief">
+        <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief"> Si
+        <img alt="black helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief"> No
       </td>
     </tr>
     <tr *ngIf="user.course_date">
-      <td>Data corso</td>
+      <td>{{ 'course_date'|translate|titlecase }}</td>
       <td>{{ user.course_date }}</td>
     </tr>
   </table>

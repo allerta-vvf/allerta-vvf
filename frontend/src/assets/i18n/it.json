@@ -52,8 +52,6 @@
         "response_updated_successfully": "Risposta aggiornata con successo"
     },
     "login": {
-        "username": "username",
-        "password": "password",
         "submit_btn": "Login"
     },
     "place_details": {
@@ -100,9 +98,20 @@
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
+    "edit_user": {
+        "image_format_not_supported": "Formato immagine non supportato",
+        "file_too_big": "File troppo grande",
+        "success_text": "Utente aggiornato con successo",
+        "error_text": "L'utente non può essere aggiornato. Riprova più tardi",
+        "creation_date": "Data di creazione dell'utente",
+        "last_update": "Data di ultima modifica dell'utente",
+        "last_access": "Ultimo accesso dell'utente"
+    },
     "user_info_modal": {
         "title": "Scheda utente"
     },
+    "username": "username",
+    "password": "password",
     "warning": "attenzione",
     "press_for_more_info": "premi qui per informazioni",
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
@@ -128,6 +137,30 @@
     "set_available": "attiva",
     "set_unavailable": "disattiva",
     "name": "nome",
+    "surname": "cognome",
+    "ssn": "codice fiscale",
+    "address": "indirizzo",
+    "zip_code": "CAP",
+    "phone_number": "numero di telefono",
+    "email": "email",
+    "birthday": "data di nascita",
+    "birthplace": "luogo di nascita",
+    "personal_information": "anagrafica personale",
+    "contact_information": "recapiti",
+    "service_information": "informazioni di servizio",
+    "course_date": "data corso",
+    "documents": "documenti",
+    "driving_license": "patente",
+    "driving_license_expiration_date": "scadenza patente",
+    "driving_license_number": "numero patente",
+    "driving_license_type": "tipologia patente",
+    "driving_license_scan": "scansione patente",
+    "upload_scan": "carica scansione",
+    "clothings": "indumenti",
+    "suit_size": "taglia tuta",
+    "boot_size": "taglia scarponi",
+    "banned": "bannato",
+    "hidden": "nascosto",
     "driver": "autista",
     "drivers": "autisti",
     "call": "chiama",
@@ -148,6 +181,7 @@
     "chief": "caposquadra",
     "crew": "squadra",
     "place": "luogo",
+    "province": "provincia",
     "notes": "note",
     "type": "tipologia",
     "add": "aggiungi",
@@ -166,5 +200,9 @@
     "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
     "revision": "revisione",
     "unknown": "sconosciuto",
-    "edit": "modifica"
+    "edit": "modifica",
+    "never": "mai",
+    "not_enough_permissions": "Non hai i permessi necessari per accedere a questa pagina.",
+    "error_title": "Errore",
+    "success_title": "Successo"
 }

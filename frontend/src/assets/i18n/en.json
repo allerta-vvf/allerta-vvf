@@ -52,8 +52,6 @@
         "response_updated_successfully": "Response updated successfully"
     },
     "login": {
-        "username": "username",
-        "password": "password",
         "submit_btn": "Login"
     },
     "place_details": {
@@ -100,9 +98,20 @@
         "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
+    "edit_user": {
+        "image_format_not_supported": "Image format not supported",
+        "file_too_big": "File too big",
+        "success_text": "User updated successfully",
+        "error_text": "User could not be updated. Please try again",
+        "creation_date": "User creation date",
+        "last_update": "User last update",
+        "last_access": "User last access"
+    },
     "user_info_modal": {
         "title": "User info"
     },
+    "username": "username",
+    "password": "password",
     "warning": "warning",
     "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",
@@ -128,6 +137,30 @@
     "set_available": "available",
     "set_unavailable": "unavailable",
     "name": "name",
+    "surname": "surname",
+    "ssn": "Social Security Number",
+    "address": "address",
+    "zip_code": "zip code",
+    "phone_number": "phone number",
+    "email": "email",
+    "birthday": "birthday",
+    "birthplace": "birthplace",
+    "personal_information": "personal information",
+    "contact_information": "contact information",
+    "service_information": "service information",
+    "course_date": "course date",
+    "documents": "documents",
+    "driving_license": "driving license",
+    "driving_license_expiration_date": "driving license expiration date",
+    "driving_license_number": "driving license number",
+    "driving_license_type": "driving license type",
+    "driving_license_scan": "driving license scan",
+    "upload_scan": "upload scan",
+    "clothings": "clothings",
+    "suit_size": "suit size",
+    "boot_size": "boot size",
+    "banned": "banned",
+    "hidden": "hidden",
     "driver": "driver",
     "drivers": "drivers",
     "call": "call",
@@ -148,6 +181,7 @@
     "chief": "chief",
     "crew": "crew",
     "place": "place",
+    "province": "province",
     "notes": "notes",
     "type": "type",
     "add": "add",
@@ -166,5 +200,9 @@
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision",
     "unknown": "unknown",
-    "edit": "edit"
+    "edit": "edit",
+    "never": "never",
+    "not_enough_permissions": "You don't have enough permissions to access this page.",
+    "error_title": "Error",
+    "success_title": "Successo"
 }

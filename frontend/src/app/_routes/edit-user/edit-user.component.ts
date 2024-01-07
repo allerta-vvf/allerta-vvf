@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -46,9 +47,9 @@ export class EditUserComponent implements OnInit {
   allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
   maxImageSize = 1024 * 1024 * 5; //5MB
 
-  creation_date: string = "MAI";
-  update_date: string = "MAI";
-  last_access_date: string = "MAI";
+  creation_date: string = this.translateService.instant("never").toUpperCase();
+  update_date: string = this.translateService.instant("never").toUpperCase();
+  last_access_date: string = this.translateService.instant("never").toUpperCase();
 
   tmpDrivingLicenseImgData: string | null = null;
   dlScanNotUploadedYet = true;
@@ -58,7 +59,8 @@ export class EditUserComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private api: ApiClientService,
-    private auth: AuthService
+    private auth: AuthService,
+    private translateService: TranslateService
   ) {
     this.route.paramMap.subscribe(params => {
       this.id = typeof params.get('id') === 'string' ? parseInt(params.get('id') || '') : undefined;
@@ -95,7 +97,7 @@ export class EditUserComponent implements OnInit {
           });
 
           const convertToItalianDate = (date: string | null): string => {
-            if(!date) return "MAI";
+            if(!date) return this.translateService.instant("never").toUpperCase();
             const dateObj = new Date(date);
             return dateObj.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
           }
@@ -142,8 +144,8 @@ export class EditUserComponent implements OnInit {
       if(!this.allowedImageTypes.includes(file.type)) {
         event.target.value = null;
         Swal.fire({
-          title: 'Errore',
-          text: 'Formato immagine non supportato',
+          title: this.translateService.instant("error_title"),
+          text: this.translateService.instant("edit_user.image_format_not_supported"),
           icon: 'error',
           confirmButtonText: 'Ok'
         });
@@ -152,8 +154,8 @@ export class EditUserComponent implements OnInit {
       if(file.size > this.maxImageSize) {
         event.target.value = null;
         Swal.fire({
-          title: 'Errore',
-          text: 'File troppo grande',
+          title: this.translateService.instant("error_title"),
+          text: this.translateService.instant("edit_user.file_too_big"),
           icon: 'error',
           confirmButtonText: 'Ok'
         });
@@ -199,20 +201,19 @@ export class EditUserComponent implements OnInit {
     data.driving_license.expiration_date = data.driving_license.expiration_date ? new Date(data.driving_license.expiration_date) : null;
 
     if (this.id) {
-      //TODO: translate
       this.api.put(`users/${this.id}`, data).then((response) => {
         console.log(response);
         Swal.fire({
-          title: 'Utente modificato',
-          text: 'L\'utente è stato modificato con successo',
+          title: this.translateService.instant("success_title"),
+          text: this.translateService.instant("edit_user.success_text"),
           icon: 'success',
           confirmButtonText: 'Ok'
         });
       }).catch((err) => {
         console.log(err);
         Swal.fire({
-          title: 'Errore',
-          text: 'Si è verificato un errore durante la modifica dell\'utente',
+          title: this.translateService.instant("error_title"),
+          text: this.translateService.instant("edit_user.error_text"),
           icon: 'error',
           confirmButtonText: 'Ok'
         });

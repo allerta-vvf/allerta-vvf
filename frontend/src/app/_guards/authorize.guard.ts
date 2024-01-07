@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@a
 import { Observable } from 'rxjs';
 import { GuardLoaderIconService } from '../_services/guard-loader-icon.service';
 import { AuthService } from '../_services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -12,7 +13,8 @@ export class AuthorizeGuard  {
   constructor(
     private authService: AuthService,
     private guardLoaderIconService: GuardLoaderIconService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) { }
 
   checkAuthAndRedirect(
@@ -30,9 +32,8 @@ export class AuthorizeGuard  {
         let permissionsRequired = route.data["permissionsRequired"];
         console.log(permissionsRequired, this.authService.profile.permissions);
         if(!permissionsRequired.every((permission: string) => this.authService.profile.permissions.includes(permission))) {
-          //TODO: translate
           Swal.fire({
-            title: "Non hai i permessi necessari per accedere a questa pagina",
+            title: this.translateService.instant("not_enough_permissions"),
             icon: "error",
             confirmButtonText: "Ok"
           });
