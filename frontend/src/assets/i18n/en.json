@@ -75,7 +75,6 @@
         "select_end_datetime": "Select end date and time for the service",
         "insert_code": "Insert service code",
         "other_crew_members": "Other crew members",
-        "select_type": "Select a type",
         "select_service_type": "Select a service type",
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
@@ -110,6 +109,10 @@
     "user_info_modal": {
         "title": "User info"
     },
+    "training_course_modal": {
+        "title": "Add training course",
+        "doc_number": "document number"
+    },
     "medical_examination_modal": {
         "title": "Add medical examination"
     },
@@ -126,6 +129,7 @@
     "warning": "warning",
     "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",
+    "select_type": "Select a type",
     "save_changes": "Save changes",
     "close": "Close",
     "monday": "Monday",
@@ -168,10 +172,12 @@
     "driving_license_scan": "driving license scan",
     "upload_scan": "upload scan",
     "upload_medical_examination_certificate": "upload medical examination certificate",
+    "upload_training_course_doc": "upload training course document",
     "clothings": "clothings",
     "suit_size": "suit size",
     "boot_size": "boot size",
     "medical_examinations": "medical examinations",
+    "training_courses": "training courses",
     "date": "date",
     "expiration_date": "expiration date",
     "certifier": "certifier",

@@ -70,6 +70,27 @@ class UserController extends Controller
             $user->driving_license = $dl_tmp[0];
         }
 
+        $tc_tmp = Document::where('documents.user', $user->id)
+            ->where('documents.type', 'training_course')
+            ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')
+            ->leftJoin('training_course_types', 'training_course_types.id', '=', 'documents.doc_type')
+            ->select('documents.doc_number as doc_number', 'documents.date', 'document_files.uuid as doc_uuid', 'training_course_types.name as type')
+            ->get();
+        
+        if($tc_tmp->count() > 0) {
+            $user->training_courses = $tc_tmp;
+            foreach($user->training_courses as $tc) {
+                if(!is_null($tc->doc_uuid)) {
+                    $tc->doc_url = URL::temporarySignedRoute(
+                        'training_course_serve', now()->addHours(1), ['uuid' => $tc->doc_uuid]
+                    );
+                    unset($tc->doc_uuid);
+                }
+            }
+        } else {
+            $user->training_courses = [];
+        }
+
         $me_tmp = Document::where('documents.user', $user->id)
             ->where('documents.type', 'medical_examination')
             ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')

@@ -147,40 +147,39 @@
     </div>
 </form>
 
-<ng-container *ngIf="false">
 <hr>
 
 <div class="text-center">
-    <h3>Corsi di formazione</h3>
-    <button disabled class="btn btn-sm btn-outline-info m-2">
-        <i class="fas fa-download"></i> LIFM
+    <h3>{{ 'training_courses'|translate|uppercase }}</h3>
+    <button *ngIf="!hideTCAddBtn" class="btn btn-sm btn-outline-success m-2" (click)="openModalAddTrainingCourse()">
+        <i class="fas fa-plus"></i> {{ 'add'|translate|ftitlecase }}
     </button>
     <table class="mx-auto table table-striped table-bordered table-responsive">
         <thead>
             <tr>
-                <th>TIPOLOGIA</th>
-                <th>NOME</th>
-                <th>DATA</th>
-                <th>SCADENZA</th>
-                <th>CERT.</th>
+                <th>{{ 'type'|translate|uppercase }}</th>
+                <th>{{ 'date'|translate|uppercase }}</th>
+                <th>{{ 'training_course_modal.doc_number'|translate|uppercase }}</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr *ngIf="false">
-                <td>TIPOCORSO</td>
-                <td>Nome</td>
-                <td>31/12/2024</td>
-                <td>31/12/2027</td>
+            <tr *ngFor="let row of user.training_courses">
+                <td>{{ row.type }}</td>
+                <td>{{ row.date | date:'dd/MM/YYYY' }}</td>
                 <td>
-                    <a href=''><i class='fas fa-graduation-cap'></i></a>
+                    <ng-container *ngIf="row.doc_url">
+                        <a [href]='row.doc_url' target="_blank">{{ row.doc_number }}</a>
+                    </ng-container>
+                    <ng-container *ngIf="!row.doc_url">
+                        {{ row.doc_number }}
+                    </ng-container>
                 </td>
             </tr>
         </tbody>
     </table>
     <br>
 </div>
-</ng-container>
 
 <hr>
 
@@ -204,8 +203,8 @@
                 <td>{{ row.date | date:'dd/MM/YYYY' }}</td>
                 <td>{{ row.certifier }}</td>
                 <td>{{ row.expiration_date | date:'dd/MM/YYYY' }}</td>
-                <td *ngIf="!hideMECertCol && row.cert_url">
-                    <a [href]='row.cert_url' target="_blank"><i class='fas fa-clipboard-list'></i></a>
+                <td *ngIf="!hideMECertCol">
+                    <a *ngIf="row.cert_url" [href]='row.cert_url' target="_blank"><i class='fas fa-clipboard-list'></i></a>
                 </td>
             </tr>
         </tbody>

@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" translate>training_course_modal.title</h4>
+  <button
+    type="button"
+    class="btn-close close pull-right"
+    [attr.aria-label]="'close' | translate | ftitlecase"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="formSubmit()" class="row g-3">
+    <div class="col-12">
+      <label for="tc_type">{{ 'type'|translate|ftitlecase }}</label>
+      <div class="input-group has-validation">
+        <select formControlName="type" class="form-control mr-2" id="tc_type">
+          <option selected disabled translate>select_type</option>
+          <option *ngFor="let type of types" value="{{ type.id }}">{{ type.name }}</option>
+        </select>
+        <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
+          {{ 'add'|translate|ftitlecase }}
+        </button>
+      </div>
+    </div>
+
+    <div class="input-group mb-2 mt-2" *ngIf="addingType">
+      <input type="text" class="form-control" [placeholder]="'type'|translate|titlecase" [(ngModel)]="newType"
+        [ngModelOptions]="{standalone: true}">
+      <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'submit'|translate|ftitlecase }}</button>
+    </div>
+    <div class="col-12">
+      <label for="tc_date" class="form-label">{{ 'date'|translate|ftitlecase }}</label>
+      <input formControlName="date" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|ftitlecase" id="tc_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="dateMaxDate">
+    </div>
+    <div class="col-12">
+      <label for="tc_doc_number">{{ 'training_course_modal.doc_number'|translate|ftitlecase }}</label>
+      <input formControlName="doc_number" type="text" class="form-control" id="tc_doc_number">
+    </div>
+    <div class="col-12">
+      <label for="tc_scan" class="form-label">{{ 'upload_training_course_doc'|translate|ftitlecase }} (<u>{{ 'optional'|translate|uppercase }}</u>, <i>.pdf</i>)</label>
+      <input class="form-control" type="file" id="tc_scan" (change)="onTrainingCourseDocumentSelected($event)">
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="formSubmit()">
+    {{ "add" | translate | ftitlecase }}
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">
+    {{ "close" | translate }}
+  </button>
+</div>

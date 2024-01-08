@@ -24,8 +24,8 @@
       <input formControlName="certifier" type="text" class="form-control" id="me_certifier">
     </div>
     <div class="col-12">
-      <label for="dl_scan" class="form-label">{{ 'upload_medical_examination_certificate'|translate|ftitlecase }} (<u>{{ 'optional'|translate|uppercase }}</u>, <i>.pdf</i>)</label>
-      <input class="form-control" type="file" id="dl_scan" (change)="onMedicalExaminationCertificateSelected($event)">
+      <label for="me_cert" class="form-label">{{ 'upload_medical_examination_certificate'|translate|ftitlecase }} (<u>{{ 'optional'|translate|uppercase }}</u>, <i>.pdf</i>)</label>
+      <input class="form-control" type="file" id="me_cert" (change)="onMedicalExaminationCertificateSelected($event)">
     </div>
   </form>
 </div>

@@ -44,6 +44,56 @@ class DocumentsController extends Controller
         return response()->file(storage_path('app/public/' . $document->file_path));
     }
 
+    function addTrainingCourse(Request $request)
+    {
+        $request->validate([
+            'user' => ['required', 'integer', 'exists:users,id'],
+            'type' => ['required', 'integer', 'exists:training_course_types,id'],
+            'date' => ['required', 'date'],
+            'doc_number' => ['required', 'string', 'max:255'],
+            'file' => [
+                File::types('application/pdf')
+                    ->max(50 * 1024)
+            ]
+        ]);
+
+        if($request->user()->id != $request->input('user') && !$request->user()->hasPermission("users-add-training-course")) abort(401);
+        if($request->user()->id == $request->input('user') && !$request->user()->hasPermission("user-add-training-course")) abort(401);
+        
+        $document = new Document();
+        $document->type = 'training_course';
+        $document->doc_type = $request->input('type');
+        $document->doc_number = $request->input('doc_number');
+        $document->user = $request->input('user');
+        $document->added_by = auth()->user()->id;
+        if($request->hasFile('file')) {
+            $fileName = time() . '_' . $request->file->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('training_courses', $fileName, 'public');
+
+            $documentFile = new DocumentFile();
+            $documentFile->uuid = Str::uuid()->toString();
+            $documentFile->type = 'training_course';
+            $documentFile->file_path = $filePath;
+            $documentFile->uploadedBy()->associate(auth()->user());
+            $documentFile->save();
+
+            $document->documentFile()->associate($documentFile);
+        }
+        $document->date = $request->input('date');
+        $document->save();
+
+        return response()->json([
+            "id" => $document->id
+        ]);
+    }
+
+    function serveTrainingCourse($uuid)
+    {
+        $document = DocumentFile::where('uuid', $uuid)->firstOrFail();
+
+        return response()->file(storage_path('app/public/' . $document->file_path));
+    }
+
     function addMedicalExamination(Request $request)
     {
         $request->validate([

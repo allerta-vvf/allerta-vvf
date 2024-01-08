@@ -13,21 +13,21 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'users' => 'c,r,u,d,i,b,h,sc,sd,ame',
+            'users' => 'c,r,u,d,i,b,h,sc,sd,atc,ame',
             'user' => 'u,h,sc,sd',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
         ],
         'admin' => [
-            'users' => 'c,r,u,d,i,b,h,sc,sd,ame',
+            'users' => 'c,r,u,d,i,b,h,sc,sd,atc,ame',
             'user' => 'u,h,sc,sd',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
         ],
         'chief' => [
-            'users' => 'r,u,sc,sd,ame',
+            'users' => 'r,u,sc,sd,atc,ame',
             'user' => 'u',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
@@ -53,6 +53,7 @@ return [
         'h' => 'hide',
         'sc' => 'set-chief',
         'sd' => 'set-driver',
+        'atc' => 'add-training-course',
         'ame' => 'add-medical-examination'
     ]
 ];

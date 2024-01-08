@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ModalAddTrainingCourseComponent } from 'src/app/_components/modal-add-traning-course/modal-add-training-course.component';
 import { ModalAddMedicalExaminationComponent } from 'src/app/_components/modal-add-medical-examination/modal-add-medical-examination.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
@@ -44,6 +45,7 @@ export class EditUserComponent implements OnInit {
     boot_size: ['']
   });
 
+  hideTCAddBtn = true;
   hideMECertCol = true;
   hideMEAddBtn = true;
   birthdayMaxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18)); //18 years ago
@@ -141,6 +143,9 @@ export class EditUserComponent implements OnInit {
     let canHide = this.id == this.auth.profile.id ?
       this.auth.profile.can('user-hide') :
       this.auth.profile.can('users-hide');
+    let canAddTrainingCourse = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-add-training-course') :
+      this.auth.profile.can('users-add-training-course');
     let canAddMedicalExamination = this.id == this.auth.profile.id ?
       this.auth.profile.can('user-add-medical-examination') :
       this.auth.profile.can('users-add-medical-examination');
@@ -149,6 +154,7 @@ export class EditUserComponent implements OnInit {
     if(!canSetDriver) this.profileForm.get('driver')?.disable();
     if(!canBan) this.profileForm.get('banned')?.disable();
     if(!canHide) this.profileForm.get('hidden')?.disable();
+    this.hideTCAddBtn = !canAddTrainingCourse;
     this.hideMEAddBtn = !canAddMedicalExamination;
   }
 
@@ -235,6 +241,23 @@ export class EditUserComponent implements OnInit {
         });
       });
     }
+  }
+
+  openModalAddTrainingCourse() {
+    const modalReference = this.modalService.show(ModalAddTrainingCourseComponent, {
+      initialState: {
+        userId: this.id
+      }
+    });
+    modalReference.content?.submitEvents.subscribe(() => {
+      //Refresh user data after modal is closed
+      this.api.get(`users/${this.id}`).then((response) => {
+        this.user = response;
+        console.log(response);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
   }
 
   openModalAddMedicalExamination() {

@@ -78,7 +78,7 @@
       <br>
       <div class="input-group has-validation">
         <select formControlName="type" [class.is-invalid]="!isFieldValid('type')" class="form-control mr-2">
-          <option selected disabled translate>edit_service.select_type</option>
+          <option selected disabled translate>select_type</option>
           <option *ngFor="let service_type of types" value="{{ service_type.id }}">{{ service_type.name }}</option>
         </select>
         <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
@@ -89,7 +89,7 @@
         </div>
       </div>
       <div class="input-group mb-2 mt-2" *ngIf="addingType">
-        <input type="text" class="form-control" [placeholder]="'type'|translate" [(ngModel)]="newType"
+        <input type="text" class="form-control" [placeholder]="'type'|translate|titlecase" [(ngModel)]="newType"
           [ngModelOptions]="{standalone: true}">
         <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'submit'|translate|ftitlecase }}</button>
       </div>

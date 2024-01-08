@@ -75,7 +75,6 @@
         "select_end_datetime": "Seleziona data e ora di fine dell'intervento",
         "insert_code": "Inserisci il progressivo dell'intervento",
         "other_crew_members": "Altri membri della squadra",
-        "select_type": "Seleziona una tipologia",
         "select_service_type": "Seleziona una tipologia di intervento",
         "type_already_exists": "La tipologia è già presente",
         "type_added_successfully": "Tipologia aggiunta con successo",
@@ -111,6 +110,10 @@
     "user_info_modal": {
         "title": "Scheda utente"
     },
+    "training_course_modal": {
+        "title": "Aggiungi corso di formazione",
+        "doc_number": "numero Ordine del Giorno"
+    },
     "medical_examination_modal": {
         "title": "Aggiungi visita medica"
     },
@@ -125,6 +128,7 @@
     "warning": "attenzione",
     "press_for_more_info": "premi qui per informazioni",
     "update_availability_schedule": "Aggiorna programmazione disponibilità",
+    "select_type": "Seleziona una tipologia",
     "save_changes": "Salva modifiche",
     "close": "Chiudi",
     "monday": "Lunedì",
@@ -167,10 +171,12 @@
     "driving_license_scan": "scansione patente",
     "upload_scan": "carica scansione",
     "upload_medical_examination_certificate": "carica certificato visita medica",
+    "upload_training_course_doc": "carica Ordine del Giorno",
     "clothings": "indumenti",
     "suit_size": "taglia tuta",
     "boot_size": "taglia scarponi",
     "medical_examinations": "visite mediche",
+    "training_courses": "corsi di formazione",
     "date": "data",
     "expiration_date": "data di scadenza",
     "certifier": "ente/certificatore",

@@ -13,6 +13,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\PlacesController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\TrainingCourseTypeController;
 use App\Http\Controllers\TrainingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -50,7 +51,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::put('/users/{user}', [UserController::class, 'update']);
 
     Route::post('/documents/driving_license', [DocumentsController::class, 'uploadDrivingLicenseScan']);
+    Route::post('/documents/training_course', [DocumentsController::class, 'addTrainingCourse']);
     Route::post('/documents/medical_examination', [DocumentsController::class, 'addMedicalExamination']);
+
+    Route::get('/training_course_types', [TrainingCourseTypeController::class, 'index']);
+    Route::post('/training_course_types', [TrainingCourseTypeController::class, 'create']);
 
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
@@ -91,6 +96,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
 Route::middleware('signed')->group( function () {
     Route::get('/documents/driving_license/{uuid}', [DocumentsController::class, 'serveDrivingLicenseScan'])->name('driving_license_scan_serve');
+    Route::get('/documents/training_course/{uuid}', [DocumentsController::class, 'serveTrainingCourse'])->name('training_course_serve');
     Route::get('/documents/medical_examination/{uuid}', [DocumentsController::class, 'serveMedicalExamination'])->name('medical_examination_serve');
 });
 
