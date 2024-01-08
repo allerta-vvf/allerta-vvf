@@ -3,21 +3,21 @@
 <form method="post" [formGroup]="trainingForm" (ngSubmit)="formSubmit()">
   <div class="container">
     <div class="form-group has-validation">
-      <label for="date-picker-start">{{ 'start'|translate|titlecase }}</label>
+      <label for="date-picker-start">{{ 'start'|translate|ftitlecase }}</label>
       <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')" id="date-picker-start"></datetime-picker>
       <div class="invalid-feedback" *ngIf="start.errors?.['required']" translate>
         edit_training.select_start_datetime
       </div>
     </div>
     <div class="form-group has-validation">
-      <label for="date-picker-end">{{ 'end'|translate|titlecase }}</label>
+      <label for="date-picker-end">{{ 'end'|translate|ftitlecase }}</label>
       <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')" id="date-picker-end"></datetime-picker>
       <div class="invalid-feedback" *ngIf="end.errors?.['required']" translate>
         edit_training.select_end_datetime
       </div>
     </div>
     <div class="form-group has-validation">
-      <label for="name">{{ 'name'|translate|titlecase }}</label>
+      <label for="name">{{ 'name'|translate|ftitlecase }}</label>
       <input formControlName="name" [class.is-invalid]="!isFieldValid('name')" id="name" class="form-control"
         type="text" [placeholder]="'edit_training.name_placeholder'|translate">
       <div class="invalid-feedback" *ngIf="name.errors?.['required']" translate>
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('chief')">
-      <label>{{ 'chief'|translate|titlecase }}</label>
+      <label>{{ 'chief'|translate|ftitlecase }}</label>
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check">
@@ -51,7 +51,7 @@
       </ng-container>
     </div>
     <div class="form-group has-validation">
-      <label for="place">{{ 'place'|translate|titlecase }}</label>
+      <label for="place">{{ 'place'|translate|ftitlecase }}</label>
       <input formControlName="place" [class.is-invalid]="!isFieldValid('place')" id="place" class="form-control"
         type="text">
       <div class="invalid-feedback" *ngIf="place.errors?.['required']" translate>
@@ -59,13 +59,13 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="notes">{{ 'notes'|translate|titlecase }}</label><br>
+      <label for="notes">{{ 'notes'|translate|ftitlecase }}</label><br>
       <textarea formControlName="notes" class="form-control" id="notes"></textarea>
     </div>
     <br>
     <br>
-    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">{{ 'submit'|translate|titlecase }}</button>
-    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">{{ 'reset'|translate|titlecase }}</button>
+    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">{{ 'submit'|translate|ftitlecase }}</button>
+    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">{{ 'reset'|translate|ftitlecase }}</button>
     <div class="d-flex justify-content-center mt-2 pt-2 mb-3" *ngIf="submittingForm">
       <div class="spinner spinner-border"></div>
     </div>

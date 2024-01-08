@@ -1,7 +1,7 @@
 <ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
     <div class="row mt-5 mb-3">
         <div class="col-xs-12 col-12">
-            <input type="text" class="form-control" placeholder="{{ 'search'|translate|titlecase }}" [(ngModel)]="searchText" (ngModelChange)="onSearchTextChange($event)">
+            <input type="text" class="form-control" placeholder="{{ 'search'|translate|ftitlecase }}" [(ngModel)]="searchText" (ngModelChange)="onSearchTextChange($event)">
         </div>
     </div>
 </ng-container>
@@ -13,16 +13,16 @@
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>{{ 'name'|translate|titlecase }}</th>
-                <th>{{ 'available'|translate|titlecase }}</th>
-                <th>{{ 'driver'|translate|titlecase }}</th>
+                <th>{{ 'name'|translate|ftitlecase }}</th>
+                <th>{{ 'available'|translate|ftitlecase }}</th>
+                <th>{{ 'driver'|translate|ftitlecase }}</th>
                 <ng-container *ngIf="auth.profile.can('users-read')">
-                    <th>{{ 'call'|translate|titlecase }}</th>
+                    <th>{{ 'call'|translate|ftitlecase }}</th>
                 </ng-container>
-                <th>{{ 'services'|translate|titlecase }}</th>
-                <th>{{ 'availability_minutes'|translate|titlecase }}</th>
+                <th>{{ 'services'|translate|ftitlecase }}</th>
+                <th>{{ 'availability_minutes'|translate|ftitlecase }}</th>
                 <ng-container *ngIf="auth.profile.can('users-update')">
-                    <th>{{ 'edit'|translate|titlecase }}</th>
+                    <th>{{ 'edit'|translate|ftitlecase }}</th>
                 </ng-container>
             </tr>
         </thead>
@@ -60,10 +60,10 @@
     <table id="table" class="table table-striped table-bordered dt-responsive nowrap">
         <thead>
             <tr>
-                <th>{{ 'action'|translate|titlecase }}</th>
-                <th>{{ 'changed'|translate|titlecase }}</th>
-                <th>{{ 'editor'|translate|titlecase }}</th>
-                <th>{{ 'datetime'|translate|titlecase }}</th>
+                <th>{{ 'action'|translate|ftitlecase }}</th>
+                <th>{{ 'changed'|translate|ftitlecase }}</th>
+                <th>{{ 'editor'|translate|ftitlecase }}</th>
+                <th>{{ 'datetime'|translate|ftitlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -82,17 +82,17 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{{ 'start'|translate|titlecase }}</th>
-                <th>{{ 'end'|translate|titlecase }}</th>
-                <th>{{ 'code'|translate|titlecase }}</th>
-                <th>{{ 'chief'|translate|titlecase }}</th>
-                <th>{{ 'drivers'|translate|titlecase }}</th>
-                <th>{{ 'crew'|translate|titlecase }}</th>
-                <th>{{ 'place'|translate|titlecase }}</th>
-                <th>{{ 'notes'|translate|titlecase }}</th>
-                <th>{{ 'type'|translate|titlecase }}</th>
-                <th *ngIf="auth.profile.can('services-update')">{{ 'update'|translate|titlecase }}</th>
-                <th *ngIf="auth.profile.can('services-delete')">{{ 'remove'|translate|titlecase }}</th>
+                <th>{{ 'start'|translate|ftitlecase }}</th>
+                <th>{{ 'end'|translate|ftitlecase }}</th>
+                <th>{{ 'code'|translate|ftitlecase }}</th>
+                <th>{{ 'chief'|translate|ftitlecase }}</th>
+                <th>{{ 'drivers'|translate|ftitlecase }}</th>
+                <th>{{ 'crew'|translate|ftitlecase }}</th>
+                <th>{{ 'place'|translate|ftitlecase }}</th>
+                <th>{{ 'notes'|translate|ftitlecase }}</th>
+                <th>{{ 'type'|translate|ftitlecase }}</th>
+                <th *ngIf="auth.profile.can('services-update')">{{ 'update'|translate|ftitlecase }}</th>
+                <th *ngIf="auth.profile.can('services-delete')">{{ 'remove'|translate|ftitlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -108,7 +108,7 @@
                 <td>
                     <ng-container *ngIf="row.place.name"><i>{{ row.place.name }}</i></ng-container><br>
                     <ng-container *ngIf="row.place.village">{{ row.place.village }}</ng-container><br>
-                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|titlecase }}</a>
+                    <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|ftitlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
                 <td>{{ row.type }}</td>
@@ -124,15 +124,15 @@
         <thead>
             <tr>
                 <td>#</td>
-                <th>{{ 'name'|translate|titlecase }}</th>
-                <th>{{ 'start'|translate|titlecase }}</th>
-                <th>{{ 'end'|translate|titlecase }}</th>
-                <th>{{ 'chief'|translate|titlecase }}</th>
-                <th>{{ 'crew'|translate|titlecase }}</th>
-                <th>{{ 'place'|translate|titlecase }}</th>
-                <th>{{ 'notes'|translate|titlecase }}</th>
-                <th *ngIf="auth.profile.can('trainings-update')">{{ 'update'|translate|titlecase }}</th>
-                <th *ngIf="auth.profile.can('trainings-delete')">{{ 'remove'|translate|titlecase }}</th>
+                <th>{{ 'name'|translate|ftitlecase }}</th>
+                <th>{{ 'start'|translate|ftitlecase }}</th>
+                <th>{{ 'end'|translate|ftitlecase }}</th>
+                <th>{{ 'chief'|translate|ftitlecase }}</th>
+                <th>{{ 'crew'|translate|ftitlecase }}</th>
+                <th>{{ 'place'|translate|ftitlecase }}</th>
+                <th>{{ 'notes'|translate|ftitlecase }}</th>
+                <th *ngIf="auth.profile.can('trainings-update')">{{ 'update'|translate|ftitlecase }}</th>
+                <th *ngIf="auth.profile.can('trainings-delete')">{{ 'remove'|translate|ftitlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -178,17 +178,17 @@
 </ng-template>
  
 <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
-  {{ 'next'|translate|titlecase }}
+  {{ 'next'|translate|ftitlecase }}
 </ng-template>
  
 <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
-  {{ 'previous'|translate|titlecase }}
+  {{ 'previous'|translate|ftitlecase }}
 </ng-template>
  
 <ng-template #lastTemplate let-disabled="disabled" let-currentPage="currentPage">
-  {{ 'last'|translate|titlecase }}
+  {{ 'last'|translate|ftitlecase }}
 </ng-template>
  
 <ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
-  {{ 'first'|translate|titlecase }}
+  {{ 'first'|translate|ftitlecase }}
 </ng-template>

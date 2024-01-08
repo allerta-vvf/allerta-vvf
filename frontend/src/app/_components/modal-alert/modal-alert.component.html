@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left" translate>alert.state</h4>
-    <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|titlecase" (click)="bsModalRef.hide()">
+    <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|ftitlecase" (click)="bsModalRef.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
@@ -14,16 +14,16 @@
         <i class="fas fa-exclamation-triangle"></i> {{ 'alert.closed'|translate }}
     </div>
     <div class="alert alert-info" role="alert" *ngIf="!alertClosed && getCurrentUserResponse() == null">
-        <i class="fas fa-info-circle"></i> Sarai presente alla chiamata?
+        <i class="fas fa-info-circle"></i> {{ 'alert.request_response_question'|translate }}
         <div class="btn-group ms-3" role="group">
-            <button class="btn btn-success" type="button" (click)="setCurrentUserResponse(1)">Si</button>
-            <button class="btn btn-danger" type="button" (click)="setCurrentUserResponse(0)">No</button>
+            <button class="btn btn-success" type="button" (click)="setCurrentUserResponse(1)">{{ 'yes'|translate|titlecase }}</button>
+            <button class="btn btn-danger" type="button" (click)="setCurrentUserResponse(0)">{{ 'no'|translate|titlecase }}</button>
         </div>
     </div>
     <table class="table table-border table-striped w-100">
         <thead>
             <tr>
-                <td>{{ 'name'|translate|titlecase }}</td>
+                <td>{{ 'name'|translate|ftitlecase }}</td>
                 <td colspan="2">{{ 'alert.response_status'|translate }}</td>
             </tr>
         </thead>

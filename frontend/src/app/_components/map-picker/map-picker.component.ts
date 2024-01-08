@@ -96,7 +96,7 @@ export class MapPickerComponent implements OnInit {
 
   searchPlace() {
     if(this.placeName.length < 3) {
-      this.translate.get('map_picker.place_min_length').subscribe((res: string) => {
+      this.translate.get('validation.place_min_length').subscribe((res: string) => {
         this.toastr.error(res);
       });
       return;

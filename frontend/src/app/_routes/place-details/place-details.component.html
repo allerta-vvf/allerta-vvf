@@ -12,27 +12,27 @@
   </h3>
   <br>
   <h4 *ngIf="place_info.name">
-    {{ 'name'|translate|titlecase }}: <b>{{ place_info.name }}</b>
+    {{ 'name'|translate|ftitlecase }}: <b>{{ place_info.name }}</b>
   </h4>
   <h4 *ngIf="place_info.country">
-    {{ 'place_details.country'|translate|titlecase }}: <b>
+    {{ 'place_details.country'|translate|ftitlecase }}: <b>
       {{ place_info.country }} ({{ place_info.country_code }})
       <ng-container *ngIf="place_info.state">- {{ place_info.state }}</ng-container>
     </b>
   </h4>
   <h4 *ngIf="place_info.village">
-    {{ 'place_details.village'|translate|titlecase }}: <b>
+    {{ 'place_details.village'|translate|ftitlecase }}: <b>
       {{ place_info.village }}
       <ng-container *ngIf="place_info.suburb">- {{ place_info.suburb }}</ng-container>
     </b> ({{ 'place_details.postcode'|translate }} <b>{{ place_info.postcode }}</b>)
   </h4>
   <h4 *ngIf="place_info.municipality">
-    {{ 'place_details.municipality'|translate|titlecase }}: <b>{{ place_info.municipality }}</b>
+    {{ 'place_details.municipality'|translate|ftitlecase }}: <b>{{ place_info.municipality }}</b>
   </h4>
   <h4 *ngIf="place_info.road">
-    {{ 'place_details.road'|translate|titlecase }}: <b>{{ place_info.road }}</b>
+    {{ 'place_details.road'|translate|ftitlecase }}: <b>{{ place_info.road }}</b>
   </h4>
   <h4 *ngIf="place_info.house_number">
-    {{ 'place_details.house_number'|translate|titlecase }}: <b>{{ place_info.house_number }}</b>
+    {{ 'place_details.house_number'|translate|ftitlecase }}: <b>{{ place_info.house_number }}</b>
   </h4>
 </div>

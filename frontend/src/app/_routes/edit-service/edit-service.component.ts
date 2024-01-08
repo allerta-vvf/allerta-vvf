@@ -130,13 +130,13 @@ export class EditServiceComponent implements OnInit {
 
   addType() {
     if (this.newType.length < 2) {
-      this.translate.get('edit_service.type_must_be_two_characters_long').subscribe((res: string) => {
+      this.translate.get('validation.type_must_be_two_characters_long').subscribe((res: string) => {
         this.toastr.error(res);
       });
       return;
     }
     if (this.types.find(t => t.name == this.newType)) {
-      this.translate.get('edit_service.type_already_exists').subscribe((res: string) => {
+      this.translate.get('validation.type_already_exists').subscribe((res: string) => {
         this.toastr.error(res);
       });
       return;

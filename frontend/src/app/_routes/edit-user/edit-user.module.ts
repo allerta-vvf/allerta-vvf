@@ -6,6 +6,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BackBtnModule } from '../../_components/back-btn/back-btn.module';
 import { ModalAddMedicalExaminationModule } from 'src/app/_components/modal-add-medical-examination/modal-add-medical-examination.module';
 import { TranslationModule } from '../../translation.module';
+import { FirstLetterUppercasePipe } from 'src/app/_pipes/first-letter-uppercase.pipe';
 
 import { EditUserRoutingModule } from './edit-user-routing.module';
 import { EditUserComponent } from './edit-user.component';
@@ -22,7 +23,8 @@ import { EditUserComponent } from './edit-user.component';
     BsDatepickerModule.forRoot(),
     BackBtnModule,
     ModalAddMedicalExaminationModule,
-    TranslationModule
+    TranslationModule,
+    FirstLetterUppercasePipe
   ]
 })
 export class EditUserModule { }

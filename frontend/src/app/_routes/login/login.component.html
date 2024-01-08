@@ -4,11 +4,11 @@
         <div class="my-2 text-danger" *ngIf="!loginResponse.loginOk">{{ loginResponse.message }}</div>
         <div class="form-floating">
             <input type="text" class="form-control" (keydown.enter)="inputPassword.focus()" [(ngModel)]="username" id="username" [placeholder]="'username'|translate">
-            <label for="username">{{ 'username'|translate|titlecase }}</label>
+            <label for="username">{{ 'username'|translate|ftitlecase }}</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" (keydown.enter)="login()" [(ngModel)]="password" id="password" [placeholder]="'password'|translate" #inputPassword>
-            <label for="password">{{ 'password'|translate|titlecase }}</label>
+            <label for="password">{{ 'password'|translate|ftitlecase }}</label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" (click)="login()" [disabled]="loading">
             <span *ngIf="!loading" translate>login.submit_btn</span>

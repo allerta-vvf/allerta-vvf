@@ -161,7 +161,7 @@ export class EditUserComponent implements OnInit {
         event.target.value = null;
         Swal.fire({
           title: this.translateService.instant("error_title"),
-          text: this.translateService.instant("edit_user.image_format_not_supported"),
+          text: this.translateService.instant("validation.image_format_not_supported"),
           icon: 'error',
           confirmButtonText: 'Ok'
         });
@@ -171,7 +171,7 @@ export class EditUserComponent implements OnInit {
         event.target.value = null;
         Swal.fire({
           title: this.translateService.instant("error_title"),
-          text: this.translateService.instant("edit_user.file_too_big"),
+          text: this.translateService.instant("validation.file_too_big"),
           icon: 'error',
           confirmButtonText: 'Ok'
         });

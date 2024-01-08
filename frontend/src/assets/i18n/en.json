@@ -37,6 +37,7 @@
         "current_alerts": "Current alerts",
         "state": "Alert state",
         "closed": "Alert closed",
+        "request_response_question": "Do you respond to the alert?",
         "response_status": "Response status",
         "no_response": "No response",
         "waiting_for_response": "Waiting for response",
@@ -67,7 +68,6 @@
         "place_load_failed": "Place could not be loaded. Please try again"
     },
     "map_picker": {
-        "place_min_length": "Place name must be at least 3 characters long",
         "loading_error": "Error loading search results. Please try again later"
     },
     "edit_service": {
@@ -77,8 +77,6 @@
         "other_crew_members": "Other crew members",
         "select_type": "Select a type",
         "select_service_type": "Select a service type",
-        "type_must_be_two_characters_long": "Type must be at least 2 characters long",
-        "type_already_exists": "Type already exists",
         "type_added_successfully": "Type added successfully",
         "service_added_successfully": "Service added successfully",
         "service_add_failed": "Service could not be added. Please try again",
@@ -99,12 +97,10 @@
         "training_add_failed": "Training could not be added. Please try again",
         "training_updated_successfully": "Training updated successfully",
         "training_update_failed": "Training could not be updated. Please try again",
-        "training_load_failed": "Errore durante il caricamento dell'intervento. Riprovare più tardi",
-        "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
+        "training_load_failed": "Error loading training. Please try again",
+        "users_load_failed": "Error loading users. Please try again"
     },
     "edit_user": {
-        "image_format_not_supported": "Image format not supported",
-        "file_too_big": "File too big",
         "success_text": "User updated successfully",
         "error_text": "User could not be updated. Please try again",
         "creation_date": "User creation date",
@@ -113,6 +109,17 @@
     },
     "user_info_modal": {
         "title": "User info"
+    },
+    "medical_examination_modal": {
+        "title": "Add medical examination"
+    },
+    "validation": {
+        "place_min_length": "Place name must be at least 3 characters long",
+        "type_must_be_two_characters_long": "Type must be at least 2 characters long",
+        "type_already_exists": "Type already exists",
+        "image_format_not_supported": "Image format not supported",
+        "document_format_not_supported": "Document format not supported",
+        "file_too_big": "File too big"
     },
     "username": "username",
     "password": "password",
@@ -160,9 +167,15 @@
     "driving_license_type": "driving license type",
     "driving_license_scan": "driving license scan",
     "upload_scan": "upload scan",
+    "upload_medical_examination_certificate": "upload medical examination certificate",
     "clothings": "clothings",
     "suit_size": "suit size",
     "boot_size": "boot size",
+    "medical_examinations": "medical examinations",
+    "date": "date",
+    "expiration_date": "expiration date",
+    "certifier": "certifier",
+    "certificate_short": "cert.",
     "banned": "banned",
     "hidden": "hidden",
     "driver": "driver",
@@ -195,18 +208,23 @@
     "search": "search",
     "submit": "invia",
     "reset": "reset",
-    "go_back": "go back",
+    "go_back": "Go back",
     "next": "next",
     "previous": "previous",
     "last": "last",
     "first": "first",
-    "press_to_select_a_date": "press to select a date",
+    "press_to_select_a_date": "Press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision",
     "unknown": "unknown",
     "edit": "edit",
     "never": "never",
+    "optional": "optional",
     "not_enough_permissions": "You don't have enough permissions to access this page.",
     "error_title": "Error",
-    "success_title": "Successo"
+    "success_title": "Success",
+    "select_date_range": "Select date range",
+    "remove_date_filters": "Remove date filters",
+    "yes": "yes",
+    "no": "no"
 }

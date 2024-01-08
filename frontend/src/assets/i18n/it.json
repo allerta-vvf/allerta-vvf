@@ -37,6 +37,7 @@
         "current_alerts": "Emergenze in corso",
         "state": "Stato dell'allerta",
         "closed": "Allerta rientrata",
+        "request_response_question": "Sarai presente alla chiamata?",
         "response_status": "Stato della risposta",
         "no_response": "Nessuna risposta",
         "waiting_for_response": "In attesa di risposta",
@@ -67,7 +68,6 @@
         "place_load_failed": "Errore durante il caricamento del luogo. Riprova più tardi"
     },
     "map_picker": {
-        "place_min_length": "Il nome della località deve essere di almeno 3 caratteri",
         "loading_error": "Errore di caricamento dei risultati della ricerca. Riprovare più tardi"
     },
     "edit_service": {
@@ -77,7 +77,6 @@
         "other_crew_members": "Altri membri della squadra",
         "select_type": "Seleziona una tipologia",
         "select_service_type": "Seleziona una tipologia di intervento",
-        "type_must_be_two_characters_long": "La tipologia deve essere di almeno 2 caratteri",
         "type_already_exists": "La tipologia è già presente",
         "type_added_successfully": "Tipologia aggiunta con successo",
         "service_added_successfully": "Intervento aggiunto con successo",
@@ -103,8 +102,6 @@
         "users_load_failed": "Errore durante il caricamento degli utenti. Riprovare più tardi"
     },
     "edit_user": {
-        "image_format_not_supported": "Formato immagine non supportato",
-        "file_too_big": "File troppo grande",
         "success_text": "Utente aggiornato con successo",
         "error_text": "L'utente non può essere aggiornato. Riprova più tardi",
         "creation_date": "Data di creazione dell'utente",
@@ -113,6 +110,15 @@
     },
     "user_info_modal": {
         "title": "Scheda utente"
+    },
+    "medical_examination_modal": {
+        "title": "Aggiungi visita medica"
+    },
+    "validation": {
+        "place_min_length": "Il nome della località deve essere di almeno 3 caratteri",
+        "type_must_be_two_characters_long": "La tipologia deve essere di almeno 2 caratteri",
+        "image_format_not_supported": "Formato immagine non supportato",
+        "file_too_big": "File troppo grande"
     },
     "username": "username",
     "password": "password",
@@ -160,9 +166,15 @@
     "driving_license_type": "tipologia patente",
     "driving_license_scan": "scansione patente",
     "upload_scan": "carica scansione",
+    "upload_medical_examination_certificate": "carica certificato visita medica",
     "clothings": "indumenti",
     "suit_size": "taglia tuta",
     "boot_size": "taglia scarponi",
+    "medical_examinations": "visite mediche",
+    "date": "data",
+    "expiration_date": "data di scadenza",
+    "certifier": "ente/certificatore",
+    "certificate_short": "cert.",
     "banned": "bannato",
     "hidden": "nascosto",
     "driver": "autista",
@@ -195,18 +207,23 @@
     "search": "cerca",
     "submit": "invia",
     "reset": "reset",
-    "go_back": "torna indietro",
+    "go_back": "Torna indietro",
     "next": "successiva",
     "previous": "precedente",
     "last": "ultima",
     "first": "prima",
-    "press_to_select_a_date": "premi per selezionare una data",
+    "press_to_select_a_date": "Premi per selezionare una data",
     "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
     "revision": "revisione",
     "unknown": "sconosciuto",
     "edit": "modifica",
     "never": "mai",
+    "optional": "opzionale",
     "not_enough_permissions": "Non hai i permessi necessari per accedere a questa pagina.",
     "error_title": "Errore",
-    "success_title": "Successo"
+    "success_title": "Successo",
+    "select_date_range": "Seleziona un intervallo di date",
+    "remove_date_filters": "Rimuovi filtri",
+    "yes": "si",
+    "no": "no"
 }

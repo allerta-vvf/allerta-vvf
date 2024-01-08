@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslationModule } from '../../translation.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { FirstLetterUppercasePipe } from 'src/app/_pipes/first-letter-uppercase.pipe';
 
 import { ModalAddMedicalExaminationComponent } from './modal-add-medical-examination.component';
 
@@ -16,7 +17,8 @@ import { ModalAddMedicalExaminationComponent } from './modal-add-medical-examina
     FormsModule,
     ReactiveFormsModule,
     TranslationModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    FirstLetterUppercasePipe
   ],
   exports: [
     ModalAddMedicalExaminationComponent

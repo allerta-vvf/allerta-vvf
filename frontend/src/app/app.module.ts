@@ -37,6 +37,9 @@ import { TrainingsComponent } from './_routes/trainings/trainings.component';
 
 import { AuthInterceptor } from './_providers/auth-interceptor.provider';
 
+//import { ApplicationPipesModule } from './_pipes/application-pipes.module';
+import { FirstLetterUppercasePipe } from './_pipes/first-letter-uppercase.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,7 +89,12 @@ import { AuthInterceptor } from './_providers/auth-interceptor.provider';
         deps: [HttpClient]
       }
     }),
-    TranslationModule
+    TranslationModule,
+    //ApplicationPipesModule
+    FirstLetterUppercasePipe
+  ],
+  exports: [
+    FirstLetterUppercasePipe
   ],
   providers: [
     {

@@ -3,7 +3,7 @@
   <button
     type="button"
     class="btn-close close pull-right"
-    [attr.aria-label]="'close' | translate | titlecase"
+    [attr.aria-label]="'close' | translate | ftitlecase"
     (click)="bsModalRef.hide()"
   >
     <span aria-hidden="true" class="visually-hidden">&times;</span>
@@ -20,27 +20,27 @@
     <th></th>
     <th></th>
     <tr *ngIf="user.surname">
-      <td>{{ 'surname'|translate|titlecase }}</td>
+      <td>{{ 'surname'|translate|ftitlecase }}</td>
       <td>{{ user.surname }}</td>
     </tr>
     <tr>
-      <td>{{ 'name'|translate|titlecase }}</td>
+      <td>{{ 'name'|translate|ftitlecase }}</td>
       <td>{{ user.name }}</td>
     </tr>
     <tr>
-        <td>{{ 'username'|translate|titlecase }}</td>
+        <td>{{ 'username'|translate|ftitlecase }}</td>
         <td>{{ user.username }}</td>
     </tr>
     <tr *ngIf="user.birthday">
-      <td>{{ 'birthday'|translate|titlecase }}</td>
+      <td>{{ 'birthday'|translate|ftitlecase }}</td>
       <td>{{ user.birthday | date:'dd/MM/yyyy' }}</td>
     </tr>
     <tr *ngIf="user.birthplace">
-      <td>{{ 'birthplace'|translate|titlecase }}</td>
+      <td>{{ 'birthplace'|translate|ftitlecase }}</td>
       <td>{{ user.birthplace }}<ng-container *ngIf="user.birthplace_province"> ({{ user.birthplace_province }})</ng-container></td>
     </tr>
     <tr *ngIf="user.ssn">
-      <td>{{ 'ssn'|translate|titlecase }}</td>
+      <td>{{ 'ssn'|translate|ftitlecase }}</td>
       <td>{{ user.ssn }}</td>
     </tr>
     <tr>
@@ -50,7 +50,7 @@
       </td>
     </tr>
     <tr *ngIf="user.address">
-      <td>{{ 'address'|translate|titlecase }}</td>
+      <td>{{ 'address'|translate|ftitlecase }}</td>
       <td>
         <a href="https://maps.google.com/?q={{ user.address }}" target="_blank">
             {{ user.address }}<ng-container *ngIf="user.address_zip_code"> ({{ 'zip_code'|translate }} <i>{{ user.address_zip_code }}</i>)</ng-container>
@@ -58,11 +58,11 @@
       </td>
     </tr>
     <tr>
-      <td>{{ 'phone_number'|translate|titlecase }}</td>
+      <td>{{ 'phone_number'|translate|ftitlecase }}</td>
       <td><a href="tel:{{ user.phone_number }}">{{ user.phone_number }}</a></td>
     </tr>
     <tr>
-      <td>{{ 'email'|translate|titlecase }}</td>
+      <td>{{ 'email'|translate|ftitlecase }}</td>
       <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
     </tr>
     <tr>
@@ -72,28 +72,28 @@
       </td>
     </tr>
     <tr>
-      <td>{{ 'driver'|translate|titlecase }}</td>
+      <td>{{ 'driver'|translate|ftitlecase }}</td>
       <td>
         <i class="fa fa-check" style="color:green" *ngIf="user.driver"></i>
         <i class="fa fa-times" style="color:red" *ngIf="!user.driver"></i>
       </td>
     </tr>
     <tr>
-      <td>{{ 'chief'|translate|titlecase }}</td>
+      <td>{{ 'chief'|translate|ftitlecase }}</td>
       <td>
         <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="user.chief"> Si
         <img alt="black helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!user.chief"> No
       </td>
     </tr>
     <tr *ngIf="user.course_date">
-      <td>{{ 'course_date'|translate|titlecase }}</td>
+      <td>{{ 'course_date'|translate|ftitlecase }}</td>
       <td>{{ user.course_date }}</td>
     </tr>
   </table>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-primary" (click)="goToEditPage()" [disabled]="!canGoToEditPage">
-    {{ "edit" | translate | titlecase }}
+    {{ "edit" | translate | ftitlecase }}
   </button>
   <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">
     {{ "close" | translate }}
