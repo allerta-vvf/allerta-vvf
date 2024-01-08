@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ModalAddMedicalExaminationComponent } from 'src/app/_components/modal-add-medical-examination/modal-add-medical-examination.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -42,6 +44,8 @@ export class EditUserComponent implements OnInit {
     boot_size: ['']
   });
 
+  hideMECertCol = true;
+  hideMEAddBtn = true;
   birthdayMaxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18)); //18 years ago
   dlExpirationMinDate = new Date(new Date().setDate(new Date().getDate() + 1)); //Tomorrow
   allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
@@ -60,7 +64,8 @@ export class EditUserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private api: ApiClientService,
     private auth: AuthService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private modalService: BsModalService
   ) {
     this.route.paramMap.subscribe(params => {
       this.id = typeof params.get('id') === 'string' ? parseInt(params.get('id') || '') : undefined;
@@ -109,6 +114,13 @@ export class EditUserComponent implements OnInit {
           if(this.user.driving_license && this.user.driving_license.scan_uuid) {
             this.dlCurrScanUrl = this.api.apiEndpoint(this.user.driving_license.scan_url);
           }
+
+          //If medical examination is present, check if at least one row has cert_url
+          if(this.user.medical_examinations && this.user.medical_examinations.length > 0) {
+            this.hideMECertCol = !this.user.medical_examinations.some((me: any) => {
+              return me.cert_url;
+            });
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -129,11 +141,15 @@ export class EditUserComponent implements OnInit {
     let canHide = this.id == this.auth.profile.id ?
       this.auth.profile.can('user-hide') :
       this.auth.profile.can('users-hide');
+    let canAddMedicalExamination = this.id == this.auth.profile.id ?
+      this.auth.profile.can('user-add-medical-examination') :
+      this.auth.profile.can('users-add-medical-examination');
     
     if(!canSetChief) this.profileForm.get('chief')?.disable();
     if(!canSetDriver) this.profileForm.get('driver')?.disable();
     if(!canBan) this.profileForm.get('banned')?.disable();
     if(!canHide) this.profileForm.get('hidden')?.disable();
+    this.hideMEAddBtn = !canAddMedicalExamination;
   }
 
   onDrivingLicenseScanSelected(event: any) {
@@ -219,6 +235,30 @@ export class EditUserComponent implements OnInit {
         });
       });
     }
+  }
+
+  openModalAddMedicalExamination() {
+    const modalReference = this.modalService.show(ModalAddMedicalExaminationComponent, {
+      initialState: {
+        userId: this.id
+      }
+    });
+    modalReference.content?.submitEvents.subscribe(() => {
+      //Refresh user data after modal is closed
+      this.api.get(`users/${this.id}`).then((response) => {
+        this.user = response;
+        console.log(response);
+
+        //If medical examination is present, check if at least one row has cert_url
+        if(this.user.medical_examinations && this.user.medical_examinations.length > 0) {
+          this.hideMECertCol = !this.user.medical_examinations.some((me: any) => {
+            return me.cert_url;
+          });
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
   }
 
 }

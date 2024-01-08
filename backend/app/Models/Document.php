@@ -18,7 +18,8 @@ class Document extends Model
     protected $fillable = [
         'type',
         'doc_number',
-        'doc_type'
+        'doc_type',
+        'doc_certifier'
     ];
 
     /**
@@ -27,9 +28,15 @@ class Document extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'date' => 'datetime',
         'expiration_date' => 'datetime'
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     public function addedBy(): BelongsTo
     {
         return $this->belongsTo(User::class);

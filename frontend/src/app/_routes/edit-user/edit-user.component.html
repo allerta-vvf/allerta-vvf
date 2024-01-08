@@ -147,7 +147,7 @@
     </div>
 </form>
 
-<ng-component *ngIf="false">
+<ng-container *ngIf="false">
 <hr>
 
 <div class="text-center">
@@ -180,31 +180,34 @@
     </table>
     <br>
 </div>
+</ng-container>
 
 <hr>
 
 <div class="text-center">
     <h3>Visite mediche</h3>
+    <button *ngIf="!hideMEAddBtn" class="btn btn-sm btn-outline-success m-2" (click)="openModalAddMedicalExamination()">
+        <i class="fas fa-plus"></i> {{ 'add'|translate|titlecase }}
+    </button>
     <table class="mx-auto table table-striped table-bordered table-responsive">
         <thead>
             <tr>
                 <th>DATA</th>
-                <th>MEDICO</th>
+                <th>ENTE</th>
                 <th>SCADENZA</th>
-                <th>CERT.</th>
+                <th *ngIf="!hideMECertCol">CERT.</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr *ngIf="false">
-                <td>31/12/2024</td>
-                <td>Medico</td>
-                <td>31/12/2027</td>
-                <td>
-                    <a href=''><i class='fas fa-clipboard-list'></i></a>
+            <tr *ngFor="let row of user.medical_examinations">
+                <td>{{ row.date | date:'dd/MM/YYYY' }}</td>
+                <td>{{ row.certifier }}</td>
+                <td>{{ row.expiration_date | date:'dd/MM/YYYY' }}</td>
+                <td *ngIf="!hideMECertCol && row.cert_url">
+                    <a [href]='row.cert_url' target="_blank"><i class='fas fa-clipboard-list'></i></a>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-</ng-component>

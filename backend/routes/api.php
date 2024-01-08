@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::put('/users/{user}', [UserController::class, 'update']);
 
     Route::post('/documents/driving_license', [DocumentsController::class, 'uploadDrivingLicenseScan']);
+    Route::post('/documents/medical_examination', [DocumentsController::class, 'addMedicalExamination']);
 
     Route::get('/schedules', [ScheduleSlotsController::class, 'index']);
     Route::post('/schedules', [ScheduleSlotsController::class, 'store']);
@@ -90,6 +91,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
 Route::middleware('signed')->group( function () {
     Route::get('/documents/driving_license/{uuid}', [DocumentsController::class, 'serveDrivingLicenseScan'])->name('driving_license_scan_serve');
+    Route::get('/documents/medical_examination/{uuid}', [DocumentsController::class, 'serveMedicalExamination'])->name('medical_examination_serve');
 });
 
 Route::get('/owner_image', function() {

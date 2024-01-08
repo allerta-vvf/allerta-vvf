@@ -60,7 +60,7 @@ class UserController extends Controller
 
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
-        $dl_tmp = Document::where('documents.added_by', $user->id)
+        $dl_tmp = Document::where('documents.user', $user->id)
             ->where('documents.type', 'driving_license')
             ->join('document_files', 'document_files.id', '=', 'documents.document_file_id')
             ->select('documents.doc_type', 'documents.doc_number', 'documents.expiration_date', 'document_files.uuid as scan_uuid')
@@ -68,6 +68,26 @@ class UserController extends Controller
         
         if($dl_tmp->count() > 0) {
             $user->driving_license = $dl_tmp[0];
+        }
+
+        $me_tmp = Document::where('documents.user', $user->id)
+            ->where('documents.type', 'medical_examination')
+            ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')
+            ->select('documents.doc_certifier as certifier', 'documents.date', 'documents.expiration_date', 'document_files.uuid as cert_uuid')
+            ->get();
+        
+        if($me_tmp->count() > 0) {
+            $user->medical_examinations = $me_tmp;
+            foreach($user->medical_examinations as $me) {
+                if(!is_null($me->cert_uuid)) {
+                    $me->cert_url = URL::temporarySignedRoute(
+                        'medical_examination_serve', now()->addHours(1), ['uuid' => $me->cert_uuid]
+                    );
+                    unset($me->cert_uuid);
+                }
+            }
+        } else {
+            $user->medical_examinations = [];
         }
 
         if(!is_null($user->driving_license) && !is_null($user->driving_license->scan_uuid)) {
@@ -143,13 +163,14 @@ class UserController extends Controller
 
         //Check if driving license is present
         if($request->has('driving_license')) {
-            $drivingLicense = Document::where('added_by', $user->id)
+            $drivingLicense = Document::where('user', $user->id)
                 ->where('type', 'driving_license')
                 ->first();
 
             if(is_null($drivingLicense)) {
                 $drivingLicense = new Document();
-                $drivingLicense->added_by = $user->id;
+                $drivingLicense->user = $user->id;
+                $drivingLicense->added_by = $request->user()->id;
                 $drivingLicense->type = 'driving_license';
             }
 

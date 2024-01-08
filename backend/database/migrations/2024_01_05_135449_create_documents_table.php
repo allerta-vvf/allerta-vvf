@@ -24,8 +24,11 @@ return new class extends Migration
             $table->string('type');
             $table->string('doc_number')->nullable();
             $table->string('doc_type')->nullable();
+            $table->string('doc_certifier')->nullable();
+            $table->foreignId('user')->constrained('users');
             $table->foreignId('added_by')->constrained('users');
             $table->foreignId('document_file_id')->nullable()->constrained('document_files');
+            $table->dateTime('date')->nullable();
             $table->dateTime('expiration_date')->nullable();
             $table->timestamps();
         });
