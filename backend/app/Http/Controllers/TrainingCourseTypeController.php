@@ -14,7 +14,7 @@ class TrainingCourseTypeController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->user()->hasPermission("users-read") && !$request->user()->hasPermission("user-read")) abort(401);
+        if(!$request->user()->hasPermission("users-add-training-course") && !$request->user()->hasPermission("user-add-training-course")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         return response()->json(
