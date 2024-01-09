@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Document;
 use App\Models\DocumentFile;
+use App\Utils\Logger;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\URL;
@@ -227,6 +228,8 @@ class UserController extends Controller
             }
             $drivingLicense->save();
         }
+
+        Logger::log("Modifica profilo utente", $user->id);
 
         return response()->json($user);
     }

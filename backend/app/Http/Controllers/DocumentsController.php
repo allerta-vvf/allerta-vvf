@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
 use App\Models\Document;
 use App\Models\DocumentFile;
+use App\Utils\Logger;
 
 class DocumentsController extends Controller
 {
@@ -31,6 +32,8 @@ class DocumentsController extends Controller
         $document->file_path = $filePath;
         $document->uploadedBy()->associate(auth()->user());
         $document->save();
+
+        Logger::log("Caricamento scansione patente", auth()->user()->id);
 
         return response()->json([
             "uuid" => $document->uuid
@@ -82,6 +85,8 @@ class DocumentsController extends Controller
         $document->date = $request->input('date');
         $document->save();
 
+        Logger::log("Aggiunta corso di formazione", $request->input('user'));
+
         return response()->json([
             "id" => $document->id
         ]);
@@ -131,6 +136,8 @@ class DocumentsController extends Controller
         $document->date = $request->input('date');
         $document->expiration_date = $request->input('expiration_date');
         $document->save();
+
+        Logger::log("Aggiunta visita medica", $request->input('user'));
 
         return response()->json([
             "id" => $document->id
