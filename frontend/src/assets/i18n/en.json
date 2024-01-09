@@ -4,9 +4,12 @@
         "services": "Services",
         "trainings": "Trainings",
         "logs": "Logs",
+        "admin": "Admin",
         "logout": "Logout",
         "stop_impersonating": "Stop impersonating",
-        "hi": "hi"
+        "hi": "hi",
+        "info": "Info",
+        "roles": "Roles"
     },
     "table": {
         "yes_remove": "Yes, remove",

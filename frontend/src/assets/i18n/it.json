@@ -4,9 +4,12 @@
         "services": "Interventi",
         "trainings": "Esercitazioni",
         "logs": "Logs",
+        "admin": "Amministrazione",
         "logout": "Logout",
         "stop_impersonating": "Torna al vero account",
-        "hi": "Ciao"
+        "hi": "Ciao",
+        "info": "Info",
+        "roles": "Ruoli"
     },
     "table": {
         "yes_remove": "Si, rimuovi",

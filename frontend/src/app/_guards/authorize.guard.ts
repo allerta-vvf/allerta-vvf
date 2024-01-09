@@ -49,7 +49,7 @@ export class AuthorizeGuard  {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     console.log(this.router.url, route, state);
-    if(this.authService.authLoaded) {
+    if(this.authService.authLoaded()) {
       this.guardLoaderIconService.hide();
       console.log("Auth already loaded, checking if profile id exists");
       return this.checkAuthAndRedirect(route, state);
@@ -57,12 +57,26 @@ export class AuthorizeGuard  {
       this.guardLoaderIconService.show();
       console.log("Auth not loaded, waiting for authChanged");
       return new Observable<boolean>((observer) => {
+        const proceed = () => {
+          this.guardLoaderIconService.hide();
+          observer.next(this.checkAuthAndRedirect(route, state));
+        };
         this.authService.authChanged.subscribe({
-          next: () => {
-            this.guardLoaderIconService.hide();
-            observer.next(this.checkAuthAndRedirect(route, state));
+          next: proceed
+        });
+
+        /*
+        Fix for a race condition in admin page:
+        1. Page loaded,
+        2. Auth service loads profile, in the meantime admin page loads and checks authLoaded() which is false
+        3. First router waits for authChanged, authChanged is emitted, second router is loaded
+        4. authLoaded() still false, second router waits for authChanged but already emitted
+        */
+        setTimeout(() => {
+          if(this.authService.authLoaded()) {
+            proceed();
           }
-        })
+        }, 200);
       });
     }
   }

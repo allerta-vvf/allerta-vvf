@@ -18,7 +18,10 @@ return [
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
-            'logs' => 'r'
+            'logs' => 'r',
+            'admin' => 'r',
+            'admin-info' => 'r,u',
+            'admin-roles' => 'r,u'
         ],
         'admin' => [
             'users' => 'c,r,u,d,i,b,h,sc,sd,atc,ame',
@@ -26,7 +29,10 @@ return [
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
-            'logs' => 'lr'
+            'logs' => 'lr',
+            'admin' => 'r',
+            'admin-info' => 'r,u',
+            'admin-roles' => 'r,u'
         ],
         'chief' => [
             'users' => 'r,u,sc,sd,atc,ame',

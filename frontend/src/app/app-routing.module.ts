@@ -37,9 +37,15 @@ const routes: Routes = [
     data: {permissionsRequired: ['trainings-read', 'trainings-update']}
   },
   {
-    path: 'stats', 
+    path: 'stats',
     loadChildren: () => import('./_routes/stats/stats.module').then(m => m.StatsModule),
     canActivate: [AuthorizeGuard]
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./_routes/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AuthorizeGuard],
+    data: {permissionsRequired: ['admin-read']}
   },
   { path: "login/:redirect/:extraParam", component: LoginComponent },
   { path: "login/:redirect", component: LoginComponent },

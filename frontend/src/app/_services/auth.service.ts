@@ -21,7 +21,7 @@ export class AuthService {
     };
     public profile: any = this.defaultPlaceholderProfile;
     public authChanged = new Subject<void>();
-    public authLoaded = false;
+    public _authLoaded = false;
 
     public loadProfile() {
         console.log("Loading profile data...");
@@ -51,6 +51,10 @@ export class AuthService {
         });
     }
 
+    authLoaded() {
+        return this._authLoaded;
+    }
+
     constructor(
         private api: ApiClientService,
         private authToken: AuthTokenService,
@@ -61,7 +65,7 @@ export class AuthService {
         }).catch(() => {
             console.log("User is not logged in");
         }).finally(() => {
-            this.authLoaded = true;
+            this._authLoaded = true;
         });
     }
 

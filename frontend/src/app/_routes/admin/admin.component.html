@@ -1,0 +1,13 @@
+<div *ngIf="tabs.length > 1">
+    <tabset>
+        <tab *ngFor="let tabz of tabs" [active]="tabz.active" [heading]="tabz.title" [id]="tabz.id" (selectTab)="routeChange($event)"></tab>
+    </tabset>
+</div>
+
+<div *ngIf="tabs.length == 0">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ 'warning'|translate|titlecase }}!</strong> {{ 'not_enough_permissions'|translate }}
+    </div>
+</div>
+
+<router-outlet></router-outlet>
