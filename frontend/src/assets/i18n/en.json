@@ -116,6 +116,9 @@
     "medical_examination_modal": {
         "title": "Add medical examination"
     },
+    "useragent_info_modal": {
+        "title": "Client information"
+    },
     "validation": {
         "place_min_length": "Place name must be at least 3 characters long",
         "type_must_be_two_characters_long": "Type must be at least 2 characters long",
@@ -124,6 +127,14 @@
         "document_format_not_supported": "Document format not supported",
         "file_too_big": "File too big"
     },
+    "property": "property",
+    "value": "value",
+    "user_agent": "User Agent",
+    "browser": "browser",
+    "engine": "engine",
+    "os": "Operating System",
+    "device": "device",
+    "cpu": "CPU",
     "username": "username",
     "password": "password",
     "warning": "warning",
@@ -163,6 +174,7 @@
     "personal_information": "personal information",
     "contact_information": "contact information",
     "service_information": "service information",
+    "device_information": "device information",
     "course_date": "course date",
     "documents": "documents",
     "driving_license": "driving license",

@@ -64,14 +64,36 @@
                 <th>{{ 'changed'|translate|ftitlecase }}</th>
                 <th>{{ 'editor'|translate|ftitlecase }}</th>
                 <th>{{ 'datetime'|translate|ftitlecase }}</th>
+                <th *ngIf="auth.profile.can('logs-read')">{{ 'device_information'|translate|ftitlecase }}</th>
             </tr>
         </thead>
         <tbody id="table_body">
             <tr *ngFor="let row of displayedData; index as i">
-                <td>{{ row.action }}</td>
+                <td>
+                    {{ row.action }}
+                    <div class="float-end d-inline">
+                        <i *ngIf="row.source_type === 'telegram'" class="fab faxlarge fa-telegram"></i>
+                        <i *ngIf="row.source_type === 'web'" class="fa faxlarge fa-globe"></i>
+                    </div>
+                </td>
                 <td>{{ row.changed }}</td>
-                <td>{{ row.editor }}</td>
+                <td>
+                    <div class="float-start d-inline" *ngIf="row.editor_hidden">
+                        <i class="fa fa-ghost"></i>
+                    </div>
+                    {{ row.editor }}
+                </td>
                 <td>{{ row.created_at | date: 'dd/MM/YYYY HH:mm:ss' }}</td>
+                <td *ngIf="auth.profile.can('logs-read') && row.source_type === 'web'">
+                    <a [href]="'https://iplocation.io/ip/'+row.ip" target="_blank" *ngIf="isPublicIp(row.ip)">
+                        <code>{{ row.ip }}</code>
+                    </a>
+                    <code *ngIf="!isPublicIp(row.ip)">{{ row.ip }}</code>
+                    <div class="mt-1" (click)="openUserAgentInfoModal(row.user_agent, useragentInfoModal)">
+                        <i *ngFor="let icon of userAgentToIcons(row.user_agent)" [ngClass]="'m-1 '+icon"></i>
+                    </div>
+                </td>
+                <td *ngIf="auth.profile.can('logs-read') && row.source_type !== 'web'"></td>
             </tr>
         </tbody>
     </table>
@@ -191,4 +213,49 @@
  
 <ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
   {{ 'first'|translate|ftitlecase }}
+</ng-template>
+
+<ng-template #useragentInfoModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" translate>{{ 'useragent_info_modal.title' }}</h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="useragentInfoModalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>{{ 'property'|translate|ftitlecase }}</th>
+                    <th>{{ 'value'|translate|ftitlecase }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ 'user_agent'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.ua }}</code></td>
+                </tr>
+                <tr *ngIf="processedUA.browser && processedUA.browser.name">
+                    <td>{{ 'browser'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.browser.name }} {{ processedUA.browser.version }}</code></td>
+                </tr>
+                <tr *ngIf="processedUA.engine && processedUA.engine.name">
+                    <td>{{ 'engine'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.engine.name }} {{ processedUA.engine.version }}</code></td>
+                </tr>
+                <tr *ngIf="processedUA.os && processedUA.os.name">
+                    <td>{{ 'os'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.os.name }} {{ processedUA.os.version }}</code></td>
+                </tr>
+                <tr *ngIf="processedUA.device && processedUA.device.name">
+                    <td>{{ 'device'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.device.vendor }} {{ processedUA.device.model }}</code></td>
+                </tr>
+                <tr *ngIf="processedUA.cpu && processedUA.cpu.architecture">
+                    <td>{{ 'cpu'|translate|ftitlecase }}</td>
+                    <td><code>{{ processedUA.cpu.architecture }}</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </ng-template>

@@ -14,6 +14,14 @@
   font-size: 20px;
 }
 
+.faxlarge {
+  font-size: x-large;
+}
+
+.fa-telegram {
+  color: #0088cc;
+}
+
 .fa-whatsapp {
   color: green;
   font-size: 1.5em;
@@ -21,4 +29,12 @@
 
 .leaflet-pane.leaflet-shadow-pane {
   display: none;
+}
+
+a code {
+  color: var(--bs-code-color) !important;
+}
+
+a:has(code) {
+  text-decoration: none !important;
 }

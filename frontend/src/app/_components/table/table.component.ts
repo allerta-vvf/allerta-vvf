@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from '../../_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import * as UAParser from 'ua-parser-js';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-table',
@@ -78,12 +80,16 @@ export class TableComponent implements OnInit, OnDestroy {
   public searchText: string = "";
   public searchData: any = [];
 
+  public useragentInfoModalRef: BsModalRef | undefined;
+  public processedUA: any = {};
+
   constructor(
     private api: ApiClientService,
     public auth: AuthService,
     private router: Router,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private modalService: BsModalService
   ) { }
 
   loadTableData() {
@@ -280,5 +286,95 @@ export class TableComponent implements OnInit, OnDestroy {
 
   extractNamesFromObject(obj: any) {
     return obj.flatMap((e: any) => e.name);
+  }
+
+  userAgentToIcons(userAgentString: string) {
+    const parser = new UAParser(userAgentString);
+    let icons = [];
+
+    switch (parser.getBrowser().name) {
+      case 'Chrome':
+      case 'Chromium':
+      case 'Chrome WebView':
+      case 'Chrome Headless':
+        icons.push('fab fa-chrome');
+        break;
+      case 'Mozilla':
+      case 'Firefox [Focus/Reality]':
+        icons.push('fab fa-firefox-browser');
+        break;
+      case 'Safari':
+        icons.push('fab fa-safari');
+        break;
+      case 'IE':
+      case 'IEMobile':
+        icons.push('fa fa-skull-crossbones');
+        break;
+      case 'Edge':
+        icons.push('fab fa-edge');
+        break;
+      case 'Android Browser':
+      case 'Huawei Browser':
+        case 'Samsung Browser':
+        icons.push('fab fa-android');
+        break;
+      case 'Silk':
+        icons.push('fab fa-amazon');
+        break;
+      case 'Instagram':
+      case 'TikTok':
+      case 'Snapchat':
+      case 'Facebook':
+      case 'WeChat':
+        icons.push('fa fa-square-share-nodes');
+        break;
+      case 'Electron':
+      case 'PhantomJS':
+        icons.push('fa fa-code');
+        break;
+      default:
+        icons.push('fa fa-question-circle');
+    }
+
+    switch (parser.getDevice().type) {
+      case 'mobile':
+        icons.push('fa fa-mobile');
+        break;
+      case 'tablet':
+        icons.push('fa fa-tablet');
+        break;
+      case 'smarttv':
+        icons.push('fa fa-tv');
+        break;
+      case 'console':
+        icons.push('fa fa-gamepad');
+        break;
+      case 'wearable':
+        icons.push('fa fa-watch');
+        break;
+      default:
+        icons.push('fa fa-desktop');
+    }
+
+    console.log(parser.getResult(), icons);
+    return icons;
+  }
+
+  isPublicIp(ipAddress: string) {
+    const parts = ipAddress.split('.');
+    if (parts.length === 4) {
+      return !(
+        parts[0] === '10' ||
+        (parts[0] === '172' && parseInt(parts[1], 10) >= 16 && parseInt(parts[1], 10) <= 31) ||
+        (parts[0] === '192' && parts[1] === '168') ||
+        ipAddress === '127.0.0.1'
+      );
+    }
+    return false;
+  }
+
+  openUserAgentInfoModal(userAgentString: string, template: TemplateRef<void>) {
+    this.processedUA = new UAParser(userAgentString).getResult();
+    this.useragentInfoModalRef = this.modalService.show(template);
   }
 }

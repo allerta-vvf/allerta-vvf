@@ -117,12 +117,23 @@
     "medical_examination_modal": {
         "title": "Aggiungi visita medica"
     },
+    "useragent_info_modal": {
+        "title": "Informazioni sul client"
+    },
     "validation": {
         "place_min_length": "Il nome della località deve essere di almeno 3 caratteri",
         "type_must_be_two_characters_long": "La tipologia deve essere di almeno 2 caratteri",
         "image_format_not_supported": "Formato immagine non supportato",
         "file_too_big": "File troppo grande"
     },
+    "property": "proprietà",
+    "value": "valore",
+    "user_agent": "User Agent",
+    "browser": "browser",
+    "engine": "motore",
+    "os": "Sistema Operativo",
+    "device": "dispositivo",
+    "cpu": "CPU",
     "username": "username",
     "password": "password",
     "warning": "attenzione",
@@ -162,6 +173,7 @@
     "personal_information": "anagrafica personale",
     "contact_information": "recapiti",
     "service_information": "informazioni di servizio",
+    "device_information": "informazioni sul dispositivo",
     "course_date": "data corso",
     "documents": "documenti",
     "driving_license": "patente",
