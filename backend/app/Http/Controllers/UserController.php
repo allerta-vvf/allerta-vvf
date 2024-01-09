@@ -171,6 +171,17 @@ class UserController extends Controller
         if(!$canBan) $request->request->remove('banned');
         if(!$canHide) $request->request->remove('hidden');
 
+        //Check if chief attribute is present and changed from previous value
+        if($request->has('chief') && $request->chief != $user->chief) {
+            if($request->chief) {
+                //Add role chief to the user
+                $user->addRole('chief');
+            } else {
+                //Remove role chief from the user
+                $user->removeRole('chief');
+            }
+        }
+
         $user->update($request->all());
 
         if($request->has('birthday')) {
