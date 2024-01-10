@@ -128,6 +128,8 @@ class AuthController extends Controller
         $request->user()->impersonate($impersonatedUser);
         $token = $impersonatedUser->createToken('auth_token')->plainTextToken;
 
+        Logger::log("Impersonato utente", $impersonatedUser, $authUser);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
