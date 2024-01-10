@@ -131,28 +131,28 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'surname' => 'string|max:255',
+            'surname' => 'nullable|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
-            'birthday' => 'date',
-            'birthplace' => 'string|max:255',
-            'birthplace_province' => 'string|max:255',
-            'ssn' => 'string|max:255',
-            'course_date' => 'date',
+            'birthday' => 'nullable|date',
+            'birthplace' => 'nullable|string|max:255',
+            'birthplace_province' => 'nullable|string|max:255',
+            'ssn' => 'nullable|string|max:255',
+            'course_date' => 'nullable|date',
             'driver' => 'required|boolean',
             'chief' => 'required|boolean',
-            'banned' => 'boolean',
-            'hidden' => 'boolean',
-            'driving_license' => 'array',
-            'driving_license.number' => 'alpha_num|max:255',
-            'driving_license.type' => 'string|max:255',
-            'driving_license.expiration_date' => 'date',
-            'driving_license.scan' => 'string|max:255',
-            'address' => 'string|max:255',
-            'address_zip_code' => 'integer|max:255',
-            'phone_number' => 'string|max:255',
-            'email' => 'string|max:255',
-            'suit_size' => 'string|max:255',
-            'boot_size' => 'string|max:255'
+            'banned' => 'nullable|boolean',
+            'hidden' => 'nullable|boolean',
+            'driving_license' => 'nullable|array',
+            'driving_license.number' => 'nullable|alpha_num|max:255',
+            'driving_license.type' => 'nullable|string|max:255',
+            'driving_license.expiration_date' => 'nullable|date',
+            'driving_license.scan' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'address_zip_code' => 'nullable|integer|max:255',
+            'phone_number' => 'nullable|string|max:255',
+            'email' => 'nullable|string|max:255',
+            'suit_size' => 'nullable|string|max:255',
+            'boot_size' => 'nullable|string|max:255'
         ]);
 
         $canSetChief = $request->user()->id == $user->id ?
@@ -229,7 +229,7 @@ class UserController extends Controller
             $drivingLicense->save();
         }
 
-        Logger::log("Modifica profilo utente", $user->id);
+        Logger::log("Modifica profilo utente", $user);
 
         return response()->json($user);
     }
