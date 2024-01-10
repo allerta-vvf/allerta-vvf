@@ -130,6 +130,7 @@
         "document_format_not_supported": "Document format not supported",
         "file_too_big": "File too big"
     },
+    "maintenance_mode_warning": "The application is currently in maintenance mode. Some features may not be available.",
     "property": "property",
     "value": "value",
     "user_agent": "User Agent",

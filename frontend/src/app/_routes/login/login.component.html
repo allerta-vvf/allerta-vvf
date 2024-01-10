@@ -10,7 +10,7 @@
             <input type="password" class="form-control" (keydown.enter)="login()" [(ngModel)]="password" id="password" [placeholder]="'password'|translate" #inputPassword>
             <label for="password">{{ 'password'|translate|ftitlecase }}</label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" (click)="login()" [disabled]="loading">
+        <button class="w-100 btn btn-lg btn-primary" (click)="login()" [disabled]="loading || api.maintenanceMode">
             <span *ngIf="!loading" translate>login.submit_btn</span>
             <div class="spinner-border spinner-border-sm text-white" *ngIf="loading"></div>
         </button>

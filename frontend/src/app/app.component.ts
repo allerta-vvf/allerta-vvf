@@ -28,7 +28,7 @@ export class AppComponent {
     private locationBackService: LocationBackService,
     public guardLoaderIconService: GuardLoaderIconService,
     private router: Router,
-    private api: ApiClientService,
+    public api: ApiClientService,
     private modalService: BsModalService,
     public guard: AuthorizeGuard
   ) {

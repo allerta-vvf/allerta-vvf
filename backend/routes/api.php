@@ -106,6 +106,12 @@ Route::get('/owner_image', function() {
     );
 });
 
+Route::get('/ping', function() {
+    return response()->json([
+        'message' => 'pong'
+    ]);
+});
+
 Route::post('/cron/execute', function(Request $request) {
     //Go to app/Console/Kernel.php to view schedules
     if(config('cron.external_cron_enabled') && $request->header('Cron') == config('cron.execution_code')) {

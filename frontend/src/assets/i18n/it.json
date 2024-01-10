@@ -129,6 +129,7 @@
         "image_format_not_supported": "Formato immagine non supportato",
         "file_too_big": "File troppo grande"
     },
+    "maintenance_mode_warning": "Il gestionale è in manutenzione. Alcune funzionalità potrebbero non essere disponibili.",
     "property": "proprietà",
     "value": "valore",
     "user_agent": "User Agent",

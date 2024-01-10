@@ -1,4 +1,4 @@
-<div [className]="menuButtonClicked ? 'topnav responsive' : 'topnav'" id="topNavBar" *ngIf="auth.profile.id !== undefined">
+<div [className]="menuButtonClicked ? 'topnav responsive' : 'topnav'" id="topNavBar" *ngIf="auth.profile.id !== undefined && !api.maintenanceMode">
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/list" translate>menu.list</a>
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/services" translate>menu.services</a>
   <a routerLinkActive="active" (click)="menuButtonClicked = false" routerLink="/trainings" translate>menu.trainings</a>
@@ -13,7 +13,13 @@
     <div class="spinner spinner-border"></div>
   </div>
 
-  <alert type="danger" *ngIf="alerts.length > 0">
+  <div class="mt-2" *ngIf="api.maintenanceMode">
+    <alert type="danger">
+      <strong>{{ 'warning'|translate|ftitlecase }}!</strong> {{ 'maintenance_mode_warning'|translate }}<br>
+    </alert>
+  </div>
+
+  <alert type="danger" *ngIf="alerts.length > 0 && !api.maintenanceMode">
     <strong>{{ 'warning'|translate|ftitlecase }}!</strong> {{ 'alert.warning_body'|translate }}<br>
     <ng-container *ngIf="alerts.length == 1">
       {{ 'alert.current_alert'|translate }}: <a (click)="openAlert(alerts[0]['id'])"><b>{{ alerts[0]["created_at"] | date:'dd/MM/YYYY, HH:mm:ss' }}</b> ({{ 'press_for_more_info'|translate }})</a>

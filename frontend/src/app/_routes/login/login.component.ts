@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, LoginResponse } from 'src/app/_services/auth.service';
 import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.service';
+import { ApiClientService } from 'src/app/_services/api-client.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
     public route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private guardLoaderIconService: GuardLoaderIconService
+    private guardLoaderIconService: GuardLoaderIconService,
+    public api: ApiClientService
   ) {
     this.route.params.subscribe((params) => {
       if (params["redirect"]) {

@@ -1,36 +1,36 @@
 <div class="text-center">
     <h3 *ngIf="available !== undefined">{{ 'list.your_availability_is'|translate }} <b>{{ available ? ("available"|translate|uppercase) : ("unavailable"|translate|uppercase) }}{{ manual_mode ? "" : " ("+('programmed'|translate)+")" }}</b></h3>
     <div id="availability-btn-group">
-        <button (click)="changeAvailibility(1)" type="button" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|ftitlecase }}</button>
-        <button (click)="changeAvailibility(0)" type="button" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|ftitlecase }}</button>
+        <button (click)="changeAvailibility(1)" [disabled]="api.maintenanceMode" type="button" id="activate-btn" class="btn btn-lg btn-success me-1">{{ 'set_available'|translate|ftitlecase }}</button>
+        <button (click)="changeAvailibility(0)" [disabled]="api.maintenanceMode" type="button" id="deactivate-btn" class="btn btn-lg btn-danger">{{ 'set_unavailable'|translate|ftitlecase }}</button>
     </div>
     <ng-container *ngIf="manual_mode !== undefined">
-        <button type="button" class="btn btn-secondary" *ngIf="manual_mode" (click)="updateManualMode(0)">
+        <button type="button" class="btn btn-secondary" *ngIf="manual_mode" (click)="updateManualMode(0)" [disabled]="api.maintenanceMode">
             {{ 'list.enable_schedules'|translate }}
         </button>
-        <button type="button" class="btn btn-secondary" *ngIf="!manual_mode" (click)="updateManualMode(1)">
+        <button type="button" class="btn btn-secondary" *ngIf="!manual_mode" (click)="updateManualMode(1)" [disabled]="api.maintenanceMode">
             {{ 'list.disable_schedules'|translate }}
         </button>
         <br>
     </ng-container>
-    <button type="button" class="btn btn-lg" (click)="openScheduleModal()">
+    <button type="button" class="btn btn-lg" (click)="openScheduleModal()" [disabled]="api.maintenanceMode">
         {{ 'list.update_schedules'|translate }}
     </button>
 </div>
 <owner-image></owner-image>
 <div class="text-center" *ngIf="auth.profile.can('alerts-create')">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-danger" (click)="addAlert('full')" [disabled]="!api.availableUsers || api.availableUsers! < 5 || alertLoading">
+        <button type="button" class="btn btn-danger" (click)="addAlert('full')" [disabled]="!api.availableUsers || api.availableUsers! < 5 || alertLoading || api.maintenanceMode">
             🚒 Richiedi squadra completa
         </button>
-        <button type="button" class="btn btn-warning" (click)="addAlert('support')" [disabled]="!api.availableUsers || api.availableUsers! < 2 || alertLoading">
+        <button type="button" class="btn btn-warning" (click)="addAlert('support')" [disabled]="!api.availableUsers || api.availableUsers! < 2 || alertLoading || api.maintenanceMode">
             Richiedi squadra di supporto 🧯
         </button>
     </div>
 </div>
 <app-table [sourceType]="'list'" (changeAvailability)="changeAvailibility($event.newState, $event.user)" (moreDetails)="openUserInfoPage($event.rowId)" #table></app-table>
 <div class="text-center">
-    <button (click)="requestTelegramToken()" class="btn btn-md btn-success mt-3">{{ 'list.connect_telegram_bot'|translate }}</button>
+    <button (click)="requestTelegramToken()" [disabled]="api.maintenanceMode" class="btn btn-md btn-success mt-3">{{ 'list.connect_telegram_bot'|translate }}</button>
     <div class="alert alert-primary mt-4" role="alert" translate>
         list.availability_minutes_updated_at_deactivation
     </div>

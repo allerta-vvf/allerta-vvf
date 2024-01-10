@@ -37,7 +37,7 @@ const genericRetryStrategy = ({
       // retry after 1s, 2s, etc...
       return timer(retryAttempt * scalingDuration);
     }),
-    finalize(() => console.log('We are done!'))
+    //finalize(() => console.log('We are done!'))
   );
 };
 
@@ -86,15 +86,26 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
+    //If maintenance mode is enabled, return 503 except for ping
+    if (this.api.maintenanceMode && !req.url.includes("ping")) {
+      return new Observable<HttpEvent<Object>>((observer) => {
+        observer.next(new HttpResponse({
+          body: { message: "Maintenance mode" },
+          status: 503,
+          statusText: "Service Unavailable",
+          url: req.url
+        }));
+        observer.complete();
+      });
+    }
     return next.handle(this.updateRequest(req)).pipe(
       retryWhen(genericRetryStrategy({
         maxRetryAttempts: 3,
         scalingDuration: 1,
         excludedStatusCodes: [304, 400, 404, 419, 500, 503],
-        excludedUrls: ["login", "logout", "me", "impersonate", "stop_impersonating"]
+        excludedUrls: ["login", "logout", "me", "impersonate", "stop_impersonating", "ping"]
       })),
       catchError(error => {
-        console.log(error);
         if (error.status === 304) {
           //Return current response as successfully
           return new Observable<HttpEvent<Object>>((observer) => {
@@ -107,6 +118,9 @@ export class AuthInterceptor implements HttpInterceptor {
             }));
             observer.complete();
           });
+        } else if (error.status === 503) {
+          this.api.maintenanceMode = true;
+          return throwError(() => error);
         } else if (error.status === 419) {
           return new Observable<HttpEvent<Object>>((observer) => {
             this.api.get("csrf-cookie").then(() => {
@@ -115,7 +129,6 @@ export class AuthInterceptor implements HttpInterceptor {
           });
         }
         if (error instanceof HttpErrorResponse && !req.url.includes('login') && !req.url.includes('me') && !req.url.includes('logout')) {
-          console.log("Error: " + error.status);
           if (error.status === 400) {
             this.router.navigate(["logout"]);
             return throwError(() => error);

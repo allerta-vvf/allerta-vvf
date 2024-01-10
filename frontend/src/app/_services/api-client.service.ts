@@ -14,6 +14,28 @@ export class ApiClientService {
   public alertsChanged = new Subject<void>();
   public availableUsers: undefined | number = undefined;
 
+  private _maintenanceMode = false;
+  private _maintenanceModeInterval: any = undefined;
+  public maintenanceModeChanged = new Subject<void>();
+
+  get maintenanceMode(): boolean {
+    return this._maintenanceMode;
+  }
+  set maintenanceMode(value: boolean) {
+    if(value && !this._maintenanceMode) {
+      //Every 5 seconds, check if maintenance mode is still active
+      this._maintenanceModeInterval = setInterval(() => {
+        this.get("ping").then(() => {
+          console.log("Maintenance mode disabled");
+          this.maintenanceMode = false;
+          clearInterval(this._maintenanceModeInterval);
+        }).catch(() => {});
+      }, 10000);
+    }
+    this._maintenanceMode = value;
+    this.maintenanceModeChanged.next();
+  }
+
   constructor(private http: HttpClient) { }
 
   public apiEndpoint(endpoint: string): string {
