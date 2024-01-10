@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class LogsController extends Controller
 {
@@ -23,6 +24,19 @@ class LogsController extends Controller
             "logs.id", "logs.action", "logs.editor_id", "logs.changed_id", "logs.created_at", "logs.source_type",
             "changed_user.name as changed", "editor_user.name as editor", "editor_user.hidden as editor_hidden"
         ];
+
+        if($request->has('from')) {
+            try {
+                $from = Carbon::parse($request->input('from'));
+                $query->whereDate('logs.created_at', '>=', $from->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
+        if($request->has('to')) {
+            try {
+                $to = Carbon::parse($request->input('to'));
+                $query->whereDate('logs.created_at', '<=', $to->toDateString());
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
+        }
         
         if($request->user()->hasPermission("logs-limited-read")) {
             $query = $query->where(function ($query) {

@@ -37,12 +37,14 @@ export class TableComponent implements OnInit, OnDestroy {
     "editor_id"
   ];
 
-  enableDateRangePickerTypes: string[] = ['services', 'trainings'];
+  enableDateRangePickerTypes: string[] = ['services', 'trainings', 'logs'];
   range: (Date | undefined)[] | undefined = undefined;
   lastRange: (Date | undefined)[] | undefined = undefined;
   rangePicked = false;
   filterStart: Date | undefined;
   filterEnd: Date | undefined;
+
+  @Input() initialStartFilter: Date | undefined;
 
   _maxPaginationSize: number = 10;
   _rowsPerPage: number = 20;
@@ -103,7 +105,7 @@ export class TableComponent implements OnInit, OnDestroy {
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
       this.originalData = this.data;
       this.totalElements = this.data.length;
-      if(this.currentPage == 1) this.displayedData = this.data.slice(0, this.rowsPerPage);
+      this.displayedData = this.data.slice((this.currentPage - 1) * this.rowsPerPage, this.currentPage * this.rowsPerPage);
       if(this.sourceType === 'list') {
         this.api.availableUsers = this.data.filter((row: any) => row.available).length;
       }
@@ -172,6 +174,12 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.sourceType);
+    if(this.initialStartFilter !== undefined) {
+      this.filterStart = this.initialStartFilter;
+      this.filterEnd = new Date();
+      this.rangePicked = true;
+      this.range = [this.filterStart, this.filterEnd];
+    }
     this.loadTableData();
     this.loadDataInterval = setInterval(() => {
       if(typeof (window as any).skipTableReload !== 'undefined' && (window as any).skipTableReload) {
