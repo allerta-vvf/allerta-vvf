@@ -118,6 +118,10 @@ class AuthController extends Controller
             method_exists($request->user()->currentAccessToken(), 'delete')
         ) {
             $request->user()->currentAccessToken()->delete();
+        } else {
+            auth()->guard('api')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
         }
 
         $impersonatedUser = User::find($user);
@@ -134,18 +138,29 @@ class AuthController extends Controller
     {
         $manager = app('impersonate');
 
-        $impersonator = User::find($manager->getImpersonatorId());
-
+        $impersonatorId = $manager->getImpersonatorId();
         $manager->leave();
+        $manager->clear();
+        $impersonator = User::find($impersonatorId);
 
         if(
             method_exists($request->user(), 'currentAccessToken') &&
             method_exists($request->user()->currentAccessToken(), 'delete')
         ) {
             $request->user()->currentAccessToken()->delete();
+        } else {
+            auth()->guard('api')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
         }
 
-        $token = $impersonator->createToken('auth_token')->plainTextToken;
+        if($request->input('use_sessions', false)) {
+            $request->session()->regenerate();
+            auth()->guard('api')->login($impersonator);
+            $token = null;
+        } else {
+            $token = $impersonator->createToken('auth_token')->plainTextToken;
+        }
 
         return response()->json([
             'access_token' => $token,
