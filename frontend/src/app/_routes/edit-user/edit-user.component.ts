@@ -193,8 +193,6 @@ export class EditUserComponent implements OnInit {
   }
 
   uploadDrivingLicenseScan(input: HTMLInputElement) {
-    const filename = "test.png"
-
     if(!input.files || !input.files[0]) return;
 
     console.log(input.files[0]);

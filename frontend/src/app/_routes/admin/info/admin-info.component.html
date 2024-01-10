@@ -1,1 +1,9 @@
-Info
+<form>
+    <div class="mb-3">
+        <label for="dl_scan" class="form-label">LIFM distaccamento</label>
+            <input class="form-control" type="file" id="dl_scan" (change)="onLIFMSelected($event)" #LIFMFileUpload>
+            <button type="button" class="btn btn-primary m-2" *ngIf="LIFMNotUploadedYet" (click)="uploadLIFM(LIFMFileUpload)">
+                <i class="fas fa-upload"></i> Carica LIFM
+            </button>
+    </div>
+</form>
