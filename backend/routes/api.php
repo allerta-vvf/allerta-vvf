@@ -32,8 +32,6 @@ use \Matthewbdaly\ETagMiddleware\ETag;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/stats/services', [StatsController::class, 'services'])->middleware(ETag::class);
-
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('/register', [AuthController::class, 'register']);
 
@@ -87,7 +85,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/logs', [LogsController::class, 'index'])->middleware(ETag::class);
 
-    //Route::get('/stats/services', [StatsController::class, 'services'])->middleware(ETag::class);
+    Route::get('/stats/services', [StatsController::class, 'services']);
 
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
