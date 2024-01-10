@@ -21,8 +21,7 @@ class TrainingController extends Controller
         $query = Training::join('users', 'users.id', '=', 'chief_id')
             ->select('trainings.*', 'users.name as chief')
             ->with('crew:name')
-            ->orderBy('start', 'desc')
-            ->get();
+            ->orderBy('start', 'desc');
         if($request->has('from')) {
             try {
                 $from = Carbon::parse($request->input('from'));
