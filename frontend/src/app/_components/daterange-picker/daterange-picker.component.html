@@ -2,5 +2,5 @@
     <span class="input-group-text" id="addon-wrapping" translate>select_date_range</span>
     <input type="text" [disabled]="disabled" [placeholder]="'select_date_range'|translate" class="form-control" placement="bottom"
         bsDaterangepicker [bsConfig]="dateRangePickerOptions" [maxDate]="maxDate" [(bsValue)]="range" (bsValueChange)="updateValue($event)">
-    <button class="btn btn-outline-secondary" type="button" (click)="resetRange()" translate>select_date_range</button>
+    <button class="btn btn-outline-secondary" type="button" (click)="resetRange()" translate>remove_date_filters</button>
 </div>
