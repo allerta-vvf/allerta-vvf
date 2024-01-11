@@ -14,6 +14,9 @@ export class AdminMaintenanceComponent implements OnInit {
 
   public isMaintenanceModeActive = false;
 
+  public telegramBotInfo: any | undefined = undefined;
+  public telegramBotInfoArray: any[] = [];
+
   constructor(
     private translateService: TranslateService,
     private api: ApiClientService
@@ -49,9 +52,24 @@ export class AdminMaintenanceComponent implements OnInit {
     });
   }
 
+  getTelegramBotDebugInfo() {
+    this.api.get('admin/telegramBot/debug').then((res: any) => {
+      this.telegramBotInfo = res;
+      this.telegramBotInfoArray = Object.entries(this.telegramBotInfo);
+      console.log(this.telegramBotInfo);
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.message
+      });
+    });
+  }
+
   ngOnInit(): void {
     this.getDB();
     this.getMaintenanceMode();
+    this.getTelegramBotDebugInfo();
   }
 
   runMigrations() {
@@ -121,6 +139,91 @@ export class AdminMaintenanceComponent implements OnInit {
         icon: 'error',
         title: this.translateService.instant('error_title'),
         text: err.message
+      });
+    });
+  }
+
+  runOptimization() {
+    this.api.post('admin/runOptimization').then((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: this.translateService.instant('success_title'),
+        text: this.translateService.instant('admin.run_optimization_success')
+      });
+      this.getDB();
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.error.message
+      });
+    });
+  }
+
+  clearOptimization() {
+    this.api.post('admin/clearOptimization').then((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: this.translateService.instant('success_title'),
+        text: this.translateService.instant('admin.clear_optimization_success')
+      });
+      this.getDB();
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.error.message
+      });
+    });
+  }
+
+  clearCache() {
+    this.api.post('admin/clearCache').then((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: this.translateService.instant('success_title'),
+        text: this.translateService.instant('admin.clear_cache_success')
+      });
+      this.getDB();
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.error.message
+      });
+    });
+  }
+
+  setTelegramBotWebhook() {
+    this.api.post('admin/telegramBot/setWebhook').then((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: this.translateService.instant('success_title'),
+        text: this.translateService.instant('admin.telegram_webhook_set_success')
+      });
+      this.getTelegramBotDebugInfo();
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.error.message
+      });
+    });
+  }
+
+  unsetTelegramBotWebhook() {
+    this.api.post('admin/telegramBot/unsetWebhook').then((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: this.translateService.instant('success_title'),
+        text: this.translateService.instant('admin.telegram_webhook_unset_success')
+      });
+      this.getTelegramBotDebugInfo();
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.error.message
       });
     });
   }

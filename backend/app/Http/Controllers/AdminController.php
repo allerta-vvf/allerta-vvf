@@ -131,6 +131,87 @@ class AdminController extends Controller
         }
     }
 
+    public function runOptimization() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        $commands = [
+            'config:cache',
+            'event:cache',
+            'route:cache'
+        ];
+
+        foreach($commands as $command) {
+            Artisan::call($command);
+        }
+
+        return response()->json([
+            'message' => 'Optimization ran successfully'
+        ]);
+    }
+
+    public function clearOptimization() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        Artisan::call('optimize:clear');
+
+        return response()->json([
+            'message' => 'Optimization cleared successfully'
+        ]);
+    }
+
+    public function clearCache() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        Artisan::call('cache:clear');
+
+        return response()->json([
+            'message' => 'Cache cleared successfully'
+        ]);
+    }
+    
+    public function getTelegramBotDebugInfo() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        Artisan::call('telegraph:debug-webhook');
+        $output = Artisan::output();
+
+        // Convert the text to a query string format
+        $queryString = str_replace([': ', "\n"], ['=', '&'], $output);
+
+        // Parse the query string
+        parse_str($queryString, $result);
+
+        foreach($result as $key => &$value) {
+            $key = trim($key);
+            $value = trim($value);
+            if($value === "no") $value = false;
+            if($value === "si" || $value === "sì" || $value === "yes") $value = true;
+        }
+        unset($value);
+
+        return response()->json($result);
+    }
+
+    public function setTelegramWebhook() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        Artisan::call('telegraph:set-webhook');
+
+        return response()->json([
+            'message' => 'Webhook set successfully'
+        ]);
+    }
+
+    public function unsetTelegramWebhook() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        Artisan::call('telegraph:unset-webhook');
+
+        return response()->json([
+            'message' => 'Webhook unset successfully'
+        ]);
+    }
+
     public function getPermissionsAndRoles() {
         if(!request()->user()->hasPermission("admin-roles-read")) abort(401);
         return response()->json([

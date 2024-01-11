@@ -102,6 +102,14 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/admin/maintenanceMode', [AdminController::class, 'getMaintenanceMode']);
     Route::post('/admin/maintenanceMode', [AdminController::class, 'updateMaintenanceMode']);
 
+    Route::post('/admin/runOptimization', [AdminController::class, 'runOptimization']);
+    Route::post('/admin/clearOptimization', [AdminController::class, 'clearOptimization']);
+    Route::post('/admin/clearCache', [AdminController::class, 'clearCache']);
+
+    Route::get('/admin/telegramBot/debug', [AdminController::class, 'getTelegramBotDebugInfo']);
+    Route::post('/admin/telegramBot/setWebhook', [AdminController::class, 'setTelegramWebhook']);
+    Route::post('/admin/telegramBot/unsetWebhook', [AdminController::class, 'unsetTelegramWebhook']);
+
     Route::get('/admin/permissionsAndRoles', [AdminController::class, 'getPermissionsAndRoles']);
     Route::post('/admin/roles', [AdminController::class, 'updateRoles']);
 });

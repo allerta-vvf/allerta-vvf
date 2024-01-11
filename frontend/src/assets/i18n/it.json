@@ -33,7 +33,20 @@
         "table": "tabella",
         "rows": "righe",
         "updates_and_maintenance_title": "Aggiornamenti e manutenzione",
-        "maintenance_mode_success": "Modalità manutenzione aggiornata con successo"
+        "maintenance_mode_success": "Modalità manutenzione aggiornata con successo",
+        "optimization": "ottimizzazione",
+        "run_optimization": "esegui ottimizzazione",
+        "run_optimization_success": "Ottimizzazione eseguita con successo",
+        "clear_optimization": "rimuovi ottimizzazione",
+        "clear_optimization_success": "Ottimizzazione rimossa con successo",
+        "clear_cache": "svuota cache",
+        "clear_cache_success": "Cache svuotata con successo",
+        "telegram_bot": "Bot Telegram",
+        "telegram_webhook": "Webhook Telegram",
+        "telegram_webhook_set": "Imposta Webhook Telegram",
+        "telegram_webhook_set_success": "Webhook Telegram impostato con successo",
+        "telegram_webhook_unset": "Rimuovi Webhook Telegram",
+        "telegram_webhook_unset_success": "Webhook Telegram rimosso con successo"
     },
     "table": {
         "yes_remove": "Si, rimuovi",

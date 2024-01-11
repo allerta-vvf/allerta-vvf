@@ -56,13 +56,9 @@ return [
         'http_client_requests' => env('SENTRY_BREADCRUMBS_HTTP_CLIENT_REQUESTS_ENABLED', true),
     ],
 
-    'before_send' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
-        if ($hint !== null && $hint->exception instanceof JsonException) {
-          return null;
-        }
-    
-        return $event;
-    },
+    'ignore_exceptions' => [
+        JsonException::class,
+    ],
 
     // Performance monitoring specific configuration
     'tracing' => [
