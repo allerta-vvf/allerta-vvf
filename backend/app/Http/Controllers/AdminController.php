@@ -116,4 +116,37 @@ class AdminController extends Controller
             ]);
         }
     }
+
+    public function getPermissionsAndRoles() {
+        if(!request()->user()->hasPermission("admin-roles-read")) abort(401);
+        return response()->json([
+            'permissions' => \App\Models\Permission::orderBy('name')->get(),
+            'roles' => \App\Models\Role::with('permissions:id,name')->get()
+        ]);
+    }
+
+    public function updateRoles(Request $request) {
+        if(!request()->user()->hasPermission("admin-roles-update")) abort(401);
+
+        $request->validate([
+            'changes' => 'required|array',
+            'changes.*.roleId' => 'required|integer|exists:roles,id',
+            'changes.*.permissionId' => 'required|integer|exists:permissions,id'
+        ]);
+
+        $roles = $request->input('changes');
+        foreach($roles as $role) {
+            $roleModel = \App\Models\Role::find($role['roleId']);
+            //If the role already has the permission, remove it, otherwise add it
+            if($roleModel->permissions()->where('id', $role['permissionId'])->exists()) {
+                $roleModel->permissions()->detach([$role['permissionId']]);
+            } else {
+                $roleModel->permissions()->attach([$role['permissionId']]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Roles updated successfully'
+        ]);
+    }
 }

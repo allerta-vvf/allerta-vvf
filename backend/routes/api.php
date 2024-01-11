@@ -98,6 +98,9 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/admin/maintenanceMode', [AdminController::class, 'getMaintenanceMode']);
     Route::post('/admin/maintenanceMode', [AdminController::class, 'updateMaintenanceMode']);
+
+    Route::get('/admin/permissionsAndRoles', [AdminController::class, 'getPermissionsAndRoles']);
+    Route::post('/admin/roles', [AdminController::class, 'updateRoles']);
 });
 
 Route::middleware('signed')->group( function () {
