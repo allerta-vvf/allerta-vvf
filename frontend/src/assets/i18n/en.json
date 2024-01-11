@@ -152,7 +152,8 @@
         "type_already_exists": "Type already exists",
         "image_format_not_supported": "Image format not supported",
         "document_format_not_supported": "Document format not supported",
-        "file_too_big": "File too big"
+        "file_too_big": "File too big",
+        "password_min_length": "Password must be at least 6 characters long"
     },
     "enable": "enable",
     "disable": "disable",
@@ -168,6 +169,12 @@
     "cpu": "CPU",
     "username": "username",
     "password": "password",
+    "new_password": "new password",
+    "confirm_password": "confirm password",
+    "password_not_match": "Passwords do not match. Please try again.",
+    "password_changed_successfully": "Password changed successfully",
+    "password_change_title": "Change password",
+    "change_password": "Change password",
     "warning": "warning",
     "press_for_more_info": "press here for more info",
     "update_availability_schedule": "Update availability schedule",

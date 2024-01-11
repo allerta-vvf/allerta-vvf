@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ModalAddTrainingCourseComponent } from 'src/app/_components/modal-add-traning-course/modal-add-training-course.component';
 import { ModalAddMedicalExaminationComponent } from 'src/app/_components/modal-add-medical-examination/modal-add-medical-examination.component';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -60,6 +60,10 @@ export class EditUserComponent implements OnInit {
   tmpDrivingLicenseImgData: string | null = null;
   dlScanNotUploadedYet = true;
   dlCurrScanUrl: string | null = null;
+
+  resetPwdModalRef: BsModalRef | undefined;
+  newPwd: string = '';
+  newPwdConfirm: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -278,6 +282,53 @@ export class EditUserComponent implements OnInit {
         }
       }).catch((err) => {
         console.log(err);
+      });
+    });
+  }
+
+  openResetPwdModal(template: TemplateRef<any>) {
+    this.resetPwdModalRef = this.modalService.show(template);
+  }
+
+  resetPwdSubmit() {
+    //Check if min size 6
+    if(this.newPwd.length < 6) {
+      Swal.fire({
+        title: this.translateService.instant("error_title"),
+        text: this.translateService.instant("validation.password_min_length"),
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return;
+    }
+    //Check if pwd and confirm are equal
+    if(this.newPwd !== this.newPwdConfirm) {
+      Swal.fire({
+        title: this.translateService.instant("error_title"),
+        text: this.translateService.instant("password_not_match"),
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return;
+    }
+    this.api.put(`users/${this.id}/reset_password`, {
+      password: this.newPwd
+    }).then((response) => {
+      console.log(response);
+      Swal.fire({
+        title: this.translateService.instant("success_title"),
+        text: this.translateService.instant("password_changed_successfully"),
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      });
+      this.resetPwdModalRef?.hide();
+    }).catch((err) => {
+      console.log(err);
+      Swal.fire({
+        title: this.translateService.instant("error_title"),
+        text: err.error.message,
+        icon: 'error',
+        confirmButtonText: 'Ok'
       });
     });
   }

@@ -235,6 +235,23 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function updatePassword(Request $request, User $user)
+    {
+        if($request->user()->id != $user->id && !$request->user()->hasPermission("users-update-auth")) abort(401);
+        if($request->user()->id == $user->id && !$request->user()->hasPermission("user-update-auth")) abort(401);
+
+        $request->validate([
+            'password' => 'required|string|min:6'
+        ]);
+
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        Logger::log("Modifica password utente", $user);
+
+        return response()->json($user);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

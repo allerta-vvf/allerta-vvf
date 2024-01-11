@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::put('/users/{user}/reset_password', [UserController::class, 'updatePassword']);
 
     Route::post('/documents/driving_license', [DocumentsController::class, 'uploadDrivingLicenseScan']);
     Route::post('/documents/training_course', [DocumentsController::class, 'addTrainingCourse']);

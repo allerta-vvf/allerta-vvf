@@ -13,8 +13,8 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'users' => 'c,r,u,d,i,b,h,sc,sd,atc,ame',
-            'user' => 'u,h,sc,sd',
+            'users' => 'c,r,u,ua,d,i,b,h,sc,sd,atc,ame',
+            'user' => 'u,ua,h,sc,sd',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
@@ -25,8 +25,8 @@ return [
             'admin-roles' => 'r,u'
         ],
         'admin' => [
-            'users' => 'c,r,u,d,i,b,h,sc,sd,atc,ame',
-            'user' => 'u,h,sc,sd',
+            'users' => 'c,r,u,ua,d,i,b,h,sc,sd,atc,ame',
+            'user' => 'u,ua,h,sc,sd',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
@@ -37,7 +37,7 @@ return [
         ],
         'chief' => [
             'users' => 'r,u,sc,sd,atc,ame',
-            'user' => 'u',
+            'user' => 'u,ua',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'c,r,u',
@@ -45,7 +45,7 @@ return [
         ],
         'user' => [
             'users' => 'lr',
-            'user' => 'u',
+            'user' => 'u,ua',
             'services' => 'c,r,u,d',
             'trainings' => 'c,r,u,d',
             'alerts' => 'r',
@@ -58,6 +58,7 @@ return [
         'lr' => 'limited-read',
         'r' => 'read',
         'u' => 'update',
+        'ua' => 'update-auth',
         'd' => 'delete',
         'i' => 'impersonate',
         'b' => 'ban',
