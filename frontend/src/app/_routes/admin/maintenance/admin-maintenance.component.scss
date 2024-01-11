@@ -1,0 +1,17 @@
+.btn-group-label {
+    margin-bottom: 0px !important;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.blink {
+    animation: blink 2s linear infinite;
+}
+
+.right-border {
+    border-right: #0000004a 1px solid
+}

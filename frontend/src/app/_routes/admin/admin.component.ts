@@ -20,6 +20,7 @@ export class AdminComponent implements OnInit {
   currRoute: string | undefined = '';
   tabs: ITab[] = [
     { title: 'info', id: 'info', active: false, permissionsRequired: ['admin-read', 'admin-info-read'] },
+    { title: 'maintenance', id: 'maintenance', active: false, permissionsRequired: ['admin-read', 'admin-maintenance-read'] },
     { title: 'roles', id: 'roles', active: false, permissionsRequired: ['admin-read', 'admin-roles-read'] }
   ];
 
@@ -34,7 +35,7 @@ export class AdminComponent implements OnInit {
 
     // Translate tab titles
     this.tabs.forEach((t) => {
-        this.translate.get(`menu.${t.title}`).subscribe((res: string) => {
+        this.translate.get(`admin.${t.title}`).subscribe((res: string) => {
             t.title = res;
         });
     });

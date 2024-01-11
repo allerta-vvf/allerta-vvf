@@ -15,6 +15,7 @@ use App\Http\Controllers\PlacesController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\TrainingCourseTypeController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use \Matthewbdaly\ETagMiddleware\ETag;
@@ -90,6 +91,13 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/telegram_login_token', [TelegramController::class, 'loginToken']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/admin/db', [AdminController::class, 'getDBData']);
+    Route::post('/admin/runMigrations', [AdminController::class, 'runMigrations']);
+    Route::post('/admin/runSeeding', [AdminController::class, 'runSeeding']);
+
+    Route::get('/admin/maintenanceMode', [AdminController::class, 'getMaintenanceMode']);
+    Route::post('/admin/maintenanceMode', [AdminController::class, 'updateMaintenanceMode']);
 });
 
 Route::middleware('signed')->group( function () {

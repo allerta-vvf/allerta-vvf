@@ -21,6 +21,7 @@ return [
             'logs' => 'r',
             'admin' => 'r',
             'admin-info' => 'r,u',
+            'admin-maintenance' => 'r,u',
             'admin-roles' => 'r,u'
         ],
         'admin' => [
