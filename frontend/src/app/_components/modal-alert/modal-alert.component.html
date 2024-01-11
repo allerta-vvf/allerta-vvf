@@ -33,7 +33,7 @@
                 <td>
                     <img alt="red helmet" src="./assets/icons/red_helmet.png" width="20px" *ngIf="crewUser.user.chief">
                     <img alt="red helmet" src="./assets/icons/black_helmet.png" width="20px" *ngIf="!crewUser.user.chief">
-                    {{ crewUser.user.name }}
+                    {{ crewUser.user.surname }} {{ crewUser.user.name }}
                     <img alt="driver" src="./assets/icons/wheel.png" width="20px" *ngIf="crewUser.user.driver">
                 </td>
                 <ng-container *ngIf="crewUser.accepted == null && alertClosed">

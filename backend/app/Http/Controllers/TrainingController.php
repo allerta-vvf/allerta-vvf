@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Utils\Logger;
+use App\Utils\DBTricks;
 
 class TrainingController extends Controller
 {
@@ -19,8 +20,8 @@ class TrainingController extends Controller
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         $query = Training::join('users', 'users.id', '=', 'chief_id')
-            ->select('trainings.*', 'users.name as chief')
-            ->with('crew:name')
+            ->select('trainings.*', DBTricks::nameSelect("chief", "users"))
+            ->with('crew:name,surname')
             ->orderBy('start', 'desc');
         if($request->has('from')) {
             try {
@@ -49,8 +50,8 @@ class TrainingController extends Controller
 
         return response()->json(
             Training::join('users', 'users.id', '=', 'chief_id')
-                ->select('trainings.*', 'users.name as chief')
-                ->with('crew:name')
+                ->select('trainings.*', DBTricks::nameSelect("chief", "users"))
+                ->with('crew:name,surname')
                 ->find($id)
         );
     }

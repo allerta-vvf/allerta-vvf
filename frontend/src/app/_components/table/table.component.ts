@@ -293,7 +293,10 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   extractNamesFromObject(obj: any) {
-    return obj.flatMap((e: any) => e.name);
+    return obj.flatMap((e: any) => {
+      if(e.surname === null) return e.name;
+      return e.surname+" "+e.name;
+    });
   }
 
   userAgentToIcons(userAgentString: string) {

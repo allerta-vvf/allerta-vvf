@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Utils\Logger;
+use App\Utils\DBTricks;
 
 class ServiceController extends Controller
 {
@@ -22,9 +23,9 @@ class ServiceController extends Controller
 
         $query = Service::join('users', 'users.id', '=', 'chief_id')
             ->join('services_types', 'services_types.id', '=', 'type_id')
-            ->select('services.*', 'users.name as chief', 'services_types.name as type')
-            ->with('drivers:name')
-            ->with('crew:name')
+            ->select('services.*', DBTricks::nameSelect("chief", "users"), 'services_types.name as type')
+            ->with('drivers:name,surname')
+            ->with('crew:name,surname')
             ->with('place')
             ->orderBy('start', 'desc');
         if($request->has('from')) {
@@ -55,9 +56,9 @@ class ServiceController extends Controller
         return response()->json(
             Service::join('users', 'users.id', '=', 'chief_id')
                 ->join('services_types', 'services_types.id', '=', 'type_id')
-                ->select('services.*', 'users.name as chief', 'services_types.name as type')
-                ->with('drivers:name')
-                ->with('crew:name')
+                ->select('services.*', DBTricks::nameSelect("chief", "users"), 'services_types.name as type')
+                ->with('drivers:name,surname')
+                ->with('crew:name,surname')
                 ->with('place')
                 ->find($id)
         );

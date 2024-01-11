@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $requestedCols = ['id', 'chief', 'last_access', 'name', 'available', 'driver', 'services', 'availability_minutes'];
+        $requestedCols = ['id', 'chief', 'last_access', 'name', 'surname', 'available', 'driver', 'services', 'availability_minutes'];
         if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
 
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
@@ -31,6 +31,7 @@ class UserController extends Controller
             ->orderBy('trainings', 'desc')
             ->orderBy('availability_minutes', 'desc')
             ->orderBy('name', 'asc')
+            ->orderBy('surname', 'asc')
             ->get();
         
         $now = now();

@@ -56,7 +56,8 @@ export class StatsServicesComponent implements OnInit {
   getUserNameById(id: number) {
     let user = this.users.find((user) => user.id === id);
     if (user) {
-      return user.name;
+      if(user.surname === null) return user.name;
+      return user.surname + " " + user.name;
     }
     return "";
   }

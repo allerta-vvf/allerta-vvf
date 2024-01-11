@@ -32,7 +32,7 @@
           <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
             class="form-check-input" id="chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
           <label class="form-check-label" for="chief-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>
@@ -45,7 +45,7 @@
           <input class="form-check-input" id="driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
             (change)="onDriversCheckboxChange($event)" [checked]="isDriverSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="driver-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>
@@ -58,7 +58,7 @@
           <input class="form-check-input" id="crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
             (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>

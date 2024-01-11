@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Models\User;
+use App\Utils\DBTricks;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -22,7 +23,7 @@ class LogsController extends Controller
         
         $selectedCols = [
             "logs.id", "logs.action", "logs.editor_id", "logs.changed_id", "logs.created_at", "logs.source_type",
-            "changed_user.name as changed", "editor_user.name as editor", "editor_user.hidden as editor_hidden"
+            DBTricks::nameSelect("changed", "changed_user"),  DBTricks::nameSelect("editor", "editor_user"), "editor_user.hidden as editor_hidden"
         ];
 
         if($request->has('from')) {
