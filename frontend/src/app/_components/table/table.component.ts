@@ -210,6 +210,14 @@ export class TableComponent implements OnInit, OnDestroy {
       this.auth.impersonate(user).then(() => {
         this.loadTableData();
         this.userImpersonate.emit(1);
+      }).catch((errMessage: any) => {
+        console.error(errMessage);
+        Swal.fire({
+          title: this.translate.instant("error_title"),
+          text: errMessage,
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
       });
     }
   }

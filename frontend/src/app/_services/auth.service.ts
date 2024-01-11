@@ -128,7 +128,7 @@ export class AuthService {
         })
     }
 
-    public impersonate(user_id: number): Promise<void> {
+    public impersonate(user_id: number): Promise<void|string> {
         return new Promise((resolve, reject) => {
             this.api.post(`impersonate/${user_id}`).then((data) => {
                 this.authToken.updateToken(data.access_token);
@@ -142,7 +142,7 @@ export class AuthService {
                 });
             }).catch((err) => {
                 console.error(err);
-                reject();
+                reject(err.error.message);
             });
         });
     }

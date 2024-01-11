@@ -46,6 +46,14 @@ export class AdminInfoComponent implements OnInit {
       this.router.navigate(['/list']);
       this.auth.impersonate(user).then(() => {
         console.log(user);
+      }).catch((errMessage: any) => {
+        console.error(errMessage);
+        Swal.fire({
+          title: this.translateService.instant("error_title"),
+          text: errMessage,
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
       });
     }
   }

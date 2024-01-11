@@ -104,10 +104,24 @@ class AuthController extends Controller
         ];
     }
 
-    public function impersonate(Request $request, $user)
+    public function impersonate(Request $request, User $user)
     {
         $authUser = User::find($request->user()->id);
         if(!$authUser->canImpersonate()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        //Check if can be impersonated
+        if(!$user->canBeImpersonated()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        //Check if currently impersonating
+        if(app('impersonate')->isImpersonating()) {
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
@@ -124,11 +138,10 @@ class AuthController extends Controller
             $request->session()->regenerateToken();
         }
 
-        $impersonatedUser = User::find($user);
-        $request->user()->impersonate($impersonatedUser);
-        $token = $impersonatedUser->createToken('auth_token')->plainTextToken;
+        $request->user()->impersonate($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        Logger::log("Impersonato utente", $impersonatedUser, $authUser);
+        Logger::log("Impersonato utente", $user, $authUser);
 
         return response()->json([
             'access_token' => $token,
