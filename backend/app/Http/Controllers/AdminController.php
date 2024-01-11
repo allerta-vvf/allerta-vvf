@@ -7,8 +7,22 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
+
 class AdminController extends Controller
 {
+    public function getInfo() {
+        if(!request()->user()->hasPermission("admin-info-read")) abort(401);
+
+        return response()->json([
+            'users' => User::select('id', 'name', 'surname', 'last_access', 'created_at')
+                ->orderBy('last_access', 'desc')
+                ->get()
+        ]);
+    }
+
     public function getDBData() {
         if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
         
@@ -120,8 +134,8 @@ class AdminController extends Controller
     public function getPermissionsAndRoles() {
         if(!request()->user()->hasPermission("admin-roles-read")) abort(401);
         return response()->json([
-            'permissions' => \App\Models\Permission::orderBy('name')->get(),
-            'roles' => \App\Models\Role::with('permissions:id,name')->get()
+            'permissions' => Permission::orderBy('name')->get(),
+            'roles' => Role::with('permissions:id,name')->get()
         ]);
     }
 
@@ -136,7 +150,7 @@ class AdminController extends Controller
 
         $roles = $request->input('changes');
         foreach($roles as $role) {
-            $roleModel = \App\Models\Role::find($role['roleId']);
+            $roleModel = Role::find($role['roleId']);
             //If the role already has the permission, remove it, otherwise add it
             if($roleModel->permissions()->where('id', $role['permissionId'])->exists()) {
                 $roleModel->permissions()->detach([$role['permissionId']]);

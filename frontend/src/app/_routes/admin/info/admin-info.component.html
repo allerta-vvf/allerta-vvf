@@ -1,1 +1,25 @@
-Info
+<div class="col-8 mx-auto table-responsive-md">
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>{{ 'name'|translate|ftitlecase }}</th>
+                <th>{{ 'edit_user.last_access'|translate }}</th>
+                <th>{{ 'edit_user.creation_date'|translate }}</th>
+                <th *ngIf="auth.profile.can('users-update')">{{ 'edit'|translate|ftitlecase }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of info.users">
+                <td>
+                    <i *ngIf="auth.profile.can('users-impersonate') && user.id !== auth.profile.id" class="fa fa-user me-2" (click)="onUserImpersonate(user.id)"></i>
+                    <div (click)="onMoreDetails(user.id)" class="d-inline">
+                        {{ user.surname }} {{ user.name }}
+                    </div>
+                </td>
+                <td>{{ user.last_access | date:'dd/MM/YYYY, HH:mm' }}</td>
+                <td>{{ user.created_at | date:'dd/MM/YYYY, HH:mm' }}</td>
+                <td *ngIf="auth.profile.can('users-update')" (click)="editUser(user.id)"><i class="fa fa-edit"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

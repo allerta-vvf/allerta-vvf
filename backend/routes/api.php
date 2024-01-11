@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/admin/info', [AdminController::class, 'getInfo']);
+
     Route::get('/admin/db', [AdminController::class, 'getDBData']);
     Route::post('/admin/runMigrations', [AdminController::class, 'runMigrations']);
     Route::post('/admin/runSeeding', [AdminController::class, 'runSeeding']);
