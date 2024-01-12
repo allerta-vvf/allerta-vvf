@@ -375,7 +375,6 @@ export class TableComponent implements OnInit, OnDestroy {
         icons.push('fa fa-desktop');
     }
 
-    console.log(parser.getResult(), icons);
     return icons;
   }
 
