@@ -5,6 +5,7 @@ import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.serv
 import { versions } from 'src/environments/versions';
 import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { ApiClientService } from './_services/api-client.service';
+import { UpdaterService } from './_services/updater.service';
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AuthorizeGuard } from './_guards/authorize.guard';
@@ -30,7 +31,8 @@ export class AppComponent {
     private router: Router,
     public api: ApiClientService,
     private modalService: BsModalService,
-    public guard: AuthorizeGuard
+    public guard: AuthorizeGuard,
+    private updater: UpdaterService
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
     this.locationBackService.initialize();
