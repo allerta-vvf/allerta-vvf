@@ -177,6 +177,8 @@
     "disable": "disattiva",
     "maintenance_mode": "modalità manutenzione",
     "maintenance_mode_warning": "Il gestionale è in manutenzione. Alcune funzionalità potrebbero non essere disponibili.",
+    "offline": "offline",
+    "offline_warning": "Sei offline. Non è possibile interagire con il gestionale.",
     "property": "proprietà",
     "value": "valore",
     "user_agent": "User Agent",

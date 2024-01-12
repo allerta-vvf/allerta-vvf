@@ -36,6 +36,28 @@ export class ApiClientService {
     this.maintenanceModeChanged.next();
   }
 
+  private _offline = false;
+  private _offlineInterval: any = undefined;
+  public offlineChanged = new Subject<void>();
+
+  get offline(): boolean {
+    return this._offline;
+  }
+  set offline(value: boolean) {
+    if(value && !this._offline) {
+      //Every 5 seconds, check if sill offline
+      this._offlineInterval = setInterval(() => {
+        this.get("ping").then(() => {
+          console.log("Offline mode disabled");
+          this.offline = false;
+          clearInterval(this._offlineInterval);
+        }).catch(() => {});
+      }, 10000);
+    }
+    this._offline = value;
+    this.offlineChanged.next();
+  }
+
   constructor(private http: HttpClient) { }
 
   public apiEndpoint(endpoint: string): string {

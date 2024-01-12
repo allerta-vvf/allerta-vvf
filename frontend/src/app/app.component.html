@@ -18,6 +18,11 @@
       <strong>{{ 'warning'|translate|ftitlecase }}!</strong> {{ 'maintenance_mode_warning'|translate }}<br>
     </alert>
   </div>
+  <div class="mt-2" *ngIf="api.offline">
+    <alert type="danger">
+      <strong>{{ 'warning'|translate|ftitlecase }}!</strong> {{ 'offline_warning'|translate }}<br>
+    </alert>
+  </div>
 
   <alert type="danger" *ngIf="alerts.length > 0 && !api.maintenanceMode">
     <strong>{{ 'warning'|translate|ftitlecase }}!</strong> {{ 'alert.warning_body'|translate }}<br>

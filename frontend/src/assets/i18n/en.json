@@ -177,6 +177,8 @@
     "disable": "disable",
     "maintenance_mode": "maintenance mode",
     "maintenance_mode_warning": "The application is currently in maintenance mode. Some features may not be available.",
+    "offline": "offline",
+    "offline_warning": "You're offline. Some features may not be available.",
     "property": "property",
     "value": "value",
     "user_agent": "User Agent",

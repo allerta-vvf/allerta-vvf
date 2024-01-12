@@ -98,6 +98,18 @@ export class AuthInterceptor implements HttpInterceptor {
         observer.complete();
       });
     }
+    //If offline, return 504 except for ping
+    if (this.api.offline && !req.url.includes("ping")) {
+      return new Observable<HttpEvent<Object>>((observer) => {
+        observer.next(new HttpResponse({
+          body: { message: "Offline" },
+          status: 504,
+          statusText: "Gateway Timeout",
+          url: req.url
+        }));
+        observer.complete();
+      });
+    }
     return next.handle(this.updateRequest(req)).pipe(
       retryWhen(genericRetryStrategy({
         maxRetryAttempts: 3,
@@ -120,6 +132,9 @@ export class AuthInterceptor implements HttpInterceptor {
           });
         } else if (error.status === 503) {
           this.api.maintenanceMode = true;
+          return throwError(() => error);
+        } else if (error.status === 504) {
+          this.api.offline = true;
           return throwError(() => error);
         } else if (error.status === 419) {
           return new Observable<HttpEvent<Object>>((observer) => {
