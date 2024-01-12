@@ -301,6 +301,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   extractNamesFromObject(obj: any) {
+    if(typeof obj === 'undefined') return "";
     return obj.flatMap((e: any) => {
       if(e.surname === null) return e.name;
       return e.surname+" "+e.name;
