@@ -102,6 +102,7 @@ export class TableComponent implements OnInit, OnDestroy {
     } : {}, this.etag).then((data: any) => {
       if(this.api.isLastSame) return;
       this.etag = this.api.lastEtag;
+      if(typeof data === 'undefined' || data === null) return;
       this.data = data.filter((row: any) => typeof row.hidden !== 'undefined' ? !row.hidden : true);
       this.originalData = this.data;
       this.totalElements = this.data.length;
