@@ -94,6 +94,43 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getJobsList() {
+        if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
+        
+        $jobPath = app_path('Jobs');
+        $jobs = [];
+
+        $files = scandir($jobPath);
+        foreach ($files as $file) {
+            if (pathinfo($file, PATHINFO_EXTENSION) == 'php') {
+                $jobs[] = pathinfo($file, PATHINFO_FILENAME);
+            }
+        }
+
+        return response()->json($jobs);
+    }
+
+    public function runJob(Request $request) {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        
+        $request->validate([
+            'job' => 'required|string'
+        ]);
+
+        Artisan::call('schedule:test', ['--name' => "App\\Jobs\\".$request->input('job')]);
+        $output = Artisan::output();
+        
+        if(str_contains($output, 'No matching scheduled command found.')) {
+            return response()->json([
+                'message' => 'Job not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Job ran successfully'
+        ]);
+    }
+
     public function getMaintenanceMode() {
         if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
         

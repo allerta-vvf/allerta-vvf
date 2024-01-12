@@ -12,6 +12,15 @@ export class AdminMaintenanceComponent implements OnInit {
   public db: any | undefined = undefined;
   public isTableListCollaped = true;
 
+  public jobs: string[] = [];
+  //Hard-coded list of jobs that should not be run manually
+  public dangerousJobs: string[] = [
+    "NotifyUsersManualModeOnJob"
+  ];
+  public ultraDangerousJobs: string[] = [
+    "ResetAvailabilityMinutesJob"
+  ];
+
   public isMaintenanceModeActive = false;
 
   public telegramBotInfo: any | undefined = undefined;
@@ -31,6 +40,19 @@ export class AdminMaintenanceComponent implements OnInit {
     this.api.get('admin/db').then((res: any) => {
       this.db = res;
       console.log(this.db);
+    }).catch((err: any) => {
+      Swal.fire({
+        icon: 'error',
+        title: this.translateService.instant('error_title'),
+        text: err.message
+      });
+    });
+  }
+
+  getJobs() {
+    this.api.get('admin/jobs').then((res: any) => {
+      this.jobs = res;
+      console.log(this.jobs);
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -68,6 +90,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDB();
+    this.getJobs();
     this.getMaintenanceMode();
     this.getTelegramBotDebugInfo();
   }
@@ -112,6 +135,35 @@ export class AdminMaintenanceComponent implements OnInit {
             icon: 'error',
             title: this.translateService.instant('error_title'),
             text: err.message
+          });
+        });
+      }
+    });
+  }
+
+  runJob(job: string) {
+    //Require confirmation before proceeding
+    Swal.fire({
+      title: this.translateService.instant('admin.run_confirm_title'),
+      text: this.translateService.instant('admin.run_confirm_text'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translateService.instant('yes'),
+      cancelButtonText: this.translateService.instant('no')
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.api.post('admin/runJob', { job }).then((res: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: this.translateService.instant('success_title'),
+            text: this.translateService.instant('admin.run_success')
+          });
+          this.getJobs();
+        }).catch((err: any) => {
+          Swal.fire({
+            icon: 'error',
+            title: this.translateService.instant('error_title'),
+            text: err.error.message
           });
         });
       }

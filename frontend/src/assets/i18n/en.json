@@ -46,7 +46,12 @@
         "telegram_webhook_set": "Set Telegram Webhook",
         "telegram_webhook_set_success": "Telegram Webhook set successfully",
         "telegram_webhook_unset": "Unset Telegram Webhook",
-        "telegram_webhook_unset_success": "Telegram Webhook unset successfully"
+        "telegram_webhook_unset_success": "Telegram Webhook unset successfully",
+        "manual_execution": "manual execution",
+        "run": "run",
+        "run_confirm_title": "Are you sure you want to run this command?",
+        "run_confirm_text": "This action cannot be undone.",
+        "run_success": "Command executed successfully"
     },
     "table": {
         "yes_remove": "Yes, remove",

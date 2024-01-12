@@ -99,6 +99,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/admin/runMigrations', [AdminController::class, 'runMigrations']);
     Route::post('/admin/runSeeding', [AdminController::class, 'runSeeding']);
 
+    Route::get('/admin/jobs', [AdminController::class, 'getJobsList']);
+    Route::post('/admin/runJob', [AdminController::class, 'runJob']);
+
     Route::get('/admin/maintenanceMode', [AdminController::class, 'getMaintenanceMode']);
     Route::post('/admin/maintenanceMode', [AdminController::class, 'updateMaintenanceMode']);
 

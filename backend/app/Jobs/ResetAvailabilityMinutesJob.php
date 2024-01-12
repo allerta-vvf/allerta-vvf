@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Models\AvailabilityMinutesArchive;
 
-class ResetAvailabilityMinutes implements ShouldQueue
+class ResetAvailabilityMinutesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

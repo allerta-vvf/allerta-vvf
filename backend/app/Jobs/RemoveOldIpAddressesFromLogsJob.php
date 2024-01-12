@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Log;
 use Carbon\Carbon;
 
-class RemoveOldIpAddressesFromLogs implements ShouldQueue
+class RemoveOldIpAddressesFromLogsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

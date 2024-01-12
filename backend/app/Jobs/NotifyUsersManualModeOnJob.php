@@ -14,7 +14,7 @@ use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Facades\Telegraph;
 
-class NotifyUsersManualModeOn implements ShouldQueue
+class NotifyUsersManualModeOnJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

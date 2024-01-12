@@ -5,9 +5,9 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-use App\Jobs\NotifyUsersManualModeOn;
-use App\Jobs\RemoveOldIpAddressesFromLogs;
-use App\Jobs\ResetAvailabilityMinutes;
+use App\Jobs\NotifyUsersManualModeOnJob;
+use App\Jobs\RemoveOldIpAddressesFromLogsJob;
+use App\Jobs\ResetAvailabilityMinutesJob;
 use App\Jobs\UpdateAvailabilityWithSchedulesJob;
 
 class Kernel extends ConsoleKernel
@@ -17,13 +17,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-      $schedule->job(new NotifyUsersManualModeOn)
+      $schedule->job(new NotifyUsersManualModeOnJob)
         ->dailyAt('7:00');
         //->sentryMonitor();
-      $schedule->job(new RemoveOldIpAddressesFromLogs)
+      $schedule->job(new RemoveOldIpAddressesFromLogsJob)
         ->dailyAt('0:30');
         //->sentryMonitor();
-      $schedule->job(new ResetAvailabilityMinutes)
+      $schedule->job(new ResetAvailabilityMinutesJob)
         ->monthlyOn(1, '0:00');
         //->sentryMonitor();
       $schedule->job(new UpdateAvailabilityWithSchedulesJob)
