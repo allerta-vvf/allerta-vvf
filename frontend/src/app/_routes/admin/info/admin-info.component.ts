@@ -13,7 +13,9 @@ import Swal from 'sweetalert2';
   styleUrls: ['./admin-info.component.scss']
 })
 export class AdminInfoComponent implements OnInit {
-  info: any;
+  info: any = {
+    users: []
+  };
 
   constructor(
     private translateService: TranslateService,
