@@ -133,6 +133,13 @@
                     <button type="button" class="btn btn-lg btn-danger" (click)="clearOptimization()">{{ 'admin.clear_optimization'|translate|ftitlecase }}</button>
                     <button type="button" class="btn btn-lg btn-warning" (click)="clearCache()">{{ 'admin.clear_cache'|translate|ftitlecase }}</button>
                 </div>
+
+                <div class="btn-group-vertical mt-2 ps-5 pe-5">
+                    <p class="btn-group-label">{{ 'admin.env_operations'|translate|ftitlecase }}</p>
+                    <button type="button" class="btn btn-lg btn-primary" (click)="envEncrypt()">{{ 'admin.env_encrypt'|translate|ftitlecase }}</button>
+                    <button type="button" class="btn btn-lg btn-warning" (click)="envDecrypt()">{{ 'admin.env_decrypt'|translate|ftitlecase }}</button>
+                    <button type="button" class="btn btn-lg btn-danger" (click)="envDelete()">{{ 'admin.env_delete'|translate|ftitlecase }}</button>
+                </div>
             </div>
             <hr>
             <div class="row">

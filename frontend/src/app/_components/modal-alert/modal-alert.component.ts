@@ -95,8 +95,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
     this.translate.get([
       'alert.delete_confirm_title',
       'alert.delete_confirm_text',
-      'table.yes_remove',
-      'table.cancel',
+      'yes_remove',
+      'cancel',
       'alert.deleted_successfully',
       'alert.delete_failed'
     ]).subscribe((res: any) => {
@@ -108,8 +108,8 @@ export class ModalAlertComponent implements OnInit, OnDestroy {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: res['table.yes_remove'],
-        cancelButtonText: res['table.cancel']
+        confirmButtonText: res['yes_remove'],
+        cancelButtonText: res['cancel']
       }).then((result: any) => {
         if (result.isConfirmed) {
           this.api.patch(`alerts/${this.id}`, {

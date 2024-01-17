@@ -188,6 +188,13 @@ class AdminController extends Controller
 
     public function clearOptimization() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+
+        //Check if .env file exists. If not, abort the operation
+        if(!file_exists(base_path('.env'))) {
+            return response()->json([
+                'message' => 'WARNING!! Environment file not found'
+            ], 400);
+        }
         
         Artisan::call('optimize:clear');
 
@@ -203,6 +210,66 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => 'Cache cleared successfully'
+        ]);
+    }
+
+    public function encryptEnvironment(Request $request) {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        $request->validate([
+            'key' => 'required|string|min:6'
+        ]);
+
+        $key = "base64:".base64_encode(hash('sha256', $request->input('key'), true));
+        
+        Artisan::call('env:encrypt', ['--force' => true, '--no-interaction' => true, '--key' => $key]);
+        //Check if "ERROR" is in the output
+        $output = Artisan::output();
+        if(str_contains($output, 'ERROR')) {
+            return response()->json([
+                'message' => str_replace('ERROR ', '', $output)
+            ], 400);
+        }
+        
+        return response()->json([
+            'message' => 'Environment encrypted successfully'
+        ]);
+    }
+
+    public function decryptEnvironment(Request $request) {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+        $request->validate([
+            'key' => 'required|string|min:6'
+        ]);
+
+        $key = "base64:".base64_encode(hash('sha256', $request->input('key'), true));
+        
+        Artisan::call('env:decrypt', ['--force' => true, '--no-interaction' => true, '--key' => $key]);
+        //Check if "ERROR" is in the output
+        $output = Artisan::output();
+        if(str_contains($output, 'ERROR')) {
+            return response()->json([
+                'message' => str_replace('ERROR ', '', $output)
+            ], 400);
+        }
+
+        //Delete .env.encrypted file if exists
+        if(file_exists(base_path('.env.encrypted'))) unlink(base_path('.env.encrypted'));
+
+        return response()->json([
+            'message' => 'Environment decrypted successfully'
+        ]);
+    }
+
+    public function deleteEnvironment() {
+        if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
+
+        if(!file_exists(base_path('bootstrap/cache/config.php'))) Artisan::call('config:cache');
+
+        //Delete .env file if exists
+        if(file_exists(base_path('.env'))) unlink(base_path('.env'));
+
+        return response()->json([
+            'message' => 'Environment file deleted successfully'
         ]);
     }
     

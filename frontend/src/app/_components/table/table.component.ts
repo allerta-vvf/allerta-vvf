@@ -242,7 +242,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   deleteService(id: number) {
-    this.translate.get(['table.yes_remove', 'table.cancel', 'table.remove_service_confirm', 'table.remove_service_text']).subscribe((res: { [key: string]: string; }) => {
+    this.translate.get(['yes_remove', 'cancel', 'table.remove_service_confirm', 'table.remove_service_text']).subscribe((res: { [key: string]: string; }) => {
       Swal.fire({
         title: res['table.remove_service_confirm'],
         text: res['table.remove_service_confirm_text'],
@@ -250,8 +250,8 @@ export class TableComponent implements OnInit, OnDestroy {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: res['table.yes_remove'],
-        cancelButtonText: res['table.cancel']
+        confirmButtonText: res['yes_remove'],
+        cancelButtonText: res['cancel']
       }).then((result) => {
         if (result.isConfirmed) {
           this.api.delete(`services/${id}`).then((response) => {
@@ -274,7 +274,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   deleteTraining(id: number) {
-    this.translate.get(['table.yes_remove', 'table.cancel', 'table.remove_training_confirm', 'table.remove_training_text']).subscribe((res: { [key: string]: string; }) => {
+    this.translate.get(['yes_remove', 'cancel', 'table.remove_training_confirm', 'table.remove_training_text']).subscribe((res: { [key: string]: string; }) => {
       Swal.fire({
         title: res['table.remove_training_confirm'],
         text: res['table.remove_training_confirm_text'],
@@ -282,8 +282,8 @@ export class TableComponent implements OnInit, OnDestroy {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: res['table.yes_remove'],
-        cancelButtonText: res['table.cancel']
+        confirmButtonText: res['yes_remove'],
+        cancelButtonText: res['cancel']
       }).then((result) => {
         if (result.isConfirmed) {
           this.api.delete(`trainings/${id}`).then((response) => {

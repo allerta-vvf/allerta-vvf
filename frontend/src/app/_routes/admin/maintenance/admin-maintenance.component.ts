@@ -202,7 +202,6 @@ export class AdminMaintenanceComponent implements OnInit {
         title: this.translateService.instant('success_title'),
         text: this.translateService.instant('admin.run_optimization_success')
       });
-      this.getDB();
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -219,7 +218,6 @@ export class AdminMaintenanceComponent implements OnInit {
         title: this.translateService.instant('success_title'),
         text: this.translateService.instant('admin.clear_optimization_success')
       });
-      this.getDB();
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -236,13 +234,106 @@ export class AdminMaintenanceComponent implements OnInit {
         title: this.translateService.instant('success_title'),
         text: this.translateService.instant('admin.clear_cache_success')
       });
-      this.getDB();
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
         title: this.translateService.instant('error_title'),
         text: err.error.message
       });
+    });
+  }
+
+  envEncrypt() {
+    Swal.fire({
+      title: this.translateService.instant('admin.env_encrypt_title'),
+      text: this.translateService.instant('admin.env_encrypt_text'),
+      input: 'password',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: this.translateService.instant('confirm'),
+      cancelButtonText: this.translateService.instant('cancel'),
+      showLoaderOnConfirm: true,
+      preConfirm: (key) => {
+        return this.api.post('admin/envEncrypt', { key }).then((res: any) => {
+          return res;
+        }).catch((err: any) => {
+          Swal.showValidationMessage(
+            err.error.message
+          );
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: this.translateService.instant('success_title'),
+          text: this.translateService.instant('admin.env_encrypt_success')
+        });
+      }
+    });
+  }
+
+  envDecrypt() {
+    Swal.fire({
+      title: this.translateService.instant('admin.env_decrypt_title'),
+      text: this.translateService.instant('admin.env_decrypt_text'),
+      input: 'password',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: this.translateService.instant('confirm'),
+      cancelButtonText: this.translateService.instant('cancel'),
+      showLoaderOnConfirm: true,
+      preConfirm: (key) => {
+        return this.api.post('admin/envDecrypt', { key }).then((res: any) => {
+          return res;
+        }).catch((err: any) => {
+          Swal.showValidationMessage(
+            err.error.message
+          );
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: this.translateService.instant('success_title'),
+          text: this.translateService.instant('admin.env_decrypt_success')
+        });
+      }
+    });
+  }
+
+  envDelete() {
+    //Require confirmation before proceeding
+    Swal.fire({
+      title: this.translateService.instant('admin.env_delete_title'),
+      text: this.translateService.instant('admin.env_delete_text'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translateService.instant('yes'),
+      cancelButtonText: this.translateService.instant('no')
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.api.post('admin/envDelete').then((res: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: this.translateService.instant('success_title'),
+            text: this.translateService.instant('admin.env_delete_success')
+          });
+        }).catch((err: any) => {
+          Swal.fire({
+            icon: 'error',
+            title: this.translateService.instant('error_title'),
+            text: err.message
+          });
+        });
+      }
     });
   }
 

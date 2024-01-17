@@ -109,6 +109,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/admin/clearOptimization', [AdminController::class, 'clearOptimization']);
     Route::post('/admin/clearCache', [AdminController::class, 'clearCache']);
 
+    Route::post('/admin/envEncrypt', [AdminController::class, 'encryptEnvironment']);
+    Route::post('/admin/envDecrypt', [AdminController::class, 'decryptEnvironment']);
+    Route::post('/admin/envDelete', [AdminController::class, 'deleteEnvironment']);
+
     Route::get('/admin/telegramBot/debug', [AdminController::class, 'getTelegramBotDebugInfo']);
     Route::post('/admin/telegramBot/setWebhook', [AdminController::class, 'setTelegramWebhook']);
     Route::post('/admin/telegramBot/unsetWebhook', [AdminController::class, 'unsetTelegramWebhook']);

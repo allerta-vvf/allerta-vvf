@@ -52,11 +52,22 @@
         "run": "run",
         "run_confirm_title": "Are you sure you want to run this command?",
         "run_confirm_text": "This action cannot be undone.",
-        "run_success": "Command executed successfully"
+        "run_success": "Command executed successfully",
+        "env_operations": "environment variables operations",
+        "env_encrypt": "encrypt .env",
+        "env_encrypt_title": "Encrypt .env file",
+        "env_encrypt_confirm": "Insert the password to encrypt the .env file",
+        "env_encrypt_success": ".env encrypted successfully",
+        "env_decrypt": "decrypt .env",
+        "env_decrypt_title": "Decrypt .env file",
+        "env_decrypt_confirm": "Insert the password to decrypt the .env file",
+        "env_decrypt_success": ".env decrypted successfully",
+        "env_delete": "delete .env",
+        "env_delete_title": "Delete .env file",
+        "env_delete_confirm": "Are you sure you want to delete the .env file?",
+        "env_delete_success": ".env deleted successfully"
     },
-    "table": {
-        "yes_remove": "Yes, remove",
-        "cancel": "Cancel",
+    "table": {        
         "remove_service_confirm": "Are you sure you want to remove this service?",
         "remove_service_confirm_text": "This action cannot be undone.",
         "service_deleted_successfully": "Service deleted successfully",
@@ -174,6 +185,9 @@
         "file_too_big": "File too big",
         "password_min_length": "Password must be at least 6 characters long"
     },
+    "yes_remove": "Yes, remove",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
     "enable": "enable",
     "disable": "disable",
     "maintenance_mode": "maintenance mode",
