@@ -24,4 +24,11 @@ class RemoveOldIpAddressesFromLogsJob implements ShouldQueue
         Log::where('created_at', '<', Carbon::now()->subWeeks(2))
             ->update(['ip' => null]);
     }
+
+    public function failed($exception = null)
+    {
+        if (app()->bound('sentry')) {
+            app('sentry')->captureException($exception);
+        }
+    }
 }

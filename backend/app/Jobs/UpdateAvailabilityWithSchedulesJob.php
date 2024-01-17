@@ -95,7 +95,7 @@ class UpdateAvailabilityWithSchedulesJob implements ShouldQueue
         TelegramBot::sendTeamMessage($text);
     }
 
-    public function failed(\Error|\TypeError $exception = null)
+    public function failed($exception = null)
     {
         if (app()->bound('sentry') && !is_null($exception)) {
             app('sentry')->captureException($exception);
