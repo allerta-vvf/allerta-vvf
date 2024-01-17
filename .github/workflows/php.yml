@@ -86,13 +86,13 @@ jobs:
         php -r 'require("deployment_remotes.php");'
         cat deployment.log | grep "After-jobs:" ; exit $?
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
         name: deploy_php_log_${{ github.run_id }}
         path: /tmp/php.log
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
         name: deploy_log_${{ github.run_id }}
@@ -132,13 +132,13 @@ jobs:
         php -r 'require("deployment_remotes.php");'
         cat deployment.log | grep "After-jobs:" ; exit $?
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
         name: deploy_php_log_${{ github.run_id }}
         path: /tmp/php.log
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
         name: deploy_log_${{ github.run_id }}
