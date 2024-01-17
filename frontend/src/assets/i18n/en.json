@@ -158,7 +158,6 @@
     },
     "edit_user": {
         "success_text": "User updated successfully",
-        "error_text": "User could not be updated. Please try again",
         "creation_date": "User creation date",
         "last_update": "User last update",
         "last_access": "User last access"

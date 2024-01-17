@@ -158,7 +158,6 @@
     },
     "edit_user": {
         "success_text": "Utente aggiornato con successo",
-        "error_text": "L'utente non può essere aggiornato. Riprova più tardi",
         "creation_date": "Data di creazione dell'utente",
         "last_update": "Data di ultima modifica dell'utente",
         "last_access": "Ultimo accesso dell'utente"

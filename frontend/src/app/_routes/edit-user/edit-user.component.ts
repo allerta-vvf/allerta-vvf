@@ -237,7 +237,7 @@ export class EditUserComponent implements OnInit {
         console.log(err);
         Swal.fire({
           title: this.translateService.instant("error_title"),
-          text: this.translateService.instant("edit_user.error_text"),
+          text: err.error.message,
           icon: 'error',
           confirmButtonText: 'Ok'
         });
