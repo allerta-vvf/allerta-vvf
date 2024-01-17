@@ -13,6 +13,8 @@ export class UpdaterService {
     updates: SwUpdate,
     translate: TranslateService
   ) {
+    if(!updates.isEnabled) return;
+
     // Allow the app to stabilize first, before starting
     // polling for updates with `interval()`.
     const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
