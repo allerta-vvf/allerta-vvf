@@ -325,6 +325,7 @@ export class TableComponent implements OnInit, OnDestroy {
         icons.push('fab fa-firefox-browser');
         break;
       case 'Safari':
+      case 'Mobile Safari':
         icons.push('fab fa-safari');
         break;
       case 'IE':

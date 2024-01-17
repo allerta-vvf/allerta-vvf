@@ -107,7 +107,7 @@
                         <tbody>
                             <tr *ngFor="let job of jobs">
                                 <td>{{ job }}</td>
-                                <td (click)="runJob(job)" class="pointer text-center"
+                                <td (click)="runJob(job)" class="cursor-pointer text-center"
                                   [ngClass]="{'text-bg-danger': ultraDangerousJobs.includes(job), 'text-bg-warning': dangerousJobs.includes(job)}">
                                     <i class="fas fa-play"></i> {{ 'admin.run'|translate|ftitlecase }}
                                 </td>
