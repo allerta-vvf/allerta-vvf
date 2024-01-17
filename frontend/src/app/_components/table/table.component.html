@@ -8,6 +8,14 @@
 <ng-container *ngIf="sourceType && enableDateRangePickerTypes.includes(sourceType)">
     <daterange-picker [(ngModel)]="range" (ngModelChange)="filterDateRangeChanged($event)"></daterange-picker>
 </ng-container>
+<ng-container *ngIf="sourceType && enableCountTotalsTypes.includes(sourceType)">
+    <div class="row mt-3">
+        <div class="col-xs-12 col-12">
+            <p class="h5">{{ 'total_elements_with_filters'|translate }}: {{ totalElements }}</p>
+        </div>
+    </div>
+</ng-container>
+
 
 <div id="list" class="table-responsive mt-4">
     <table *ngIf="sourceType === 'list'" id="table" class="table table-striped table-bordered dt-responsive nowrap">

@@ -308,6 +308,7 @@
     "previous": "precedente",
     "last": "ultima",
     "first": "prima",
+    "total_elements_with_filters": "# Elementi (selezione corrente)",
     "press_to_select_a_date": "Premi per selezionare una data",
     "footer_text": "Allerta-VVF, software libero realizzato per i Vigili del Fuoco volontari.",
     "revision": "revisione",

@@ -308,6 +308,7 @@
     "previous": "previous",
     "last": "last",
     "first": "first",
+    "total_elements_with_filters": "Total elements (curr. selection)",
     "press_to_select_a_date": "Press to select a date",
     "footer_text": "Allerta-VVF, free software developed for volunteer firefighters brigades.",
     "revision": "revision",

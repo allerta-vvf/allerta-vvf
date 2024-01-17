@@ -44,6 +44,8 @@ export class TableComponent implements OnInit, OnDestroy {
   filterStart: Date | undefined;
   filterEnd: Date | undefined;
 
+  enableCountTotalsTypes: string[] = ['services', 'trainings', 'logs'];
+
   @Input() initialStartFilter: Date | undefined;
 
   _maxPaginationSize: number = 10;
