@@ -59,12 +59,12 @@
   "shortcuts": [
     {
       "name": "Interventi",
-      "url": "/#/services",
+      "url": "./#/services",
       "description": "Lista degli interventi"
     },
     {
       "name": "Esercitazioni",
-      "url": "/#/trainings",
+      "url": "./#/trainings",
       "description": "Lista delle esercitazioni"
     }
   ]
