@@ -381,6 +381,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   isPublicIp(ipAddress: string) {
+    if(typeof ipAddress === 'undefined' || ipAddress === null) return false;
     const parts = ipAddress.split('.');
     if (parts.length === 4) {
       return !(
