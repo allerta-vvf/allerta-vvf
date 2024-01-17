@@ -177,7 +177,7 @@
 
 <ng-container *ngIf="sourceType && enablePaginationTypes.includes(sourceType)">
     <div class="row mt-5">
-        <div class="col-xs-12 col-12">
+        <div class="col-xs-12 col-12 pagination-parent">
             <pagination
               [totalItems]="totalElements"
               [(ngModel)]="currentPage"

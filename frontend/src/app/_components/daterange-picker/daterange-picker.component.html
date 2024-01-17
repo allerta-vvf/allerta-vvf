@@ -1,6 +1,6 @@
 <div class="input-group flex-nowrap">
-    <span class="input-group-text" id="addon-wrapping" translate>select_date_range</span>
+    <span class="input-group-text" id="dateRangeLabel" (click)="dp.show()" translate>select_date_range</span>
     <input type="text" [disabled]="disabled" [placeholder]="'select_date_range'|translate" class="form-control" placement="bottom"
-        bsDaterangepicker [bsConfig]="dateRangePickerOptions" [maxDate]="maxDate" [(bsValue)]="range" (bsValueChange)="updateValue($event)">
+        bsDaterangepicker [bsConfig]="dateRangePickerOptions" [maxDate]="maxDate" [(bsValue)]="range" (bsValueChange)="updateValue($event)" #dp="bsDaterangepicker">
     <button class="btn btn-outline-secondary" type="button" (click)="resetRange()" translate>remove_date_filters</button>
 </div>

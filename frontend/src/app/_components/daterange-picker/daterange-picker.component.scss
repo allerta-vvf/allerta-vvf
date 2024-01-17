@@ -1,3 +1,10 @@
 .date-picker {
     width: 85%
 }
+
+/* Hide #dateRangeLabel on mobile */
+@media (max-width: 767px) {
+    #dateRangeLabel {
+        display: none;
+    }
+}

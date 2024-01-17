@@ -17,4 +17,8 @@ export class ServicesComponent implements OnInit {
     this.router.navigate(['services', 'new']);
   }
 
+  goToStats() {
+    this.router.navigate(['stats', 'services']);
+  }
+
 }
