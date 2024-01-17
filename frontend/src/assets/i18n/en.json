@@ -185,6 +185,9 @@
         "file_too_big": "File too big",
         "password_min_length": "Password must be at least 6 characters long"
     },
+    "update_available": "Update available",
+    "update_available_text": "A new version of the application is available. Do you want to update now?",
+    "update_now": "Update now",
     "yes_remove": "Yes, remove",
     "confirm": "Confirm",
     "cancel": "Cancel",

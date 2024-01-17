@@ -30,7 +30,7 @@ export class UpdaterService {
 
     updates.unrecoverable.subscribe(event => {
       console.error(event);
-      location.reload();
+      document.location.reload();
     });
 
     updates.versionUpdates.subscribe(evt => {
@@ -41,6 +41,18 @@ export class UpdaterService {
         case 'VERSION_READY':
           console.log(`Current app version: ${evt.currentVersion.hash}`);
           console.log(`New app version ready for use: ${evt.latestVersion.hash}`);
+          Swal.fire({
+            title: translate.instant('update_available'),
+            text: translate.instant('update_available_text'),
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: translate.instant('update_now'),
+            cancelButtonText: translate.instant('cancel')
+          }).then((result) => {
+            if (result.isConfirmed) {
+              document.location.reload();
+            }
+          });
           break;
         case 'VERSION_INSTALLATION_FAILED':
           console.log(`Failed to install app version '${evt.version.hash}': ${evt.error}`);

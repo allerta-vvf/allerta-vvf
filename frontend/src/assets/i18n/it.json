@@ -185,6 +185,9 @@
         "file_too_big": "File troppo grande",
         "password_min_length": "La password deve essere di almeno 6 caratteri"
     },
+    "update_available": "Aggiornamento disponibile",
+    "update_available_text": "È disponibile un aggiornamento per il gestionale. Vuoi aggiornare ora?",
+    "update_now": "Aggiorna ora",
     "yes_remove": "Si, rimuovi",
     "confirm": "Conferma",
     "cancel": "Annulla",
