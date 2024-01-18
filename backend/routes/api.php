@@ -117,6 +117,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/admin/telegramBot/setWebhook', [AdminController::class, 'setTelegramWebhook']);
     Route::post('/admin/telegramBot/unsetWebhook', [AdminController::class, 'unsetTelegramWebhook']);
 
+    Route::get('/admin/options', [AdminController::class, 'getOptions']);
+    Route::put('/admin/options/{option}', [AdminController::class, 'updateOption']);
+
     Route::get('/admin/permissionsAndRoles', [AdminController::class, 'getPermissionsAndRoles']);
     Route::post('/admin/roles', [AdminController::class, 'updateRoles']);
 });

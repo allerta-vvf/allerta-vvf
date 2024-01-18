@@ -22,6 +22,7 @@ return [
             'admin' => 'r',
             'admin-info' => 'r,u',
             'admin-maintenance' => 'r,u',
+            'admin-options' => 'r,u',
             'admin-roles' => 'r,u'
         ],
         'admin' => [
@@ -33,6 +34,7 @@ return [
             'logs' => 'lr',
             'admin' => 'r',
             'admin-info' => 'r,u',
+            'admin-options' => 'r,u',
             'admin-roles' => 'r,u'
         ],
         'chief' => [

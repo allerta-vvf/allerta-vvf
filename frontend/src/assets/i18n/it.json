@@ -65,7 +65,9 @@
         "env_delete": "rimuovi .env",
         "env_delete_title": "Rimuovi il file .env",
         "env_delete_text": "Sei sicuro di voler rimuovere il file .env?",
-        "env_delete_success": ".env rimosso con successo"
+        "env_delete_success": ".env rimosso con successo",
+        "options": "Opzioni",
+        "option_update_success": "Opzione aggiornata con successo"
     },
     "table": {
         "remove_service_confirm": "Sei sicuro di voler rimuovere questo intervento?",
@@ -184,6 +186,10 @@
         "document_format_not_supported": "Formato documento non supportato",
         "file_too_big": "File troppo grande",
         "password_min_length": "La password deve essere di almeno 6 caratteri"
+    },
+    "options": {
+        "service_place_selection_manual": "Seleziona manualmente il luogo dell'intervento",
+        "no_selection_available": "Nessuna selezione disponibile"
     },
     "update_available": "Aggiornamento disponibile",
     "update_available_text": "È disponibile un aggiornamento per Allerta. Vuoi aggiornare ora?",

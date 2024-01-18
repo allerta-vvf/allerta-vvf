@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Option;
 
 class AdminController extends Controller
 {
@@ -313,6 +314,47 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => 'Webhook unset successfully'
+        ]);
+    }
+
+    public function getOptions() {
+        if(!request()->user()->hasPermission("admin-options-read")) abort(401);
+        
+        return response()->json(Option::all());
+    }
+
+    public function updateOption(Request $request, Option $option) {
+        if(!request()->user()->hasPermission("admin-options-update")) abort(401);
+
+        switch($option->type) {
+            case 'number':
+                $type_validation = 'numeric';
+                if($option->min) $type_validation .= '|min:'.$option->min;
+                if($option->max) $type_validation .= '|max:'.$option->max;
+                break;
+            case 'boolean':
+                $type_validation = 'boolean';
+                break;
+            case 'select':
+                $type_validation = 'in:'.implode(',', $option->options);
+                break;
+            default:
+                $type_validation = 'string';
+                break;
+        }
+
+        $request->validate([
+            'value' => [
+                'required',
+                $type_validation
+            ]
+        ]);
+        
+        $option->value = request()->input('value');
+        $option->save();
+
+        return response()->json([
+            'message' => 'Option updated successfully'
         ]);
     }
 

@@ -20,6 +20,12 @@ const routes: Routes = [{
             data: {permissionsRequired: ['admin-read', 'admin-maintenance-read']}
         },
         {
+            path: 'options',
+            loadChildren: () => import('./options/admin-options.module').then(m => m.AdminOptionsModule),
+            canActivate: [AuthorizeGuard],
+            data: {permissionsRequired: ['admin-read', 'admin-options-read']}
+        },
+        {
             path: 'roles',
             loadChildren: () => import('./roles/admin-roles.module').then(m => m.AdminRolesModule),
             canActivate: [AuthorizeGuard],

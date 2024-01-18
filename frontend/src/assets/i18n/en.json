@@ -65,7 +65,9 @@
         "env_delete": "delete .env",
         "env_delete_title": "Delete .env file",
         "env_delete_confirm": "Are you sure you want to delete the .env file?",
-        "env_delete_success": ".env deleted successfully"
+        "env_delete_success": ".env deleted successfully",
+        "options": "Options",
+        "option_update_success": "Option updated successfully"
     },
     "table": {        
         "remove_service_confirm": "Are you sure you want to remove this service?",
@@ -184,6 +186,10 @@
         "document_format_not_supported": "Document format not supported",
         "file_too_big": "File too big",
         "password_min_length": "Password must be at least 6 characters long"
+    },
+    "options": {
+        "service_place_selection_manual": "Manual place selection for services",
+        "no_selection_available": "No selection available"
     },
     "update_available": "Update available",
     "update_available_text": "A new version of the application is available. Do you want to update now?",

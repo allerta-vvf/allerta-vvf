@@ -21,6 +21,7 @@ export class AdminComponent implements OnInit {
   tabs: ITab[] = [
     { title: 'info', id: 'info', active: false, permissionsRequired: ['admin-read', 'admin-info-read'] },
     { title: 'maintenance', id: 'maintenance', active: false, permissionsRequired: ['admin-read', 'admin-maintenance-read'] },
+    { title: 'options', id: 'options', active: false, permissionsRequired: ['admin-read', 'admin-options-read'] },
     { title: 'roles', id: 'roles', active: false, permissionsRequired: ['admin-read', 'admin-roles-read'] }
   ];
 
