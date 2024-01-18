@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,7 +17,7 @@ export class AdminOptionsComponent implements OnInit {
     private translateService: TranslateService,
     private api: ApiClientService,
     public auth: AuthService,
-    private router: Router
+    private toastr: ToastrService
   ) { }
 
   getOptions() {
@@ -64,12 +64,7 @@ export class AdminOptionsComponent implements OnInit {
     }).then((res: any) => {
       console.log(res);
       option._origValue = option.value;
-      Swal.fire({
-        title: this.translateService.instant("success_title"),
-        text: this.translateService.instant("admin.option_update_success"),
-        icon: 'success',
-        confirmButtonText: 'Ok'
-      });
+      this.toastr.success(this.translateService.instant("admin.option_update_success"));
     }).catch((err: any) => {
       console.error(err);
       Swal.fire({

@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModalAddTrainingCourseComponent } from 'src/app/_components/modal-add-traning-course/modal-add-training-course.component';
 import { ModalAddMedicalExaminationComponent } from 'src/app/_components/modal-add-medical-examination/modal-add-medical-examination.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -71,7 +72,8 @@ export class EditUserComponent implements OnInit {
     private api: ApiClientService,
     private auth: AuthService,
     private translateService: TranslateService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private toastr: ToastrService
   ) {
     this.route.paramMap.subscribe(params => {
       this.id = typeof params.get('id') === 'string' ? parseInt(params.get('id') || '') : undefined;
@@ -227,12 +229,7 @@ export class EditUserComponent implements OnInit {
     if (this.id) {
       this.api.put(`users/${this.id}`, data).then((response) => {
         console.log(response);
-        Swal.fire({
-          title: this.translateService.instant("success_title"),
-          text: this.translateService.instant("edit_user.success_text"),
-          icon: 'success',
-          confirmButtonText: 'Ok'
-        });
+        this.toastr.success(this.translateService.instant('edit_user.success_text'));
       }).catch((err) => {
         console.log(err);
         Swal.fire({
@@ -315,12 +312,7 @@ export class EditUserComponent implements OnInit {
       password: this.newPwd
     }).then((response) => {
       console.log(response);
-      Swal.fire({
-        title: this.translateService.instant("success_title"),
-        text: this.translateService.instant("password_changed_successfully"),
-        icon: 'success',
-        confirmButtonText: 'Ok'
-      });
+      this.toastr.success(this.translateService.instant('password_changed_successfully'));
       this.resetPwdModalRef?.hide();
     }).catch((err) => {
       console.log(err);

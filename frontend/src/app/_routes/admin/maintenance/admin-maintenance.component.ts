@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -28,7 +29,8 @@ export class AdminMaintenanceComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
-    private api: ApiClientService
+    private api: ApiClientService,
+    private toastr: ToastrService
   ) { }
 
   sizeToHuman(size: number) {
@@ -97,11 +99,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   runMigrations() {
     this.api.post('admin/runMigrations').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.run_migrations_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.run_migrations_success'));
       this.getDB();
     }).catch((err: any) => {
       Swal.fire({
@@ -124,11 +122,7 @@ export class AdminMaintenanceComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.api.post('admin/runSeeding').then((res: any) => {
-          Swal.fire({
-            icon: 'success',
-            title: this.translateService.instant('success_title'),
-            text: this.translateService.instant('admin.run_seeding_success')
-          });
+          this.toastr.success(this.translateService.instant('admin.run_seeding_success'));
           this.getDB();
         }).catch((err: any) => {
           Swal.fire({
@@ -153,11 +147,7 @@ export class AdminMaintenanceComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.api.post('admin/runJob', { job }).then((res: any) => {
-          Swal.fire({
-            icon: 'success',
-            title: this.translateService.instant('success_title'),
-            text: this.translateService.instant('admin.run_success')
-          });
+          this.toastr.success(this.translateService.instant('admin.run_success'));
           this.getJobs();
         }).catch((err: any) => {
           Swal.fire({
@@ -181,11 +171,7 @@ export class AdminMaintenanceComponent implements OnInit {
           console.log(err);
         });
       }
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.maintenance_mode_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.maintenance_mode_success'));
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -197,11 +183,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   runOptimization() {
     this.api.post('admin/runOptimization').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.run_optimization_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.run_optimization_success'));
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -213,11 +195,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   clearOptimization() {
     this.api.post('admin/clearOptimization').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.clear_optimization_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.clear_optimization_success'));
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -229,11 +207,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   clearCache() {
     this.api.post('admin/clearCache').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.clear_cache_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.clear_cache_success'));
     }).catch((err: any) => {
       Swal.fire({
         icon: 'error',
@@ -267,11 +241,7 @@ export class AdminMaintenanceComponent implements OnInit {
       allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'success',
-          title: this.translateService.instant('success_title'),
-          text: this.translateService.instant('admin.env_encrypt_success')
-        });
+        this.toastr.success(this.translateService.instant('admin.env_encrypt_success'));
       }
     });
   }
@@ -300,11 +270,7 @@ export class AdminMaintenanceComponent implements OnInit {
       allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'success',
-          title: this.translateService.instant('success_title'),
-          text: this.translateService.instant('admin.env_decrypt_success')
-        });
+        this.toastr.success(this.translateService.instant('admin.env_decrypt_success'));
       }
     });
   }
@@ -321,11 +287,7 @@ export class AdminMaintenanceComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.api.post('admin/envDelete').then((res: any) => {
-          Swal.fire({
-            icon: 'success',
-            title: this.translateService.instant('success_title'),
-            text: this.translateService.instant('admin.env_delete_success')
-          });
+          this.toastr.success(this.translateService.instant('admin.env_delete_success'));
         }).catch((err: any) => {
           Swal.fire({
             icon: 'error',
@@ -339,11 +301,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   setTelegramBotWebhook() {
     this.api.post('admin/telegramBot/setWebhook').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.telegram_webhook_set_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.telegram_webhook_set_success'));
       this.getTelegramBotDebugInfo();
     }).catch((err: any) => {
       Swal.fire({
@@ -356,11 +314,7 @@ export class AdminMaintenanceComponent implements OnInit {
 
   unsetTelegramBotWebhook() {
     this.api.post('admin/telegramBot/unsetWebhook').then((res: any) => {
-      Swal.fire({
-        icon: 'success',
-        title: this.translateService.instant('success_title'),
-        text: this.translateService.instant('admin.telegram_webhook_unset_success')
-      });
+      this.toastr.success(this.translateService.instant('admin.telegram_webhook_unset_success'));
       this.getTelegramBotDebugInfo();
     }).catch((err: any) => {
       Swal.fire({
