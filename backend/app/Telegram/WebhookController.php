@@ -144,6 +144,7 @@ class WebhookController extends
         $this->replyToUserChat(
             "ℹ️ Informazioni sul profilo:".
             "\n<i>Nome:</i> <b>".$user["name"]."</b>".
+            (!empty($user["surname"])&& !is_null($user["surname"]) ? "\n<i>Cognome:</i> <b>".$user["surname"]."</b>" : "").
             "\n<i>Disponibile:</i> ".($user["available"] ? "<b>SI</b>" : "<b>NO</b>").
             "\n<i>Caposquadra:</i> ".($user["chief"] === 1 ? "<b>SI</b>" : "<b>NO</b>").
             "\n<i>Autista:</i> ".($user["driver"] === 1 ? "<b>SI</b>" : "<b>NO</b>").
@@ -202,13 +203,14 @@ class WebhookController extends
           ->orderBy('trainings', 'desc')
           ->orderBy('availability_minutes', 'desc')
           ->orderBy('name', 'asc')
+          ->orderBy('surname', 'asc')
           ->get();
         if(count($users) == 0) {
             $text = "⚠️ Nessun vigile attualmente disponibile.";
         } else {
             $text = "👨‍🚒 Elenco dei vigili attualmente disponibili:";
             foreach ($users as $user) {
-                $text .= "\n- <i>".$user->name."</i>";
+                $text .= "\n- <i>".(!empty($user->surname)&&!is_null($user->surname) ? $user->surname : "")." ".$user->name."</i>";
                 if($user->chief) $text .= " CS";
                 if($user->driver) $text .= " 🚒";
             }
