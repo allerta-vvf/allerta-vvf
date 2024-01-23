@@ -13,7 +13,7 @@ class PlacesController extends Controller
     /**
      * Search place using OSM APIs.
      */
-    public function search(Request $request)
+    public function reverseSearch(Request $request)
     {
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
@@ -26,6 +26,35 @@ class PlacesController extends Controller
             return Http::withUrlParameters([
                 'place' => $query,
             ])->get('https://nominatim.openstreetmap.org/search?format=json&limit=6&q={place}')->object();
+        });
+        return response()->json($result);
+    }
+
+    public function italyListRegions()
+    {
+        $seconds = 60 * 60 * 24 * 365 * 10; // 10 years
+        $result = Cache::remember('italy_regions', $seconds, function () {
+            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/regioni')->object();
+        });
+        return response()->json($result);
+    }
+
+    public function italyListProvincesByRegion(Request $request, string $region_name)
+    {
+        $region_name = strtolower($region_name);
+        $seconds = 60 * 60 * 24 * 365; // 1 year
+        $result = Cache::remember('italy_provinces_'.$region_name, $seconds, function () use ($region_name) {
+            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/province/'.$region_name)->object();
+        });
+        return response()->json($result);
+    }
+
+    public function italyListMunicipalitiesByProvince(Request $request, string $province_name)
+    {
+        $province_name = strtolower($province_name);
+        $seconds = 60 * 60 * 24 * 365; // 1 year
+        $result = Cache::remember('italy_municipalities_'.$province_name, $seconds, function () use ($province_name) {
+            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/comuni/provincia/'.$province_name)->object();
         });
         return response()->json($result);
     }

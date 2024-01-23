@@ -77,7 +77,12 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::get('/service_types', [ServiceTypeController::class, 'index']);
     Route::post('/service_types', [ServiceTypeController::class, 'create']);
-    Route::get('/places/search', [PlacesController::class, 'search']);
+
+    Route::get('/places/reverse/search', [PlacesController::class, 'reverseSearch']);
+    Route::get('/places/italy/regions', [PlacesController::class, 'italyListRegions']);
+    Route::get('/places/italy/provinces/{region_name}', [PlacesController::class, 'italyListProvincesByRegion']);
+    Route::get('/places/italy/municipalities/{province_name}', [PlacesController::class, 'italyListMunicipalitiesByProvince']);
+    
     Route::get('/places/{id}', [PlacesController::class, 'show']);
 
     Route::get('/trainings', [TrainingController::class, 'index'])->middleware(ETag::class);

@@ -101,7 +101,7 @@ export class MapPickerComponent implements OnInit {
       });
       return;
     }
-    this.api.get("places/search", {
+    this.api.get("places/reverse/search", {
       q: this.placeName
     }).then((places) => {
       this.isPlaceSearchResultsOpen = true;
