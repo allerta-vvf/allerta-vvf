@@ -10,6 +10,9 @@ This is only a **development version**.
 
 ![Login](images/login.png)
 ![List](images/list.png)
+![Services](images/services.png)
+![Trainings](images/trainings.png)
+![Stats](images/stats.png)
 ![Logs](images/logs.png)
 
 ## Main repository
