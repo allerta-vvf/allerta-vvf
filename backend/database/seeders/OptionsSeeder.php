@@ -14,7 +14,7 @@ class OptionsSeeder extends Seeder
     {
         $options = [
             [
-                'name' => 'service_place_selection_manual',
+                'name' => 'service_place_selection_use_map_picker',
                 'value' => true,
                 'type' => 'boolean'
             ]

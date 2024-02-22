@@ -33,7 +33,7 @@ class UserController extends Controller
             ->orderBy('name', 'asc')
             ->orderBy('surname', 'asc')
             ->get();
-        
+
         $now = now();
         foreach($list as $user) {
             //Add online status
@@ -67,7 +67,7 @@ class UserController extends Controller
             ->join('document_files', 'document_files.id', '=', 'documents.document_file_id')
             ->select('documents.doc_type', 'documents.doc_number', 'documents.expiration_date', 'document_files.uuid as scan_uuid')
             ->get();
-        
+
         if($dl_tmp->count() > 0) {
             $user->driving_license = $dl_tmp[0];
         }
@@ -78,7 +78,7 @@ class UserController extends Controller
             ->leftJoin('training_course_types', 'training_course_types.id', '=', 'documents.doc_type')
             ->select('documents.doc_number as doc_number', 'documents.date', 'document_files.uuid as doc_uuid', 'training_course_types.name as type')
             ->get();
-        
+
         if($tc_tmp->count() > 0) {
             $user->training_courses = $tc_tmp;
             foreach($user->training_courses as $tc) {
@@ -98,7 +98,7 @@ class UserController extends Controller
             ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')
             ->select('documents.doc_certifier as certifier', 'documents.date', 'documents.expiration_date', 'document_files.uuid as cert_uuid')
             ->get();
-        
+
         if($me_tmp->count() > 0) {
             $user->medical_examinations = $me_tmp;
             foreach($user->medical_examinations as $me) {
@@ -250,13 +250,5 @@ class UserController extends Controller
         Logger::log("Modifica password utente", $user);
 
         return response()->json($user);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 }

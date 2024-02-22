@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, UntypedFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
+import { AuthService } from 'src/app/_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -22,11 +23,15 @@ export class EditServiceComponent implements OnInit {
     crew: [],
     lat: -1,
     lon: -1,
+    provinceCode: '',
+    municipalityCode: '',
+    address: '',
     notes: '',
     type: ''
   };
   loadedServiceLat = "";
   loadedServiceLng = "";
+  usingMapSelector = true;
 
   users: any[] = [];
   types: any[] = [];
@@ -44,8 +49,9 @@ export class EditServiceComponent implements OnInit {
   get chief() { return this.serviceForm.get('chief'); }
   get drivers() { return this.serviceForm.get('drivers'); }
   get crew() { return this.serviceForm.get('crew'); }
-  get lat() { return this.serviceForm.get('lat'); }
-  get lon() { return this.serviceForm.get('lon'); }
+  get lat() { return this.serviceForm.get('place.lat'); }
+  get lon() { return this.serviceForm.get('place.lon'); }
+  get address() { return this.serviceForm.get('place.address'); }
   get type() { return this.serviceForm.get('type'); }
 
   ngOnInit() {
@@ -56,14 +62,26 @@ export class EditServiceComponent implements OnInit {
       chief: [this.loadedService.chief, [Validators.required]],
       drivers: [this.loadedService.drivers, []],
       crew: [this.loadedService.crew, [Validators.required]],
-      lat: [this.loadedService.lat, [Validators.required, (control: AbstractControl): ValidationErrors | null => {
-        const valid = control.value >= -90 && control.value <= 90;
-        return valid ? null : { 'invalidLatitude': { value: control.value } };
-      }]],
-      lon: [this.loadedService.lon, [Validators.required, (control: AbstractControl): ValidationErrors | null => {
-        const valid = control.value >= -180 && control.value <= 180;
-        return valid ? null : { 'invalidLongitude': { value: control.value } };
-      }]],
+      place: this.fb.group({
+        lat: [this.loadedService.lat, this.usingMapSelector ?
+          [Validators.required, (control: AbstractControl): ValidationErrors | null => {
+            const valid = control.value >= -90 && control.value <= 90;
+            return valid ? null : { 'invalidLatitude': { value: control.value } };
+          }] : []
+        ],
+        lon: [this.loadedService.lon, this.usingMapSelector ?
+          [Validators.required, (control: AbstractControl): ValidationErrors | null => {
+            const valid = control.value >= -180 && control.value <= 180;
+            return valid ? null : { 'invalidLongitude': { value: control.value } };
+          }] : []
+        ],
+        provinceCode: [this.loadedService.provinceCode, this.usingMapSelector ?
+          [] : [Validators.required, Validators.minLength(3)]],
+        municipalityCode: [this.loadedService.municipalityCode, this.usingMapSelector ?
+          [] : [Validators.required, Validators.minLength(3)]],
+        address: [this.loadedService.address, this.usingMapSelector ?
+          [] : [Validators.required, Validators.minLength(3)]]
+      }),
       notes: [this.loadedService.notes],
       type: [this.loadedService.type, [Validators.required, Validators.minLength(1)]]
     });
@@ -72,10 +90,12 @@ export class EditServiceComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ApiClientService,
+    public auth: AuthService,
     private toastr: ToastrService,
     private fb: UntypedFormBuilder,
     private translate: TranslateService
   ) {
+    this.usingMapSelector = this.auth.profile.getOption("service_place_selection_use_map_picker", true);
     this.route.paramMap.subscribe(params => {
       this.serviceId = params.get('id') || undefined;
       if (this.serviceId === "new") {
@@ -182,15 +202,24 @@ export class EditServiceComponent implements OnInit {
     return this.crew.value.find((x: number) => x == id);
   }
 
-  setPlace(lat: number, lng: number) {
+  setPlaceMap(lat: number, lng: number) {
     this.lat.setValue(lat);
     this.lon.setValue(lng);
     console.log("Place selected", lat, lng);
   }
 
+  setPlace(provinceCode: string, municipalityCode: string, address: string) {
+    this.serviceForm.get('place.provinceCode').setValue(provinceCode);
+    this.serviceForm.get('place.municipalityCode').setValue(municipalityCode);
+    this.address.setValue(address);
+    console.log("Place selected", provinceCode, municipalityCode, address);
+  }
+
   //https://loiane.com/2017/08/angular-reactive-forms-trigger-validation-on-submit/
   isFieldValid(field: string) {
-    return this.formSubmitAttempt ? this.serviceForm.get(field).valid : true;
+    if(!this.formSubmitAttempt) return true;
+    if(this.serviceForm.get(field) == null) return false;
+    return this.serviceForm.get(field).valid;
   }
 
   formSubmit() {

@@ -138,6 +138,7 @@
                 <td>
                     <ng-container *ngIf="row.place.name"><i>{{ row.place.name }}</i></ng-container><br>
                     <ng-container *ngIf="row.place.village">{{ row.place.village }}</ng-container><br>
+                    <ng-container *ngIf="row.place.municipality">{{ row.place.municipality.name }} {{ row.place.municipality.province.short_name }}</ng-container><br>
                     <a class="place_details_link cursor-pointer" (click)="openPlaceDetails(row.place.id)">{{ 'more details'|translate|ftitlecase }}</a>
                 </td>
                 <td>{{ row.notes }}</td>
@@ -206,19 +207,19 @@
 <ng-template #pageTemplate let-page let-disabled="disabled" let-currentPage="currentPage">
   {{ page.number }}
 </ng-template>
- 
+
 <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
   {{ 'next'|translate|ftitlecase }}
 </ng-template>
- 
+
 <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
   {{ 'previous'|translate|ftitlecase }}
 </ng-template>
- 
+
 <ng-template #lastTemplate let-disabled="disabled" let-currentPage="currentPage">
   {{ 'last'|translate|ftitlecase }}
 </ng-template>
- 
+
 <ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
   {{ 'first'|translate|ftitlecase }}
 </ng-template>

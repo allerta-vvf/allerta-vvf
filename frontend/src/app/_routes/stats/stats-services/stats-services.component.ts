@@ -21,7 +21,6 @@ export class StatsServicesComponent implements OnInit {
   chartServicesByDriverData: any;
   chartServicesByTypeData: any;
   chartServicesByVillageData: any;
-  chartServicesByMunicipalityData: any;
   
   @ViewChild("servicesMap") servicesMap!: MapComponent;
 
@@ -109,14 +108,6 @@ export class StatsServicesComponent implements OnInit {
         villages[service.place.village] = 0;
       }
       villages[service.place.village]++;
-
-      if (service.place.municipality === null) service.place.municipality = this.translate.instant("unknown");
-      // Capitalize first letter
-      service.place.municipality = service.place.municipality.charAt(0).toUpperCase() + service.place.municipality.slice(1);
-      if (!municipalities[service.place.municipality]) {
-        municipalities[service.place.municipality] = 0;
-      }
-      municipalities[service.place.municipality]++;
     }
 
     console.log(people, chiefs, drivers, types, villages, municipalities);
@@ -187,20 +178,6 @@ export class StatsServicesComponent implements OnInit {
       datasets: [
         {
           data: villagesValues,
-        }
-      ]
-    };
-    
-    let municipalitiesLabels: string[] = [], municipalitiesValues: number[] = [];
-    Object.entries(municipalities).sort(([,a],[,b]) => b-a).forEach(([key, value]) => {
-      municipalitiesLabels.push(key);
-      municipalitiesValues.push(value);
-    });
-    this.chartServicesByMunicipalityData = {
-      labels: municipalitiesLabels,
-      datasets: [
-        {
-          data: municipalitiesValues,
         }
       ]
     };

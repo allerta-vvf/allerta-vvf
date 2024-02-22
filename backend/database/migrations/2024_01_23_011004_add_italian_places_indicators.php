@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('PlaceProvince', function (Blueprint $table) {
+        Schema::create('place_provinces', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 2)->unique();
+            $table->string('code', 20)->unique();
             $table->string('name', 100);
             $table->string('short_name', 2);
             $table->string('region', 25);
         });
-        Schema::create('PlaceMunicipality', function (Blueprint $table) {
+        Schema::create('place_municipalities', function (Blueprint $table) {
             $table->id();
             $table->string('code', 6)->unique();
             $table->string('name', 200);
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('fax', 30)->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
-            $table->foreignId('province_id')->constrained('PlaceProvince');
+            $table->foreignId('province_id')->constrained('place_provinces');
         });
     }
 
@@ -41,7 +41,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('PlaceMunicipality');
-        Schema::dropIfExists('PlaceProvince');
+        Schema::dropIfExists('place_municipalities');
+        Schema::dropIfExists('place_provinces');
     }
 };

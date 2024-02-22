@@ -14,6 +14,7 @@ export class PlaceDetailsComponent implements OnInit {
   id: number = 0;
   lat: number = 0;
   lon: number = 0;
+  place_query: string = '';
   place_info: any = {};
   place_loaded = false;
 
@@ -37,32 +38,36 @@ export class PlaceDetailsComponent implements OnInit {
         this.lon = parseFloat(place_info.lon || '');
         console.log(this.lat, this.lon);
 
-        this.options = {
-          layers: [
-            tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })
-          ],
-          zoom: 17,
-          center: latLng(this.lat, this.lon)
-        };
+        if(Number.isNaN(this.lat) || Number.isNaN(this.lon)) {
+          this.place_query = encodeURIComponent(place_info.name + ", " + place_info.municipality.name + " " + place_info.municipality.province.short_name);
+        } else {
+          this.options = {
+            layers: [
+              tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })
+            ],
+            zoom: 17,
+            center: latLng(this.lat, this.lon)
+          };
 
-        const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
-        const iconUrl = "./assets/icons/marker-icon.png";
-        const shadowUrl = "./assets/icons/marker-shadow.png";
-        const iconDefault = new Icon({
-          iconRetinaUrl,
-          iconUrl,
-          shadowUrl,
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowSize: [41, 41]
-        });
-        this.layers = [
-          marker([this.lat, this.lon], {
-            icon: iconDefault
-          })
-        ];
+          const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
+          const iconUrl = "./assets/icons/marker-icon.png";
+          const shadowUrl = "./assets/icons/marker-shadow.png";
+          const iconDefault = new Icon({
+            iconRetinaUrl,
+            iconUrl,
+            shadowUrl,
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            tooltipAnchor: [16, -28],
+            shadowSize: [41, 41]
+          });
+          this.layers = [
+            marker([this.lat, this.lon], {
+              icon: iconDefault
+            })
+          ];
+        }
 
         this.place_loaded = true;
       }).catch((err) => {

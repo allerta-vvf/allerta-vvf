@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Option;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -94,13 +94,26 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $impersonateManager = app('impersonate');
+
+        $options = Option::all(["name", "value", "type"]);
+        //Cast the value to the correct type and remove type
+        foreach($options as $option) {
+            if($option->type == "boolean") {
+                $option->value = boolval($option->value);
+            } else if($option->type == "number") {
+                $option->value = floatval($option->value);
+            }
+            unset($option->type);
+        }
+
         return [
             ...$request->user()->toArray(),
             "permissions" => array_map(function($p) {
                 return $p["name"];
             }, $request->user()->allPermissions()->toArray()),
             "impersonating_user" => $impersonateManager->isImpersonating(),
-            "impersonator_id" => $impersonateManager->getImpersonatorId()
+            "impersonator_id" => $impersonateManager->getImpersonatorId(),
+            "options" => $options
         ];
     }
 
@@ -148,7 +161,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
-    
+
     public function stopImpersonating(Request $request)
     {
         $manager = app('impersonate');

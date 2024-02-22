@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\PlaceMunicipality;
 
 class Place extends Model
 {
@@ -32,7 +34,13 @@ class Place extends Model
         'state',
         'village',
         'suburb',
-        'city',
-        'municipality'
+        'city'
     ];
+
+    /**
+     * Get the municipality
+     */
+    public function municipality(): BelongsTo {
+        return $this->belongsTo(PlaceMunicipality::class);
+    }
 }

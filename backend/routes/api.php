@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/places/italy/regions', [PlacesController::class, 'italyListRegions']);
     Route::get('/places/italy/provinces/{region_name}', [PlacesController::class, 'italyListProvincesByRegion']);
     Route::get('/places/italy/municipalities/{province_name}', [PlacesController::class, 'italyListMunicipalitiesByProvince']);
-    
+
     Route::get('/places/{id}', [PlacesController::class, 'show']);
 
     Route::get('/trainings', [TrainingController::class, 'index'])->middleware(ETag::class);

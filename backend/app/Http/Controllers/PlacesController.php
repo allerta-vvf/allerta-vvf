@@ -64,7 +64,9 @@ class PlacesController extends Controller
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
         return response()->json(
-            Place::find($id)
+            Place::where('id', $id)
+                ->with('municipality', 'municipality.province')
+                ->firstOrFail()
         );
     }
 }
