@@ -25,11 +25,22 @@ RUN apt-get update && apt-get install -y \
     libfreetype-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    zlib1g-dev \
+    nano \
+    iputils-ping \
+    curl \
+    build-essential \
+    libssl-dev \
+    libmariadb-dev-compat \
+    python3-dev \
+    python3-pip \
+    && pip3 install mysqlclient \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) pdo_mysql
 
-RUN pecl install redis-5.3.7 \
+RUN pecl install redis-6.0.2 \
     && docker-php-ext-enable redis
 
 # Use the default production configuration for PHP runtime arguments, see

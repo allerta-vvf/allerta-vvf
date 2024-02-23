@@ -21,7 +21,20 @@ else
     # Generate encryption key
     echo "Generating encryption key..."
     php artisan key:generate
+
+    # Run migrations
+    echo "Running migrations..."
+    php artisan migrate --force
+
+    # Run seeders
+    echo "Running seeders..."
+    php artisan db:seed
+    php artisan db:seed --class=DummyDataSeeder
 fi
+
+# Run migrations
+echo "Running migrations..."
+php artisan migrate
 
 # Run Apache
 apache2-foreground
