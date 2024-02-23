@@ -22,6 +22,7 @@ class DummyDataSeeder extends Seeder
         $user->email = 'u1@example.com';
         $user->save();
         $user->addRole('superadmin');
+        $user->save();
 
         /*
         Create 10 users:
@@ -42,15 +43,18 @@ class DummyDataSeeder extends Seeder
 
             if ($i === 1) {
                 $user->addRole('admin');
-                $user->update(['chief' => true]);
+                $user->chief = true;
             } elseif ($i === 2 || $i === 3) {
                 $user->addRole('chief');
-                $user->update(['chief' => true, 'driver' => true]);
+                $user->chief = true;
+                $user->driver = true;
             } elseif ($i === 4 || $i === 5) {
                 $user->addRole('chief');
             } elseif ($i === 6 || $i === 7) {
-                $user->update(['driver' => true]);
+                $user->driver = true;
             }
+
+            $user->save();
         }
     }
 }
