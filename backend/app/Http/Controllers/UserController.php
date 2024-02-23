@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\URL;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return the list of users, used in main list.
      */
     public function index(Request $request)
     {
@@ -46,15 +46,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Return a single user with all the details.
      */
     public function show(Request $request, User $user)
     {
@@ -123,7 +115,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update user data
      */
     public function update(Request $request, User $user)
     {
@@ -235,6 +227,9 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+     * Update user password
+     */
     public function updatePassword(Request $request, User $user)
     {
         if($request->user()->id != $user->id && !$request->user()->hasPermission("users-update-auth")) abort(401);

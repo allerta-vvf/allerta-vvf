@@ -12,7 +12,7 @@ use App\Utils\DBTricks;
 class TrainingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List all Trainings.
      */
     public function index(Request $request)
     {
@@ -110,7 +110,7 @@ class TrainingController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete Training
      */
     public function destroy(Request $request, $id)
     {

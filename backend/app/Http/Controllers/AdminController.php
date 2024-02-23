@@ -14,6 +14,9 @@ use App\Models\Option;
 
 class AdminController extends Controller
 {
+    /**
+     * Retrieve the info for the admin panel
+     */
     public function getInfo() {
         if(!request()->user()->hasPermission("admin-info-read")) abort(401);
 
@@ -24,9 +27,12 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Retrieve DB info and stats
+     */
     public function getDBData() {
         if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
-        
+
         Artisan::call('db:show', ['--json' => true, '--counts' => true]);
         $output = Artisan::output();
         $parsedOutput = json_decode($output, true);
@@ -77,27 +83,36 @@ class AdminController extends Controller
         return response()->json($parsedOutput);
     }
 
+    /**
+     * Run DB migrations
+     */
     public function runMigrations() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('migrate', ['--force' => true]);
         return response()->json([
             'message' => 'Migrations ran successfully'
         ]);
     }
 
+    /**
+     * Run DB seeders (except for dummy data seeder)
+     */
     public function runSeeding() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('db:seed', ['--force' => true]);
         return response()->json([
             'message' => 'Seeders ran successfully'
         ]);
     }
 
+    /**
+     * Return the list of jobs available in the app
+     */
     public function getJobsList() {
         if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
-        
+
         $jobPath = app_path('Jobs');
         $jobs = [];
 
@@ -111,16 +126,19 @@ class AdminController extends Controller
         return response()->json($jobs);
     }
 
+    /**
+     * Run a specific job
+     */
     public function runJob(Request $request) {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         $request->validate([
             'job' => 'required|string'
         ]);
 
         Artisan::call('schedule:test', ['--name' => "App\\Jobs\\".$request->input('job')]);
         $output = Artisan::output();
-        
+
         if(str_contains($output, 'No matching scheduled command found.')) {
             return response()->json([
                 'message' => 'Job not found'
@@ -132,9 +150,12 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Get the maintenance mode status
+     */
     public function getMaintenanceMode() {
         if(!request()->user()->hasPermission("admin-maintenance-read")) abort(401);
-        
+
         if (App::isDownForMaintenance()) {
             return response()->json(['enabled' => true]);
         } else {
@@ -142,9 +163,12 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Enable or disable the maintenance mode
+     */
     public function updateMaintenanceMode(Request $request) {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         $request->validate([
             'enabled' => 'required|boolean'
         ]);
@@ -169,9 +193,12 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Run the optimization commands: cache config, events, routes
+     */
     public function runOptimization() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         $commands = [
             'config:cache',
             'event:cache',
@@ -187,6 +214,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Clear the optimization cache
+     */
     public function clearOptimization() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
 
@@ -196,7 +226,7 @@ class AdminController extends Controller
                 'message' => 'WARNING!! Environment file not found'
             ], 400);
         }
-        
+
         Artisan::call('optimize:clear');
 
         return response()->json([
@@ -204,9 +234,12 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Clear the application cache
+     */
     public function clearCache() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('cache:clear');
 
         return response()->json([
@@ -214,6 +247,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Encrypt the application .env file
+     */
     public function encryptEnvironment(Request $request) {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
         $request->validate([
@@ -221,7 +257,7 @@ class AdminController extends Controller
         ]);
 
         $key = "base64:".base64_encode(hash('sha256', $request->input('key'), true));
-        
+
         Artisan::call('env:encrypt', ['--force' => true, '--no-interaction' => true, '--key' => $key]);
         //Check if "ERROR" is in the output
         $output = Artisan::output();
@@ -230,12 +266,15 @@ class AdminController extends Controller
                 'message' => str_replace('ERROR ', '', $output)
             ], 400);
         }
-        
+
         return response()->json([
             'message' => 'Environment encrypted successfully'
         ]);
     }
 
+    /**
+     * Decrypt the application .env file
+     */
     public function decryptEnvironment(Request $request) {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
         $request->validate([
@@ -243,7 +282,7 @@ class AdminController extends Controller
         ]);
 
         $key = "base64:".base64_encode(hash('sha256', $request->input('key'), true));
-        
+
         Artisan::call('env:decrypt', ['--force' => true, '--no-interaction' => true, '--key' => $key]);
         //Check if "ERROR" is in the output
         $output = Artisan::output();
@@ -261,6 +300,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Delete the application .env file
+     */
     public function deleteEnvironment() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
 
@@ -273,10 +315,13 @@ class AdminController extends Controller
             'message' => 'Environment file deleted successfully'
         ]);
     }
-    
+
+    /**
+     * Get the Telegram bot debug info
+     */
     public function getTelegramBotDebugInfo() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('telegraph:debug-webhook');
         $output = Artisan::output();
 
@@ -297,9 +342,12 @@ class AdminController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * Set the Telegram bot webhook, using the current app public URL
+     */
     public function setTelegramWebhook() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('telegraph:set-webhook');
 
         return response()->json([
@@ -307,9 +355,12 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Unset the Telegram bot webhook
+     */
     public function unsetTelegramWebhook() {
         if(!request()->user()->hasPermission("admin-maintenance-update")) abort(401);
-        
+
         Artisan::call('telegraph:unset-webhook');
 
         return response()->json([
@@ -317,12 +368,18 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Get the list of options, with their type, last update etc.
+     */
     public function getOptions() {
         if(!request()->user()->hasPermission("admin-options-read")) abort(401);
-        
+
         return response()->json(Option::all());
     }
 
+    /**
+     * Update an option value
+     */
     public function updateOption(Request $request, Option $option) {
         if(!request()->user()->hasPermission("admin-options-update")) abort(401);
 
@@ -349,7 +406,7 @@ class AdminController extends Controller
                 $type_validation
             ]
         ]);
-        
+
         $option->value = request()->input('value');
         $option->save();
 
@@ -358,6 +415,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Get the list of permissions and roles
+     */
     public function getPermissionsAndRoles() {
         if(!request()->user()->hasPermission("admin-roles-read")) abort(401);
         return response()->json([
@@ -366,6 +426,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Update role permissions
+     */
     public function updateRoles(Request $request) {
         if(!request()->user()->hasPermission("admin-roles-update")) abort(401);
 

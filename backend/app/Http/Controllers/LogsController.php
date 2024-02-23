@@ -11,16 +11,21 @@ use Carbon\Carbon;
 class LogsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List all logs
      */
     public function index(Request $request)
     {
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
+        $request->validate([
+            'from' => 'date',
+            'to' => 'date'
+        ]);
+
         $query = Log::join('users as changed_user', 'changed_user.id', '=', 'logs.changed_id')
             ->join('users as editor_user', 'editor_user.id', '=', 'logs.editor_id')
             ->orderBy('created_at', 'desc');
-        
+
         $selectedCols = [
             "logs.id", "logs.action", "logs.editor_id", "logs.changed_id", "logs.created_at", "logs.source_type",
             DBTricks::nameSelect("changed", "changed_user"),  DBTricks::nameSelect("editor", "editor_user"), "editor_user.hidden as editor_hidden"
@@ -38,7 +43,7 @@ class LogsController extends Controller
                 $query->whereDate('logs.created_at', '<=', $to->toDateString());
             } catch (\Carbon\Exceptions\InvalidFormatException $e) { }
         }
-        
+
         if($request->user()->hasPermission("logs-limited-read")) {
             $query = $query->where(function ($query) {
                 $query->where('editor_user.hidden', false)

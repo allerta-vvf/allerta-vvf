@@ -11,6 +11,9 @@ use App\Utils\Logger;
 
 class DocumentsController extends Controller
 {
+    /**
+     * Upload driving license scan
+     */
     public function uploadDrivingLicenseScan(Request $request)
     {
         $request->validate([
@@ -40,6 +43,9 @@ class DocumentsController extends Controller
         ]);
     }
 
+    /**
+     * Serve driving license scan
+     */
     public function serveDrivingLicenseScan($uuid)
     {
         $document = DocumentFile::where('uuid', $uuid)->firstOrFail();
@@ -47,6 +53,9 @@ class DocumentsController extends Controller
         return response()->file(storage_path('app/public/' . $document->file_path));
     }
 
+    /**
+     * Add training course data to user
+     */
     function addTrainingCourse(Request $request)
     {
         $request->validate([
@@ -62,7 +71,7 @@ class DocumentsController extends Controller
 
         if($request->user()->id != $request->input('user') && !$request->user()->hasPermission("users-add-training-course")) abort(401);
         if($request->user()->id == $request->input('user') && !$request->user()->hasPermission("user-add-training-course")) abort(401);
-        
+
         $document = new Document();
         $document->type = 'training_course';
         $document->doc_type = $request->input('type');
@@ -92,6 +101,9 @@ class DocumentsController extends Controller
         ]);
     }
 
+    /**
+     * Serve training course document
+     */
     function serveTrainingCourse($uuid)
     {
         $document = DocumentFile::where('uuid', $uuid)->firstOrFail();
@@ -99,6 +111,9 @@ class DocumentsController extends Controller
         return response()->file(storage_path('app/public/' . $document->file_path));
     }
 
+    /**
+     * Add medical examination data to user
+     */
     function addMedicalExamination(Request $request)
     {
         $request->validate([
@@ -114,7 +129,7 @@ class DocumentsController extends Controller
 
         if($request->user()->id != $request->input('user') && !$request->user()->hasPermission("users-add-medical-examination")) abort(401);
         if($request->user()->id == $request->input('user') && !$request->user()->hasPermission("user-add-medical-examination")) abort(401);
-        
+
         $document = new Document();
         $document->type = 'medical_examination';
         $document->doc_certifier = $request->input('doctor');
@@ -144,6 +159,9 @@ class DocumentsController extends Controller
         ]);
     }
 
+    /**
+     * Serve medical examination document
+     */
     function serveMedicalExamination($uuid)
     {
         $document = DocumentFile::where('uuid', $uuid)->firstOrFail();

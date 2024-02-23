@@ -11,6 +11,9 @@ use App\Utils\Logger;
 
 class AuthController extends Controller
 {
+    /**
+     * Register a new user
+     */
     public function register(Request $request)
     {
         if(!$request->user()->hasPermission("users-create")) abort(401);
@@ -39,6 +42,10 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Login
+     * @unauthenticated
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -73,6 +80,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout
+     */
     public function logout(Request $request)
     {
         Logger::log("Logout");
@@ -91,6 +101,9 @@ class AuthController extends Controller
 		return response()->json(null, 200);
     }
 
+    /**
+     * Get current user info and global options (so they can be loaded on frontend without additional requests)
+     */
     public function me(Request $request)
     {
         $impersonateManager = app('impersonate');
@@ -117,6 +130,9 @@ class AuthController extends Controller
         ];
     }
 
+    /**
+     * Impersonate another user
+     */
     public function impersonate(Request $request, User $user)
     {
         $authUser = User::find($request->user()->id);
@@ -162,6 +178,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Stop impersonating other user
+     */
     public function stopImpersonating(Request $request)
     {
         $manager = app('impersonate');
@@ -196,6 +215,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refresh token, if using sessions it will return a new session token
+     */
     public function refreshToken(Request $request)
     {
         if(

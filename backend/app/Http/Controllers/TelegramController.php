@@ -10,6 +10,9 @@ use App\Utils\Logger;
 
 class TelegramController extends Controller
 {
+    /**
+     * Returns a link that the user can use to start the login process
+     */
     public function loginToken(Request $request)
     {
         //Get telegramBotUsername from the name of the first bot (first row)

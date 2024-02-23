@@ -30,6 +30,9 @@ class PlacesController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * List all the regions of Italy.
+     */
     public function italyListRegions()
     {
         $seconds = 60 * 60 * 24 * 365 * 10; // 10 years
@@ -39,6 +42,9 @@ class PlacesController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * List all the provinces of a region of Italy.
+     */
     public function italyListProvincesByRegion(Request $request, string $region_name)
     {
         $region_name = strtolower($region_name);
@@ -49,6 +55,9 @@ class PlacesController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * List all the municipalities of a province of Italy.
+     */
     public function italyListMunicipalitiesByProvince(Request $request, string $province_name)
     {
         $province_name = strtolower($province_name);
@@ -59,6 +68,9 @@ class PlacesController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * Return the place saved in DB with the given id.
+     */
     public function show(Request $request, $id)
     {
         User::where('id', $request->user()->id)->update(['last_access' => now()]);

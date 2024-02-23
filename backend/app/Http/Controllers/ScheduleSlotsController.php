@@ -10,7 +10,7 @@ use App\Utils\Logger;
 class ScheduleSlotsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return the schedule slots of the user
      */
     public function index(Request $request)
     {
@@ -22,7 +22,7 @@ class ScheduleSlotsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Update the schedule slots of the user
      */
     public function store(Request $request)
     {

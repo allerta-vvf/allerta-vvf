@@ -16,6 +16,7 @@ use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\TrainingCourseTypeController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GenericController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use \Matthewbdaly\ETagMiddleware\ETag;
@@ -135,25 +136,8 @@ Route::middleware('signed')->group( function () {
     Route::get('/documents/medical_examination/{uuid}', [DocumentsController::class, 'serveMedicalExamination'])->name('medical_examination_serve');
 });
 
-Route::get('/owner_image', function() {
-    return response()
-      ->file(
-        resource_path('images') . DIRECTORY_SEPARATOR . config("features.owner_image"),
-        ['Cache-control' => 'max-age=2678400']
-    );
-});
+Route::get('/owner_image', [GenericController::class, 'ownerImage']);
 
-Route::get('/ping', function() {
-    return response()->json([
-        'message' => 'pong'
-    ]);
-});
+Route::get('/ping', [GenericController::class, 'ping']);
 
-Route::post('/cron/execute', function(Request $request) {
-    //Go to app/Console/Kernel.php to view schedules
-    if(config('cron.external_cron_enabled') && $request->header('Cron') == config('cron.execution_code')) {
-        Artisan::call('schedule:run');
-    } else {
-        return response('Access Denied', 403);
-    }
-});
+Route::post('/cron/execute', [GenericController::class, 'executeCron']);

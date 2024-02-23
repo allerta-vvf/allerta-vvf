@@ -18,7 +18,7 @@ use App\Utils\Helpers;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show all Services
      */
     public function index(Request $request)
     {
@@ -255,7 +255,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete Service
      */
     public function destroy(Request $request, $id)
     {

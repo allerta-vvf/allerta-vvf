@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 class StatsController extends Controller
 {
     /**
-     * Get all services with all data
+     * Get all services with all data, for usage in statistics page
      */
     public function services(Request $request)
     {

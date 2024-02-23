@@ -13,11 +13,14 @@ use Illuminate\Http\Request;
 class AlertController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a list of all the alerts.
      */
-    public function index()
+    public function index(Request $request)
     {
         if(!request()->user()->hasPermission("alerts-read")) abort(401);
+        $request->validate([
+            'full' => 'boolean'
+        ]);
         return response()->json(
             request()->query('full', false) ?
                 Alert::with(['crew.user' => function($query) {
@@ -36,15 +39,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Add new Alert
      */
     public function store(Request $request)
     {
@@ -62,7 +57,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Get single Alert
+     * Get single alert info by id
      */
     public function show(Request $request, $id)
     {
@@ -79,15 +74,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Alert $Alert)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update alert data. You can update notes and closed status.
      */
     public function update(Request $request, $id)
     {
