@@ -52,9 +52,12 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      PMA_USER: user
+      PMA_PASSWORD: password
     ports:
       - "8080:80"
+    depends_on:
+      - db
 
 volumes:
   db-data:
