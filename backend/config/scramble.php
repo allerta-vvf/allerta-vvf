@@ -24,7 +24,7 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => '',
+        'description' => 'Open source firefighters\' management software',
     ],
 
     /*
