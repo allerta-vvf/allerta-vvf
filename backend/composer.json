@@ -6,9 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "dedoc/scramble": "^0.8.5",
+        "dedoc/scramble": "^0.9.0",
         "defstudio/telegraph": "^1.38",
-        "doctrine/dbal": "3.8.2",
+        "doctrine/dbal": "3.8.3",
         "guzzlehttp/guzzle": "^7.8",
         "lab404/laravel-impersonate": "^1.7",
         "laravel/framework": "^10.0",
