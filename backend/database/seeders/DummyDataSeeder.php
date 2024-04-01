@@ -24,6 +24,19 @@ class DummyDataSeeder extends Seeder
         $user->addRole('superadmin');
         $user->save();
 
+        $names = [
+            ['Mario', 'Rossi'],
+            ['Luigi', 'Verdi'],
+            ['Paolo', 'Bianchi'],
+            ['Giovanni', 'Neri'],
+            ['Giuseppe', 'Fontana'],
+            ['Antonio', 'Gallo'],
+            ['Francesco', 'Greco'],
+            ['Angelo', 'Martini'],
+            ['Vincenzo', 'Mancini'],
+            ['Salvatore', 'Costa'],
+        ];
+
         /*
         Create 10 users:
         - 1 chief and with role 'admin'
@@ -34,10 +47,10 @@ class DummyDataSeeder extends Seeder
         */
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
-            $user->name = ''.$i;
-            $user->surname = 'User';
-            $user->username = 'user' . $i;
-            $user->password = Hash::make('user' . $i);
+            $user->name = $names[$i-1][0];
+            $user->surname = $names[$i-1][1];
+            $user->username = strtolower($user->surname.".".$user->name);
+            $user->password = Hash::make('password');
             $user->email = 'u' . $i+1 . '@example.com';
             $user->save();
 

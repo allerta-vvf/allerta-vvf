@@ -29,7 +29,6 @@ services:
       - DB_DATABASE=mydb
     volumes:
       - laravel-storage:/var/www/html/storage
-      - ./.env.docker:/var/www/html/.env
 
   db:
     image: mysql:5.7

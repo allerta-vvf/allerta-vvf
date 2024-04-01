@@ -15,12 +15,17 @@ else
     sed -i "s/DB_DATABASE=laravel/DB_DATABASE=${DB_DATABASE}/g" .env.tmp
     sed -i "s/DB_USERNAME=root/DB_USERNAME=${DB_USER}/g" .env.tmp
     sed -i "s/DB_PASSWORD=/DB_PASSWORD=${DB_PASSWORD}/g" .env.tmp
+
+    # Set encryption key
+    echo "Generating encryption key..."
+    # We can't use just the command, so we need to save the output to a file and then overwrite it in .env.test
+    php artisan key:generate --show > key.tmp
+    sed -i "s#APP_KEY=#APP_KEY=$(cat key.tmp)#g" .env.tmp
+    rm key.tmp
+
+    # Overwrite .env with the updated .env.tmp
     cat .env.tmp > .env
     rm .env.tmp
-
-    # Generate encryption key
-    echo "Generating encryption key..."
-    php artisan key:generate
 
     # Run migrations
     echo "Running migrations..."

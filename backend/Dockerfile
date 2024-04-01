@@ -1,5 +1,5 @@
 # Stage 1: Build PHP app and install dependencies
-FROM php:8.2 AS builder
+FROM php:8.3.4 AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
 
 # Stage 2: Serve the application using Apache PHP
-FROM php:8.1.10-apache
+FROM php:8.3.4-apache
 
 # Copy the built PHP app from the builder stage
 COPY --from=builder /app /var/www/html
@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
     libmariadb-dev-compat \
     python3-dev \
     python3-pip \
-    && pip3 install mysqlclient \
+    && pip3 install --break-system-packages mysqlclient \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
