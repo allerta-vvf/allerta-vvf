@@ -60,6 +60,14 @@ export class ApiClientService {
 
   constructor(private http: HttpClient) { }
 
+  private returnResponseData(body: any): any {
+    if(body === null || body === undefined) return null;
+    if(body.data !== undefined) {
+      return body.data;
+    }
+    return body;
+  }
+
   public apiEndpoint(endpoint: string): string {
     if(endpoint.startsWith('http') || endpoint.startsWith('//')) {
       return endpoint;
@@ -80,7 +88,9 @@ export class ApiClientService {
         next: (v: any) => {
           this.lastEtag = v.headers.get("etag");
           this.isLastSame = etag === this.lastEtag && etag !== "";
-          resolve(v.body);
+          resolve(
+            this.returnResponseData(v.body)
+          );
         },
         error: (e) => reject(e)
       });

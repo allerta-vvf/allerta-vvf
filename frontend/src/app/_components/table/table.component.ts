@@ -25,7 +25,6 @@ export class TableComponent implements OnInit, OnDestroy {
     "type_id",
     "pivot",
     "place_id",
-    "display_name",
     "licence",
     "lat",
     "lon",
@@ -50,7 +49,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   _maxPaginationSize: number = 10;
   _rowsPerPage: number = 20;
-  
+
   @Input('maxPaginationSize')
   get maxPaginationSize(): any {
     return this._maxPaginationSize;
@@ -58,7 +57,7 @@ export class TableComponent implements OnInit, OnDestroy {
   set maxPaginationSize(value: any) {
     if(!isNaN(value)) this._maxPaginationSize = value;
   }
-  
+
   @Input('rowsPerPage')
   get rowsPerPage(): any {
     return this._rowsPerPage;
@@ -240,7 +239,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   editService(id: number) {
-    this.router.navigate(['/services', id]); 
+    this.router.navigate(['/services', id]);
   }
 
   deleteService(id: number) {
@@ -272,7 +271,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   editTraining(id: number) {
-    this.router.navigate(['/trainings', id]); 
+    this.router.navigate(['/trainings', id]);
   }
 
   deleteTraining(id: number) {

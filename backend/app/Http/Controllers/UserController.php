@@ -10,12 +10,20 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\URL;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+
+use App\Http\Resources\UsersListResource;
+use App\Http\Resources\UserResource;
+
+
 class UserController extends Controller
 {
     /**
-     * Return the list of users, used in main list.
+     * Return users list.
+     *
+     * Used in main list
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $requestedCols = ['id', 'chief', 'last_access', 'name', 'surname', 'available', 'driver', 'services', 'availability_minutes'];
         if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
@@ -42,13 +50,13 @@ class UserController extends Controller
             unset($user->last_access);
         }
 
-        return response()->json($list);
+        return UsersListResource::collection($list);
     }
 
     /**
      * Return a single user with all the details.
      */
-    public function show(Request $request, User $user)
+    public function show(Request $request, User $user): UserResource
     {
         if($request->user()->id != $user->id && !$request->user()->hasPermission("users-read")) abort(401);
 
@@ -74,12 +82,11 @@ class UserController extends Controller
         if($tc_tmp->count() > 0) {
             $user->training_courses = $tc_tmp;
             foreach($user->training_courses as $tc) {
-                if(!is_null($tc->doc_uuid)) {
-                    $tc->doc_url = URL::temporarySignedRoute(
+                $tc->doc_url = !is_null($tc->doc_uuid) ?
+                    URL::temporarySignedRoute(
                         'training_course_serve', now()->addHours(1), ['uuid' => $tc->doc_uuid]
-                    );
-                    unset($tc->doc_uuid);
-                }
+                    ) : null;
+                unset($tc->doc_uuid);
             }
         } else {
             $user->training_courses = [];
@@ -94,12 +101,11 @@ class UserController extends Controller
         if($me_tmp->count() > 0) {
             $user->medical_examinations = $me_tmp;
             foreach($user->medical_examinations as $me) {
-                if(!is_null($me->cert_uuid)) {
-                    $me->cert_url = URL::temporarySignedRoute(
+                $me->cert_url = !is_null($me->cert_uuid) ?
+                    URL::temporarySignedRoute(
                         'medical_examination_serve', now()->addHours(1), ['uuid' => $me->cert_uuid]
-                    );
-                    unset($me->cert_uuid);
-                }
+                    ) : null;
+                unset($me->cert_uuid);
             }
         } else {
             $user->medical_examinations = [];
@@ -111,7 +117,7 @@ class UserController extends Controller
             );
         }
 
-        return response()->json($user);
+        return UserResource::make($user);
     }
 
     /**
@@ -224,7 +230,7 @@ class UserController extends Controller
 
         Logger::log("Modifica profilo utente", $user);
 
-        return response()->json($user);
+        return response()->noContent();
     }
 
     /**
@@ -244,6 +250,6 @@ class UserController extends Controller
 
         Logger::log("Modifica password utente", $user);
 
-        return response()->json($user);
+        return response()->noContent();
     }
 }

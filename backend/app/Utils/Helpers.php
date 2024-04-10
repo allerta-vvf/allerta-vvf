@@ -10,7 +10,7 @@ class Helpers {
         if($option) {
             // Cast to correct type
             if($option->type == "boolean") {
-                return $option->value == "true";
+                return ($option->value == "1" || $option->value == "true");
             } else if($option->type == "number") {
                 return floatval($option->value);
             } else {

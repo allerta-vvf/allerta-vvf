@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
 use App\Models\Document;
 use App\Models\DocumentFile;
+use App\Models\User;
 use App\Utils\Logger;
 
 class DocumentsController extends Controller
@@ -36,7 +37,7 @@ class DocumentsController extends Controller
         $document->uploadedBy()->associate(auth()->user());
         $document->save();
 
-        Logger::log("Caricamento scansione patente", auth()->user()->id);
+        Logger::log("Caricamento scansione patente", auth()->user());
 
         return response()->json([
             "uuid" => $document->uuid
@@ -94,7 +95,8 @@ class DocumentsController extends Controller
         $document->date = $request->input('date');
         $document->save();
 
-        Logger::log("Aggiunta corso di formazione", $request->input('user'));
+        $user = User::findOrFail($request->input('user'));
+        Logger::log("Aggiunta corso di formazione", $user);
 
         return response()->json([
             "id" => $document->id
@@ -132,7 +134,7 @@ class DocumentsController extends Controller
 
         $document = new Document();
         $document->type = 'medical_examination';
-        $document->doc_certifier = $request->input('doctor');
+        $document->doc_certifier = $request->input('certifier');
         $document->user = $request->input('user');
         $document->added_by = auth()->user()->id;
         if($request->hasFile('file')) {
@@ -152,7 +154,8 @@ class DocumentsController extends Controller
         $document->expiration_date = $request->input('expiration_date');
         $document->save();
 
-        Logger::log("Aggiunta visita medica", $request->input('user'));
+        $user = User::findOrFail($request->input('user'));
+        Logger::log("Aggiunta visita medica", $user);
 
         return response()->json([
             "id" => $document->id

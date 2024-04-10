@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('places', function (Blueprint $table) {
             $table->dropColumn('municipality');
-            $table->foreignId('municipality_id')->constrained('place_municipalities')->nullable();
+            $table->foreignId('municipality_id')->constrained('place_municipalities')->nullable()->default(null);
             $table->float('lat', 10, 6)->nullable()->change();
             $table->float('lon', 10, 6)->nullable()->change();
         });

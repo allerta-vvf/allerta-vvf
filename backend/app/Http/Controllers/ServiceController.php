@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ServiceResource;
+use App\Http\Resources\ServicesListResource;
 use App\Models\Place;
 use App\Models\PlaceMunicipality;
 use App\Models\PlaceProvince;
@@ -63,7 +65,7 @@ class ServiceController extends Controller
             $p = $service->place;
             unset($p->lat, $p->lon, $p->place_id, $p->osm_id, $p->osm_type, $p->licence, $p->addresstype, $p->country, $p->country_code, $p->display_name, $p->road, $p->house_number, $p->postcode, $p->state, $p->suburb, $p->city, $p->municipality_id);
         }
-        return response()->json($result);
+        return ServicesListResource::collection($result);
     }
 
     /**
@@ -74,7 +76,7 @@ class ServiceController extends Controller
         if (!$request->user()->hasPermission("services-read")) abort(401);
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
-        return response()->json(
+        return ServiceResource::make(
             Service::join('users', 'users.id', '=', 'chief_id')
                 ->join('services_types', 'services_types.id', '=', 'type_id')
                 ->select('services.*', DBTricks::nameSelect("chief", "users"), 'services_types.name as type')
@@ -124,15 +126,15 @@ class ServiceController extends Controller
 
         if ($is_map_picker) {
             //Find Place by lat lon
-            $place = Place::where('lat', $request->place->lat)->where('lon', $request->place->lon)->first();
+            $place = Place::where('lat', $request->place["lat"])->where('lon', $request->place["lon"])->first();
             if (!$place) {
                 $place = new Place();
-                $place->lat = $request->place->lat;
-                $place->lon = $request->place->lon;
+                $place->lat = $request->place["lat"];
+                $place->lon = $request->place["lon"];
 
                 $response = Http::withUrlParameters([
-                    'lat' => $request->place->lat,
-                    'lon' => $request->place->lon,
+                    'lat' => $request->place["lat"],
+                    'lon' => $request->place["lon"],
                 ])->get('https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}');
                 if (!$response->ok()) abort(500);
 
@@ -252,6 +254,8 @@ class ServiceController extends Controller
         User::whereIn('id', $usersToIncrement)->increment('services');
 
         Logger::log($adding ? "Intervento aggiunto" : "Intervento modificato");
+
+        return response()->noContent();
     }
 
     /**
@@ -265,5 +269,7 @@ class ServiceController extends Controller
         User::whereIn('id', $usersToDecrement)->decrement('services');
         $service->delete();
         Logger::log("Intervento eliminato");
+
+        return response()->noContent();
     }
 }
