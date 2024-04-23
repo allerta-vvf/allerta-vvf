@@ -9,12 +9,18 @@ use App\Utils\Availability;
 class AvailabilityController extends Controller
 {
     /**
-     * Get the availability status of the user
+     * Get the availability status of the user. If in "manual mode", the availability is not automatically updated following timetables.
      */
     public function get(Request $request)
     {
         return [
+            /**
+             * @var boolean
+             */
             "available" => $request->user()->available,
+            /**
+             * @var boolean
+             */
             "manual_mode" => $request->user()->availability_manual_mode
         ];
     }
@@ -31,7 +37,33 @@ class AvailabilityController extends Controller
             $user = $request->user();
         }
 
-        return Availability::updateAvailability($user, $request->input("available", false));
+        $request->validate([
+            /**
+             * The id of the user to update the availability status. If not provided, the current user will be used
+             * @var int|null
+             * @example null
+             */
+            'id' => ['nullable', 'integer'],
+            /**
+             * The availability status of the user
+             * @var boolean
+             * @example true
+             */
+            'available' => ['required', 'bool'],
+        ]);
+
+        $opReturn = Availability::updateAvailability($user, $request->input("available", false));
+        return [
+            /**
+             * @var int
+             * @example 1
+             */
+            "updated_user_id" => $opReturn["updated_user_id"],
+            /**
+             * @example Nome
+             */
+            "updated_user_name" => $opReturn["updated_user_name"]
+        ];
     }
 
     /**
@@ -39,6 +71,12 @@ class AvailabilityController extends Controller
      */
     public function updateAvailabilityManualMode(Request $request)
     {
-        return Availability::updateAvailabilityManualMode($request->user(), $request->input("manual_mode", false));
+        $request->validate([
+            'manual_mode' => ['required', 'bool']
+        ]);
+
+        Availability::updateAvailabilityManualMode($request->user(), $request->input("manual_mode", false));
+
+        return response()->noContent();
     }
 }

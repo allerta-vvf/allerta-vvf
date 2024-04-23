@@ -73,7 +73,5 @@ class Availability {
             $fromTelegram ? $user : null,
             $fromTelegram ? "telegram" : "web"
         );
-
-        return;
     }
 }
