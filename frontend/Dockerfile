@@ -1,5 +1,5 @@
 # Step 1: Build Angular in production mode
-FROM node:18 AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 
