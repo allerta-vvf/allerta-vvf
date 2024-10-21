@@ -528,3 +528,5 @@ adminer.php
 /server/resources/images/logo.png
 /server/resources/images/owner.png
 /server/resources/images/map_cache
+
+.env.docker

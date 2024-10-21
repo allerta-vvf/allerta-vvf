@@ -1,0 +1,21 @@
+<div class="col-8 mx-auto table-responsive-md">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center" *ngFor="let role of roles">{{ role.name|titlecase }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let permission of permissions">
+                <td class="text-start">{{ permission.name }}</td>
+                <td *ngFor="let role of roles" (click)="togglePermission(role, permission)">
+                    <span class="cross d-flex justify-content-center">
+                        {{ doesRoleHavePermission(role, permission.id) ? '✖' : '' }}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary position-fixed bottom-0 end-0 m-3" *ngIf="roleChanges.length > 0" (click)="saveRoleChanges()" [disabled]="roleChangesSubmitting">{{ 'save_changes'|translate|ftitlecase }}</button>
+</div>

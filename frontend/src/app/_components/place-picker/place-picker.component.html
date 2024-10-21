@@ -1,0 +1,22 @@
+<div class="border border-2 p-2 pb-0">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="region-label">{{ 'region'|translate|titlecase }}</span>
+    <input [(ngModel)]="selectedRegion" [typeahead]="regions" (typeaheadOnSelect)="onRegionSelected()"
+      class="form-control" aria-describedby="region-label">
+  </div>
+  <div class="input-group mb-3" *ngIf="regionSelected">
+    <span class="input-group-text" id="province-label">{{ 'province'|translate|titlecase }}</span>
+    <input [(ngModel)]="selectedProvince" [typeahead]="provinces" typeaheadOptionField="nome" (typeaheadOnSelect)="onProvinceSelected($event)"
+      class="form-control" aria-describedby="province-label">
+  </div>
+  <div class="input-group mb-3" *ngIf="provinceSelected">
+    <span class="input-group-text" id="municipality-label">{{ 'place_details.municipality'|translate|titlecase }}</span>
+    <input [(ngModel)]="selectedMunicipality" [typeahead]="municipalities" typeaheadOptionField="nome" (typeaheadOnSelect)="onMunicipalitySelected($event)"
+      class="form-control" aria-describedby="municipality-label">
+  </div>
+  <div class="input-group mb-3" *ngIf="municipalitySelected">
+    <span class="input-group-text" id="address-label">{{ 'address'|translate|titlecase }}</span>
+    <input [(ngModel)]="selectedAddress" (change)="onAddressChanged()"
+      class="form-control" aria-describedby="address-label" type="text">
+  </div>
+</div>

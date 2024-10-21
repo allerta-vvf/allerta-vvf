@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiClientService } from 'src/app/_services/api-client.service';
-import { LatLng, latLng, tileLayer, Marker, Map } from 'leaflet';
+import { LatLng, latLng, tileLayer, Marker, Map, Icon } from 'leaflet';
 import "leaflet.locatecontrol";
 
 @Component({
@@ -17,7 +17,7 @@ export class MapPickerComponent implements OnInit {
   @Input() selectLat = "";
   @Input() selectLng = "";
 
-  @Output() onMarkerSet = new EventEmitter<any>();
+  @Output() markerSet = new EventEmitter<any>();
 
   options = {
     layers: [
@@ -48,7 +48,7 @@ export class MapPickerComponent implements OnInit {
   }
 
   setMarker(latLng: LatLng) {
-    this.onMarkerSet.emit({
+    this.markerSet.emit({
       lat: latLng.lat,
       lng: latLng.lng
     });
@@ -56,7 +56,7 @@ export class MapPickerComponent implements OnInit {
     const iconRetinaUrl = "./assets/icons/marker-icon-2x.png";
     const iconUrl = "./assets/icons/marker-icon.png";
     const shadowUrl = "./assets/icons/marker-shadow.png";
-    const iconDefault = new (window as any).L.Icon({
+    const iconDefault = new Icon({
       iconRetinaUrl,
       iconUrl,
       shadowUrl,
@@ -96,12 +96,12 @@ export class MapPickerComponent implements OnInit {
 
   searchPlace() {
     if(this.placeName.length < 3) {
-      this.translate.get('map_picker.place_min_length').subscribe((res: string) => {
+      this.translate.get('validation.place_min_length').subscribe((res: string) => {
         this.toastr.error(res);
       });
       return;
     }
-    this.api.get("places/search", {
+    this.api.get("places/reverse/search", {
       q: this.placeName
     }).then((places) => {
       this.isPlaceSearchResultsOpen = true;

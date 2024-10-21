@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">{{ 'update_availability_schedule'|translate }}</h4>
-    <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|titlecase" (click)="bsModalRef.hide()">
+    <button type="button" class="btn-close close pull-right" [attr.aria-label]="'close'|translate|ftitlecase" (click)="bsModalRef.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
@@ -11,22 +11,22 @@
                 <td style="background-color: white;"></td>
                 <ng-container *ngIf="orientation === 'portrait'">
                     <ng-container *ngFor="let day of days; let i = index">
-                        <td class="day" (click)="selectDay(i)">{{ day.short|translate }}</td>
+                        <td class="day" (click)="selectEntireDay(i)">{{ day.short|translate }}</td>
                     </ng-container>
                 </ng-container>
                 <ng-container *ngIf="orientation === 'landscape'">
-                    <ng-container *ngFor="let hour of hours">
-                        <td class="hour" (click)="selectHour(hour)">{{ hour }}</td>
+                    <ng-container *ngFor="let slot of slots; odd as isOdd; even as isEven;">
+                        <td class="hour" (click)="selectEverySlotWithHour(slot)">{{ isEven ? (slot/2) : ((slot-1)/2) }}:{{ isEven ? "00" : "30" }}</td>
                     </ng-container>
                 </ng-container>
             </tr>
         </thead>
         <tbody id="scheduler_body" *ngIf="orientation === 'portrait'">
-            <ng-container *ngFor="let hour of hours">
+            <ng-container *ngFor="let slot of slots; odd as isOdd; even as isEven;">
                 <tr>
-                    <td class="hour" (click)="selectHour(hour)">{{ hour }}</td>
+                    <td class="hour" (click)="selectEverySlotWithHour(slot)">{{ isEven ? (slot/2) : ((slot-1)/2) }}:{{ isEven ? "00" : "30" }}</td>
                     <ng-container *ngFor="let day of days; let i = index">
-                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, hour)" (mousedown)="mouseDownCell(i, hour)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, hour)"></td>
+                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, slot)" (mousedown)="mouseDownCell(i, slot)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, slot)"></td>
                     </ng-container>
                 </tr>
             </ng-container>
@@ -34,9 +34,9 @@
         <tbody id="scheduler_body" *ngIf="orientation === 'landscape'">
             <ng-container *ngFor="let day of days; let i = index">
                 <tr>
-                    <td class="day" (click)="selectDay(i)">{{ day.short|translate }}</td>
-                    <ng-container *ngFor="let hour of hours">
-                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, hour)" (mousedown)="mouseDownCell(i, hour)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, hour)"></td>
+                    <td class="day" (click)="selectEntireDay(i)">{{ day.short|translate }}</td>
+                    <ng-container *ngFor="let slot of slots">
+                        <td class="hour-cell" [class.highlighted] = "isCellSelected(i, slot)" (mousedown)="mouseDownCell(i, slot)" (mouseup)="mouseUpCell()" (mouseover)="mouseOverCell(i, slot)"></td>
                     </ng-container>
                 </tr>
             </ng-container>

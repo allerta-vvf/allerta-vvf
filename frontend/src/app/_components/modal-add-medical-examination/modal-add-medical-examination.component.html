@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" translate>medical_examination_modal.title</h4>
+  <button
+    type="button"
+    class="btn-close close pull-right"
+    [attr.aria-label]="'close' | translate | ftitlecase"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="formSubmit()" class="row g-3">
+    <div class="col-md-6">
+      <label for="me_date" class="form-label">{{ 'date'|translate|ftitlecase }}</label>
+      <input formControlName="date" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|ftitlecase" id="me_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [maxDate]="dateMaxDate">
+    </div>
+    <div class="col-md-6">
+      <label for="me_expiration_date" class="form-label">{{ 'expiration_date'|translate|ftitlecase }}</label>
+      <input formControlName="expiration_date" type="text" class="form-control" [placeholder]="'press_to_select_a_date'|translate|ftitlecase" id="me_expiration_date" bsDatepicker [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" [minDate]="expirationDateMinDate">
+    </div>
+    <div class="col-12">
+      <label for="me_certifier">{{ 'certifier'|translate|ftitlecase }}</label>
+      <input formControlName="certifier" type="text" class="form-control" id="me_certifier">
+    </div>
+    <div class="col-12">
+      <label for="me_cert" class="form-label">{{ 'upload_medical_examination_certificate'|translate|ftitlecase }} (<u>{{ 'optional'|translate|uppercase }}</u>, <i>.pdf</i>)</label>
+      <input class="form-control" type="file" id="me_cert" (change)="onMedicalExaminationCertificateSelected($event)">
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="formSubmit()">
+    {{ "add" | translate | ftitlecase }}
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">
+    {{ "close" | translate }}
+  </button>
+</div>

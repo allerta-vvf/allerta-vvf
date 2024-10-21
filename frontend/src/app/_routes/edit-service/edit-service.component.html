@@ -3,21 +3,21 @@
 <form method="post" [formGroup]="serviceForm" (ngSubmit)="formSubmit()">
   <div class="container">
     <div class="form-group has-validation">
-      <label for="date-picker">{{ 'start'|translate|titlecase }}</label>
-      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')"></datetime-picker>
+      <label for="date-picker-start">{{ 'start'|translate|ftitlecase }}</label>
+      <datetime-picker formControlName="start" [class.is-invalid]="!isFieldValid('start')" id="date-picker-start"></datetime-picker>
       <div class="invalid-feedback" *ngIf="start.errors?.['required']" translate>
         edit_service.select_start_datetime
       </div>
     </div>
     <div class="form-group has-validation">
-      <label for="date-picker">{{ 'end'|translate|titlecase }}</label>
-      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')"></datetime-picker>
+      <label for="date-picker-end">{{ 'end'|translate|ftitlecase }}</label>
+      <datetime-picker formControlName="end" [class.is-invalid]="!isFieldValid('end')" id="date-picker-end"></datetime-picker>
       <div class="invalid-feedback" *ngIf="end.errors?.['required']" translate>
         edit_service.select_end_datetime
       </div>
     </div>
     <div class="form-group has-validation">
-      <label for="code">{{ 'code'|translate|titlecase }}</label>
+      <label for="code">{{ 'code'|translate|ftitlecase }}</label>
       <input formControlName="code" [class.is-invalid]="!isFieldValid('code')" id="code" class="form-control"
         type="text" placeholder="1234/5">
       <div class="invalid-feedback" *ngIf="code.errors?.['required']" translate>
@@ -25,27 +25,27 @@
       </div>
     </div>
     <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('chief')">
-      <label>{{ 'chief'|translate|titlecase }}</label>
+      <label>{{ 'chief'|translate|ftitlecase }}</label>
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check">
           <input formControlName="chief" [class.is-invalid]="!isFieldValid('chief')"
-            class="form-check-input chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
+            class="form-check-input" id="chief-{{ user.id }}" type="radio" value='{{ user.id }}'>
           <label class="form-check-label" for="chief-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>
     </div>
     <div class="form-group has-validation" [class.is-invalid-div]="!isFieldValid('drivers')">
-      <label>{{ 'drivers'|translate|titlecase }}</label>
+      <label>{{ 'drivers'|translate|ftitlecase }}</label>
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check" *ngIf="user.driver">
-          <input class="form-check-input driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
+          <input class="form-check-input" id="driver-{{ user.id }}" [class.is-invalid]="!isFieldValid('drivers')"
             (change)="onDriversCheckboxChange($event)" [checked]="isDriverSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="driver-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>
@@ -55,48 +55,53 @@
       <br>
       <ng-container *ngFor="let user of users">
         <div class="form-check">
-          <input class="form-check-input crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
+          <input class="form-check-input" id="crew-{{ user.id }}" [class.is-invalid]="!isFieldValid('crew')"
             (change)="onCrewCheckboxChange($event)" [checked]="isCrewSelected(user.id)" type="checkbox" value='{{ user.id }}'>
           <label class="form-check-label" for="crew-{{ user.id }}">
-            {{ user.name }}
+            {{ user.surname }} {{ user.name }}
           </label>
         </div>
       </ng-container>
     </div>
-    <div [class.is-invalid-div]="!isFieldValid('place')" class="mb-2">
-      <label>{{ 'place'|translate|titlecase }}</label>
-      <map-picker *ngIf="addingService" (onMarkerSet)="setPlace($event.lat, $event.lng)"></map-picker>
-      <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (onMarkerSet)="setPlace($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
+    <div [class.is-invalid-div]="!isFieldValid('lat')" class="mb-2" *ngIf="usingMapSelector">
+      <label>{{ 'place'|translate|ftitlecase }}</label>
+      <map-picker *ngIf="addingService" (markerSet)="setPlaceMap($event.lat, $event.lng)"></map-picker>
+      <map-picker *ngIf="!addingService && loadedServiceLat !== ''" (markerSet)="setPlaceMap($event.lat, $event.lng)" [selectLat]="loadedServiceLat" [selectLng]="loadedServiceLng"></map-picker>
+    </div>
+    <div [class.is-invalid-div]="!isFieldValid('place.address')" class="mb-2" *ngIf="!usingMapSelector">
+      <label>{{ 'place'|translate|ftitlecase }}</label>
+      <place-picker *ngIf="addingService" (addrSel)="setPlace($event.province, $event.municipality, $event.address)"></place-picker>
+      <place-picker *ngIf="!addingService && loadedServiceLat !== ''" (addrSel)="setPlace($event.province, $event.municipality, $event.address)"></place-picker>
     </div>
     <div class="form-group">
-      <label for="notes">{{ 'notes'|translate|titlecase }}</label><br>
+      <label for="notes">{{ 'notes'|translate|ftitlecase }}</label><br>
       <textarea formControlName="notes" class="form-control" id="notes"></textarea>
     </div>
     <br>
     <div class="form-group">
-      <label>{{ 'type'|translate|titlecase }}</label>
+      <label>{{ 'type'|translate|ftitlecase }}</label>
       <br>
       <div class="input-group has-validation">
         <select formControlName="type" [class.is-invalid]="!isFieldValid('type')" class="form-control mr-2">
-          <option selected disabled translate>edit_service.select_type</option>
+          <option selected disabled translate>select_type</option>
           <option *ngFor="let service_type of types" value="{{ service_type.id }}">{{ service_type.name }}</option>
         </select>
         <button class="btn btn-outline-secondary" type="button" tabindex="-1" (click)="addingType = true">
-          {{ 'add'|translate|titlecase }}
+          {{ 'add'|translate|ftitlecase }}
         </button>
-        <div class="invalid-feedback" *ngIf="type.errors?.['required']">
+        <div class="invalid-feedback" *ngIf="type.errors?.['required']" translate>
           edit_service.select_service_type
         </div>
       </div>
       <div class="input-group mb-2 mt-2" *ngIf="addingType">
-        <input type="text" class="form-control" [placeholder]="'type'|translate" [(ngModel)]="newType"
+        <input type="text" class="form-control" [placeholder]="'type'|translate|titlecase" [(ngModel)]="newType"
           [ngModelOptions]="{standalone: true}">
-        <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'chief'|translate|titlecase }}</button>
+        <button class="btn btn-secondary" type="button" (click)="addType()">{{ 'submit'|translate|ftitlecase }}</button>
       </div>
     </div>
     <br>
-    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">{{ 'submit'|translate|titlecase }}</button>
-    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">{{ 'reset'|translate|titlecase }}</button>
+    <button id="submit_button" type="submit" class="btn btn-primary" [disabled]="submittingForm">{{ 'submit'|translate|ftitlecase }}</button>
+    <button class="btn" type="button" (click)="formReset()" [disabled]="submittingForm">{{ 'reset'|translate|ftitlecase }}</button>
     <div class="d-flex justify-content-center mt-2 pt-2 mb-3" *ngIf="submittingForm">
       <div class="spinner spinner-border"></div>
     </div>

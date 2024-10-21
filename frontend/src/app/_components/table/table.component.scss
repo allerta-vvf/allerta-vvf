@@ -24,11 +24,12 @@ img {
   max-width: 20em;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .place_details_link {
   text-decoration: underline;
   color: #0d6efd;
 }
+
+.pagination-parent {
+  overflow-x: auto !important;
+}
+

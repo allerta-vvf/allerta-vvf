@@ -1,0 +1,48 @@
+<table class="table table-responsive table-striped">
+  <thead>
+    <tr>
+      <th>{{ 'name'|translate|ftitlecase }}</th>
+      <th>{{ 'value'|translate|ftitlecase }}</th>
+      <th>{{ 'action'|translate|ftitlecase }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let option of options">
+      <td>{{ 'options.'+option.name|translate }}</td>
+      
+      <!-- Data type specific input fields -->
+      <td *ngIf="option.type === 'number'">
+        <input
+          type="number" class="form-control"
+          [(ngModel)]="option.value" name="{{ option.name }}" [min]="option.min" [max]="option.max"
+        />
+      </td>
+      <td *ngIf="option.type === 'string'">
+        <input
+          type="text" class="form-control"
+          [(ngModel)]="option.value" name="{{ option.name }}"
+        />
+      </td>
+      <td *ngIf="option.type === 'boolean'">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input custom-check-input" type="checkbox" role="switch"
+            [(ngModel)]="option.value" name="{{ option.name }}"
+          />
+        </div>
+      </td>
+      <td *ngIf="option.type === 'select'">
+        <select *ngIf="option.options" class="form-select" [(ngModel)]="option.value" name="{{ option.name }}">
+          <option *ngFor="let optionValue of option.options" [value]="optionValue">{{ 'options.'+optionValue|translate }}</option>
+        </select>
+        <div class="alert alert-warning" role="alert"  *ngIf="!option.options">
+          {{ 'options.no_selection_available'|translate }}
+        </div>
+      </td>
+
+      <td>
+        <button (click)="updateOption(option.id)" class="btn btn-primary" [disabled]="option.value === option._origValue || option._updating">{{ 'update'|translate|ftitlecase }}</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

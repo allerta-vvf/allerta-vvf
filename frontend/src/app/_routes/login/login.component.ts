@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, LoginResponse } from 'src/app/_services/auth.service';
+import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.service';
+import { ApiClientService } from 'src/app/_services/api-client.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +22,9 @@ export class LoginComponent {
   constructor(
     public route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private guardLoaderIconService: GuardLoaderIconService,
+    public api: ApiClientService
   ) {
     this.route.params.subscribe((params) => {
       if (params["redirect"]) {
@@ -39,7 +43,16 @@ export class LoginComponent {
 
     if(this.authService.isAuthenticated()) {
       this.router.navigate(this.redirectParamsList);
+    } else {
+      this.authService.authChanged.subscribe({
+        next: () => {
+          this.router.navigate(this.redirectParamsList);
+        }
+      });
     }
+
+    this.guardLoaderIconService.hide();
+    this.guardLoaderIconService.lock();
   }
 
   login(): void {
@@ -49,6 +62,7 @@ export class LoginComponent {
       this.loading = false;
       console.log(response);
       if (response.loginOk === true) {
+        this.guardLoaderIconService.unlock();
         this.router.navigate(this.redirectParamsList);
       }
     });

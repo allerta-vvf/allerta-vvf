@@ -1,20 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "~bootstrap/scss/bootstrap.scss";
-@import "~@fortawesome/fontawesome-free/css/all.css";
-@import '~ngx-toastr/toastr';
+@import "node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "node_modules/@fortawesome/fontawesome-free/css/all.css";
+@import 'node_modules/ngx-toastr/toastr.css';
 
 //Leaving this here because in component.scss it doesn't work really well
-@import '~ngx-bootstrap/datepicker/bs-datepicker.scss';
-@import '~leaflet/dist/leaflet.css';
-@import '~leaflet.locatecontrol/dist/L.Control.Locate.min.css';
+@import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss';
+@import 'node_modules/leaflet/dist/leaflet.css';
+@import 'node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 .fa {
   vertical-align: middle;
   font-size: 20px;
 }
 
+.faxlarge {
+  font-size: x-large;
+}
+
+.fa-telegram {
+  color: #0088cc;
+}
+
 .fa-whatsapp {
   color: green;
   font-size: 1.5em;
+}
+
+.leaflet-pane.leaflet-shadow-pane {
+  display: none;
+}
+
+a code {
+  color: var(--bs-code-color) !important;
+}
+
+a:has(code) {
+  text-decoration: none !important;
 }

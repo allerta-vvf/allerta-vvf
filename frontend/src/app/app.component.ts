@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import { LocationBackService } from 'src/app/_services/locationBack.service';
+import { GuardLoaderIconService } from 'src/app/_services/guard-loader-icon.service';
 import { versions } from 'src/environments/versions';
 import { Router, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { ApiClientService } from './_services/api-client.service';
+import { UpdaterService } from './_services/updater.service';
 import { ModalAlertComponent } from 'src/app/_components/modal-alert/modal-alert.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { AuthorizeGuard } from './_guards/authorize.guard';
 
 @Component({
   selector: 'app-root',
@@ -19,21 +22,30 @@ export class AppComponent {
   public loadingRoute = false;
   private loadAlertsInterval: NodeJS.Timer | undefined = undefined;
   public alerts = [];
+  private alertsEtag = "";
 
   constructor(
     public auth: AuthService,
     private locationBackService: LocationBackService,
+    public guardLoaderIconService: GuardLoaderIconService,
     private router: Router,
-    private api: ApiClientService,
-    private modalService: BsModalService
+    public api: ApiClientService,
+    private modalService: BsModalService,
+    public guard: AuthorizeGuard,
+    private updater: UpdaterService
   ) {
     this.revision_datetime_string = new Date(versions.revision_timestamp).toLocaleString(undefined,  { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    this.locationBackService.initialize();
   }
 
   loadAlerts() {
-    if(this.auth.profile) {
-      this.api.get("alerts").then((response) => {
-        this.alerts = response;
+    if(this.auth.profile.id) {
+      this.api.get("alerts", {}, this.alertsEtag).then((response) => {
+        if(this.api.isLastSame) return;
+        this.alerts = response !== null ? response : [];
+        this.alertsEtag = this.api.lastEtag;
+      }).catch((err) => {
+        console.log(err);
       });
     }
   }
@@ -47,22 +59,31 @@ export class AppComponent {
       }
     });
 
-    this.loadAlertsInterval = setInterval(() => {
-      console.log("Refreshing alerts...");
+    if(this.auth.profile.can("alerts-read")) {
+      this.loadAlertsInterval = setInterval(() => {
+        console.log("Refreshing alerts...");
+        this.loadAlerts();
+      }, 30000);
       this.loadAlerts();
-    }, 15000);
-    this.loadAlerts();
 
-    this.api.alertsChanged.subscribe(() => {
-      this.loadAlerts();
-    });
+      this.api.alertsChanged.subscribe(() => {
+        this.loadAlerts();
+      });
+    }
   }
 
   openAlert(id: number) {
-    this.modalService.show(ModalAlertComponent, {
-      initialState: {
-        id: id
-      }
-    });
+    if(this.auth.profile.can("alerts-read")) {
+      this.modalService.show(ModalAlertComponent, {
+        initialState: {
+          id: id
+        }
+      });
+    }
+  }
+
+  logout(event: Event) {
+    event.preventDefault();
+    this.auth.logout();
   }
 }
