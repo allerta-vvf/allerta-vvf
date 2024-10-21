@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, UntypedFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ApiClientService } from 'src/app/_services/api-client.service';
 import { AuthService } from 'src/app/_services/auth.service';
@@ -93,7 +93,8 @@ export class EditServiceComponent implements OnInit {
     public auth: AuthService,
     private toastr: ToastrService,
     private fb: UntypedFormBuilder,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router
   ) {
     this.usingMapSelector = this.auth.profile.getOption("service_place_selection_use_map_picker", true);
     this.route.paramMap.subscribe(params => {
@@ -211,6 +212,7 @@ export class EditServiceComponent implements OnInit {
   setPlace(provinceCode: string, municipalityCode: string, address: string) {
     this.serviceForm.get('place.provinceCode').setValue(provinceCode);
     this.serviceForm.get('place.municipalityCode').setValue(municipalityCode);
+    this.serviceForm.get('place.address').setValue(address);
     this.address.setValue(address);
     console.log("Place selected", provinceCode, municipalityCode, address);
   }
@@ -251,13 +253,17 @@ export class EditServiceComponent implements OnInit {
           console.log(res);
           this.translate.get('edit_service.service_added_successfully').subscribe((res: string) => {
             this.toastr.success(res);
+            this.router.navigate(['/services']);
           });
           this.submittingForm = false;
         }).catch((err) => {
-          console.error(err);
-          this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
-            this.toastr.error(res);
-          });
+          if (err.error.message) {
+            this.toastr.error(err.error.message);
+          } else {
+            this.translate.get('edit_service.service_add_failed').subscribe((res: string) => {
+              this.toastr.error(res);
+            });
+          }
           this.submittingForm = false;
         });
       }

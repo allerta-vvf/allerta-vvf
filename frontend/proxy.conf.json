@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "http://allertavvf.test/",
+    "target": "http://localhost:8000/",
     "secure": false,
     "changeOrigin": true
   },
   "/docs": {
-    "target": "http://allertavvf.test/",
+    "target": "http://localhost:8000/",
     "secure": false,
     "changeOrigin": true
   }
