@@ -157,7 +157,14 @@ class ServiceController extends Controller
 
         if (is_null($service)) abort(404);
 
-        if (!$adding) {
+        if ($adding) {
+            //Check if code already exists
+            if (Service::where('code', $request->code)->exists()) {
+                return response()->json([
+                    'message' => "Il codice inserito è già stato utilizzato in un altro intervento"
+                ], 402);
+            }
+        } else {
             $usersToDecrement = $this->extractServiceUsers($service);
             User::whereIn('id', $usersToDecrement)->decrement('services');
 
