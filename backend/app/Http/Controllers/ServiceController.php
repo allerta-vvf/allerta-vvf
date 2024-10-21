@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\ServicesListResource;
+use App\Http\Resources\ServicesListForExternalResource;
 use App\Models\Place;
 use App\Models\PlaceMunicipality;
 use App\Models\PlaceProvince;
@@ -52,6 +53,46 @@ class ServiceController extends Controller
             }
         }
 
+        // Handle search queries
+        $searchQueries = $request->query('query');
+        // Try parsing JSON
+        if (is_string($searchQueries)) {
+            $searchQueries = json_decode($searchQueries, true);
+        }
+        if ($searchQueries && is_array($searchQueries)) {
+            foreach ($searchQueries as $searchQuery) {
+                switch ($searchQuery['query']) {
+                    case 'last':
+                        //Last n services
+                        $query->take($searchQuery['value']);
+                        break;
+
+                    case 'from':
+                        //From date
+                        try {
+                            $from = Carbon::parse($searchQuery['value']);
+                            $query->whereDate('start', '>=', $from->toDateString());
+                        } catch (\Carbon\Exceptions\InvalidFormatException $e) {
+                        }
+                        break;
+
+                    case 'to':
+                        //To date
+                        try {
+                            $to = Carbon::parse($searchQuery['value']);
+                            $query->whereDate('start', '<=', $to->toDateString());
+                        } catch (\Carbon\Exceptions\InvalidFormatException $e) {
+                        }
+                        break;
+
+                    case 'type':
+                        //Type
+                        $query->where('services_types.name', 'like', '%' . $searchQuery['value'] . '%');
+                        break;
+                }
+            }
+        }
+
         $result = $query->get();
         foreach ($result as $service) {
             if($service->place->municipality) {
@@ -64,6 +105,9 @@ class ServiceController extends Controller
 
             $p = $service->place;
             unset($p->lat, $p->lon, $p->place_id, $p->osm_id, $p->osm_type, $p->licence, $p->addresstype, $p->country, $p->country_code, $p->display_name, $p->road, $p->house_number, $p->postcode, $p->state, $p->suburb, $p->city, $p->municipality_id);
+        }
+        if ($request->has('external')) {
+            return ServicesListForExternalResource::collection($result);
         }
         return ServicesListResource::collection($result);
     }
