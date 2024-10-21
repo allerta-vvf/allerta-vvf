@@ -333,5 +333,8 @@
   "select_date_range": "Select date range",
   "remove_date_filters": "Remove date filters",
   "yes": "yes",
-  "no": "no"
+  "no": "no",
+  "error_loading_regions": "Unable to load regions",
+  "error_loading_provinces": "Unable to load provinces",
+  "error_loading_municipalities": "Unable to load municipalities"
 }

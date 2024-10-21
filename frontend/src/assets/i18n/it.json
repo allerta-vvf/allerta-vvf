@@ -333,5 +333,8 @@
   "select_date_range": "Seleziona un intervallo di date",
   "remove_date_filters": "Rimuovi filtri",
   "yes": "si",
-  "no": "no"
+  "no": "no",
+  "error_loading_regions": "Impossible caricare le regioni",
+  "error_loading_provinces": "Impossible caricare le province",
+  "error_loading_municipalities": "Impossible caricare i comuni"
 }
