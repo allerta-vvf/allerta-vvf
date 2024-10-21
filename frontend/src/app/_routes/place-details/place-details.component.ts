@@ -38,9 +38,10 @@ export class PlaceDetailsComponent implements OnInit {
         this.lon = parseFloat(place_info.lon || '');
         console.log(this.lat, this.lon);
 
-        if(Number.isNaN(this.lat) || Number.isNaN(this.lon)) {
+        if(place_info.municipality && place_info.municipality.province) {
           this.place_query = encodeURIComponent(place_info.name + ", " + place_info.municipality.name + " " + place_info.municipality.province.short_name);
-        } else {
+        }
+        if(!Number.isNaN(this.lat) && !Number.isNaN(this.lon)) {
           this.options = {
             layers: [
               tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })

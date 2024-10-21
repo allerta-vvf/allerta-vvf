@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Place;
 use App\Models\User;
+use App\Utils\HttpClient;
 
 class PlacesController extends Controller
 {
@@ -23,9 +24,9 @@ class PlacesController extends Controller
         $query_hash = md5($query);
         $seconds = 60 * 60 * 24 * 30; // 30 days
         $result = Cache::remember('nominatim_'.$query_hash, $seconds, function () use ($query) {
-            return Http::withUrlParameters([
+            return HttpClient::defaultClient()->withUrlParameters([
                 'place' => $query,
-            ])->get('https://nominatim.openstreetmap.org/search?format=json&limit=6&q={place}')->object();
+            ])->get('https://nominatim.openstreetmap.org/search?format=json&limit=5&q={place}')->object();
         });
         return response()->json($result);
     }
@@ -37,7 +38,7 @@ class PlacesController extends Controller
     {
         $seconds = 60 * 60 * 24 * 365 * 10; // 10 years
         $result = Cache::remember('italy_regions', $seconds, function () {
-            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/regioni')->object();
+            return HttpClient::defaultClient()->get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/regioni')->object();
         });
         return response()->json($result);
     }
@@ -50,7 +51,7 @@ class PlacesController extends Controller
         $region_name = strtolower($region_name);
         $seconds = 60 * 60 * 24 * 365; // 1 year
         $result = Cache::remember('italy_provinces_'.$region_name, $seconds, function () use ($region_name) {
-            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/province/'.$region_name)->object();
+            return HttpClient::defaultClient()->get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/province/'.$region_name)->object();
         });
         return response()->json($result);
     }
@@ -63,7 +64,7 @@ class PlacesController extends Controller
         $province_name = strtolower($province_name);
         $seconds = 60 * 60 * 24 * 365; // 1 year
         $result = Cache::remember('italy_municipalities_'.$province_name, $seconds, function () use ($province_name) {
-            return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/comuni/provincia/'.$province_name)->object();
+            return HttpClient::defaultClient()->get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/comuni/provincia/'.$province_name)->object();
         });
         return response()->json($result);
     }

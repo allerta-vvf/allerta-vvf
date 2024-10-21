@@ -13,10 +13,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use App\Utils\Logger;
 use App\Utils\DBTricks;
 use App\Utils\Helpers;
+use App\Utils\HttpClient;
 
 class ServiceController extends Controller
 {
@@ -162,7 +162,7 @@ class ServiceController extends Controller
             if (Service::where('code', $request->code)->exists()) {
                 return response()->json([
                     'message' => "Il codice inserito è già stato utilizzato in un altro intervento"
-                ], 402);
+                ], 400);
             }
         } else {
             $usersToDecrement = $this->extractServiceUsers($service);
@@ -278,6 +278,28 @@ class ServiceController extends Controller
                 }
             }
             $place->municipality()->associate($municipality);
+
+            
+            try {
+                $query = $place->name . ', ' . $municipality->name . ', Italia';
+                $query_hash = md5($query);
+                $seconds = 60 * 60 * 24 * 30; // 30 days
+                $result = Cache::remember('nominatim_fromMunicipality_'.$query_hash, $seconds, function () use ($query) {
+                    return HttpClient::defaultClient()->withUrlParameters([
+                        'place' => $query,
+                    ])->get('https://nominatim.openstreetmap.org/search?format=json&limit=1&q={place}')->object();
+                });
+
+                if (count($result) > 0) {
+                    $place->lat = $result[0]->lat;
+                    $place->lon = $result[0]->lon;
+                }
+            } catch (\Throwable $exception) {
+                echo("ERROR");
+                echo($exception->getMessage());
+                return;
+                app('sentry')->captureException($exception);
+            }
 
             $place->save();
         }

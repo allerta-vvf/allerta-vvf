@@ -7,7 +7,7 @@
   <div [leafletLayers]="layers"></div>
 </div>
 
-<div class="place_info" *ngIf="place_loaded && place_info.lat && place_info.lon">
+<div class="place_info" *ngIf="place_loaded && place_info.lat && place_info.lon && !place_info.municipality">
   <h3>
     <a href="https://www.google.com/maps/@?api=1&map_action=map&center={{ place_info.lat }},{{ place_info.lon }}&zoom=19&basemap=satellite" target="_blank">{{ 'place_details.open_in_google_maps'|translate }}</a>
   </h3>
