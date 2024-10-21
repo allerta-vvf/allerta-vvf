@@ -117,7 +117,6 @@ export class ModalAvailabilityScheduleComponent implements OnInit {
 
   selectEverySlotWithHour(slot: number) {
     console.log("Slot hour selected", slot);
-    debugger;
     if(this.selectedSlots.includes(slot)) {
       this.days.forEach((day: any, i: number) => {
         this.selectedCells = this.selectedCells.filter((cell: any) => cell.day !== i || cell.slot !== slot);

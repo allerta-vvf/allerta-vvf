@@ -44,6 +44,20 @@ export class PlacePickerComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(localStorage.getItem('placePickerLastRegion') && localStorage.getItem('placePickerLastRegion') != "") {
+      this.selectedRegion = localStorage.getItem('placePickerLastRegion')||"";
+      this.onRegionSelected();
+
+      if(
+        localStorage.getItem('placePickerLastProvince') && localStorage.getItem('placePickerLastProvince') != "" &&
+        localStorage.getItem('placePickerLastProvinceCode') && localStorage.getItem('placePickerLastProvinceCode') != ""
+      ) {
+        this.selectedProvince = localStorage.getItem('placePickerLastProvince')||"";
+        this.selectedProvinceCodice = localStorage.getItem('placePickerLastProvinceCode')||"";
+        console.log(this.selectedProvince, this.selectedProvinceCodice);
+        this.onProvinceSelected({item: {codice: this.selectedProvinceCodice}});
+      }
+    }
   }
 
   onRegionSelected() {
@@ -57,6 +71,8 @@ export class PlacePickerComponent implements OnInit {
       this.provinces = res;
       console.log(this.provinces);
       this.regionSelected = true;
+
+      localStorage.setItem('placePickerLastRegion', this.selectedRegion||"");
     }).catch((err: any) => {
       console.error(err);
       this.toastr.error(this.translate.instant("error_loading_provinces"));
@@ -74,6 +90,9 @@ export class PlacePickerComponent implements OnInit {
 
       this.selectedProvinceCodice = event.item.codice;
       this.provinceSelected = true;
+
+      localStorage.setItem('placePickerLastProvince', this.selectedProvince||"");
+      localStorage.setItem('placePickerLastProvinceCode', this.selectedProvinceCodice||"");
     }).catch((err: any) => {
       console.error(err);
       this.toastr.error(this.translate.instant("error_loading_municipalities"));
