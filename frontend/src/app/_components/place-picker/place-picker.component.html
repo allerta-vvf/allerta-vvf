@@ -10,7 +10,7 @@
       class="form-control" aria-describedby="province-label">
   </div>
   <div class="input-group mb-3" *ngIf="provinceSelected">
-    <span class="input-group-text" id="municipality-label">{{ 'place_details.municipality'|translate|titlecase }}</span>
+    <span class="input-group-text" id="municipality-label">{{ 'municipality'|translate|titlecase }}</span>
     <input [(ngModel)]="selectedMunicipality" [typeahead]="municipalities" typeaheadOptionField="nome" (typeaheadOnSelect)="onMunicipalitySelected($event)"
       class="form-control" aria-describedby="municipality-label">
   </div>
