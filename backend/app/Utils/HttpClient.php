@@ -3,10 +3,11 @@
 namespace App\Utils;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Config;
 
 class HttpClient {
     public static function defaultClient() {
-        $owner = $config("features.owner");
+        $owner = Config::get("features.owner");
         $userAgent = "AllertaVVF";
         if ($owner) {
             $userAgent .= " ($owner)";
