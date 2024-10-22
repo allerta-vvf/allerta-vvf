@@ -183,7 +183,7 @@ class ServiceController extends Controller
                 $place->lat = $request->place["lat"];
                 $place->lon = $request->place["lon"];
 
-                $response = Http::withUrlParameters([
+                $response = HttpClient::defaultClient()->withUrlParameters([
                     'lat' => $request->place["lat"],
                     'lon' => $request->place["lon"],
                 ])->get('https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}');
@@ -227,7 +227,7 @@ class ServiceController extends Controller
                 $province = PlaceProvince::where('code', $request->place["provinceCode"])->first();
                 if (!$province) {
                     $provinces = Cache::remember('italy_provinces_all', 60 * 60 * 24 * 365, function () {
-                        return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/province/')->object();
+                        return HttpClient::defaultClient()->get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/province/')->object();
                     });
 
                     //Find province
@@ -249,7 +249,7 @@ class ServiceController extends Controller
 
                 $province_name = $province->name;
                 $municipalities = Cache::remember('italy_municipalities_' . $province_name, 60 * 60 * 24 * 365, function () use ($province_name) {
-                    return Http::get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/comuni/provincia/' . $province_name)->object();
+                    return HttpClient::defaultClient()->get('https://axqvoqvbfjpaamphztgd.functions.supabase.co/comuni/provincia/' . $province_name)->object();
                 });
 
                 //Find municipality
