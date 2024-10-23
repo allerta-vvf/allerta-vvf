@@ -189,7 +189,7 @@ export class EditServiceComponent implements OnInit {
     }
   }
   isDriverSelected(id: number) {
-    return this.drivers.value.find((x: number) => x == id);
+    return this.drivers.value && this.drivers.value.find((x: number) => x == id);
   }
 
   onCrewCheckboxChange(event: any) {
