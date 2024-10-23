@@ -44,7 +44,7 @@ jobs:
     - name: Build frontend
       working-directory: frontend
       run: |
-        npm ci
+        npm ci --force
         npm run build
 
     - name: Install dependencies
