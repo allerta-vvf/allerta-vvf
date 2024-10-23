@@ -13,11 +13,11 @@ on:
 
 jobs:
   tests:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: !contains(toJSON(github.event.commits.*.message), '[skip-ci]')
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0']
+        php-versions: ['8.3']
     name: Testing ${{ matrix.php-versions }}
     steps:
     - name: Checkout
@@ -39,7 +39,7 @@ jobs:
     - name: Setup NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: '16'
 
     - name: Build frontend
       working-directory: frontend
@@ -65,7 +65,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.0
+        php-version: 8.3
         extensions: mbstring, intl
         ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
@@ -73,7 +73,7 @@ jobs:
     - name: Setup NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: '16'
 
     - name: Deploy
       run: |
@@ -111,7 +111,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.0
+        php-version: 8.3
         extensions: mbstring, intl
         ini-values: post_max_size=256M, log_errors = on, error_reporting = 32767, error_log = /tmp/php.log
         coverage: xdebug, pcov
@@ -119,7 +119,7 @@ jobs:
     - name: Setup NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: '16'
 
     - name: Deploy
       run: |
