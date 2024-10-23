@@ -19,16 +19,16 @@ class Kernel extends ConsoleKernel
     {
       $schedule->job(new NotifyUsersManualModeOnJob)
         ->dailyAt('7:00')
-        ->sentryMonitor();
+        ->sentryMonitor('notify-users-manual-mode-on');
       $schedule->job(new RemoveOldIpAddressesFromLogsJob)
         ->dailyAt('0:30')
-        ->sentryMonitor();
+        ->sentryMonitor('remove-old-ip-addresses-from-logs');
       $schedule->job(new ResetAvailabilityMinutesJob)
         ->monthlyOn(1, '0:00')
-        ->sentryMonitor();
+        ->sentryMonitor('reset-availability-minutes');
       $schedule->job(new UpdateAvailabilityWithSchedulesJob)
         ->everyThirtyMinutes()
-        ->sentryMonitor();
+        ->sentryMonitor('update-availability-with-schedules');
     }
 
     /**
