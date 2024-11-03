@@ -200,7 +200,7 @@ export class EditServiceComponent implements OnInit {
     }
   }
   isCrewSelected(id: number) {
-    return this.crew.value.find((x: number) => x == id);
+    return this.crew.value && this.crew.value.find((x: number) => x == id);
   }
 
   setPlaceMap(lat: number, lng: number) {
