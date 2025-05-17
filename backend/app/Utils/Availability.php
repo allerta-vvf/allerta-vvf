@@ -33,11 +33,11 @@ class Availability {
         $user->save();
 
         $text = null;
-        if($available_users_count_before == 5 && !$available) {
+        if($available_users_count_before == 5 && !$available && $last_availability) {
             $text = "🧯 Distaccamento operativo per supporto";
-        } else if($available_users_count_before == 2 && !$available) {
+        } else if($available_users_count_before == 2 && !$available && $last_availability) {
             $text = "⚠️ Distaccamento non operativo";
-        } else if($available_users_count_before == 4 && $available) {
+        } else if($available_users_count_before == 4 && $available && !$last_availability) {
             $text = "🚒 Distaccamento operativo con squadra completa";
         } else if($available_users_count_before == 1 && $available) {
             $text = "🧯 Distaccamento operativo per supporto";
