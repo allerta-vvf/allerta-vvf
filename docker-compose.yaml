@@ -31,7 +31,7 @@ services:
       - laravel-storage:/var/www/html/storage
 
   db:
-    image: mysql:9.1
+    image: mysql:9.3
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydb
