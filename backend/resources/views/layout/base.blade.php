@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>AllertaVvf</title>
-  <base href="/">
+  <base href="{{ asset('/') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/x-icon" href="{{ asset('/favicon.ico') }}">
+  <link rel="manifest" href="{{ asset('/manifest.webmanifest') }}">
   <meta name="theme-color" content="#1976d2">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
@@ -25,7 +25,6 @@
   <a style="float: right;" id="logout" href="{{ URL::r('logout') }}">{{ ucfirst(__('app.menu.hi')) }}, {{ Auth::user()->name ?? ucfirst(__('app.profile.name')) }}. <b id="logout-text">{{ ucfirst(__('auth.logout')) }}</b></a>
   <a class="icon" id="menuButton">☰</a>
 </div>
-@show
 <script>
   document.getElementById("menuButton").onclick = function() {
     var x = document.getElementById("topNavBar");
@@ -35,6 +34,9 @@
       x.className = "topnav responsive";
     }
   }
+</script>
+@show
+<script>
   // Set current user ID if user is logged in
   @if(Auth::check())
   window.currentUserId = {{ Auth::id() }};
