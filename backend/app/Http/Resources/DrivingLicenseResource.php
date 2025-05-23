@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DrivingLicenseResource extends JsonResource
@@ -10,7 +9,7 @@ class DrivingLicenseResource extends JsonResource
     /**
      * Transform the resource into an array.
      */
-    public function toArray(Request $request): array
+    public function toArray(): array
     {
         return [
             'doc_type' => $this->doc_type,
