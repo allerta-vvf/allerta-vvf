@@ -21,7 +21,7 @@ class PlacesController extends Controller
         $query = $request->input('q', null);
         if(!$query) abort(400);
 
-        $query_hash = md5($query);
+        $query_hash = hash('sha256', $query);
         $seconds = 60 * 60 * 24 * 30; // 30 days
         $result = Cache::remember('nominatim_'.$query_hash, $seconds, function () use ($query) {
             return HttpClient::defaultClient()->withUrlParameters([

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MedicalExaminationsListResource extends JsonResource
@@ -10,7 +9,7 @@ class MedicalExaminationsListResource extends JsonResource
     /**
      * Transform the resource into an array.
      */
-    public function toArray(Request $request): array
+    public function toArray(): array
     {
         return [
             "certifier" => $this->certifier,

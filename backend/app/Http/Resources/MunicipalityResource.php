@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MunicipalityResource extends JsonResource
@@ -12,7 +11,7 @@ class MunicipalityResource extends JsonResource
      *
      * Not used for responses, but for the API documentation. (see PlaceResource.php)
      */
-    public function toArray(Request $request): array
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
