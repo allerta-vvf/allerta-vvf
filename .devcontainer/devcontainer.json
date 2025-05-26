@@ -1,0 +1,30 @@
+{
+  "name": "Laravel + Apache + MariaDB",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [8000],
+  "postCreateCommand": "cd backend && composer install && chmod +x setup-env.sh && ./setup-env.sh && php artisan serve --host=0.0.0.0 --port=8000",
+  "features": {
+    "ghcr.io/devcontainers/features/apache:1": {},
+    "ghcr.io/devcontainers/features/php:1": {
+      "version": "8.2"
+    },
+    "ghcr.io/devcontainers/features/mariadb:1": {
+      "version": "11.3",
+      "database": "laravel",
+      "user": "root",
+      "password": ""
+    }
+  },
+  "remoteEnv": {
+    "DB_CONNECTION": "mysql",
+    "DB_HOST": "db",
+    "DB_PORT": "3306",
+    "DB_DATABASE": "laravel",
+    "DB_USERNAME": "root",
+    "DB_PASSWORD": ""
+  }
+}
