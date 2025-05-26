@@ -32,7 +32,16 @@ return [
     'name' => 'name',
     'driver' => 'driver',
     'call' => 'call',
-    'services' => 'services',
+    'service' => 'service|services',
     'availability_minutes' => 'availability minutes',
-    'edit' => 'edit'
+    'edit' => 'edit',
+    'chief' => 'chief',
+    'type' => 'type',
+    'code' => 'code',
+    'start' => 'start',
+    'end' => 'end',
+    'notes' => 'notes',
+    'actions' => 'actions',
+    'add' => 'Add :item',
+    'details' => 'details'
 ];

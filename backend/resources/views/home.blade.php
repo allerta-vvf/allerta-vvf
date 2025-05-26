@@ -119,7 +119,7 @@ function openScheduleModal() {
                 @permission('users-read')
                     <th>{{ ucfirst(__('app.call')) }}</th>
                 @endpermission
-                <th>{{ ucfirst(__('app.services')) }}</th>
+                <th>{{ ucfirst(trans_choice(__('app.service'),2)) }}</th>
                 <th>{{ ucfirst(__('app.availability_minutes')) }}</th>
                 @permission('users-update')
                     <th>{{ ucfirst(__('app.edit')) }}</th>

@@ -55,8 +55,30 @@ Route::group(['middleware' => ['auth']], function () {
         ]);
     })->name('home');
     Route::get('/services', function () {
-        return view('services');
+        // Query services with related data, similar to API controller
+        $services = \App\Models\Service::with(['chief', 'type'])
+            ->orderBy('start', 'desc')
+            ->get()
+            ->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'code' => $service->code,
+                    'type' => $service->type ? $service->type->name : '',
+                    'chief' => $service->chief ? ($service->chief->name . ' ' . $service->chief->surname) : '',
+                    'start' => $service->start,
+                    'end' => $service->end,
+                    'notes' => $service->notes,
+                ];
+            });
+        return view('services', ['services' => $services]);
     })->name('services');
+    Route::get('/services/create', function () {
+        return view('service_form');
+    })->name('services.create');
+    Route::get('/services/{id}', function ($id) {
+        // You can pass the service to the view for editing in the future
+        return view('service_form', ['serviceId' => $id]);
+    })->name('services.edit');
     Route::get('/trainings', function () {
         return view('trainings');
     })->name('trainings');

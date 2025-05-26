@@ -31,7 +31,16 @@ return [
     'name' => 'Nome',
     'driver' => 'Autista',
     'call' => 'Chiama',
-    'services' => 'Interventi',
+    'service' => 'intervento|interventi',
     'availability_minutes' => 'Disponibilità',
-    'edit' => 'Modifica'
+    'edit' => 'modifica',
+    'chief' => 'caposquadra',
+    'type' => 'tipo',
+    'code' => 'codice',
+    'start' => 'inizio',
+    'end' => 'fine',
+    'notes' => 'note',
+    'actions' => 'azioni',
+    'add' => 'Aggiungi :item',
+    'details' => 'dettagli'
 ];
