@@ -18,3 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 storage/app/git-version.json
+nohup.out

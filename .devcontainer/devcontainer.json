@@ -1,16 +1,8 @@
 {
-  "name": "Laravel + PHP 8.3 + MariaDB",
-  "features": {
-    "ghcr.io/devcontainers/features/php:1": {
-      "version": "8.3"
-    },
-    "ghcr.io/devcontainers/features/mariadb:1": {
-      "version": "11.3",
-      "database": "laravel",
-      "user": "root",
-      "password": ""
-    }
-  },
-  "forwardPorts": [8000],
-  "postCreateCommand": "cd backend && composer install && chmod +x ../.devcontainer/setup-env.sh && ../.devcontainer/setup-env.sh && nohup php artisan serve --host=0.0.0.0 --port=8000 &"
+	"name": "Laravel + MariaDB",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"forwardPorts": [8000, 3306],
+	"postAttachCommand": "cd backend && composer install && chmod +x ../.devcontainer/setup-env.sh && ../.devcontainer/setup-env.sh && nohup php artisan serve --host=0.0.0.0 --port=8000 &"
 }
