@@ -56,8 +56,31 @@ Route::group(['middleware' => ['auth']], function () {
         return view('service_form', ['serviceId' => $id]);
     })->name('services.edit');
     Route::get('/trainings', function () {
-        return view('trainings');
+        // Query trainings with related data, similar to services
+        $trainings = \App\Models\Training::with(['chief'])
+            ->orderBy('start', 'desc')
+            ->get()
+            ->map(function ($training) {
+                return [
+                    'id' => $training->id,
+                    'name' => $training->name,
+                    'start' => $training->start,
+                    'end' => $training->end,
+                    'chief' => $training->chief ? ($training->chief->name . ' ' . $training->chief->surname) : '',
+                    'crew' => $training->crew,
+                    'place' => $training->place,
+                    'notes' => $training->notes,
+                ];
+            });
+        return view('trainings', ['trainings' => $trainings]);
     })->name('trainings');
+    Route::get('/trainings/create', function () {
+        return view('training_form');
+    })->name('trainings.create');
+    Route::get('/trainings/{id}', function ($id) {
+        // You can pass the training to the view for editing in the future
+        return view('training_form', ['trainingId' => $id]);
+    })->name('trainings.edit');
     Route::get('/logs', function () {
         return view('logs');
     })->name('logs');

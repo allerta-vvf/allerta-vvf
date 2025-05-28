@@ -33,7 +33,6 @@ return [
     'call' => 'Chiama',
     'service' => 'intervento|interventi',
     'availability_minutes' => 'Disponibilità',
-    'edit' => 'modifica',
     'chief' => 'caposquadra',
     'type' => 'tipo',
     'code' => 'codice',
@@ -42,5 +41,12 @@ return [
     'notes' => 'note',
     'actions' => 'azioni',
     'add' => 'Aggiungi :item',
-    'details' => 'dettagli'
+    'edit' => 'modifica',
+    'details' => 'dettagli',
+    'actions' => 'azioni',
+    'save_changes' => 'Salva modifiche',
+    'cancel' => 'annulla',
+    'place' => 'luogo',
+    'crew' => 'squadra',
+    'training' => 'esercitazione|esercitazioni'
 ];

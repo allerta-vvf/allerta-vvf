@@ -34,7 +34,6 @@ return [
     'call' => 'call',
     'service' => 'service|services',
     'availability_minutes' => 'availability minutes',
-    'edit' => 'edit',
     'chief' => 'chief',
     'type' => 'type',
     'code' => 'code',
@@ -43,5 +42,12 @@ return [
     'notes' => 'notes',
     'actions' => 'actions',
     'add' => 'Add :item',
-    'details' => 'details'
+    'edit' => 'edit',
+    'details' => 'details',
+    'actions' => 'actions',
+    'save_changes' => 'Save changes',
+    'cancel' => 'cancel',
+    'place' => 'place',
+    'crew' => 'crew',
+    'training' => 'training|trainings'
 ];
