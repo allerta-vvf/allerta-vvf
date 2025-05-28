@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Utils;
+namespace App\Services;
 
 use App\Models\User;
-use App\Utils\TelegramBot;
-use App\Utils\Logger;
+use App\Services\TelegramBot;
+use App\Services\Logger;
 
 class Availability {
     public static function updateAvailability(User|int $id, bool $available, bool $fromTelegram = false)

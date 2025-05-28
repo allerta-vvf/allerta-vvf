@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Models\User;
-use App\Utils\DBTricks;
+use App\Services\DBTricks;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 

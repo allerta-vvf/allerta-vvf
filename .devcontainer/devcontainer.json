@@ -1,0 +1,8 @@
+{
+	"name": "Laravel + MariaDB",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"forwardPorts": [8000, 3306],
+	"postAttachCommand": "cd backend && composer install && chmod +x ../.devcontainer/setup-env.sh && ../.devcontainer/setup-env.sh && nohup php artisan serve --host=0.0.0.0 --port=8000 &"
+}

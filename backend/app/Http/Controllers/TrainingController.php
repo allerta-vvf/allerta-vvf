@@ -6,8 +6,8 @@ use App\Models\Training;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Utils\Logger;
-use App\Utils\DBTricks;
+use App\Services\Logger;
+use App\Services\DBTricks;
 
 class TrainingController extends Controller
 {

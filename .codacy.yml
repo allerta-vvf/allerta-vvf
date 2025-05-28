@@ -1,0 +1,3 @@
+exclude_paths:
+  - "backend/scripts/git-version.php"
+  - "frontend/*"

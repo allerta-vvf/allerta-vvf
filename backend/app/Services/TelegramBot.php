@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Services;
 
 use App\Models\TelegramBotNotifications;
 use App\Models\TelegramBotLogins;
@@ -48,7 +48,7 @@ class TelegramBot {
         $msgParamType = gettype($message);
         if($msgParamType == "string") {
             if($message == "") return;
-            $hash = md5($message);
+            $hash = hash('sha256', $message);
             $chat_ids = TelegramBotNotifications::where("type_team_state", true)
                 ->whereNot("last_message_hash", $hash)
                 ->get()->pluck('chat_id')->toArray();

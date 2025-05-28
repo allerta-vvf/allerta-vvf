@@ -13,10 +13,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use App\Utils\Logger;
-use App\Utils\DBTricks;
-use App\Utils\Helpers;
-use App\Utils\HttpClient;
+use App\Services\Logger;
+use App\Services\DBTricks;
+use App\Services\Helpers;
+use App\Services\HttpClient;
 
 class ServiceController extends Controller
 {
@@ -282,7 +282,7 @@ class ServiceController extends Controller
             
             try {
                 $query = $place->name . ', ' . $municipality->name . ', Italia';
-                $query_hash = md5($query);
+                $query_hash = hash('sha256', $query);
                 $seconds = 60 * 60 * 24 * 30; // 30 days
                 $result = Cache::remember('nominatim_fromMunicipality_'.$query_hash, $seconds, function () use ($query) {
                     return HttpClient::defaultClient()->withUrlParameters([

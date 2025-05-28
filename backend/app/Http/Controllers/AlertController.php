@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alert;
-use App\Utils\Alerts;
-use App\Utils\Logger;
-use App\Utils\TelegramBot;
+use App\Services\Alerts;
+use App\Services\Logger;
+use App\Services\TelegramBot;
 use App\Exceptions\AlertClosed;
 use App\Exceptions\AlertResponseAlreadySet;
 use Illuminate\Http\Request;

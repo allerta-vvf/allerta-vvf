@@ -11,7 +11,7 @@ class GenericController extends Controller
      * Returns the owner image
      * @unauthenticated
      */
-    public function ownerImage(Request $request)
+    public function ownerImage()
     {
         return response()
             ->file(
@@ -23,7 +23,7 @@ class GenericController extends Controller
     /**
      * Returns a pong message
      */
-    public function ping(Request $request)
+    public function ping()
     {
         return response()->json([
             'message' => 'pong'

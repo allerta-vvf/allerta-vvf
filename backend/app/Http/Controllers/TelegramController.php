@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TelegramBotLogins;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Str;
-use App\Utils\Logger;
+use App\Services\Logger;
 
 class TelegramController extends Controller
 {

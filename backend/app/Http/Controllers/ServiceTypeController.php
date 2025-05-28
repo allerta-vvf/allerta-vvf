@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Utils\Logger;
+use App\Services\Logger;
 
 class ServiceTypeController extends Controller
 {
