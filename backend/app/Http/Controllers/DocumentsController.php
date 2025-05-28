@@ -8,7 +8,7 @@ use Illuminate\Validation\Rules\File;
 use App\Models\Document;
 use App\Models\DocumentFile;
 use App\Models\User;
-use App\Utils\Logger;
+use App\Services\Logger;
 
 class DocumentsController extends Controller
 {

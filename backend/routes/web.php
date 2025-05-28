@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 
 use App\Models\User;
-use App\Utils\Logger;
+use App\Services\Logger;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,35 +23,11 @@ use App\Utils\Logger;
 //Generate various routes with same middleware auth
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
-        $requestedCols = ['id', 'chief', 'last_access', 'name', 'surname', 'available', 'driver', 'services', 'availability_minutes'];
-        if(auth()->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
-
         User::where('id', auth()->user()->id)->update(['last_access' => now()]);
-
-        $list = User::where('hidden', 0)
-            ->select($requestedCols)
-            ->orderBy('available', 'desc')
-            ->orderBy('chief', 'desc')
-            ->orderBy('driver', 'desc')
-            ->orderBy('services', 'asc')
-            ->orderBy('trainings', 'desc')
-            ->orderBy('availability_minutes', 'desc')
-            ->orderBy('name', 'asc')
-            ->orderBy('surname', 'asc')
-            ->get();
-
-        $now = now();
-        foreach($list as $user) {
-            //Add online status
-            $user->online = !is_null($user->last_access) && $user->last_access->diffInSeconds($now) < 30;
-            //Delete last_access
-            unset($user->last_access);
-        }
-
         return view('home', [
             'available' => Auth::user()->available,
             'availability_manual_mode' => Auth::user()->availability_manual_mode,
-            'users' => $list
+            'users' => User::getAvailableUsers(Auth::user()->isAbleTo("users-read"))
         ]);
     })->name('home');
     Route::get('/services', function () {

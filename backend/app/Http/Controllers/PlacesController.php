@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Place;
 use App\Models\User;
-use App\Utils\HttpClient;
+use App\Services\HttpClient;
 
 class PlacesController extends Controller
 {

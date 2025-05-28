@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Document;
 use App\Models\DocumentFile;
-use App\Utils\Logger;
+use App\Services\Logger;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\URL;
@@ -25,32 +25,11 @@ class UserController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $requestedCols = ['id', 'chief', 'last_access', 'name', 'surname', 'available', 'driver', 'services', 'availability_minutes'];
-        if($request->user()->isAbleTo("users-read")) $requestedCols[] = "phone_number";
-
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
-
-        $list = User::where('hidden', 0)
-            ->select($requestedCols)
-            ->orderBy('available', 'desc')
-            ->orderBy('chief', 'desc')
-            ->orderBy('driver', 'desc')
-            ->orderBy('services', 'asc')
-            ->orderBy('trainings', 'desc')
-            ->orderBy('availability_minutes', 'desc')
-            ->orderBy('name', 'asc')
-            ->orderBy('surname', 'asc')
-            ->get();
-
-        $now = now();
-        foreach($list as $user) {
-            //Add online status
-            $user->online = !is_null($user->last_access) && $user->last_access->diffInSeconds($now) < 30;
-            //Delete last_access
-            unset($user->last_access);
-        }
-
-        return UsersListResource::collection($list);
+        
+        return UsersListResource::collection(
+            User::getAvailableUsers($request->user()->isAbleTo("users-read"))
+        );
     }
 
     /**
@@ -62,62 +41,9 @@ class UserController extends Controller
 
         User::where('id', $request->user()->id)->update(['last_access' => now()]);
 
-        $dl_tmp = Document::where('documents.user', $user->id)
-            ->where('documents.type', 'driving_license')
-            ->join('document_files', 'document_files.id', '=', 'documents.document_file_id')
-            ->select('documents.doc_type', 'documents.doc_number', 'documents.expiration_date', 'document_files.uuid as scan_uuid')
-            ->get();
-
-        if($dl_tmp->count() > 0) {
-            $user->driving_license = $dl_tmp[0];
-        }
-
-        $tc_tmp = Document::where('documents.user', $user->id)
-            ->where('documents.type', 'training_course')
-            ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')
-            ->leftJoin('training_course_types', 'training_course_types.id', '=', 'documents.doc_type')
-            ->select('documents.doc_number as doc_number', 'documents.date', 'document_files.uuid as doc_uuid', 'training_course_types.name as type')
-            ->get();
-
-        if($tc_tmp->count() > 0) {
-            $user->training_courses = $tc_tmp;
-            foreach($user->training_courses as $tc) {
-                $tc->doc_url = !is_null($tc->doc_uuid) ?
-                    URL::temporarySignedRoute(
-                        'training_course_serve', now()->addHours(1), ['uuid' => $tc->doc_uuid]
-                    ) : null;
-                unset($tc->doc_uuid);
-            }
-        } else {
-            $user->training_courses = [];
-        }
-
-        $me_tmp = Document::where('documents.user', $user->id)
-            ->where('documents.type', 'medical_examination')
-            ->leftJoin('document_files', 'document_files.id', '=', 'documents.document_file_id')
-            ->select('documents.doc_certifier as certifier', 'documents.date', 'documents.expiration_date', 'document_files.uuid as cert_uuid')
-            ->get();
-
-        if($me_tmp->count() > 0) {
-            $user->medical_examinations = $me_tmp;
-            foreach($user->medical_examinations as $me) {
-                $me->cert_url = !is_null($me->cert_uuid) ?
-                    URL::temporarySignedRoute(
-                        'medical_examination_serve', now()->addHours(1), ['uuid' => $me->cert_uuid]
-                    ) : null;
-                unset($me->cert_uuid);
-            }
-        } else {
-            $user->medical_examinations = [];
-        }
-
-        if(!is_null($user->driving_license) && !is_null($user->driving_license->scan_uuid)) {
-            $user->driving_license->scan_url = URL::temporarySignedRoute(
-                'driving_license_scan_serve', now()->addMinutes(2), ['uuid' => $user->driving_license->scan_uuid]
-            );
-        }
-
-        return UserResource::make($user);
+        return UserResource::make(
+            User::_processUserInfo($user)
+        );
     }
 
     /**

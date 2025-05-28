@@ -13,10 +13,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use App\Utils\Logger;
-use App\Utils\DBTricks;
-use App\Utils\Helpers;
-use App\Utils\HttpClient;
+use App\Services\Logger;
+use App\Services\DBTricks;
+use App\Services\Helpers;
+use App\Services\HttpClient;
 
 class ServiceController extends Controller
 {

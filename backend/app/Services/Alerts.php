@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Utils;
+namespace App\Services;
 
 use App\Models\Alert;
 use App\Models\AlertCrew;
 use App\Models\User;
-use App\Utils\TelegramBot;
-use App\Utils\Logger;
+use App\Services\TelegramBot;
+use App\Services\Logger;
 use App\Exceptions\AlertClosed;
 use App\Exceptions\AlertResponseAlreadySet;
 use App\Models\TelegramSpecialMessage;

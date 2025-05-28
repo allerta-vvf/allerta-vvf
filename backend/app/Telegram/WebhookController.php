@@ -5,8 +5,8 @@ namespace App\Telegram;
 use App\Models\TelegramBotLogins;
 use App\Models\User;
 
-use App\Utils\Alerts;
-use App\Utils\Availability;
+use App\Services\Alerts;
+use App\Services\Availability;
 
 use App\Exceptions\AlertClosed;
 use App\Exceptions\AlertResponseAlreadySet;
