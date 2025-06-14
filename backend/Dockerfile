@@ -1,5 +1,5 @@
 # Stage 1: Build PHP app and install dependencies
-FROM php:8.3.12 AS builder
+FROM php:8.4.8 AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
 
 # Stage 2: Serve the application using Apache PHP
-FROM php:8.3.12-apache
+FROM php:8.4.8-apache
 
 # Copy the built PHP app from the builder stage
 COPY --from=builder /app /var/www/html
